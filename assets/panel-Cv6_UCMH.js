@@ -1,1 +1,0 @@
-import{s as e}from"./link-CGcfQkun.js";import{t}from"./shell-CmEF-IgM.js";import{r as n}from"./index-CN7M6xiA.js";var r=e();function i(){return(0,r.jsx)(t,{children:(0,r.jsx)(n,{})})}export{i as component};
