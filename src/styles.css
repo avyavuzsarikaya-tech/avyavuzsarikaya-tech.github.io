@@ -74,6 +74,24 @@
   .source-row:target {
     background: var(--color-highlight);
   }
+  /* Fade at the end of the section bar: tells a phone reader the row scrolls. */
+  .section-bar::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    width: 2rem;
+    pointer-events: none;
+    background: linear-gradient(to right, transparent, var(--color-paper));
+  }
+  [dir="rtl"] .section-bar::after {
+    background: linear-gradient(to left, transparent, var(--color-paper));
+  }
+  @media (min-width: 1024px) {
+    .section-bar::after {
+      display: none;
+    }
+  }
   select.lang-box {
     color-scheme: dark;
   }

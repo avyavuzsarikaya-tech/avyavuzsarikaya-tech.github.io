@@ -5,7 +5,7 @@ import { fieldClass } from "@/components/shell";
 import { langMeta, useCopy } from "@/lib/i18n";
 import { useLibrary } from "@/lib/library";
 import { safeHttpUrl } from "@/lib/text";
-import { blankStory, LANGS, THEMES, type Lang, type Story } from "@/lib/types";
+import { blankStory, isTheme, LANGS, THEMES, type Lang, type Story } from "@/lib/types";
 
 const MAX_AUDIO = 4 * 1024 * 1024;
 
@@ -195,7 +195,7 @@ function Editor({ storyId }: { storyId: string }) {
               value={draft.theme}
               onChange={(event) => {
                 const theme = event.target.value;
-                if (theme === "climate" || theme === "cities" || theme === "trade" || theme === "knowledge") {
+                if (isTheme(theme)) {
                   setDraft({ ...draft, theme });
                 }
               }}

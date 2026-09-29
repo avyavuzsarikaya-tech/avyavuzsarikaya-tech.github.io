@@ -1,7 +1,17 @@
 export const LANGS = ["tr", "ar", "en", "fr", "es"] as const;
 export type Lang = (typeof LANGS)[number];
 
-export const THEMES = ["climate", "cities", "trade", "knowledge", "research"] as const;
+export const THEMES = [
+  "climate",
+  "environment",
+  "politics",
+  "economy",
+  "science",
+  "technology",
+  "culture",
+  "health",
+  "research",
+] as const;
 export type Theme = (typeof THEMES)[number];
 
 export type AudioClip = {
@@ -38,6 +48,22 @@ export function isLang(value: string): value is Lang {
 
 export function isTheme(value: string): value is Theme {
   return (THEMES as readonly string[]).includes(value);
+}
+
+/** Older two-part sections, mapped to the first half of their old label. */
+const LEGACY_THEMES: Record<string, Theme> = {
+  cities: "politics",
+  trade: "science",
+  knowledge: "culture",
+};
+
+/** A current section, or the new home of an old two-part one; otherwise undefined. */
+export function toTheme(value: string): Theme | undefined {
+  return isTheme(value) ? value : LEGACY_THEMES[value];
+}
+
+export function normalizeTheme(value: string): Theme {
+  return toTheme(value) ?? "research";
 }
 
 export function emptyLocale(): LocaleCopy {

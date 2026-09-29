@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { SEED } from "@/lib/seed";
-import { isLang, type Lang, type Story } from "@/lib/types";
+import { isLang, isTheme, normalizeTheme, type Lang, type Story } from "@/lib/types";
 
 const DB_NAME = "orbis";
 const DB_STORE = "kv";
@@ -106,10 +106,18 @@ export const useLibrary = create<LibraryState>((set, get) => ({
     if (get().ready || get().loading) return;
     set({ loading: true });
     const envelope = await readEnvelope();
-    const have = new Set(envelope.stories.map((item) => item.id));
+    // Readings saved under the old two-part sections move to the new single sections.
+    const seedTheme = new Map(SEED.map((item) => [item.id, item.theme]));
+    let migrated = false;
+    const current = envelope.stories.map((item) => {
+      if (isTheme(item.theme)) return item;
+      migrated = true;
+      return { ...item, theme: seedTheme.get(item.id) ?? normalizeTheme(item.theme) };
+    });
+    const have = new Set(current.map((item) => item.id));
     const missing = SEED.filter((item) => !have.has(item.id)).map((item) => structuredClone(item));
-    const stories = missing.length ? [...envelope.stories, ...missing] : envelope.stories;
-    if (missing.length) await writeEnvelope(stories);
+    const stories = missing.length ? [...current, ...missing] : current;
+    if (missing.length || migrated) await writeEnvelope(stories);
     set({ stories, lang: readLang(), ready: true, loading: false });
   },
   setLang: (lang) => {

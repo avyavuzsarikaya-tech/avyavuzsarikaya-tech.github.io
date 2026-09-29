@@ -4,13 +4,13 @@ import { useFrameCopy } from "@/lib/frame-copy";
 import { useCopy } from "@/lib/i18n";
 import { useLibrary } from "@/lib/library";
 import { formatDate, paragraphs, storyTitle } from "@/lib/text";
-import { isTheme, type Lang, type Story, type Theme } from "@/lib/types";
+import { toTheme, type Lang, type Story, type Theme } from "@/lib/types";
 
 type HomeSearch = { s?: Theme };
 
 export const Route = createFileRoute("/")({
   validateSearch: (search: Record<string, unknown>): HomeSearch => {
-    const s = typeof search.s === "string" && isTheme(search.s) ? search.s : undefined;
+    const s = typeof search.s === "string" && search.s ? toTheme(search.s) : undefined;
     return s ? { s } : {};
   },
   component: Home,
@@ -54,8 +54,11 @@ function Atlas({ section }: { section: Theme | "all" }) {
   const all = [...stories].sort((a, b) => b.date.localeCompare(a.date));
   const sorted = all.filter((story) => section === "all" || story.theme === section);
   const latest = sorted[0];
-  const right = sorted.slice(1, 3);
-  const bottom = sorted.slice(3, 5);
+  const cards = sorted.slice(1, 5);
+  // The grid fills itself: one reading spans the full width, two sit side by side,
+  // and an odd card left on the bottom row stretches across both columns.
+  const alone = cards.length === 0;
+  const leadSpan = alone ? "col-span-2" : cards.length === 1 ? "" : "row-span-2";
 
   if (stories.length === 0) {
     return (
@@ -87,16 +90,27 @@ function Atlas({ section }: { section: Theme | "all" }) {
             <Link
               to="/read/$storyId"
               params={{ storyId: latest.id }}
-              className="row-span-2 flex min-w-0 flex-col gap-2 border-r border-b border-rule p-3 md:gap-4 md:p-8 rtl:border-r-0 rtl:border-l"
+              className={`${leadSpan} flex min-w-0 flex-col gap-2 border-r border-b border-rule p-3 md:gap-4 md:p-8 rtl:border-r-0 rtl:border-l`}
             >
               <Meta story={latest} lang={lang} />
-              <h2 className="text-xl leading-tight md:text-4xl">{storyTitle(latest, lang)}</h2>
-              <p className="font-body line-clamp-8 text-pretty text-sm leading-snug md:line-clamp-6 md:text-base md:leading-relaxed">
-                {cut(latest.locales[lang].body, 2)}
+              <h2 className={alone ? "max-w-3xl text-3xl leading-tight md:text-5xl" : "text-xl leading-tight md:text-4xl"}>
+                {storyTitle(latest, lang)}
+              </h2>
+              {alone && latest.locales[lang].dek ? (
+                <p className="max-w-3xl text-pretty text-lg leading-snug text-muted md:text-xl">{latest.locales[lang].dek}</p>
+              ) : null}
+              <p
+                className={
+                  alone
+                    ? "font-body line-clamp-[10] max-w-3xl text-pretty text-base leading-relaxed md:line-clamp-none md:text-lg"
+                    : "font-body line-clamp-8 text-pretty text-sm leading-snug md:line-clamp-6 md:text-base md:leading-relaxed"
+                }
+              >
+                {cut(latest.locales[lang].body, alone ? 3 : 2)}
               </p>
             </Link>
-            {[...right, ...bottom].map((story) => (
-              <Card key={story.id} story={story} lang={lang} />
+            {cards.map((story, n) => (
+              <Card key={story.id} story={story} lang={lang} wide={cards.length === 3 && n === 2} />
             ))}
           </div>
         ) : (
@@ -140,14 +154,14 @@ function Atlas({ section }: { section: Theme | "all" }) {
   );
 }
 
-function Card({ story, lang }: { story: Story; lang: Lang }) {
+function Card({ story, lang, wide = false }: { story: Story; lang: Lang; wide?: boolean }) {
   const title = storyTitle(story, lang);
   const excerpt = cut(story.locales[lang].body, 1);
   return (
     <Link
       to="/read/$storyId"
       params={{ storyId: story.id }}
-      className="flex min-w-0 flex-col gap-2 border-r border-b border-rule p-3 md:gap-3 md:p-8 rtl:border-r-0 rtl:border-l"
+      className={`${wide ? "col-span-2" : ""} flex min-w-0 flex-col gap-2 border-r border-b border-rule p-3 md:gap-3 md:p-8 rtl:border-r-0 rtl:border-l`}
     >
       <Meta story={story} lang={lang} />
       <h2 className="text-base leading-tight md:text-2xl">{title}</h2>

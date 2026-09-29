@@ -365,7 +365,7 @@ export const SEED: Story[] = [
   ),
   story(
     "after-ten-million",
-    "cities",
+    "politics",
     "2026-01-20",
     [
       {
@@ -383,7 +383,7 @@ export const SEED: Story[] = [
   ),
   story(
     "grain-moves",
-    "trade",
+    "economy",
     "2025-11-04",
     [
       {
@@ -401,7 +401,7 @@ export const SEED: Story[] = [
   ),
   story(
     "languages-of-record",
-    "knowledge",
+    "culture",
     "2026-02-08",
     [
       {

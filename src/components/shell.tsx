@@ -95,8 +95,8 @@ export function Shell({ children, section }: { children: React.ReactNode; sectio
       </header>
 
       <div dir={meta.dir} lang={meta.html} className="flex flex-1 flex-col">
-        <nav aria-label={copy.sections} className="border-b border-rule">
-          <div className="no-scrollbar flex gap-6 overflow-x-auto px-5 text-sm whitespace-nowrap md:px-8">
+        <nav aria-label={copy.sections} className="section-bar relative border-b border-rule">
+          <div className="no-scrollbar flex gap-5 overflow-x-auto px-5 text-[13px] tracking-wide whitespace-nowrap md:gap-7 md:px-8">
             <Link to="/" className={barItem(section === "all")}>
               {copy.home}
             </Link>
@@ -124,7 +124,7 @@ export function Shell({ children, section }: { children: React.ReactNode; sectio
             </div>
             <div>
               <p className="text-xs uppercase tracking-widest text-mist">{copy.sections}</p>
-              <ul className="mt-2 flex flex-col">
+              <ul className="mt-2 grid grid-cols-2 gap-x-6">
                 {THEMES.map((theme) => (
                   <li key={theme}>
                     <Link to="/" search={{ s: theme }} className="inline-flex min-h-9 items-center text-sm text-paper">
