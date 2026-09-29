@@ -149,7 +149,7 @@ function Atlas({ section }: { section: Theme | "all" }) {
                   />
                 </div>
               )}
-              <EndMark />
+              {section === "all" && !alone ? <EndMark /> : null}
             </Link>
             {cards.map((story, n) => (
               <Card key={story.id} story={story} lang={lang} span={cardSpan(n)} />
