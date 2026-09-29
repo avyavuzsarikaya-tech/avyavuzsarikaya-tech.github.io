@@ -13,6 +13,8 @@ export const langMeta: Record<
 
 export type Copy = {
   atlas: string;
+  home: string;
+  sections: string;
   panel: string;
   language: string;
   hero: string;
@@ -75,6 +77,8 @@ export type Copy = {
 const copy: Record<Lang, Copy> = {
   en: {
     atlas: "Atlas",
+    home: "Home",
+    sections: "Sections",
     panel: "Panel",
     language: "Language",
     hero: "A world, with its sources.",
@@ -144,6 +148,8 @@ const copy: Record<Lang, Copy> = {
   },
   tr: {
     atlas: "Atlas",
+    home: "Ana sayfa",
+    sections: "Bölümler",
     panel: "Panel",
     language: "Dil",
     hero: "Kaynaklarıyla bir dünya.",
@@ -214,6 +220,8 @@ const copy: Record<Lang, Copy> = {
   },
   ar: {
     atlas: "الأطلس",
+    home: "الرئيسية",
+    sections: "الأقسام",
     panel: "اللوحة",
     language: "اللغة",
     hero: "عالمٌ بمصادره.",
@@ -283,6 +291,8 @@ const copy: Record<Lang, Copy> = {
   },
   fr: {
     atlas: "Atlas",
+    home: "Accueil",
+    sections: "Sections",
     panel: "Panneau",
     language: "Langue",
     hero: "Un monde, et ses sources.",
@@ -355,6 +365,8 @@ const copy: Record<Lang, Copy> = {
   },
   es: {
     atlas: "Atlas",
+    home: "Inicio",
+    sections: "Secciones",
     panel: "Panel",
     language: "Lengua",
     hero: "Un mundo, con sus fuentes.",

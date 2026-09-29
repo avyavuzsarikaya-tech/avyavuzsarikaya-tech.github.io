@@ -7,8 +7,8 @@ import { LANGS, type Lang } from "@/lib/types";
 function Meridian() {
   return (
     <span className="relative inline-flex h-8 w-8 items-center justify-center" aria-hidden="true">
-      <span className="absolute h-8 w-px bg-ink" />
-      <span className="size-2 rounded-full bg-ink" />
+      <span className="absolute h-8 w-px bg-paper" />
+      <span className="size-2 rounded-full bg-paper" />
     </span>
   );
 }
@@ -23,21 +23,26 @@ function LangSwitch({
   label: string;
 }) {
   return (
-    <select
-      value={lang}
-      aria-label={label}
-      onChange={(event) => {
-        const next = event.target.value;
-        if (next === "tr" || next === "ar" || next === "en" || next === "fr" || next === "es") onChange(next);
-      }}
-      className="min-h-11 bg-paper px-1 text-sm tracking-widest text-ink"
-    >
-      {LANGS.map((code) => (
-        <option key={code} value={code} lang={langMeta[code].html}>
-          {langMeta[code].code}
-        </option>
-      ))}
-    </select>
+    <label className="relative inline-flex items-center">
+      <select
+        value={lang}
+        aria-label={label}
+        onChange={(event) => {
+          const next = event.target.value;
+          if (next === "tr" || next === "ar" || next === "en" || next === "fr" || next === "es") onChange(next);
+        }}
+        className="lang-box min-h-11 appearance-none bg-transparent pr-5 text-xs tracking-widest text-paper"
+      >
+        {LANGS.map((code) => (
+          <option key={code} value={code} lang={langMeta[code].html}>
+            {langMeta[code].code}
+          </option>
+        ))}
+      </select>
+      <span className="pointer-events-none absolute right-0 text-xs text-paper" aria-hidden="true">
+        ▾
+      </span>
+    </label>
   );
 }
 
@@ -60,22 +65,33 @@ export function Shell({ children }: { children: React.ReactNode }) {
     document.documentElement.dir = meta.dir;
   }, [meta.html, meta.dir]);
 
-  const atlasClass = inPanel ? "text-muted" : "border-b border-ink text-ink";
-  const panelClass = inPanel ? "border-b border-ink text-ink" : "text-ink";
-
   return (
     <div className="min-h-screen bg-paper text-ink">
-      <header dir="ltr" className="flex items-start justify-between gap-6 px-5 py-6 md:px-8">
-        <Link to="/" className="inline-flex min-h-11 items-center gap-3">
+      <header dir="ltr" className="flex items-start justify-between gap-6 bg-ink px-5 py-6 text-paper md:px-8">
+        <Link to="/" className="inline-flex min-h-11 items-center gap-3 text-paper">
           <Meridian />
           <span className="font-display text-xl tracking-widest">ORBIS</span>
         </Link>
         <div className="flex flex-col items-end">
           <LangSwitch lang={lang} onChange={setLang} label={copy.language} />
-          <Link to="/" className={`inline-flex min-h-11 items-center text-sm ${atlasClass}`}>
+          <Link
+            to="/"
+            className={
+              inPanel
+                ? "inline-flex min-h-11 items-center border-b border-mist text-sm text-mist"
+                : "inline-flex min-h-11 items-center border-b border-mist text-sm text-paper"
+            }
+          >
             {copy.atlas}
           </Link>
-          <Link to="/panel" className={`inline-flex min-h-11 items-center text-sm ${panelClass}`}>
+          <Link
+            to="/panel"
+            className={
+              inPanel
+                ? "inline-flex min-h-11 items-center text-sm text-paper"
+                : "inline-flex min-h-11 items-center text-sm text-mist"
+            }
+          >
             {copy.panel}
           </Link>
         </div>

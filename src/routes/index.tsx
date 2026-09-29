@@ -37,13 +37,13 @@ function Atlas() {
     .filter((story) => section === "all" || story.theme === section)
     .sort((a, b) => b.date.localeCompare(a.date));
   const latest = sorted[0];
-  const beside = sorted.slice(1, 3);
-  const after = sorted.slice(3);
+  const right = sorted.slice(1, 3);
+  const bottom = sorted.slice(3, 5);
 
   return (
-    <main className="px-5 pb-16 md:px-8">
+    <main className="pb-16">
       {stories.length === 0 ? (
-        <div className="flex flex-col items-start gap-4 border-t border-line py-10">
+        <div className="flex flex-col items-start gap-4 px-5 py-10 md:px-8">
           <p>{copy.emptyAtlas}</p>
           <button
             type="button"
@@ -53,57 +53,73 @@ function Atlas() {
             {copy.restore}
           </button>
         </div>
-      ) : sorted.length === 0 || !latest ? (
-        <p className="border-t border-line py-10 text-muted">{copy.emptyAtlas}</p>
+      ) : !latest ? (
+        <p className="px-5 py-10 text-muted md:px-8">{copy.emptyAtlas}</p>
       ) : (
-        <div className="grid border-t border-line md:grid-cols-5">
-          <Link
-            to="/read/$storyId"
-            params={{ storyId: latest.id }}
-            className="border-b border-line py-6 md:col-span-3 md:border-r md:pr-8"
-          >
-            <p className="text-xs uppercase tracking-widest text-muted">{copy.readings}</p>
-            <h1 className="mt-4 text-3xl md:text-5xl">01. {storyTitle(latest, lang)}</h1>
-          </Link>
-          <div className="flex items-start border-b border-line py-6 md:col-span-2 md:pl-8">
-            <label className="w-full text-sm">
-              <select
-                value={section}
-                aria-label={copy.homeSections}
-                onChange={(event) => {
-                  const next = event.target.value;
-                  setSection(isSection(next) ? next : "all");
-                }}
-                className="min-h-11 w-full border border-ink bg-paper px-3 text-ink"
-              >
-                <option value="all">{copy.homeSections}</option>
-                {THEMES.map((theme) => (
-                  <option key={theme} value={theme}>
-                    {copy.themes[theme]}
-                  </option>
-                ))}
-              </select>
-            </label>
+        <>
+          <div className="flex items-end justify-between gap-6 px-5 py-8 md:px-8">
+            <div className="min-w-0">
+              <p className="text-xs uppercase tracking-widest text-muted">{copy.readings}</p>
+              <h1 className="mt-3 text-3xl md:text-5xl">
+                <Link to="/read/$storyId" params={{ storyId: latest.id }}>
+                  01 {storyTitle(latest, lang)}
+                </Link>
+              </h1>
+            </div>
+            <nav className="flex shrink-0 items-center gap-6 text-sm">
+              <Link to="/" className="inline-flex min-h-11 items-center">
+                {copy.home}
+              </Link>
+              <label className="relative inline-flex items-center">
+                <select
+                  value={section}
+                  aria-label={copy.sections}
+                  onChange={(event) => {
+                    const next = event.target.value;
+                    setSection(isSection(next) ? next : "all");
+                  }}
+                  className="min-h-11 appearance-none bg-transparent pr-5 text-sm text-ink"
+                >
+                  <option value="all">{copy.sections}</option>
+                  {THEMES.map((theme) => (
+                    <option key={theme} value={theme}>
+                      {copy.themes[theme]}
+                    </option>
+                  ))}
+                </select>
+                <span className="pointer-events-none absolute right-0 text-xs" aria-hidden="true">
+                  ▾
+                </span>
+              </label>
+            </nav>
           </div>
-
-          <Link
-            to="/read/$storyId"
-            params={{ storyId: latest.id }}
-            className="min-h-72 border-b border-line py-6 md:col-span-3 md:row-span-2 md:border-r md:pr-8"
-          >
-            <p className="text-pretty leading-relaxed">{cut(latest.locales[lang].body, 2)}</p>
-          </Link>
-
-          {beside.map((story) => (
-            <Card key={story.id} story={story} lang={lang} />
-          ))}
-          {after.map((story, index) => (
-            <Card key={story.id} story={story} lang={lang} wide={index % 2 === 0} />
-          ))}
-        </div>
+          <div className="border-t border-line" />
+          <div className="grid grid-cols-1 border-l border-line md:grid-cols-2">
+            <Link
+              to="/read/$storyId"
+              params={{ storyId: latest.id }}
+              className="flex flex-col gap-4 border-r border-b border-line p-5 md:row-span-2 md:p-8"
+            >
+              <div className="flex aspect-[16/9] items-center justify-center bg-ink text-paper" aria-hidden="true">
+                <span className="relative inline-flex h-16 w-16 items-center justify-center">
+                  <span className="absolute h-16 w-px bg-paper" />
+                  <span className="size-3 rounded-full bg-paper" />
+                </span>
+              </div>
+              <h2 className="text-3xl md:text-4xl">{storyTitle(latest, lang)}</h2>
+              <p className="font-body text-pretty leading-relaxed">{cut(latest.locales[lang].body, 2)}</p>
+            </Link>
+            {right.map((story) => (
+              <Card key={story.id} story={story} lang={lang} />
+            ))}
+            {bottom.map((story) => (
+              <Card key={story.id} story={story} lang={lang} />
+            ))}
+          </div>
+        </>
       )}
 
-      <ul className="mt-10 flex flex-col">
+      <ul className="mt-10 flex flex-col px-5 md:px-8">
         {THEMES.map((theme) => {
           const on = section === theme;
           return (
@@ -128,21 +144,17 @@ function Atlas() {
   );
 }
 
-function Card({ story, lang, wide = false }: { story: Story; lang: Lang; wide?: boolean }) {
+function Card({ story, lang }: { story: Story; lang: Lang }) {
   const title = storyTitle(story, lang);
   const excerpt = cut(story.locales[lang].body, 1);
   return (
     <Link
       to="/read/$storyId"
       params={{ storyId: story.id }}
-      className={
-        wide
-          ? "flex flex-col gap-3 border-b border-line py-6 md:col-span-3 md:border-r md:pr-8"
-          : "flex flex-col gap-3 border-b border-line py-6 md:col-span-2 md:pl-8"
-      }
+      className="flex flex-col gap-3 border-r border-b border-line p-5 md:p-8"
     >
       <h2 className="text-2xl">{title}</h2>
-      {excerpt ? <p className="text-pretty text-muted">{excerpt}</p> : null}
+      {excerpt ? <p className="font-body line-clamp-4 text-pretty text-muted">{excerpt}</p> : null}
     </Link>
   );
 }

@@ -2,7 +2,7 @@
 
 @theme {
   --font-display: "Bodoni Moda", "Noto Naskh Arabic", "Times New Roman", serif;
-  --font-body: "Literata", "Noto Naskh Arabic", Georgia, serif;
+  --font-body: "Times New Roman", Times, "Noto Naskh Arabic", serif;
   --color-paper: #f4f4f5;
   --color-sheet: #ffffff;
   --color-ink: #0c0c0c;
