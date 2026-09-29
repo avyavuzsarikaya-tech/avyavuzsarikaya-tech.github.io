@@ -54,11 +54,19 @@ function Atlas({ section }: { section: Theme | "all" }) {
   const all = [...stories].sort((a, b) => b.date.localeCompare(a.date));
   const sorted = all.filter((story) => section === "all" || story.theme === section);
   const latest = sorted[0];
-  const cards = sorted.slice(1, 5);
-  // The grid fills itself: one reading spans the full width, two sit side by side,
-  // and an odd card left on the bottom row stretches across both columns.
+  // Three-by-three grid: the lead fills the top-left four cells, three cards run down
+  // the right and three across the bottom, the corner card belonging to both.
+  const cards = sorted.slice(1, 6);
   const alone = cards.length === 0;
-  const leadSpan = alone ? "col-span-2" : cards.length === 1 ? "" : "row-span-2";
+  const leadSpan = alone ? "col-span-3" : cards.length === 1 ? "col-span-2" : "col-span-2 row-span-2";
+  const bottom = Math.max(0, cards.length - 2);
+  // Fewer than three bottom cards stretch so the row never leaves a hole.
+  const cardSpan = (n: number) => {
+    if (n < 2) return "";
+    if (bottom === 1) return "col-span-3";
+    if (bottom === 2 && n === 2) return "col-span-2";
+    return "";
+  };
 
   if (stories.length === 0) {
     return (
@@ -86,7 +94,7 @@ function Atlas({ section }: { section: Theme | "all" }) {
 
       <div className="grid border-t border-rule lg:grid-cols-[minmax(0,1fr)_20rem]">
         {latest ? (
-          <div className="grid grid-cols-2 self-start">
+          <div className="grid grid-cols-3 self-start">
             <Link
               to="/read/$storyId"
               params={{ storyId: latest.id }}
@@ -110,7 +118,7 @@ function Atlas({ section }: { section: Theme | "all" }) {
               </p>
             </Link>
             {cards.map((story, n) => (
-              <Card key={story.id} story={story} lang={lang} wide={cards.length === 3 && n === 2} />
+              <Card key={story.id} story={story} lang={lang} span={cardSpan(n)} />
             ))}
           </div>
         ) : (
@@ -154,14 +162,14 @@ function Atlas({ section }: { section: Theme | "all" }) {
   );
 }
 
-function Card({ story, lang, wide = false }: { story: Story; lang: Lang; wide?: boolean }) {
+function Card({ story, lang, span = "" }: { story: Story; lang: Lang; span?: string }) {
   const title = storyTitle(story, lang);
   const excerpt = cut(story.locales[lang].body, 1);
   return (
     <Link
       to="/read/$storyId"
       params={{ storyId: story.id }}
-      className={`${wide ? "col-span-2" : ""} flex min-w-0 flex-col gap-2 border-r border-b border-rule p-3 md:gap-3 md:p-8 rtl:border-r-0 rtl:border-l`}
+      className={`${span} flex min-w-0 flex-col gap-2 border-r border-b border-rule p-3 md:gap-3 md:p-8 rtl:border-r-0 rtl:border-l`}
     >
       <Meta story={story} lang={lang} />
       <h2 className="text-base leading-tight md:text-2xl">{title}</h2>

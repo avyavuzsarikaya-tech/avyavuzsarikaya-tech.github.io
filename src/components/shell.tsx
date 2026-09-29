@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useFrameCopy } from "@/lib/frame-copy";
 import { langMeta, useCopy } from "@/lib/i18n";
 import { useLibrary } from "@/lib/library";
@@ -61,6 +61,14 @@ export function Shell({ children, section }: { children: React.ReactNode; sectio
   const meta = langMeta[lang];
   const path = useRouterState({ select: (s) => s.location.pathname });
   const inPanel = path.startsWith("/panel");
+  const bar = useRef<HTMLDivElement | null>(null);
+
+  // On a phone the section row scrolls sideways: bring the open section into view.
+  useEffect(() => {
+    const on = bar.current?.querySelector<HTMLElement>('[data-on="true"]');
+    // "nearest" keeps the page itself still; works for right-to-left Arabic too.
+    on?.scrollIntoView({ inline: "center", block: "nearest" });
+  }, [section, lang]);
 
   useEffect(() => {
     void load();
@@ -96,12 +104,12 @@ export function Shell({ children, section }: { children: React.ReactNode; sectio
 
       <div dir={meta.dir} lang={meta.html} className="flex flex-1 flex-col">
         <nav aria-label={copy.sections} className="section-bar relative border-b border-rule">
-          <div className="no-scrollbar flex gap-5 overflow-x-auto px-5 text-[13px] tracking-wide whitespace-nowrap md:gap-7 md:px-8">
-            <Link to="/" className={barItem(section === "all")}>
+          <div ref={bar} className="no-scrollbar flex gap-5 overflow-x-auto px-5 text-[13px] tracking-wide whitespace-nowrap md:gap-7 md:px-8">
+            <Link to="/" data-on={section === "all"} className={barItem(section === "all")}>
               {copy.home}
             </Link>
             {THEMES.map((theme) => (
-              <Link key={theme} to="/" search={{ s: theme }} className={barItem(section === theme)}>
+              <Link key={theme} to="/" search={{ s: theme }} data-on={section === theme} className={barItem(section === theme)}>
                 {copy.themes[theme]}
               </Link>
             ))}
