@@ -1,4 +1,5 @@
 import type { LocaleCopy, Source, Story } from "@/lib/types";
+import { SAMPLES } from "@/lib/samples";
 
 function loc(title: string, dek: string, region: string, body: string): LocaleCopy {
   return { title, dek, region, body: body.trim(), audio: null };
@@ -457,3 +458,6 @@ export const SEED: Story[] = [
     { tr: trialTr, ar: trialAr, en: trialEn, fr: trialFr, es: trialEs },
   ),
 ];
+
+// Sample readings for testing the layout; delete this line and the import above to remove them.
+SEED.push(...SAMPLES);
