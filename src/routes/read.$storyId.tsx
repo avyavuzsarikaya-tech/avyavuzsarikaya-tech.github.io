@@ -62,16 +62,17 @@ function Reading({ storyId }: { storyId: string }) {
               {locale.dek}
             </p>
           ) : null}
-          <p className="text-sm text-muted">
-            {[locale.region, formatDate(story.date, lang), minutes ? `${minutes} ${copy.min}` : ""]
-              .filter(Boolean)
-              .join(" · ")}
-          </p>
+          <div className="inline-flex w-fit max-w-full flex-col gap-3">
+            <p className="text-sm text-muted">
+              {[locale.region, formatDate(story.date, lang), minutes ? `${minutes} ${copy.min}` : ""]
+                .filter(Boolean)
+                .join(" · ")}
+            </p>
+            {locale.audio ? (
+              <ReadingPlayer clip={locale.audio} listen={copy.listen} pause={copy.pause} />
+            ) : null}
+          </div>
         </header>
-
-        {locale.audio ? (
-          <ReadingPlayer clip={locale.audio} listen={copy.listen} pause={copy.pause} />
-        ) : null}
 
         {written ? (
           <Prose body={locale.body} sourceNums={sourceNums} sourceWord={copy.sourceWord} />
