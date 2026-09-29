@@ -13,8 +13,9 @@ export const Route = createFileRoute("/read/$storyId")({
 
 function ReadingPage() {
   const { storyId } = Route.useParams();
+  const theme = useLibrary((s) => s.stories.find((item) => item.id === storyId)?.theme);
   return (
-    <Shell>
+    <Shell section={theme}>
       <Reading storyId={storyId} />
     </Shell>
   );

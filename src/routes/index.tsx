@@ -1,141 +1,141 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
 import { Shell } from "@/components/shell";
+import { useFrameCopy } from "@/lib/frame-copy";
 import { useCopy } from "@/lib/i18n";
 import { useLibrary } from "@/lib/library";
-import { paragraphs, storyTitle } from "@/lib/text";
-import { THEMES, type Lang, type Story, type Theme } from "@/lib/types";
+import { formatDate, paragraphs, storyTitle } from "@/lib/text";
+import { isTheme, type Lang, type Story, type Theme } from "@/lib/types";
+
+type HomeSearch = { s?: Theme };
 
 export const Route = createFileRoute("/")({
+  validateSearch: (search: Record<string, unknown>): HomeSearch => {
+    const s = typeof search.s === "string" && isTheme(search.s) ? search.s : undefined;
+    return s ? { s } : {};
+  },
   component: Home,
 });
 
 function Home() {
+  const { s } = Route.useSearch();
   return (
-    <Shell>
-      <Atlas />
+    <Shell section={s ?? "all"}>
+      <Atlas section={s ?? "all"} />
     </Shell>
   );
 }
 
-function isSection(value: string): value is Theme | "all" {
-  return value === "all" || (THEMES as readonly string[]).includes(value);
-}
-
+/** First paragraphs as plain text: source markers like [1] are dropped for the cards. */
 function cut(body: string, count: number): string {
-  return paragraphs(body).slice(0, count).join(" ");
+  return paragraphs(body)
+    .slice(0, count)
+    .join(" ")
+    .replace(/\s*\[\d+\]/g, "")
+    .trim();
 }
 
-function Atlas() {
+function Meta({ story, lang }: { story: Story; lang: Lang }) {
+  const copy = useCopy(lang);
+  return (
+    <p className="text-xs uppercase tracking-widest text-pine">
+      {copy.themes[story.theme]}
+      <span className="hidden text-muted normal-case tracking-normal md:inline"> · {formatDate(story.date, lang)}</span>
+    </p>
+  );
+}
+
+function Atlas({ section }: { section: Theme | "all" }) {
   const lang = useLibrary((s) => s.lang);
   const stories = useLibrary((s) => s.stories);
   const restoreSeed = useLibrary((s) => s.restoreSeed);
   const copy = useCopy(lang);
-  const [section, setSection] = useState<Theme | "all">("all");
+  const frame = useFrameCopy(lang);
 
-  const sorted = [...stories]
-    .filter((story) => section === "all" || story.theme === section)
-    .sort((a, b) => b.date.localeCompare(a.date));
+  const all = [...stories].sort((a, b) => b.date.localeCompare(a.date));
+  const sorted = all.filter((story) => section === "all" || story.theme === section);
   const latest = sorted[0];
   const right = sorted.slice(1, 3);
   const bottom = sorted.slice(3, 5);
 
+  if (stories.length === 0) {
+    return (
+      <main className="flex flex-col items-start gap-4 px-5 py-10 md:px-8">
+        <p>{copy.emptyAtlas}</p>
+        <button
+          type="button"
+          onClick={() => void restoreSeed()}
+          className="inline-flex min-h-11 items-center bg-pine px-4 text-paper"
+        >
+          {copy.restore}
+        </button>
+      </main>
+    );
+  }
+
   return (
-    <main className="pb-16">
-      {stories.length === 0 ? (
-        <div className="flex flex-col items-start gap-4 px-5 py-10 md:px-8">
-          <p>{copy.emptyAtlas}</p>
-          <button
-            type="button"
-            onClick={() => void restoreSeed()}
-            className="inline-flex min-h-11 items-center bg-pine px-4 text-paper"
-          >
-            {copy.restore}
-          </button>
-        </div>
-      ) : !latest ? (
-        <p className="px-5 py-10 text-muted md:px-8">{copy.emptyAtlas}</p>
-      ) : (
-        <>
-          <div className="flex items-end justify-between gap-4 px-3 py-4 md:px-8 md:py-8">
-            <div className="min-w-0 flex-1">
-              <p className="text-xs uppercase tracking-widest text-muted">{copy.readings}</p>
-              <h1 className="mt-1 truncate text-lg leading-tight">
-                <Link to="/read/$storyId" params={{ storyId: latest.id }}>
-                  01 {storyTitle(latest, lang)}
-                </Link>
-              </h1>
-            </div>
-            <nav className="flex shrink-0 items-center gap-4 text-sm">
-              <Link to="/" className="inline-flex min-h-11 items-center">
-                {copy.home}
-              </Link>
-              <label className="relative inline-flex items-center">
-                <select
-                  value={section}
-                  aria-label={copy.sections}
-                  onChange={(event) => {
-                    const next = event.target.value;
-                    setSection(isSection(next) ? next : "all");
-                  }}
-                  className="min-h-11 max-w-28 appearance-none bg-transparent pr-5 text-sm text-ink md:max-w-none"
-                >
-                  <option value="all">{copy.sections}</option>
-                  {THEMES.map((theme) => (
-                    <option key={theme} value={theme}>
-                      {copy.themes[theme]}
-                    </option>
-                  ))}
-                </select>
-                <span className="pointer-events-none absolute right-0 text-xs" aria-hidden="true">
-                  ▾
-                </span>
-              </label>
-            </nav>
-          </div>
-          <div className="border-t border-rule" />
-          <div className="grid grid-cols-2 border-l border-rule">
+    <main>
+      <div className="px-5 py-6 md:px-8 md:py-8">
+        <p className="text-xs uppercase tracking-widest text-muted">{copy.readings}</p>
+        <h1 className="mt-1 text-2xl leading-tight md:text-3xl">
+          {section === "all" ? copy.hero : copy.themes[section]}
+        </h1>
+      </div>
+
+      <div className="grid border-t border-rule lg:grid-cols-[minmax(0,1fr)_20rem]">
+        {latest ? (
+          <div className="grid grid-cols-2 self-start">
             <Link
               to="/read/$storyId"
               params={{ storyId: latest.id }}
-              className="row-span-2 flex min-w-0 flex-col gap-2 border-r border-b border-rule p-3 md:gap-4 md:p-8"
+              className="row-span-2 flex min-w-0 flex-col gap-2 border-r border-b border-rule p-3 md:gap-4 md:p-8 rtl:border-r-0 rtl:border-l"
             >
+              <Meta story={latest} lang={lang} />
               <h2 className="text-xl leading-tight md:text-4xl">{storyTitle(latest, lang)}</h2>
-              <p className="font-body line-clamp-8 text-pretty text-sm leading-snug md:line-clamp-4 md:text-base md:leading-relaxed">
+              <p className="font-body line-clamp-8 text-pretty text-sm leading-snug md:line-clamp-6 md:text-base md:leading-relaxed">
                 {cut(latest.locales[lang].body, 2)}
               </p>
             </Link>
-            {right.map((story) => (
-              <Card key={story.id} story={story} lang={lang} />
-            ))}
-            {bottom.map((story) => (
+            {[...right, ...bottom].map((story) => (
               <Card key={story.id} story={story} lang={lang} />
             ))}
           </div>
-        </>
-      )}
+        ) : (
+          <p className="px-5 py-10 text-muted md:px-8">{frame.emptySection}</p>
+        )}
 
-      <ul className="mt-10 flex flex-col px-5 md:px-8">
-        {THEMES.map((theme) => {
-          const on = section === theme;
-          return (
-            <li key={theme}>
-              <button
-                type="button"
-                onClick={() => setSection(on ? "all" : theme)}
-                className={
-                  on
-                    ? "inline-flex min-h-11 items-center gap-3 border-b border-ink text-left"
-                    : "inline-flex min-h-11 items-center gap-3 text-left"
-                }
-              >
-                <span aria-hidden="true">•</span>
-                {copy.themes[theme]}
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+        <aside className="flex flex-col gap-10 px-5 py-8 md:px-8">
+          <section aria-labelledby="index-title">
+            <h2 id="index-title" className="text-xs font-normal uppercase tracking-widest text-muted" style={{ fontFamily: "inherit" }}>
+              {frame.index}
+            </h2>
+            <ol className="mt-3 flex flex-col">
+              {all.map((story, n) => (
+                <li key={story.id} className="border-b border-line">
+                  <Link
+                    to="/read/$storyId"
+                    params={{ storyId: story.id }}
+                    className="grid grid-cols-[2rem_1fr] gap-2 py-3"
+                  >
+                    <span className="tabular-nums text-sm text-pine">{String(n + 1).padStart(2, "0")}</span>
+                    <span className="min-w-0">
+                      <span className="block leading-snug">{storyTitle(story, lang)}</span>
+                      <span className="mt-1 block text-xs text-muted">{formatDate(story.date, lang)}</span>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </section>
+
+          <section aria-labelledby="about-title">
+            <h2 id="about-title" className="text-xs font-normal uppercase tracking-widest text-muted" style={{ fontFamily: "inherit" }}>
+              {frame.about}
+            </h2>
+            <p className="mt-3 text-pretty text-sm leading-relaxed">{copy.manifesto}</p>
+            <p className="mt-3 text-pretty text-sm leading-relaxed text-muted">{copy.listenRule}</p>
+          </section>
+        </aside>
+      </div>
     </main>
   );
 }
@@ -147,8 +147,9 @@ function Card({ story, lang }: { story: Story; lang: Lang }) {
     <Link
       to="/read/$storyId"
       params={{ storyId: story.id }}
-      className="flex min-w-0 flex-col gap-2 border-r border-b border-rule p-3 md:gap-3 md:p-8"
+      className="flex min-w-0 flex-col gap-2 border-r border-b border-rule p-3 md:gap-3 md:p-8 rtl:border-r-0 rtl:border-l"
     >
+      <Meta story={story} lang={lang} />
       <h2 className="text-base leading-tight md:text-2xl">{title}</h2>
       {excerpt ? (
         <p className="font-body line-clamp-3 text-pretty text-[13px] leading-snug text-muted md:text-base">{excerpt}</p>
