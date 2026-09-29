@@ -95,7 +95,7 @@ export function Shell({
       : "inline-flex min-h-11 shrink-0 items-center border-b-2 border-transparent text-muted hover:text-ink";
 
   return (
-    <div className="flex min-h-screen flex-col bg-paper text-ink">
+    <div className="flex min-h-dvh flex-col bg-paper text-ink">
       <header
         dir="ltr"
         className="flex items-center justify-between gap-4 bg-ink px-5 py-3 text-paper md:px-8"
@@ -143,12 +143,18 @@ export function Shell({
           </div>
         </nav>
 
-        <div className="flex-1">
+        <div>
           {ready ? children : <p className="px-5 py-16 text-muted md:px-8">{copy.loading}</p>}
         </div>
 
-        <footer className="mt-12 bg-ink px-5 py-10 text-paper md:px-8">
-          <div className="grid gap-8 md:grid-cols-3">
+        <div aria-hidden="true" className="flex items-center gap-3 px-5 pt-12 pb-10 md:px-8">
+          <span className="h-px flex-1 bg-rule" />
+          <span className="size-1.5 rounded-full bg-ink" />
+          <span className="h-px flex-1 bg-rule" />
+        </div>
+
+        <footer className="flex flex-1 flex-col bg-ink px-5 py-10 text-paper md:px-8">
+          <div className="mb-10 grid gap-8 md:grid-cols-3">
             <div className="flex flex-col gap-3">
               <Link
                 to="/"
@@ -159,11 +165,10 @@ export function Shell({
                 <span className="font-display text-lg tracking-widest">ORBIS</span>
               </Link>
               <p className="text-sm text-mist">{copy.colophon}</p>
-              <p className="text-sm text-mist">{frame.principle}</p>
             </div>
             <div>
               <p className="text-xs uppercase tracking-widest text-mist">{copy.sections}</p>
-              <ul className="mt-2 grid grid-cols-2 gap-x-6">
+              <ul className="mt-2 grid w-fit grid-cols-2 gap-x-12">
                 {THEMES.map((theme) => (
                   <li key={theme}>
                     <Link
@@ -202,7 +207,7 @@ export function Shell({
               </ul>
             </div>
           </div>
-          <p className="mt-10 border-t border-muted pt-6 text-xs text-mist">
+          <p className="mt-auto border-t border-muted pt-6 text-xs text-mist">
             © {new Date().getFullYear()} Orbis. {frame.rights}
           </p>
         </footer>

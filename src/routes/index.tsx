@@ -59,21 +59,23 @@ function Atlas({ section }: { section: Theme | "all" }) {
   const latest = sorted[0];
   // Three-by-three grid: the lead fills the top-left four cells, three cards run down
   // the right and three across the bottom, the corner card belonging to both.
-  const cards = sorted.slice(1, 6);
+  // Up to one more full row of three follows underneath.
+  const cards = sorted.slice(1, 9);
   const alone = cards.length === 0;
   const leadSpan = alone
     ? "col-span-3"
     : cards.length === 1
       ? "col-span-2"
       : "col-span-2 row-span-2";
-  const bottom = Math.max(0, cards.length - 2);
   // The index lists only stories the grid does not already show.
-  const rest = section === "all" ? all.slice(6) : all;
-  // Fewer than three bottom cards stretch so the row never leaves a hole.
+  const rest = section === "all" ? all.slice(9) : all;
+  // A row with fewer than three cards stretches so it never leaves a hole.
   const cardSpan = (n: number) => {
     if (n < 2) return "";
-    if (bottom === 1) return "col-span-3";
-    if (bottom === 2 && n === 2) return "col-span-2";
+    const row = Math.floor((n - 2) / 3);
+    const inRow = Math.min(3, cards.length - 2 - row * 3);
+    if (inRow === 1) return "col-span-3";
+    if (inRow === 2 && (n - 2) % 3 === 0) return "col-span-2";
     return "";
   };
 
@@ -109,7 +111,7 @@ function Atlas({ section }: { section: Theme | "all" }) {
             <Link
               to="/read/$storyId"
               params={{ storyId: latest.id }}
-              className={`${leadSpan} flex min-w-0 flex-col gap-2 border-r border-b border-rule p-3 md:gap-4 md:p-8 rtl:border-r-0 rtl:border-l`}
+              className={`${leadSpan} flex min-w-0 flex-col gap-2 border-r border-b border-rule p-3 md:gap-3 md:px-8 md:py-6 rtl:border-r-0 rtl:border-l`}
             >
               <Meta story={latest} lang={lang} />
               <h2
@@ -121,20 +123,33 @@ function Atlas({ section }: { section: Theme | "all" }) {
               >
                 {storyTitle(latest, lang)}
               </h2>
-              {alone && latest.locales[lang].dek ? (
-                <p className="max-w-3xl text-pretty text-lg leading-snug text-muted md:text-xl">
+              {latest.locales[lang].dek ? (
+                <p
+                  className={
+                    alone
+                      ? "max-w-3xl text-pretty text-lg leading-snug text-muted md:text-xl"
+                      : "hidden text-pretty text-lg leading-snug text-muted lg:block lg:text-xl"
+                  }
+                >
                   {latest.locales[lang].dek}
                 </p>
               ) : null}
-              <p
-                className={
-                  alone
-                    ? "font-body line-clamp-[10] max-w-3xl text-pretty text-base leading-relaxed md:line-clamp-none md:text-lg"
-                    : "font-body line-clamp-8 text-pretty text-sm leading-snug md:line-clamp-6 md:text-base md:leading-relaxed"
-                }
-              >
-                {cut(latest.locales[lang].body, alone ? 3 : 2)}
-              </p>
+              {alone ? (
+                <p className="font-body line-clamp-[10] max-w-3xl text-pretty text-base leading-relaxed md:line-clamp-none md:text-lg">
+                  {cut(latest.locales[lang].body, 3)}
+                </p>
+              ) : (
+                <div className="relative md:min-h-24 md:flex-1">
+                  <p className="font-body line-clamp-8 text-pretty text-sm leading-snug md:absolute md:inset-0 md:line-clamp-none md:overflow-hidden md:text-base md:leading-relaxed">
+                    {cut(latest.locales[lang].body, 6)}
+                  </p>
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-10 bg-gradient-to-t from-paper to-transparent md:block"
+                  />
+                </div>
+              )}
+              <EndMark />
             </Link>
             {cards.map((story, n) => (
               <Card key={story.id} story={story} lang={lang} span={cardSpan(n)} />
@@ -185,6 +200,16 @@ function Atlas({ section }: { section: Theme | "all" }) {
   );
 }
 
+function EndMark() {
+  return (
+    <span aria-hidden="true" className="mx-auto mt-1 flex w-16 items-center gap-2 md:w-24 md:gap-3">
+      <span className="h-px flex-1 bg-rule" />
+      <span className="size-1 rounded-full bg-ink md:size-1.5" />
+      <span className="h-px flex-1 bg-rule" />
+    </span>
+  );
+}
+
 function Card({ story, lang, span = "" }: { story: Story; lang: Lang; span?: string }) {
   const title = storyTitle(story, lang);
   const excerpt = cut(story.locales[lang].body, 1);
@@ -192,15 +217,16 @@ function Card({ story, lang, span = "" }: { story: Story; lang: Lang; span?: str
     <Link
       to="/read/$storyId"
       params={{ storyId: story.id }}
-      className={`${span} flex min-w-0 flex-col gap-2 border-r border-b border-rule p-3 md:gap-3 md:p-8 rtl:border-r-0 rtl:border-l`}
+      className={`${span} flex min-w-0 flex-col gap-2 border-r border-b border-rule p-3 md:gap-2 md:px-8 md:py-5 rtl:border-r-0 rtl:border-l`}
     >
       <Meta story={story} lang={lang} />
-      <h2 className="text-base leading-tight md:text-2xl">{title}</h2>
+      <h2 className="text-base leading-tight md:text-xl lg:text-2xl">{title}</h2>
       {excerpt ? (
-        <p className="font-body line-clamp-3 text-pretty text-[13px] leading-snug text-muted md:text-base">
+        <p className="font-body line-clamp-3 text-pretty text-[13px] leading-snug text-muted md:line-clamp-2 md:text-base">
           {excerpt}
         </p>
       ) : null}
+      <EndMark />
     </Link>
   );
 }
