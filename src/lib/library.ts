@@ -106,7 +106,11 @@ export const useLibrary = create<LibraryState>((set, get) => ({
     if (get().ready || get().loading) return;
     set({ loading: true });
     const envelope = await readEnvelope();
-    set({ stories: envelope.stories, lang: readLang(), ready: true, loading: false });
+    const have = new Set(envelope.stories.map((item) => item.id));
+    const missing = SEED.filter((item) => !have.has(item.id)).map((item) => structuredClone(item));
+    const stories = missing.length ? [...envelope.stories, ...missing] : envelope.stories;
+    if (missing.length) await writeEnvelope(stories);
+    set({ stories, lang: readLang(), ready: true, loading: false });
   },
   setLang: (lang) => {
     set({ lang });

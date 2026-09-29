@@ -57,16 +57,16 @@ function Atlas() {
         <p className="px-5 py-10 text-muted md:px-8">{copy.emptyAtlas}</p>
       ) : (
         <>
-          <div className="flex items-end justify-between gap-6 px-5 py-8 md:px-8">
-            <div className="min-w-0">
+          <div className="flex items-end justify-between gap-4 px-3 py-4 md:px-8 md:py-8">
+            <div className="min-w-0 flex-1">
               <p className="text-xs uppercase tracking-widest text-muted">{copy.readings}</p>
-              <h1 className="mt-3 text-3xl md:text-5xl">
+              <h1 className="mt-1 truncate text-lg leading-tight">
                 <Link to="/read/$storyId" params={{ storyId: latest.id }}>
                   01 {storyTitle(latest, lang)}
                 </Link>
               </h1>
             </div>
-            <nav className="flex shrink-0 items-center gap-6 text-sm">
+            <nav className="flex shrink-0 items-center gap-4 text-sm">
               <Link to="/" className="inline-flex min-h-11 items-center">
                 {copy.home}
               </Link>
@@ -78,7 +78,7 @@ function Atlas() {
                     const next = event.target.value;
                     setSection(isSection(next) ? next : "all");
                   }}
-                  className="min-h-11 appearance-none bg-transparent pr-5 text-sm text-ink"
+                  className="min-h-11 max-w-28 appearance-none bg-transparent pr-5 text-sm text-ink md:max-w-none"
                 >
                   <option value="all">{copy.sections}</option>
                   {THEMES.map((theme) => (
@@ -93,21 +93,17 @@ function Atlas() {
               </label>
             </nav>
           </div>
-          <div className="border-t border-line" />
-          <div className="grid grid-cols-1 border-l border-line md:grid-cols-2">
+          <div className="border-t border-rule" />
+          <div className="grid grid-cols-2 border-l border-rule">
             <Link
               to="/read/$storyId"
               params={{ storyId: latest.id }}
-              className="flex flex-col gap-4 border-r border-b border-line p-5 md:row-span-2 md:p-8"
+              className="row-span-2 flex min-w-0 flex-col gap-2 border-r border-b border-rule p-3 md:gap-4 md:p-8"
             >
-              <div className="flex aspect-[16/9] items-center justify-center bg-ink text-paper" aria-hidden="true">
-                <span className="relative inline-flex h-16 w-16 items-center justify-center">
-                  <span className="absolute h-16 w-px bg-paper" />
-                  <span className="size-3 rounded-full bg-paper" />
-                </span>
-              </div>
-              <h2 className="text-3xl md:text-4xl">{storyTitle(latest, lang)}</h2>
-              <p className="font-body text-pretty leading-relaxed">{cut(latest.locales[lang].body, 2)}</p>
+              <h2 className="text-xl leading-tight md:text-4xl">{storyTitle(latest, lang)}</h2>
+              <p className="font-body line-clamp-8 text-pretty text-sm leading-snug md:line-clamp-4 md:text-base md:leading-relaxed">
+                {cut(latest.locales[lang].body, 2)}
+              </p>
             </Link>
             {right.map((story) => (
               <Card key={story.id} story={story} lang={lang} />
@@ -151,10 +147,12 @@ function Card({ story, lang }: { story: Story; lang: Lang }) {
     <Link
       to="/read/$storyId"
       params={{ storyId: story.id }}
-      className="flex flex-col gap-3 border-r border-b border-line p-5 md:p-8"
+      className="flex min-w-0 flex-col gap-2 border-r border-b border-rule p-3 md:gap-3 md:p-8"
     >
-      <h2 className="text-2xl">{title}</h2>
-      {excerpt ? <p className="font-body line-clamp-4 text-pretty text-muted">{excerpt}</p> : null}
+      <h2 className="text-base leading-tight md:text-2xl">{title}</h2>
+      {excerpt ? (
+        <p className="font-body line-clamp-3 text-pretty text-[13px] leading-snug text-muted md:text-base">{excerpt}</p>
+      ) : null}
     </Link>
   );
 }
