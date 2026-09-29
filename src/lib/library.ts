@@ -6,7 +6,15 @@ const DB_NAME = "orbis";
 const DB_STORE = "kv";
 const KEY = "stories";
 
-type Envelope = { stories: Story[] };
+type Envelope = { stories: Story[]; seed?: string };
+
+/** Fingerprint of the published stories: a saved copy made from older ones is replaced. */
+const SEED_STAMP = (() => {
+  const text = JSON.stringify(SEED);
+  let h = 5381;
+  for (let i = 0; i < text.length; i++) h = ((h << 5) + h + text.charCodeAt(i)) | 0;
+  return `${text.length}-${(h >>> 0).toString(36)}`;
+})();
 
 type LibraryState = {
   ready: boolean;
@@ -62,14 +70,14 @@ async function readEnvelope(): Promise<Envelope> {
   if (memory) return memory;
   try {
     const stored = await idbGet();
-    if (stored && Array.isArray(stored.stories)) {
+    if (stored && Array.isArray(stored.stories) && stored.seed === SEED_STAMP) {
       memory = stored;
       return stored;
     }
   } catch {
     /* session memory below */
   }
-  memory = { stories: structuredClone(SEED) };
+  memory = { stories: structuredClone(SEED), seed: SEED_STAMP };
   try {
     await idbSet(memory);
   } catch {
@@ -79,7 +87,7 @@ async function readEnvelope(): Promise<Envelope> {
 }
 
 async function writeEnvelope(stories: Story[]) {
-  memory = { stories };
+  memory = { stories, seed: SEED_STAMP };
   try {
     await idbSet(memory);
   } catch {

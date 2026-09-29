@@ -73,7 +73,7 @@ export function ReadingPlayer({
         type="button"
         onClick={() => void toggle()}
         aria-label={playing ? pause : listen}
-        className="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-pine text-paper"
+        className="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-ink text-paper"
       >
         {playing ? <Pause className="size-5" aria-hidden="true" /> : <Play className="size-5" aria-hidden="true" />}
       </button>
