@@ -1,0 +1,1 @@
+import{m as e}from"./types-rsefHmAW.js";import{t}from"./shell-EXCsLG99.js";import{a as n}from"./index-CtDB8xOz.js";var r=e();function i(){return(0,r.jsx)(t,{children:(0,r.jsx)(n,{})})}export{i as component};
