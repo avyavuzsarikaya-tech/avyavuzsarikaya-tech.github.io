@@ -1,7 +1,7 @@
 export const LANGS = ["tr", "ar", "en", "fr", "es"] as const;
 export type Lang = (typeof LANGS)[number];
 
-export const THEMES = ["climate", "cities", "trade", "knowledge"] as const;
+export const THEMES = ["climate", "cities", "trade", "knowledge", "research"] as const;
 export type Theme = (typeof THEMES)[number];
 
 export type AudioClip = {

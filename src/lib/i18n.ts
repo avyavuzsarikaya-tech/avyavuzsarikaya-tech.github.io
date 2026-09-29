@@ -19,6 +19,7 @@ export type Copy = {
   manifesto: string;
   listenRule: string;
   readings: string;
+  homeSections: string;
   min: string;
   listen: string;
   pause: string;
@@ -82,6 +83,7 @@ const copy: Record<Lang, Copy> = {
     listenRule:
       "A listen control appears only after a recording has been filed for the language you are reading.",
     readings: "Readings",
+    homeSections: "Home sections",
     min: "min",
     listen: "Listen",
     pause: "Pause",
@@ -95,10 +97,11 @@ const copy: Record<Lang, Copy> = {
     loading: "Opening the atlas",
     colophon: "Orbis files sourced readings. The chain of documents sits at the foot of every text.",
     themes: {
-      climate: "Climate",
-      cities: "Cities",
-      trade: "Trade",
-      knowledge: "Record",
+      climate: "Climate — Environment",
+      cities: "Politics — Economy",
+      trade: "Science — Technology",
+      knowledge: "Culture — Health",
+      research: "Research",
     },
     newReading: "New reading",
     restore: "Restore the opening readings",
@@ -149,6 +152,7 @@ const copy: Record<Lang, Copy> = {
     listenRule:
       "Dinle düğmesi, yalnızca okuduğunuz dil için bir ses kaydı yüklendiyse görünür.",
     readings: "Okumalar",
+    homeSections: "Ana bölümler",
     min: "dk",
     listen: "Dinle",
     pause: "Durdur",
@@ -162,10 +166,11 @@ const copy: Record<Lang, Copy> = {
     loading: "Atlas açılıyor",
     colophon: "Orbis kaynaklı okumalar tutar. Belge zinciri her metnin dibindedir.",
     themes: {
-      climate: "İklim",
-      cities: "Kentler",
-      trade: "Ticaret",
-      knowledge: "Kayıt",
+      climate: "İklim — Çevre",
+      cities: "Politika — Ekonomi",
+      trade: "Bilim — Teknoloji",
+      knowledge: "Kültür — Sağlık",
+      research: "Araştırma Yazıları",
     },
     newReading: "Yeni okuma",
     restore: "Açılış okumalarını geri getir",
@@ -216,6 +221,7 @@ const copy: Record<Lang, Copy> = {
       "أوربيس أطلس قراءة. يُعاد كتابة كل نص بخمس لغات ويُربط بالوثائق العامة التي يستند إليها. لا مكتب أخبار عاجلة هنا، ولا صفحة رأي.",
     listenRule: "يظهر زر الاستماع فقط بعد رفع تسجيل للغة التي تقرأ بها.",
     readings: "قراءات",
+    homeSections: "أقسام الصفحة",
     min: "د",
     listen: "استمع",
     pause: "إيقاف",
@@ -229,10 +235,11 @@ const copy: Record<Lang, Copy> = {
     loading: "يُفتح الأطلس",
     colophon: "أوربيس يحفظ قراءات موثّقة. سلسلة الوثائق في ذيل كل نص.",
     themes: {
-      climate: "المناخ",
-      cities: "المدن",
-      trade: "التجارة",
-      knowledge: "السجل",
+      climate: "المناخ — البيئة",
+      cities: "السياسة — الاقتصاد",
+      trade: "العلم — التقنية",
+      knowledge: "الثقافة — الصحة",
+      research: "كتابات بحثية",
     },
     newReading: "قراءة جديدة",
     restore: "استعد قراءات الافتتاح",
@@ -284,6 +291,7 @@ const copy: Record<Lang, Copy> = {
     listenRule:
       "Le bouton d’écoute n’apparaît qu’une fois un enregistrement déposé pour la langue que vous lisez.",
     readings: "Lectures",
+    homeSections: "Sections",
     min: "min",
     listen: "Écouter",
     pause: "Pause",
@@ -297,10 +305,11 @@ const copy: Record<Lang, Copy> = {
     loading: "Ouverture de l’atlas",
     colophon: "Orbis tient des lectures sourcées. La chaîne des documents est au pied de chaque texte.",
     themes: {
-      climate: "Climat",
-      cities: "Villes",
-      trade: "Échanges",
-      knowledge: "Registre",
+      climate: "Climat — Environnement",
+      cities: "Politique — Économie",
+      trade: "Science — Technologie",
+      knowledge: "Culture — Santé",
+      research: "Écrits de recherche",
     },
     newReading: "Nouvelle lecture",
     restore: "Rétablir les lectures d’ouverture",
@@ -354,6 +363,7 @@ const copy: Record<Lang, Copy> = {
     listenRule:
       "El botón de escuchar solo aparece cuando hay una grabación cargada para la lengua que estás leyendo.",
     readings: "Lecturas",
+    homeSections: "Secciones",
     min: "min",
     listen: "Escuchar",
     pause: "Pausa",
@@ -367,10 +377,11 @@ const copy: Record<Lang, Copy> = {
     loading: "Abriendo el atlas",
     colophon: "Orbis guarda lecturas con fuente. La cadena de documentos queda al pie de cada texto.",
     themes: {
-      climate: "Clima",
-      cities: "Ciudades",
-      trade: "Comercio",
-      knowledge: "Registro",
+      climate: "Clima — Medio ambiente",
+      cities: "Política — Economía",
+      trade: "Ciencia — Tecnología",
+      knowledge: "Cultura — Salud",
+      research: "Escritos de investigación",
     },
     newReading: "Nueva lectura",
     restore: "Restaurar las lecturas de apertura",
