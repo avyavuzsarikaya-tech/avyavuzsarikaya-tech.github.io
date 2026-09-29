@@ -143,7 +143,7 @@ export function Shell({
           </div>
         </nav>
 
-        <div>
+        <div className="flex-1">
           {ready ? children : <p className="px-5 py-16 text-muted md:px-8">{copy.loading}</p>}
         </div>
 
@@ -153,8 +153,8 @@ export function Shell({
           <span className="h-px flex-1 bg-rule" />
         </div>
 
-        <footer className="flex flex-1 flex-col bg-ink px-5 py-10 text-paper md:px-8">
-          <div className="mb-10 grid gap-8 md:grid-cols-3">
+        <footer className="bg-ink px-5 py-10 text-paper md:px-8">
+          <div className="grid gap-8 md:grid-cols-3">
             <div className="flex flex-col gap-3">
               <Link
                 to="/"
@@ -207,7 +207,7 @@ export function Shell({
               </ul>
             </div>
           </div>
-          <p className="mt-auto border-t border-muted pt-6 text-xs text-mist">
+          <p className="mt-10 border-t border-muted pt-6 text-xs text-mist">
             © {new Date().getFullYear()} Orbis. {frame.rights}
           </p>
         </footer>

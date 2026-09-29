@@ -226,7 +226,6 @@ function Card({ story, lang, span = "" }: { story: Story; lang: Lang; span?: str
           {excerpt}
         </p>
       ) : null}
-      <EndMark />
     </Link>
   );
 }
