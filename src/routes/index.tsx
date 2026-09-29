@@ -39,7 +39,10 @@ function Meta({ story, lang }: { story: Story; lang: Lang }) {
   return (
     <p className="text-xs uppercase tracking-widest text-pine">
       {copy.themes[story.theme]}
-      <span className="hidden text-muted normal-case tracking-normal md:inline"> · {formatDate(story.date, lang)}</span>
+      <span className="hidden text-muted normal-case tracking-normal md:inline">
+        {" "}
+        · {formatDate(story.date, lang)}
+      </span>
     </p>
   );
 }
@@ -58,8 +61,17 @@ function Atlas({ section }: { section: Theme | "all" }) {
   // the right and three across the bottom, the corner card belonging to both.
   const cards = sorted.slice(1, 6);
   const alone = cards.length === 0;
-  const leadSpan = alone ? "col-span-3" : cards.length === 1 ? "col-span-2" : "col-span-2 row-span-2";
-  const bottom = Math.max(0, cards.length - 2);
+  const leadSpan = alone
+    ? "col-span-3"
+    : cards.length === 1
+      ? "col-span-2"
+      : "col-span-2 row-span-2";
+  // On the home page a missing bottom card is replaced by the About box, so the
+  // bottom row always shows three boxes and the corner story stays in the corner.
+  const fill = section === "all" && cards.length === 4;
+  const bottom = fill ? 3 : Math.max(0, cards.length - 2);
+  // The index lists only stories the grid does not already show.
+  const rest = section === "all" ? all.slice(6) : all;
   // Fewer than three bottom cards stretch so the row never leaves a hole.
   const cardSpan = (n: number) => {
     if (n < 2) return "";
@@ -101,11 +113,19 @@ function Atlas({ section }: { section: Theme | "all" }) {
               className={`${leadSpan} flex min-w-0 flex-col gap-2 border-r border-b border-rule p-3 md:gap-4 md:p-8 rtl:border-r-0 rtl:border-l`}
             >
               <Meta story={latest} lang={lang} />
-              <h2 className={alone ? "max-w-3xl text-3xl leading-tight md:text-5xl" : "text-xl leading-tight md:text-4xl"}>
+              <h2
+                className={
+                  alone
+                    ? "max-w-3xl text-3xl leading-tight md:text-5xl"
+                    : "text-xl leading-tight md:text-4xl"
+                }
+              >
                 {storyTitle(latest, lang)}
               </h2>
               {alone && latest.locales[lang].dek ? (
-                <p className="max-w-3xl text-pretty text-lg leading-snug text-muted md:text-xl">{latest.locales[lang].dek}</p>
+                <p className="max-w-3xl text-pretty text-lg leading-snug text-muted md:text-xl">
+                  {latest.locales[lang].dek}
+                </p>
               ) : null}
               <p
                 className={
@@ -117,46 +137,69 @@ function Atlas({ section }: { section: Theme | "all" }) {
                 {cut(latest.locales[lang].body, alone ? 3 : 2)}
               </p>
             </Link>
-            {cards.map((story, n) => (
-              <Card key={story.id} story={story} lang={lang} span={cardSpan(n)} />
-            ))}
+            {cards.map((story, n) => [
+              fill && n === 3 ? (
+                <About key="about" text={copy.manifesto} title={frame.about} />
+              ) : null,
+              <Card key={story.id} story={story} lang={lang} span={fill ? "" : cardSpan(n)} />,
+            ])}
           </div>
         ) : (
           <p className="px-5 py-10 text-muted md:px-8">{frame.emptySection}</p>
         )}
 
-        <aside className="flex flex-col gap-10 px-5 py-8 md:px-8">
-          <section aria-labelledby="index-title">
-            <h2 id="index-title" className="text-xs font-normal uppercase tracking-widest text-muted" style={{ fontFamily: "inherit" }}>
-              {frame.index}
-            </h2>
-            <ol className="mt-3 flex flex-col">
-              {all.map((story, n) => (
-                <li key={story.id} className="border-b border-line">
-                  <Link
-                    to="/read/$storyId"
-                    params={{ storyId: story.id }}
-                    className="grid grid-cols-[2rem_1fr] gap-2 py-3"
-                  >
-                    <span className="tabular-nums text-sm text-pine">{String(n + 1).padStart(2, "0")}</span>
-                    <span className="min-w-0">
-                      <span className="block leading-snug">{storyTitle(story, lang)}</span>
-                      <span className="mt-1 block text-xs text-muted">{formatDate(story.date, lang)}</span>
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ol>
-          </section>
+        {rest.length > 0 || !fill ? (
+          <aside className="flex flex-col gap-10 px-5 py-8 md:px-8">
+            {rest.length > 0 ? (
+              <section aria-labelledby="index-title">
+                <h2
+                  id="index-title"
+                  className="text-xs font-normal uppercase tracking-widest text-muted"
+                  style={{ fontFamily: "inherit" }}
+                >
+                  {frame.index}
+                </h2>
+                <ol className="mt-3 flex flex-col">
+                  {rest.map((story, n) => (
+                    <li key={story.id} className="border-b border-line">
+                      <Link
+                        to="/read/$storyId"
+                        params={{ storyId: story.id }}
+                        className="grid grid-cols-[2rem_1fr] gap-2 py-3"
+                      >
+                        <span className="tabular-nums text-sm text-pine">
+                          {String(n + 1 + (all.length - rest.length)).padStart(2, "0")}
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block leading-snug">{storyTitle(story, lang)}</span>
+                          <span className="mt-1 block text-xs text-muted">
+                            {formatDate(story.date, lang)}
+                          </span>
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            ) : null}
 
-          <section aria-labelledby="about-title">
-            <h2 id="about-title" className="text-xs font-normal uppercase tracking-widest text-muted" style={{ fontFamily: "inherit" }}>
-              {frame.about}
-            </h2>
-            <p className="mt-3 text-pretty text-sm leading-relaxed">{copy.manifesto}</p>
-            <p className="mt-3 text-pretty text-sm leading-relaxed text-muted">{copy.listenRule}</p>
-          </section>
-        </aside>
+            {fill ? null : (
+              <section aria-labelledby="about-title">
+                <h2
+                  id="about-title"
+                  className="text-xs font-normal uppercase tracking-widest text-muted"
+                  style={{ fontFamily: "inherit" }}
+                >
+                  {frame.about}
+                </h2>
+                <p className="mt-3 text-pretty text-sm leading-relaxed">{copy.manifesto}</p>
+                <p className="mt-3 text-pretty text-sm leading-relaxed text-muted">
+                  {copy.listenRule}
+                </p>
+              </section>
+            )}
+          </aside>
+        ) : null}
       </div>
     </main>
   );
@@ -174,8 +217,22 @@ function Card({ story, lang, span = "" }: { story: Story; lang: Lang; span?: str
       <Meta story={story} lang={lang} />
       <h2 className="text-base leading-tight md:text-2xl">{title}</h2>
       {excerpt ? (
-        <p className="font-body line-clamp-3 text-pretty text-[13px] leading-snug text-muted md:text-base">{excerpt}</p>
+        <p className="font-body line-clamp-3 text-pretty text-[13px] leading-snug text-muted md:text-base">
+          {excerpt}
+        </p>
       ) : null}
     </Link>
+  );
+}
+
+/** Fills an empty grid cell on the home page so the bottom row keeps three boxes. */
+function About({ title, text }: { title: string; text: string }) {
+  return (
+    <div className="flex min-w-0 flex-col gap-2 border-r border-b border-rule p-3 md:gap-3 md:p-8 rtl:border-r-0 rtl:border-l">
+      <p className="text-xs uppercase tracking-widest text-muted">{title}</p>
+      <p className="font-body line-clamp-6 text-pretty text-[13px] leading-snug text-muted md:text-base">
+        {text}
+      </p>
+    </div>
   );
 }

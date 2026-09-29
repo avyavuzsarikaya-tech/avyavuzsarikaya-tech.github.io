@@ -30,7 +30,8 @@ function LangSwitch({
         aria-label={label}
         onChange={(event) => {
           const next = event.target.value;
-          if (next === "tr" || next === "ar" || next === "en" || next === "fr" || next === "es") onChange(next);
+          if (next === "tr" || next === "ar" || next === "en" || next === "fr" || next === "es")
+            onChange(next);
         }}
         className="lang-box min-h-11 appearance-none bg-transparent pr-4 text-xs tracking-widest text-paper"
       >
@@ -40,7 +41,10 @@ function LangSwitch({
           </option>
         ))}
       </select>
-      <span className="pointer-events-none absolute right-0 text-[10px] text-paper" aria-hidden="true">
+      <span
+        className="pointer-events-none absolute right-0 text-[10px] text-paper"
+        aria-hidden="true"
+      >
         ▾
       </span>
     </label>
@@ -51,7 +55,13 @@ function LangSwitch({
  * Site frame shared by every page: black header, section bar, footer.
  * `section` marks the active section in the bar ("all" on the home page with no filter).
  */
-export function Shell({ children, section }: { children: React.ReactNode; section?: Theme | "all" }) {
+export function Shell({
+  children,
+  section,
+}: {
+  children: React.ReactNode;
+  section?: Theme | "all";
+}) {
   const lang = useLibrary((s) => s.lang);
   const ready = useLibrary((s) => s.ready);
   const setLang = useLibrary((s) => s.setLang);
@@ -86,30 +96,47 @@ export function Shell({ children, section }: { children: React.ReactNode; sectio
 
   return (
     <div className="flex min-h-screen flex-col bg-paper text-ink">
-      <header dir="ltr" className="flex items-center justify-between gap-4 bg-ink px-5 py-3 text-paper md:px-8">
+      <header
+        dir="ltr"
+        className="flex items-center justify-between gap-4 bg-ink px-5 py-3 text-paper md:px-8"
+      >
         <Link to="/" className="inline-flex min-h-11 items-center gap-3 text-paper">
           <Meridian />
           <span className="font-display text-xl tracking-widest">ORBIS</span>
         </Link>
         <nav className="flex items-center gap-5 text-sm">
-          <Link to="/" className={inPanel ? "inline-flex min-h-11 items-center text-mist" : "inline-flex min-h-11 items-center text-paper"}>
-            {copy.atlas}
-          </Link>
-          <Link to="/panel" className={inPanel ? "inline-flex min-h-11 items-center text-paper" : "inline-flex min-h-11 items-center text-mist"}>
-            {copy.panel}
-          </Link>
+          {/* The editing panel stays out of the reader's menu; open it at /panel. */}
+          {inPanel ? (
+            <>
+              <Link to="/" className="inline-flex min-h-11 items-center text-mist">
+                {copy.atlas}
+              </Link>
+              <Link to="/panel" className="inline-flex min-h-11 items-center text-paper">
+                {copy.panel}
+              </Link>
+            </>
+          ) : null}
           <LangSwitch lang={lang} onChange={setLang} label={copy.language} />
         </nav>
       </header>
 
       <div dir={meta.dir} lang={meta.html} className="flex flex-1 flex-col">
         <nav aria-label={copy.sections} className="section-bar relative border-b border-rule">
-          <div ref={bar} className="no-scrollbar flex gap-5 overflow-x-auto px-5 text-[13px] tracking-wide whitespace-nowrap md:gap-7 md:px-8">
+          <div
+            ref={bar}
+            className="no-scrollbar flex gap-5 overflow-x-auto px-5 text-[13px] tracking-wide whitespace-nowrap md:gap-7 md:px-8"
+          >
             <Link to="/" data-on={section === "all"} className={barItem(section === "all")}>
               {copy.home}
             </Link>
             {THEMES.map((theme) => (
-              <Link key={theme} to="/" search={{ s: theme }} data-on={section === theme} className={barItem(section === theme)}>
+              <Link
+                key={theme}
+                to="/"
+                search={{ s: theme }}
+                data-on={section === theme}
+                className={barItem(section === theme)}
+              >
                 {copy.themes[theme]}
               </Link>
             ))}
@@ -123,7 +150,11 @@ export function Shell({ children, section }: { children: React.ReactNode; sectio
         <footer className="mt-16 bg-ink px-5 py-10 text-paper md:px-8">
           <div className="grid gap-8 md:grid-cols-3">
             <div className="flex flex-col gap-3">
-              <Link to="/" dir="ltr" className="inline-flex min-h-11 items-center gap-3 self-start text-paper">
+              <Link
+                to="/"
+                dir="ltr"
+                className="inline-flex min-h-11 items-center gap-3 self-start text-paper"
+              >
                 <Meridian />
                 <span className="font-display text-lg tracking-widest">ORBIS</span>
               </Link>
@@ -135,7 +166,11 @@ export function Shell({ children, section }: { children: React.ReactNode; sectio
               <ul className="mt-2 grid grid-cols-2 gap-x-6">
                 {THEMES.map((theme) => (
                   <li key={theme}>
-                    <Link to="/" search={{ s: theme }} className="inline-flex min-h-9 items-center text-sm text-paper">
+                    <Link
+                      to="/"
+                      search={{ s: theme }}
+                      className="inline-flex min-h-9 items-center text-sm text-paper"
+                    >
                       {copy.themes[theme]}
                     </Link>
                   </li>

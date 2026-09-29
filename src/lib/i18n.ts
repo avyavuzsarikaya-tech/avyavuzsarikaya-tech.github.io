@@ -83,7 +83,7 @@ const copy: Record<Lang, Copy> = {
     language: "Language",
     hero: "A world, with its sources.",
     manifesto:
-      "Orbis is a reading atlas. Each dispatch is written again in five languages and tied to the public documents it rests on. There is no breaking-news desk, and there is no opinion page.",
+      "Orbis is a reading atlas. Each dispatch is rewritten in five languages and tied to the public documents it rests on. There is no breaking-news desk, and there is no opinion page.",
     listenRule:
       "A listen control appears only after a recording has been filed for the language you are reading.",
     readings: "Readings",
