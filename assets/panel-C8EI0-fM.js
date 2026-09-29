@@ -1,1 +1,0 @@
-import{m as e}from"./types-rsefHmAW.js";import{t}from"./shell-DBLNX-Wu.js";import{a as n}from"./index-_Gmvl42I.js";var r=e();function i(){return(0,r.jsx)(t,{children:(0,r.jsx)(n,{})})}export{i as component};
