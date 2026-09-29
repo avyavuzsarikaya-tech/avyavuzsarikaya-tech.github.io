@@ -147,7 +147,7 @@ export function Shell({
           {ready ? children : <p className="px-5 py-16 text-muted md:px-8">{copy.loading}</p>}
         </div>
 
-        <footer className="mt-16 bg-ink px-5 py-10 text-paper md:px-8">
+        <footer className="mt-12 bg-ink px-5 py-10 text-paper md:px-8">
           <div className="grid gap-8 md:grid-cols-3">
             <div className="flex flex-col gap-3">
               <Link

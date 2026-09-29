@@ -52,19 +52,16 @@ function Reading({ storyId }: { storyId: string }) {
           <Link to="/" className="inline-flex min-h-11 items-center text-pine">
             {copy.back}
           </Link>
-          <Link
-            to="/panel/$storyId"
-            params={{ storyId: story.id }}
-            className="inline-flex min-h-11 items-center text-muted"
-          >
-            {copy.edit}
-          </Link>
         </div>
 
         <header className="flex flex-col gap-4">
           <p className="text-xs uppercase tracking-widest text-pine">{copy.themes[story.theme]}</p>
           <h1 className="text-4xl md:text-5xl">{locale.title || story.locales.en.title}</h1>
-          {locale.dek ? <p className={lang === "ar" ? "text-lg text-muted" : "text-lg text-muted italic"}>{locale.dek}</p> : null}
+          {locale.dek ? (
+            <p className={lang === "ar" ? "text-lg text-muted" : "text-lg text-muted italic"}>
+              {locale.dek}
+            </p>
+          ) : null}
           <p className="text-sm text-muted">
             {[locale.region, formatDate(story.date, lang), minutes ? `${minutes} ${copy.min}` : ""]
               .filter(Boolean)
@@ -72,7 +69,9 @@ function Reading({ storyId }: { storyId: string }) {
           </p>
         </header>
 
-        {locale.audio ? <ReadingPlayer clip={locale.audio} listen={copy.listen} pause={copy.pause} /> : null}
+        {locale.audio ? (
+          <ReadingPlayer clip={locale.audio} listen={copy.listen} pause={copy.pause} />
+        ) : null}
 
         {written ? (
           <Prose body={locale.body} sourceNums={sourceNums} sourceWord={copy.sourceWord} />
