@@ -10,6 +10,7 @@ on:
       - og.jpg
       - .nojekyll
       - assets/**
+      - audio/**
       - __grok/**
   workflow_dispatch:
 
@@ -30,12 +31,15 @@ jobs:
       - name: Place the site at the repository root
         run: |
           cp dist/client/index.html dist/client/404.html dist/client/.nojekyll dist/client/favicon.svg dist/client/og.jpg .
-          rm -rf assets __grok
+          rm -rf assets __grok audio
           cp -a dist/client/assets assets
           if [ -d dist/client/__grok ]; then cp -a dist/client/__grok __grok; fi
+          if [ -d dist/client/audio ]; then cp -a dist/client/audio audio; fi
           git config user.name "avyavuzsarikaya-tech"
           git config user.email "335169178+avyavuzsarikaya-tech@users.noreply.github.com"
-          git add index.html 404.html .nojekyll favicon.svg og.jpg assets __grok
+          git add -A index.html 404.html .nojekyll favicon.svg og.jpg assets
+          if [ -d __grok ]; then git add -A __grok; fi
+          if [ -d audio ]; then git add -A audio; fi
           if git diff --staged --quiet; then
             echo "Site already current"
             exit 0
