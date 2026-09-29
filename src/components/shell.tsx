@@ -168,7 +168,7 @@ export function Shell({
             </div>
             <div>
               <p className="text-xs uppercase tracking-widest text-mist">{copy.sections}</p>
-              <ul className="mt-2 grid w-fit grid-cols-2 gap-x-12">
+              <ul className="mt-2 grid w-fit grid-cols-2 gap-x-6">
                 {THEMES.map((theme) => (
                   <li key={theme}>
                     <Link
