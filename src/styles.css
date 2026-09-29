@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Bodoni Moda", "Noto Naskh Arabic", "Times New Roman", serif;
+  --font-body: "Literata", "Noto Naskh Arabic", Georgia, serif;
+  --color-paper: #f4f4f5;
+  --color-sheet: #ffffff;
+  --color-ink: #0c0c0c;
+  --color-muted: #5a5a5a;
+  --color-mist: #d4d4d4;
+  --color-line: #e6e6e6;
+  --color-pine: #6e2432;
+  --color-highlight: #ececee;
+  --radius-sm: 2px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: var(--font-body);
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  :lang(ar) {
+    font-family: "Noto Naskh Arabic", Georgia, serif;
+    line-height: 1.85;
+  }
+  :lang(ar) :is(h1, h2, h3) {
+    font-family: "Noto Naskh Arabic", Georgia, serif;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  ::selection {
+    background: var(--color-highlight);
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-pine);
+    outline-offset: 3px;
+  }
+  a.cite {
+    color: var(--color-pine);
+    font-size: 0.72em;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    vertical-align: super;
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-pine);
+    padding-inline: 0.15em;
+  }
+  .source-row.is-lit,
+  .source-row:target {
+    background: var(--color-highlight);
+  }
+  select.lang-box {
+    color-scheme: dark;
+  }
+  input[type="range"].seek {
+    accent-color: var(--color-pine);
+    width: 100%;
+    height: 2.75rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      transition: none !important;
+    }
+  }
+}

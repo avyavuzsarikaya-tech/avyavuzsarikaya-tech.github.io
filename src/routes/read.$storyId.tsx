@@ -1,0 +1,137 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ReadingPlayer } from "@/components/player";
+import { Prose } from "@/components/prose";
+import { Shell } from "@/components/shell";
+import { langMeta, useCopy } from "@/lib/i18n";
+import { useLibrary } from "@/lib/library";
+import { formatDate, hasCopy, readingMinutes, safeHttpUrl } from "@/lib/text";
+import { LANGS } from "@/lib/types";
+
+export const Route = createFileRoute("/read/$storyId")({
+  component: ReadingPage,
+});
+
+function ReadingPage() {
+  const { storyId } = Route.useParams();
+  return (
+    <Shell>
+      <Reading storyId={storyId} />
+    </Shell>
+  );
+}
+
+function Reading({ storyId }: { storyId: string }) {
+  const lang = useLibrary((s) => s.lang);
+  const setLang = useLibrary((s) => s.setLang);
+  const story = useLibrary((s) => s.stories.find((item) => item.id === storyId));
+  const copy = useCopy(lang);
+
+  if (!story) {
+    return (
+      <main className="px-5 py-12 md:px-12">
+        <p>{copy.missing}</p>
+        <Link to="/" className="mt-6 inline-flex min-h-11 items-center text-pine">
+          {copy.back}
+        </Link>
+      </main>
+    );
+  }
+
+  const locale = story.locales[lang];
+  const minutes = readingMinutes(locale.body);
+  const written = hasCopy(story, lang);
+  const sourceNums = new Set(story.sources.map((source) => source.n));
+  const sources = [...story.sources].sort((a, b) => a.n - b.n);
+  const others = LANGS.filter((code) => hasCopy(story, code));
+
+  return (
+    <main className="px-5 py-10 md:px-12 md:py-14">
+      <div className="mx-auto flex max-w-2xl flex-col gap-8">
+        <div className="flex items-center justify-between gap-4 text-sm">
+          <Link to="/" className="inline-flex min-h-11 items-center text-pine">
+            {copy.back}
+          </Link>
+          <Link
+            to="/panel/$storyId"
+            params={{ storyId: story.id }}
+            className="inline-flex min-h-11 items-center text-muted"
+          >
+            {copy.edit}
+          </Link>
+        </div>
+
+        <header className="flex flex-col gap-4">
+          <p className="text-xs uppercase tracking-widest text-pine">{copy.themes[story.theme]}</p>
+          <h1 className="text-4xl md:text-5xl">{locale.title || story.locales.en.title}</h1>
+          {locale.dek ? <p className={lang === "ar" ? "text-lg text-muted" : "text-lg text-muted italic"}>{locale.dek}</p> : null}
+          <p className="text-sm text-muted">
+            {[locale.region, formatDate(story.date, lang), minutes ? `${minutes} ${copy.min}` : ""]
+              .filter(Boolean)
+              .join(" · ")}
+          </p>
+        </header>
+
+        {locale.audio ? <ReadingPlayer clip={locale.audio} listen={copy.listen} pause={copy.pause} /> : null}
+
+        {written ? (
+          <Prose body={locale.body} sourceNums={sourceNums} sourceWord={copy.sourceWord} />
+        ) : (
+          <div className="flex flex-col gap-4">
+            <p>{copy.unwritten}</p>
+            {others.length ? (
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-sm text-muted">{copy.availableIn}</span>
+                {others.map((code) => (
+                  <button
+                    key={code}
+                    type="button"
+                    onClick={() => setLang(code)}
+                    className="inline-flex min-h-11 items-center border border-line px-3 text-sm"
+                  >
+                    {langMeta[code].name}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        )}
+
+        {sources.length ? (
+          <section className="border-t border-line pt-8" aria-labelledby="bibliography">
+            <h2 id="bibliography" className="text-2xl">
+              {copy.sources}
+            </h2>
+            <ol className="mt-6 flex flex-col">
+              {sources.map((source) => {
+                const href = safeHttpUrl(source.url);
+                return (
+                  <li
+                    key={source.n}
+                    id={`source-${source.n}`}
+                    className="source-row scroll-mt-24 grid grid-cols-[2.5rem_1fr] gap-3 border-b border-line py-4"
+                  >
+                    <span className="tabular-nums text-pine">{source.n}</span>
+                    <div className="min-w-0">
+                      <p>{source.label}</p>
+                      {href ? (
+                        <a
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          dir="ltr"
+                          className="mt-1 block break-all text-sm text-pine"
+                        >
+                          {href}
+                        </a>
+                      ) : null}
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          </section>
+        ) : null}
+      </div>
+    </main>
+  );
+}
