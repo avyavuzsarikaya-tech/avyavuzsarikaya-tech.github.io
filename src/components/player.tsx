@@ -68,22 +68,22 @@ export function ReadingPlayer({
   }
 
   return (
-    <div className="flex items-center gap-4 border border-line bg-sheet px-4 py-3">
+    <div className="flex w-0 min-w-full items-center gap-2.5">
       <button
         type="button"
         onClick={() => void toggle()}
         aria-label={playing ? pause : listen}
-        className="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-ink text-paper"
+        className="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-ink text-paper"
       >
-        {playing ? <Pause className="size-5" aria-hidden="true" /> : <Play className="size-5" aria-hidden="true" />}
+        {playing ? (
+          <Pause className="size-3.5" aria-hidden="true" />
+        ) : (
+          <Play className="size-3.5 translate-x-px" aria-hidden="true" />
+        )}
       </button>
       <div className="min-w-0 flex-1">
-        <div className="flex items-baseline justify-between gap-3">
-          <p className="text-sm text-pine">{listen}</p>
-          <p className="truncate text-sm text-muted">{clip.name}</p>
-        </div>
         <input
-          className="seek"
+          className="seek h-4"
           type="range"
           min={0}
           max={duration || 0}
@@ -92,9 +92,12 @@ export function ReadingPlayer({
           aria-label={listen}
           onChange={(event) => seek(Number(event.target.value))}
         />
-        <p className="text-sm tabular-nums text-muted">
-          {fmt(progress)} / {fmt(duration)}
-        </p>
+        <div className="flex items-baseline justify-between gap-2 text-xs">
+          <span className="text-pine">{listen}</span>
+          <span className="tabular-nums text-muted">
+            {fmt(progress)} / {fmt(duration)}
+          </span>
+        </div>
       </div>
     </div>
   );
