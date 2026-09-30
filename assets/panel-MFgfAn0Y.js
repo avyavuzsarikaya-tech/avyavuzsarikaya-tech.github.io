@@ -1,0 +1,1 @@
+import{S as e}from"./types-wmEqjsb2.js";import{t}from"./shell-BO0VrblP.js";import{i as n}from"./index-AtJyDn_G.js";var r=e();function i(){return(0,r.jsx)(t,{children:(0,r.jsx)(n,{})})}export{i as component};
