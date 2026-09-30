@@ -32,14 +32,18 @@ html[data-look="bordo"] {
   --color-highlight: #f1e8d8;
   --color-panel: #5a1523;
 }
-/* In the burgundy scheme the section bar and the small grey labels
-   (Readings, Index) take the dark green too. */
+/* In the burgundy scheme the section bar and the small labels (Readings, Index)
+   are burgundy mixed with white, in the same proportion as the classic grey:
+   #5a5a5a is 68% of the classic black #0c0c0c and 32% white; #8f606a is 68%
+   of the burgundy #5a1523 and 32% white. */
 html[data-look="bordo"] .section-link,
 html[data-look="bordo"] .kicker {
-  color: var(--color-pine);
+  color: #8f606a;
 }
+/* The open section is full black in the classic scheme, so here it is full burgundy. */
 html[data-look="bordo"] .section-link[data-on="true"] {
-  border-color: var(--color-pine);
+  color: var(--color-panel);
+  border-color: var(--color-panel);
 }
 
 @layer base {
