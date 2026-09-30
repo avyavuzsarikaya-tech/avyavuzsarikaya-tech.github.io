@@ -26,6 +26,8 @@ export type Copy = {
   listen: string;
   pause: string;
   speed: string;
+  audioError: string;
+  retry: string;
   textSize: string;
   typeDown: string;
   typeUp: string;
@@ -96,6 +98,8 @@ const copy: Record<Lang, Copy> = {
     listen: "Listen",
     pause: "Pause",
     speed: "Speed",
+    audioError: "The recording could not be played.",
+    retry: "Try again",
     textSize: "Type size",
     typeDown: "Smaller type",
     typeUp: "Larger type",
@@ -175,6 +179,8 @@ const copy: Record<Lang, Copy> = {
     listen: "Dinle",
     pause: "Durdur",
     speed: "Hız",
+    audioError: "Ses kaydı açılamadı.",
+    retry: "Tekrar dene",
     textSize: "Metin boyutu",
     typeDown: "Daha küçük yazı",
     typeUp: "Daha büyük yazı",
@@ -254,6 +260,8 @@ const copy: Record<Lang, Copy> = {
     listen: "استمع",
     pause: "إيقاف",
     speed: "السرعة",
+    audioError: "تعذّر تشغيل التسجيل.",
+    retry: "أعد المحاولة",
     textSize: "حجم النص",
     typeDown: "تصغير النص",
     typeUp: "تكبير النص",
@@ -334,6 +342,8 @@ const copy: Record<Lang, Copy> = {
     listen: "Écouter",
     pause: "Pause",
     speed: "Vitesse",
+    audioError: "L’enregistrement n’a pas pu être lu.",
+    retry: "Réessayer",
     textSize: "Taille du texte",
     typeDown: "Réduire le texte",
     typeUp: "Agrandir le texte",
@@ -416,6 +426,8 @@ const copy: Record<Lang, Copy> = {
     listen: "Escuchar",
     pause: "Pausa",
     speed: "Velocidad",
+    audioError: "No se pudo reproducir la grabación.",
+    retry: "Reintentar",
     textSize: "Tamaño del texto",
     typeDown: "Reducir el texto",
     typeUp: "Agrandar el texto",

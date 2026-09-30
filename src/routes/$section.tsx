@@ -1,43 +1,38 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { Atlas } from "@/components/atlas";
-import { Shell } from "@/components/shell";
-import { copyFor } from "@/lib/i18n";
-import { canonical, pageMeta, SITE_NAME } from "@/lib/site";
+import { HomePage, SectionPage } from "@/components/atlas";
+import { DEFAULT_LANG, isPrefixed } from "@/lib/lang-path";
+import { homeHead, sectionHead } from "@/lib/site";
 import { toTheme, type Theme } from "@/lib/types";
 
-/** A section of the atlas at its own address: /climate, /politics, … */
+/**
+ * A one-part address is either a language's front page (/tr, /ar, /fr, /es) or an
+ * English section (/climate, /politics, …).
+ */
 export const Route = createFileRoute("/$section")({
   beforeLoad: ({ params }) => {
-    const theme = toTheme(params.section);
-    // Not a section: back to the front page.
+    const part = params.section;
+    if (isPrefixed(part)) return;
+    // English has no prefix.
+    if (part === DEFAULT_LANG) throw redirect({ to: "/", replace: true });
+    const theme = toTheme(part);
+    // Neither: back to the front page.
     if (!theme) throw redirect({ to: "/", replace: true });
     // An old two-part section name: to the section that replaced it.
-    if (theme !== params.section) {
+    if (theme !== part) {
       throw redirect({ to: "/$section", params: { section: theme }, replace: true });
     }
   },
   head: ({ params }) => {
-    const theme = toTheme(params.section);
-    if (!theme) return {};
-    const name = copyFor("en").themes[theme];
-    return {
-      meta: pageMeta({
-        title: `${name} — ${SITE_NAME}`,
-        description: `${name} readings on ${SITE_NAME}.`,
-        path: `/${theme}`,
-      }),
-      links: [canonical(`/${theme}`)],
-    };
+    const part = params.section;
+    if (isPrefixed(part)) return homeHead(part);
+    const theme = toTheme(part);
+    return theme ? sectionHead(DEFAULT_LANG, theme) : {};
   },
-  component: SectionPage,
+  component: Page,
 });
 
-function SectionPage() {
+function Page() {
   const { section } = Route.useParams();
-  const theme = toTheme(section) as Theme;
-  return (
-    <Shell section={theme}>
-      <Atlas section={theme} />
-    </Shell>
-  );
+  if (isPrefixed(section)) return <HomePage />;
+  return <SectionPage theme={toTheme(section) as Theme} />;
 }

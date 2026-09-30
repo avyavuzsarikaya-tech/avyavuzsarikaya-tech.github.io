@@ -1,6 +1,14 @@
-import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
+import {
+  createRootRoute,
+  HeadContent,
+  Outlet,
+  Scripts,
+  useRouterState,
+} from "@tanstack/react-router";
 import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
+import { langMeta } from "@/lib/i18n";
+import { LANG_BOOT, langFromPath } from "@/lib/lang-path";
 import { LOOK_BOOT } from "@/lib/look";
 import { pageMeta, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
 import appCss from "../styles.css?url";
@@ -18,7 +26,7 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "theme-color", content: "#0c0c0c" },
-      ...pageMeta({ title: SITE_NAME, description: SITE_DESCRIPTION, path: "/" }),
+      ...pageMeta({ title: SITE_NAME, description: SITE_DESCRIPTION, url: "/" }),
     ],
     links: [
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
@@ -30,12 +38,21 @@ export const Route = createRootRoute({
       { rel: "apple-touch-icon", href: "/__grok/icon-180.png" },
     ],
   }),
-  component: () => (
-    <html lang="en" suppressHydrationWarning>
+  component: RootDocument,
+});
+
+function RootDocument() {
+  // Reader pages are written in the language of their address, so the document says so
+  // from the first byte. The panel sets its own language once it opens.
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  const meta = langMeta[path.startsWith("/panel") ? "en" : langFromPath(path)];
+  return (
+    <html lang={meta.html} dir={meta.dir} suppressHydrationWarning>
       <head>
         <HeadContent />
-        {/* Applies a saved colour scheme before the first paint. */}
-        <script dangerouslySetInnerHTML={{ __html: LOOK_BOOT }} />
+        {/* Before the first paint: the reader's language (plain addresses only), then the
+            saved colour scheme. */}
+        <script dangerouslySetInnerHTML={{ __html: LANG_BOOT + LOOK_BOOT }} />
       </head>
       <body>
         <PreviewHostBridge />
@@ -45,5 +62,5 @@ export const Route = createRootRoute({
         <Scripts />
       </body>
     </html>
-  ),
-});
+  );
+}

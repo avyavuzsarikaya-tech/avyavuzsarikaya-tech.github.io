@@ -1,23 +1,17 @@
 import { Link } from "@tanstack/react-router";
+import { Shell } from "@/components/shell";
 import { useFrameCopy } from "@/lib/frame-copy";
 import { useCopy } from "@/lib/i18n";
-import { useLibrary } from "@/lib/library";
-import { formatDate, paragraphs, readingMinutes, storyTitle } from "@/lib/text";
-import type { Lang, Story, Theme } from "@/lib/types";
+import { readLink } from "@/lib/lang-path";
+import { CARDS } from "@/lib/seed";
+import { formatDate, storyTitle } from "@/lib/text";
+import type { Lang, StoryCard as Story, Theme } from "@/lib/types";
+import { useLang } from "@/lib/use-lang";
 
 /**
  * The front page grid and the section pages share this layout: the lead reading, the
  * cards around it, and the index of further readings on the right.
  */
-
-/** First paragraphs as plain text: source markers like [1] are dropped for the cards. */
-function cut(body: string, count: number): string {
-  return paragraphs(body)
-    .slice(0, count)
-    .join(" ")
-    .replace(/\s*\[\d+\]/g, "")
-    .trim();
-}
 
 function Meta({ story, lang }: { story: Story; lang: Lang }) {
   const copy = useCopy(lang);
@@ -33,9 +27,8 @@ function Meta({ story, lang }: { story: Story; lang: Lang }) {
 }
 
 export function Atlas({ section }: { section: Theme | "all" }) {
-  const lang = useLibrary((s) => s.lang);
-  const stories = useLibrary((s) => s.stories);
-  const restoreSeed = useLibrary((s) => s.restoreSeed);
+  const lang = useLang();
+  const stories = CARDS;
   const copy = useCopy(lang);
   const frame = useFrameCopy(lang);
 
@@ -69,19 +62,12 @@ export function Atlas({ section }: { section: Theme | "all" }) {
     return (
       <main className="flex flex-col items-start gap-4 px-5 py-10 md:px-8">
         <p>{copy.emptyAtlas}</p>
-        <button
-          type="button"
-          onClick={() => void restoreSeed()}
-          className="inline-flex min-h-11 items-center bg-pine px-4 text-paper"
-        >
-          {copy.restore}
-        </button>
       </main>
     );
   }
 
   const leadDek = latest?.locales[lang].dek?.trim() ?? "";
-  const leadMinutes = latest ? readingMinutes(latest.locales[lang].body) : 0;
+  const leadMinutes = latest?.locales[lang].minutes ?? 0;
 
   return (
     <main>
@@ -98,8 +84,7 @@ export function Atlas({ section }: { section: Theme | "all" }) {
         {latest ? (
           <div className="grid grid-cols-1 self-start md:grid-cols-3">
             <Link
-              to="/read/$storyId"
-              params={{ storyId: latest.id }}
+              {...readLink(lang, latest.id)}
               className={`${leadSpan} flex min-w-0 flex-col gap-3 border-b border-rule px-5 py-7 md:border-r md:px-8 md:py-8 md:rtl:border-r-0 md:rtl:border-l`}
             >
               <Meta story={latest} lang={lang} />
@@ -131,7 +116,7 @@ export function Atlas({ section }: { section: Theme | "all" }) {
                   </p>
                 ) : (
                   <p className="font-body line-clamp-4 max-w-2xl text-pretty text-base leading-snug text-muted">
-                    {cut(latest.locales[lang].body, 1)}
+                    {latest.locales[lang].lead}
                   </p>
                 )}
                 {leadMinutes ? (
@@ -167,8 +152,7 @@ export function Atlas({ section }: { section: Theme | "all" }) {
                   {rest.map((story, n) => (
                     <li key={story.id} className="border-b border-line last:border-b-0">
                       <Link
-                        to="/read/$storyId"
-                        params={{ storyId: story.id }}
+                        {...readLink(lang, story.id)}
                         className="grid grid-cols-[1.75rem_1fr] gap-2 py-2.5"
                       >
                         <span className="pt-0.5 text-xs tabular-nums text-muted">
@@ -210,13 +194,12 @@ function Card({
   // The card shows the reading's own one-sentence summary, in full.
   // Only a reading without one falls back to the start of its text.
   const dek = story.locales[lang].dek?.trim();
-  const excerpt = dek || cut(story.locales[lang].body, 1);
+  const excerpt = dek || story.locales[lang].lead;
   // The second reading stands a step above the rest, so the eye moves
   // lead, then second, then the row. Small cards part by space, not by rules.
   return (
     <Link
-      to="/read/$storyId"
-      params={{ storyId: story.id }}
+      {...readLink(lang, story.id)}
       className={`${span} flex min-w-0 flex-col gap-2 border-b border-line px-5 md:px-8 ${second ? "gap-3 py-6 md:py-7" : "py-5"}`}
     >
       {story.image ? <Picture story={story} className={second ? "" : "hidden md:block"} /> : null}
@@ -254,5 +237,23 @@ function Picture({ story, className = "" }: { story: Story; className?: string }
       decoding="async"
       className={`${className} aspect-[3/2] w-full object-cover`}
     />
+  );
+}
+
+/** The front page, in the language of its address. */
+export function HomePage() {
+  return (
+    <Shell section="all">
+      <Atlas section="all" />
+    </Shell>
+  );
+}
+
+/** One section of the atlas, in the language of its address. */
+export function SectionPage({ theme }: { theme: Theme }) {
+  return (
+    <Shell section={theme}>
+      <Atlas section={theme} />
+    </Shell>
   );
 }

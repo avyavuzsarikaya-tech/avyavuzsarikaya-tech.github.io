@@ -12,7 +12,10 @@ export const Route = createFileRoute("/panel/")({
 function PanelHome() {
   const lang = useLibrary((s) => s.lang);
   const stories = useLibrary((s) => s.stories);
+  const ready = useLibrary((s) => s.ready);
   const copy = useCopy(lang);
+
+  if (!ready) return <p className="px-5 py-16 text-muted md:px-12">{copy.loading}</p>;
 
   return (
     <main className="px-5 py-10 md:px-12 md:py-14">

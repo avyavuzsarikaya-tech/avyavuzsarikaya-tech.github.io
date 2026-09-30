@@ -1,16 +1,17 @@
-import { normalizeTheme, type Story } from "@/lib/types";
+import INDEX from "virtual:orbis-index";
+import { normalizeTheme, type Story, type StoryCard } from "@/lib/types";
 
 /**
  * Published readings. Each one is a file in content/stories/<id>.json; the panel writes
  * those files to the repository and the site is rebuilt from them.
  *
+ * The front page works from CARDS (title, summary and reading time of every reading).
+ * A reading's full text is a separate download, fetched only when that reading opens.
+ *
  * Media paths inside a story are relative to the site root (audio/…, images/…) and get
  * the base path added here. A data: address (a file just chosen in the panel) is left alone.
  */
-const files = import.meta.glob<Story>("/content/stories/*.json", {
-  eager: true,
-  import: "default",
-});
+const files = import.meta.glob<Story>("/content/stories/*.json", { import: "default" });
 
 export function mediaUrl(path: string): string {
   if (!path || /^(data:|blob:|https?:|\/)/.test(path)) return path;
@@ -34,7 +35,29 @@ function resolve(story: Story): Story {
   };
 }
 
-export const SEED: Story[] = Object.values(files).map((story) => resolve(structuredClone(story)));
+export const CARDS: StoryCard[] = INDEX.map((card) => ({
+  ...card,
+  theme: normalizeTheme(card.theme),
+  image: card.image ? { ...card.image, src: mediaUrl(card.image.src) } : undefined,
+}));
+
+export function findCard(id: string): StoryCard | undefined {
+  return CARDS.find((card) => card.id === id);
+}
+
+/** The full reading, or null when no published file has this id. */
+export async function loadStory(id: string): Promise<Story | null> {
+  const card = findCard(id);
+  const load = card ? files[`/content/stories/${card.file}`] : undefined;
+  if (!load) return null;
+  return resolve(structuredClone(await load()));
+}
+
+/** Every reading in full, for the panel. */
+export async function loadAllStories(): Promise<Story[]> {
+  const all = await Promise.all(Object.values(files).map((load) => load()));
+  return all.map((story) => resolve(structuredClone(story)));
+}
 
 /** The inverse of mediaUrl: the path as it is stored in the story file. */
 export function mediaPath(url: string): string {

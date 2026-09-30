@@ -36,17 +36,23 @@ export function ReadingPlayer({
   listen,
   pause,
   speed = "Speed",
+  failed = "The recording could not be played.",
+  retry = "Try again",
 }: {
   clip: AudioClip;
   listen: string;
   pause: string;
   speed?: string;
+  failed?: string;
+  retry?: string;
 }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [rate, setRate] = useState(1);
+  // The recording would not load or play: say so, and offer another try.
+  const [error, setError] = useState(false);
   const rateRef = useRef(1);
   rateRef.current = rate;
 
@@ -59,6 +65,7 @@ export function ReadingPlayer({
     setPlaying(false);
     setProgress(0);
     setDuration(0);
+    setError(false);
     const audio = new Audio(clip.dataUrl);
     audio.preload = "metadata";
     audio.playbackRate = rateRef.current;
@@ -69,14 +76,20 @@ export function ReadingPlayer({
       setPlaying(false);
       setProgress(0);
     };
+    const onFail = () => {
+      setPlaying(false);
+      setError(true);
+    };
     audio.addEventListener("timeupdate", onTime);
     audio.addEventListener("loadedmetadata", onMeta);
     audio.addEventListener("ended", onEnd);
+    audio.addEventListener("error", onFail);
     return () => {
       audio.pause();
       audio.removeEventListener("timeupdate", onTime);
       audio.removeEventListener("loadedmetadata", onMeta);
       audio.removeEventListener("ended", onEnd);
+      audio.removeEventListener("error", onFail);
       audioRef.current = null;
     };
   }, [clip.dataUrl]);
@@ -98,9 +111,20 @@ export function ReadingPlayer({
       audio.playbackRate = rate;
       await audio.play();
       setPlaying(true);
+      setError(false);
     } catch {
       setPlaying(false);
+      setError(true);
     }
+  }
+
+  /** Fetch the recording again after a failure (a dropped connection, say). */
+  function tryAgain() {
+    const audio = audioRef.current;
+    if (!audio) return;
+    setError(false);
+    audio.load();
+    void toggle();
   }
 
   function seek(value: number) {
@@ -181,6 +205,18 @@ export function ReadingPlayer({
           </Pick>
         </div>
       </div>
+      {error ? (
+        <p role="alert" className="flex flex-wrap items-center gap-x-3 text-sm text-muted">
+          {failed}
+          <button
+            type="button"
+            onClick={tryAgain}
+            className="inline-flex min-h-11 items-center text-pine underline underline-offset-4"
+          >
+            {retry}
+          </button>
+        </p>
+      ) : null}
     </div>
   );
 }

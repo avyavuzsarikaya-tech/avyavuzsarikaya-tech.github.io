@@ -1,8 +1,9 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { Atlas } from "@/components/atlas";
-import { Shell } from "@/components/shell";
+import { HomePage } from "@/components/atlas";
+import { homeHead } from "@/lib/site";
 import { toTheme } from "@/lib/types";
 
+/** The front page in English. The other languages' front pages are /tr, /ar, /fr, /es. */
 export const Route = createFileRoute("/")({
   // Sections used to open as /?s=climate; old links now land on /climate.
   beforeLoad: ({ search }) => {
@@ -10,13 +11,6 @@ export const Route = createFileRoute("/")({
     const theme = typeof s === "string" ? toTheme(s) : undefined;
     if (theme) throw redirect({ to: "/$section", params: { section: theme }, replace: true });
   },
-  component: Home,
+  head: () => homeHead("en"),
+  component: HomePage,
 });
-
-function Home() {
-  return (
-    <Shell section="all">
-      <Atlas section="all" />
-    </Shell>
-  );
-}

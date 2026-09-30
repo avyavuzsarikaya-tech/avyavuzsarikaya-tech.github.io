@@ -93,3 +93,26 @@ export function blankStory(): Story {
     },
   };
 }
+
+/** What the front page and section pages know about a reading in one language. */
+export type LocaleCard = {
+  title: string;
+  dek: string;
+  region: string;
+  /** First paragraph as plain text, for a card without a summary. */
+  lead: string;
+  minutes: number;
+  /** Whether the reading has a text in this language. */
+  written: boolean;
+};
+
+/** A reading as listed on the front page; the full text is loaded when it is opened. */
+export type StoryCard = {
+  id: string;
+  /** File name in content/stories. */
+  file: string;
+  theme: Theme;
+  date: string;
+  image?: StoryImage;
+  locales: Record<Lang, LocaleCard>;
+};

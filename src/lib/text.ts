@@ -41,7 +41,11 @@ export function safeHttpUrl(raw: string): string | null {
   }
 }
 
-export function storyTitle(story: Story, lang: Lang): string {
+/** The title in this language, or else in the first language that has one. Works for cards too. */
+export function storyTitle(
+  story: { locales: Record<Lang, { title: string }> },
+  lang: Lang,
+): string {
   const direct = story.locales[lang].title.trim();
   if (direct) return direct;
   for (const code of ["en", "tr", "fr", "es", "ar"] as const) {

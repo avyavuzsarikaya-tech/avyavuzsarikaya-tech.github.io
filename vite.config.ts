@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync } from "node:fs";
+import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import type { Plugin } from "vite";
 import { defineConfig } from "vite";
@@ -11,7 +11,9 @@ import { grokPwaPlugin } from "./scripts/grok-pwa-plugin.mjs";
 // @ts-expect-error JS plugin alongside the TS vite config
 import { appEnvPlugin } from "./scripts/app-env-plugin.mjs";
 import { isMigrationFile } from "./scripts/migration-plan.mjs";
-import { THEMES } from "./src/lib/types";
+import { LANGS, THEMES } from "./src/lib/types.ts";
+// @ts-expect-error JS plugin alongside the TS vite config
+import { readStoryIndex, storyIndexPlugin } from "./scripts/story-index-plugin.mjs";
 
 /** The files `src/lib/db.ts` globs — same directory, same non-recursive scope. */
 function hasGlobbedMigrations(root: string): boolean {
@@ -146,25 +148,29 @@ function authPopupPlugin(): Plugin {
 const pages = process.env.ORBIS_PAGES === "1";
 
 /**
- * GitHub Pages build: besides the shell (index.html, 404.html) every section and every
- * published reading gets its own HTML file (climate.html, read/<id>.html). The host then
- * answers those addresses with 200 instead of the 404 fallback, and each file carries
- * the page's own title and link-preview tags for search engines and messaging apps.
+ * GitHub Pages build: every page is written out as its own HTML file with its text
+ * already in it — the front pages (index.html, tr/index.html, …), every section
+ * (climate.html, tr/climate.html, …) and every reading in every language
+ * (read/<id>.html, tr/read/<id>.html, …). The host answers those addresses with 200, and
+ * each file carries its page's title, language alternates and link-preview tags.
+ * The shell (404.html) covers everything else, the panel included.
  */
 function staticPages() {
-  const dir = "content/stories";
-  const readings = readdirSync(dir)
-    .filter((name) => name.endsWith(".json"))
-    .map((name) => {
-      const story = JSON.parse(readFileSync(join(dir, name), "utf8")) as { id?: string };
-      return `/read/${story.id || name.slice(0, -5)}`;
-    });
-  return [...THEMES.map((theme) => `/${theme}`), ...readings].map((path) => ({ path }));
+  const ids = readStoryIndex("content/stories").map((story) => story.id);
+  const paths: string[] = [];
+  for (const lang of LANGS) {
+    const prefix = lang === "en" ? "" : `/${lang}`;
+    // A language's front page is a folder (tr/index.html), so /tr/ opens without a redirect.
+    paths.push(lang === "en" ? "/" : `${prefix}/`);
+    for (const theme of THEMES) paths.push(`${prefix}/${theme}`);
+    for (const id of ids) paths.push(`${prefix}/read/${id}`);
+  }
+  return paths.map((path) => ({ path }));
 }
 
 const startOptions = pages
   ? {
-      spa: { enabled: true },
+      spa: { enabled: true, maskPath: "/panel" },
       pages: staticPages(),
       prerender: {
         enabled: true,
@@ -198,6 +204,8 @@ export default defineConfig(({ command, isPreview }) => ({
     appEnvPlugin(),
     // PWA head + ?install=1 tutorial page; runs before Start/Nitro.
     grokPwaPlugin(),
+    // virtual:orbis-index — the reading cards for the front page.
+    storyIndexPlugin(),
     tailwindcss(),
     tanstackStart(startOptions),
     ...(command === "build" || isPreview

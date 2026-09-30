@@ -1,19 +1,44 @@
-import { paragraphs } from "@/lib/text";
-import type { Story } from "@/lib/types";
+import { copyFor } from "@/lib/i18n";
+import { DEFAULT_LANG, publicPath } from "@/lib/lang-path";
+import { LANGS, type Lang, type StoryCard, type Theme } from "@/lib/types";
 
 /**
  * The public address of the site. Link previews (WhatsApp, X, Telegram), the canonical
- * address and the sitemap are built from it. Change it here if the site moves to its
- * own domain (scripts/pages-shell.mjs reads the same value).
+ * address, the language alternates and the sitemap are built from it. Change it here if
+ * the site moves to its own domain (scripts/pages-shell.mjs reads the same value).
  */
 export const SITE_URL = "https://avyavuzsarikaya-tech.github.io";
 export const SITE_NAME = "Orbis";
-export const SITE_DESCRIPTION =
-  "Orbis: sourced readings in Turkish, Arabic, English, French, and Spanish.";
 /** The 1200×630 card shown when a page without its own picture is shared. */
 export const SITE_CARD = `${SITE_URL}/og.jpg`;
 
+const DESCRIPTION: Record<Lang, string> = {
+  tr: "Orbis: Türkçe, Arapça, İngilizce, Fransızca ve İspanyolca kaynaklı okumalar.",
+  ar: "أوربيس: قراءات موثّقة بمصادرها بالتركية والعربية والإنجليزية والفرنسية والإسبانية.",
+  en: "Orbis: sourced readings in Turkish, Arabic, English, French, and Spanish.",
+  fr: "Orbis : des lectures sourcées en turc, arabe, anglais, français et espagnol.",
+  es: "Orbis: lecturas con fuentes en turco, árabe, inglés, francés y español.",
+};
+export const SITE_DESCRIPTION = DESCRIPTION.en;
+
+const SECTION_DESCRIPTION: Record<Lang, (name: string) => string> = {
+  tr: (name) => `Orbis'in ${name} bölümündeki okumalar.`,
+  ar: (name) => `قراءات قسم ${name} في أوربيس.`,
+  en: (name) => `${name} readings on Orbis.`,
+  fr: (name) => `Les lectures de la rubrique ${name} sur Orbis.`,
+  es: (name) => `Las lecturas de la sección ${name} en Orbis.`,
+};
+
+const OG_LOCALE: Record<Lang, string> = {
+  tr: "tr_TR",
+  ar: "ar_AR",
+  en: "en_GB",
+  fr: "fr_FR",
+  es: "es_ES",
+};
+
 type Meta = Record<string, unknown>;
+type Link = Record<string, string>;
 
 export function absoluteUrl(path: string): string {
   if (/^https?:\/\//.test(path)) return path;
@@ -22,7 +47,10 @@ export function absoluteUrl(path: string): string {
 
 /** Plain text, source markers like [1] removed, cut at a word near `max` characters. */
 export function clip(text: string, max = 160): string {
-  const plain = text.replace(/\s*\[\d+\]/g, "").replace(/\s+/g, " ").trim();
+  const plain = text
+    .replace(/\s*\[\d+\]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
   if (plain.length <= max) return plain;
   const cut = plain.slice(0, max - 1);
   const space = cut.lastIndexOf(" ");
@@ -33,26 +61,28 @@ export function clip(text: string, max = 160): string {
 export function pageMeta({
   title,
   description,
-  path,
+  url,
+  lang = DEFAULT_LANG,
   image = SITE_CARD,
   type = "website",
 }: {
   title: string;
   description: string;
-  path: string;
+  url: string;
+  lang?: Lang;
   image?: string;
   type?: "website" | "article";
 }): Meta[] {
-  const url = absoluteUrl(path);
   const picture = absoluteUrl(image);
   return [
     { title },
     { name: "description", content: description },
     { property: "og:site_name", content: SITE_NAME },
     { property: "og:type", content: type },
+    { property: "og:locale", content: OG_LOCALE[lang] },
     { property: "og:title", content: title },
     { property: "og:description", content: description },
-    { property: "og:url", content: url },
+    { property: "og:url", content: absoluteUrl(url) },
     { property: "og:image", content: picture },
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:title", content: title },
@@ -61,44 +91,94 @@ export function pageMeta({
   ];
 }
 
-export function canonical(path: string) {
-  return { rel: "canonical", href: absoluteUrl(path) };
+/**
+ * The canonical address of this page, and the same page in each language it exists in,
+ * so a search engine shows the Turkish page to a Turkish reader.
+ */
+function addressLinks(lang: Lang, path: string, langs: readonly Lang[]): Link[] {
+  const links: Link[] = [{ rel: "canonical", href: absoluteUrl(publicPath(lang, path)) }];
+  for (const code of langs) {
+    links.push({ rel: "alternate", hrefLang: code, href: absoluteUrl(publicPath(code, path)) });
+  }
+  if (langs.includes(DEFAULT_LANG)) {
+    links.push({
+      rel: "alternate",
+      hrefLang: "x-default",
+      href: absoluteUrl(publicPath(DEFAULT_LANG, path)),
+    });
+  }
+  return links;
 }
 
-/** Head of a reading page, in English (the site's default language). */
-export function storyHead(story: Story | undefined, path: string) {
-  if (!story) {
+export function homeHead(lang: Lang) {
+  return {
+    meta: pageMeta({
+      title: SITE_NAME,
+      description: DESCRIPTION[lang],
+      url: publicPath(lang, "/"),
+      lang,
+    }),
+    links: addressLinks(lang, "/", LANGS),
+  };
+}
+
+export function sectionHead(lang: Lang, theme: Theme) {
+  const name = copyFor(lang).themes[theme];
+  const path = `/${theme}`;
+  return {
+    meta: pageMeta({
+      title: `${name} — ${SITE_NAME}`,
+      description: SECTION_DESCRIPTION[lang](name),
+      url: publicPath(lang, path),
+      lang,
+    }),
+    links: addressLinks(lang, path, LANGS),
+  };
+}
+
+/** Head of a reading page in one language. */
+export function storyHead(card: StoryCard | undefined, lang: Lang) {
+  if (!card) {
     return { meta: [{ title: SITE_NAME }, { name: "robots", content: "noindex" }] };
   }
-  const en = story.locales.en;
-  const title = en.title.trim() || SITE_NAME;
-  const description =
-    clip(en.dek || paragraphs(en.body)[0] || "") || SITE_DESCRIPTION;
-  const image = story.image?.src;
+  const path = `/read/${card.id}`;
+  const written = LANGS.filter((code) => card.locales[code].written);
+  // A language without this text shows a notice pointing to the others: not a page to index.
+  const own = card.locales[lang].written ? lang : (written[0] ?? DEFAULT_LANG);
+  const copy = card.locales[own];
+  const title = copy.title.trim() || card.locales.en.title.trim() || SITE_NAME;
+  const description = clip(copy.dek || copy.lead) || DESCRIPTION[lang];
+  const image = card.image?.src || SITE_CARD;
+  const url = publicPath(lang, path);
   return {
     meta: [
       ...pageMeta({
         title: `${title} — ${SITE_NAME}`,
         description,
-        path,
-        image: image || SITE_CARD,
+        url,
+        lang,
+        image,
         type: "article",
       }),
-      { property: "article:published_time", content: story.date },
-      {
-        "script:ld+json": {
-          "@context": "https://schema.org",
-          "@type": "Article",
-          headline: title,
-          description,
-          datePublished: story.date,
-          inLanguage: "en",
-          image: [absoluteUrl(image || SITE_CARD)],
-          mainEntityOfPage: absoluteUrl(path),
-          publisher: { "@type": "Organization", name: SITE_NAME, url: `${SITE_URL}/` },
-        },
-      },
+      { property: "article:published_time", content: card.date },
+      ...(own === lang
+        ? [
+            {
+              "script:ld+json": {
+                "@context": "https://schema.org",
+                "@type": "Article",
+                headline: title,
+                description,
+                datePublished: card.date,
+                inLanguage: lang,
+                image: [absoluteUrl(image)],
+                mainEntityOfPage: absoluteUrl(url),
+                publisher: { "@type": "Organization", name: SITE_NAME, url: `${SITE_URL}/` },
+              },
+            },
+          ]
+        : [{ name: "robots", content: "noindex" }]),
     ],
-    links: [canonical(path)],
+    links: own === lang ? addressLinks(lang, path, written) : [],
   };
 }

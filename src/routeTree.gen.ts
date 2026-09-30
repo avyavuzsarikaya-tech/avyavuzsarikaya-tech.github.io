@@ -12,9 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SectionRouteImport } from './routes/$section'
 import { Route as PanelRouteImport } from './routes/panel'
+import { Route as LangSectionRouteImport } from './routes/$lang.$section'
 import { Route as PanelIndexRouteImport } from './routes/panel.index'
 import { Route as PanelStoryIdRouteImport } from './routes/panel.$storyId'
 import { Route as ReadStoryIdRouteImport } from './routes/read.$storyId'
+import { Route as LangReadStoryIdRouteImport } from './routes/$lang.read.$storyId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -29,6 +31,11 @@ const SectionRoute = SectionRouteImport.update({
 const PanelRoute = PanelRouteImport.update({
   id: '/panel',
   path: '/panel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangSectionRoute = LangSectionRouteImport.update({
+  id: '/$lang/$section',
+  path: '/$lang/$section',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PanelIndexRoute = PanelIndexRouteImport.update({
@@ -46,30 +53,41 @@ const ReadStoryIdRoute = ReadStoryIdRouteImport.update({
   path: '/read/$storyId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LangReadStoryIdRoute = LangReadStoryIdRouteImport.update({
+  id: '/$lang/read/$storyId',
+  path: '/$lang/read/$storyId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$section': typeof SectionRoute
   '/panel': typeof PanelRouteWithChildren
+  '/$lang/$section': typeof LangSectionRoute
   '/panel/$storyId': typeof PanelStoryIdRoute
   '/read/$storyId': typeof ReadStoryIdRoute
   '/panel/': typeof PanelIndexRoute
+  '/$lang/read/$storyId': typeof LangReadStoryIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$section': typeof SectionRoute
+  '/$lang/$section': typeof LangSectionRoute
   '/panel/$storyId': typeof PanelStoryIdRoute
   '/read/$storyId': typeof ReadStoryIdRoute
   '/panel': typeof PanelIndexRoute
+  '/$lang/read/$storyId': typeof LangReadStoryIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$section': typeof SectionRoute
   '/panel': typeof PanelRouteWithChildren
+  '/$lang/$section': typeof LangSectionRoute
   '/panel/$storyId': typeof PanelStoryIdRoute
   '/read/$storyId': typeof ReadStoryIdRoute
   '/panel/': typeof PanelIndexRoute
+  '/$lang/read/$storyId': typeof LangReadStoryIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -77,26 +95,39 @@ export interface FileRouteTypes {
     | '/'
     | '/$section'
     | '/panel'
+    | '/$lang/$section'
     | '/panel/$storyId'
     | '/read/$storyId'
     | '/panel/'
+    | '/$lang/read/$storyId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$section' | '/panel/$storyId' | '/read/$storyId' | '/panel'
+  to:
+    | '/'
+    | '/$section'
+    | '/$lang/$section'
+    | '/panel/$storyId'
+    | '/read/$storyId'
+    | '/panel'
+    | '/$lang/read/$storyId'
   id:
     | '__root__'
     | '/'
     | '/$section'
     | '/panel'
+    | '/$lang/$section'
     | '/panel/$storyId'
     | '/read/$storyId'
     | '/panel/'
+    | '/$lang/read/$storyId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SectionRoute: typeof SectionRoute
   PanelRoute: typeof PanelRouteWithChildren
+  LangSectionRoute: typeof LangSectionRoute
   ReadStoryIdRoute: typeof ReadStoryIdRoute
+  LangReadStoryIdRoute: typeof LangReadStoryIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -122,6 +153,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PanelRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$lang/$section': {
+      id: '/$lang/$section'
+      path: '/$lang/$section'
+      fullPath: '/$lang/$section'
+      preLoaderRoute: typeof LangSectionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/panel/': {
       id: '/panel/'
       path: '/'
@@ -143,6 +181,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReadStoryIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$lang/read/$storyId': {
+      id: '/$lang/read/$storyId'
+      path: '/$lang/read/$storyId'
+      fullPath: '/$lang/read/$storyId'
+      preLoaderRoute: typeof LangReadStoryIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -162,7 +207,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SectionRoute: SectionRoute,
   PanelRoute: PanelRouteWithChildren,
+  LangSectionRoute: LangSectionRoute,
   ReadStoryIdRoute: ReadStoryIdRoute,
+  LangReadStoryIdRoute: LangReadStoryIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

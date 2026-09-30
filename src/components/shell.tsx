@@ -1,12 +1,14 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { Palette } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { Pick } from "@/components/pick";
 import { useFrameCopy } from "@/lib/frame-copy";
 import { langMeta, useCopy } from "@/lib/i18n";
+import { homeLink, rememberLang, sectionLink, withLang } from "@/lib/lang-path";
 import { useLibrary } from "@/lib/library";
 import { LOOKS, LOOK_SWATCH, useLook, type Look } from "@/lib/look";
-import { LANGS, THEMES, type Theme } from "@/lib/types";
+import { LANGS, THEMES, type Lang, type Theme } from "@/lib/types";
+import { useLang } from "@/lib/use-lang";
 
 function Meridian() {
   return (
@@ -39,10 +41,9 @@ export function Shell({
   children: React.ReactNode;
   section?: Theme | "all";
 }) {
-  const lang = useLibrary((s) => s.lang);
-  const ready = useLibrary((s) => s.ready);
-  const setLang = useLibrary((s) => s.setLang);
-  const load = useLibrary((s) => s.load);
+  const lang = useLang();
+  const setPanelLang = useLibrary((s) => s.setLang);
+  const navigate = useNavigate();
   const copy = useCopy(lang);
   const frame = useFrameCopy(lang);
   const meta = langMeta[lang];
@@ -59,13 +60,16 @@ export function Shell({
   }, [section, lang]);
 
   useEffect(() => {
-    void load();
-  }, [load]);
-
-  useEffect(() => {
     document.documentElement.lang = meta.html;
     document.documentElement.dir = meta.dir;
   }, [meta.html, meta.dir]);
+
+  // Reader pages: the same page at the other language's address. The panel keeps its address.
+  function setLang(code: Lang) {
+    rememberLang(code);
+    setPanelLang(code);
+    if (!inPanel) void navigate({ href: withLang(code, path) });
+  }
 
   const barItem = (on: boolean) =>
     on
@@ -78,7 +82,7 @@ export function Shell({
         dir="ltr"
         className="flex items-center justify-between gap-4 bg-panel px-5 py-3 text-paper md:px-8"
       >
-        <Link to="/" className="inline-flex min-h-11 items-center gap-3 text-paper">
+        <Link {...homeLink(lang)} className="inline-flex min-h-11 items-center gap-3 text-paper">
           <Meridian />
           <span className="font-display text-xl tracking-widest">ORBIS</span>
         </Link>
@@ -86,7 +90,7 @@ export function Shell({
           {/* The editing panel stays out of the reader's menu; open it at /panel. */}
           {inPanel ? (
             <>
-              <Link to="/" className="inline-flex min-h-11 items-center text-mist">
+              <Link {...homeLink(lang)} className="inline-flex min-h-11 items-center text-mist">
                 {copy.atlas}
               </Link>
               <Link to="/panel" className="inline-flex min-h-11 items-center text-paper">
@@ -140,14 +144,17 @@ export function Shell({
             ref={bar}
             className="no-scrollbar flex gap-5 overflow-x-auto px-5 text-[13px] tracking-wide whitespace-nowrap md:gap-7 md:px-8"
           >
-            <Link to="/" data-on={section === "all"} className={barItem(section === "all")}>
+            <Link
+              {...homeLink(lang)}
+              data-on={section === "all"}
+              className={barItem(section === "all")}
+            >
               {copy.home}
             </Link>
             {THEMES.map((theme) => (
               <Link
                 key={theme}
-                to="/$section"
-                params={{ section: theme }}
+                {...sectionLink(lang, theme)}
                 data-on={section === theme}
                 className={barItem(section === theme)}
               >
@@ -158,7 +165,7 @@ export function Shell({
         </nav>
 
         <div className="flex-1">
-          {ready ? children : <p className="px-5 py-16 text-muted md:px-8">{copy.loading}</p>}
+          {children}
         </div>
 
         <div aria-hidden="true" className="flex items-center gap-3 px-5 pt-12 pb-10 md:px-8">
@@ -171,7 +178,7 @@ export function Shell({
           <div className="grid gap-8 md:grid-cols-3">
             <div className="flex flex-col gap-3">
               <Link
-                to="/"
+                {...homeLink(lang)}
                 dir="ltr"
                 className="inline-flex min-h-11 items-center gap-3 self-start text-paper"
               >
@@ -186,8 +193,7 @@ export function Shell({
                 {THEMES.map((theme) => (
                   <li key={theme}>
                     <Link
-                      to="/$section"
-                      params={{ section: theme }}
+                      {...sectionLink(lang, theme)}
                       className="inline-flex min-h-9 items-center text-sm text-paper"
                     >
                       {copy.themes[theme]}

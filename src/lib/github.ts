@@ -4,7 +4,8 @@
  * here reaches every reader within a few minutes.
  *
  * Access is a fine-grained GitHub token limited to this one repository (Contents: read
- * and write). It is kept only in this browser.
+ * and write). It is kept only for this browser session (sessionStorage): closing the
+ * browser forgets it, so it does not sit on the device where any script could find it.
  */
 
 export const REPO = {
@@ -19,7 +20,9 @@ const TOKEN_KEY = "orbis-github-token";
 
 export function readToken(): string {
   try {
-    return localStorage.getItem(TOKEN_KEY) ?? "";
+    // Earlier versions kept the token for good; clear that copy.
+    localStorage.removeItem(TOKEN_KEY);
+    return sessionStorage.getItem(TOKEN_KEY) ?? "";
   } catch {
     return "";
   }
@@ -27,8 +30,8 @@ export function readToken(): string {
 
 export function writeToken(token: string) {
   try {
-    if (token) localStorage.setItem(TOKEN_KEY, token);
-    else localStorage.removeItem(TOKEN_KEY);
+    if (token) sessionStorage.setItem(TOKEN_KEY, token);
+    else sessionStorage.removeItem(TOKEN_KEY);
   } catch {
     /* ignore */
   }
