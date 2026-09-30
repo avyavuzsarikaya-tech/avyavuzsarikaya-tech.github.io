@@ -112,52 +112,67 @@ export function ReadingPlayer({
     if (audio) audio.playbackRate = value;
   }
 
+  const span = duration > 0 ? Math.min(progress, duration) / duration : 0;
+  const pct = `${span * 100}%`;
+
   return (
-    <div className="flex w-0 min-w-full items-center gap-2.5">
-      <button
-        type="button"
-        onClick={() => void toggle()}
-        aria-label={playing ? pause : listen}
-        className="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-ink text-paper"
-      >
-        {playing ? (
-          <Pause className="size-3.5" aria-hidden="true" />
-        ) : (
-          <Play className="size-3.5 translate-x-px" aria-hidden="true" />
-        )}
-      </button>
-      <div className="min-w-0 flex-1">
+    <div className="reading-player flex flex-col gap-1.5">
+      <div className="flex justify-between text-sm tabular-nums text-muted">
+        <span dir="ltr">{fmt(progress)}</span>
+        <span dir="ltr">{fmt(duration)}</span>
+      </div>
+      <div className="seek-line">
+        <div className="seek-rule" aria-hidden="true">
+          <span className="seek-fill" style={{ width: pct }} />
+          <span className="seek-knob" style={{ insetInlineStart: pct }} />
+        </div>
         <input
-          className="seek h-4"
+          className="seek"
           type="range"
           min={0}
           max={duration || 0}
           step={0.1}
           value={Math.min(progress, duration || 0)}
           aria-label={listen}
+          aria-valuetext={`${fmt(progress)} / ${fmt(duration)}`}
           onChange={(event) => seek(Number(event.target.value))}
         />
-        <div className="flex items-baseline gap-1.5 whitespace-nowrap text-xs">
-          <span className="text-pine">{listen}</span>
-          <span dir="ltr" className="tabular-nums text-muted">
-            {fmt(progress)}/{fmt(duration)}
+      </div>
+      <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
+        <button
+          type="button"
+          onClick={() => void toggle()}
+          aria-label={playing ? pause : listen}
+          className={
+            playing
+              ? "inline-flex size-10 shrink-0 items-center justify-center border border-pine bg-paper text-ink"
+              : "inline-flex size-10 shrink-0 items-center justify-center border border-ink bg-paper text-ink"
+          }
+        >
+          {playing ? (
+            <Pause className="size-4" strokeWidth={1.75} aria-hidden="true" />
+          ) : (
+            <Play className="size-4 translate-x-px" strokeWidth={1.75} aria-hidden="true" />
+          )}
+        </button>
+        <span className="text-sm text-pine">{listen}</span>
+        <label className="ms-auto inline-flex max-w-full cursor-pointer items-center gap-1.5 border-b border-ink py-2 text-sm text-ink">
+          <span className="text-muted">{speed}</span>
+          <select
+            value={String(rate)}
+            onChange={(event) => changeRate(Number(event.target.value))}
+            className="cursor-pointer appearance-none bg-transparent text-sm tabular-nums text-ink"
+          >
+            {RATES.map((value) => (
+              <option key={value} value={String(value)}>
+                {value}x
+              </option>
+            ))}
+          </select>
+          <span aria-hidden="true" className="text-[10px] leading-none">
+            ▾
           </span>
-          <label dir="ltr" className="ms-auto inline-flex items-baseline gap-1 text-muted">
-            <span className="sr-only">{speed}</span>
-            <select
-              value={String(rate)}
-              aria-label={speed}
-              onChange={(event) => changeRate(Number(event.target.value))}
-              className="appearance-none bg-transparent pe-0 text-xs tabular-nums text-ink"
-            >
-              {RATES.map((value) => (
-                <option key={value} value={String(value)}>
-                  {value}x
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
+        </label>
       </div>
     </div>
   );
