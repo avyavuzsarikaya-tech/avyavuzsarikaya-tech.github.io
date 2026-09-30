@@ -3,7 +3,7 @@ import { Shell } from "@/components/shell";
 import { useFrameCopy } from "@/lib/frame-copy";
 import { useCopy } from "@/lib/i18n";
 import { useLibrary } from "@/lib/library";
-import { formatDate, paragraphs, storyTitle } from "@/lib/text";
+import { formatDate, paragraphs, readingMinutes, storyTitle } from "@/lib/text";
 import { toTheme, type Lang, type Story, type Theme } from "@/lib/types";
 
 type HomeSearch = { s?: Theme };
@@ -94,6 +94,9 @@ function Atlas({ section }: { section: Theme | "all" }) {
     );
   }
 
+  const leadDek = latest?.locales[lang].dek?.trim() ?? "";
+  const leadMinutes = latest ? readingMinutes(latest.locales[lang].body) : 0;
+
   return (
     <main>
       <div className="px-5 py-6 md:px-8 md:py-8">
@@ -123,36 +126,36 @@ function Atlas({ section }: { section: Theme | "all" }) {
               >
                 {storyTitle(latest, lang)}
               </h2>
-              {latest.image ? (
-                <Picture story={latest} className={alone ? "max-w-3xl" : "md:aspect-[16/9]"} />
-              ) : null}
-              {latest.locales[lang].dek ? (
+              {/* Like a newspaper front: title, the reading's own summary in full, reading time,
+                  then the picture. The text itself starts on the reading page. */}
+              {leadDek ? (
                 <p
                   className={
                     alone
                       ? "max-w-3xl text-pretty text-lg leading-snug text-muted md:text-xl"
-                      : "hidden text-pretty text-lg leading-snug text-muted lg:block lg:text-xl"
+                      : "text-pretty text-base leading-snug text-muted md:text-lg lg:text-xl"
                   }
                 >
-                  {latest.locales[lang].dek}
-                </p>
-              ) : null}
-              {alone ? (
-                <p className="font-body line-clamp-[10] max-w-3xl text-pretty text-base leading-relaxed md:line-clamp-none md:text-lg">
-                  {cut(latest.locales[lang].body, 3)}
+                  {leadDek}
                 </p>
               ) : (
-                <div className="relative md:min-h-24 md:flex-1">
-                  <p className="font-body line-clamp-8 text-pretty text-sm leading-snug md:absolute md:inset-0 md:line-clamp-none md:overflow-hidden md:text-base md:leading-relaxed">
-                    {cut(latest.locales[lang].body, 6)}
-                  </p>
-                  <span
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-10 bg-gradient-to-t from-paper to-transparent md:block"
-                  />
-                </div>
+                <p className="font-body line-clamp-4 text-pretty text-sm leading-snug text-muted md:text-base">
+                  {cut(latest.locales[lang].body, 1)}
+                </p>
               )}
-              {section === "all" && !alone ? <EndMark /> : null}
+              {leadMinutes ? (
+                <p className="text-xs uppercase tracking-widest text-muted">
+                  {leadMinutes} {copy.min}
+                </p>
+              ) : null}
+              {latest.image ? (
+                <Picture story={latest} className={alone ? "max-w-3xl" : "md:aspect-[16/9]"} />
+              ) : null}
+              {section === "all" && !alone ? (
+                <span className="mt-auto pt-4">
+                  <EndMark />
+                </span>
+              ) : null}
             </Link>
             {cards.map((story, n) => (
               <Card key={story.id} story={story} lang={lang} span={cardSpan(n)} />
@@ -215,7 +218,10 @@ function EndMark() {
 
 function Card({ story, lang, span = "" }: { story: Story; lang: Lang; span?: string }) {
   const title = storyTitle(story, lang);
-  const excerpt = cut(story.locales[lang].body, 1);
+  // The card shows the reading's own one-sentence summary, in full.
+  // Only a reading without one falls back to the start of its text.
+  const dek = story.locales[lang].dek?.trim();
+  const excerpt = dek || cut(story.locales[lang].body, 1);
   return (
     <Link
       to="/read/$storyId"
@@ -226,7 +232,13 @@ function Card({ story, lang, span = "" }: { story: Story; lang: Lang; span?: str
       <Meta story={story} lang={lang} />
       <h2 className="text-base leading-tight md:text-xl lg:text-2xl">{title}</h2>
       {excerpt ? (
-        <p className="font-body line-clamp-3 text-pretty text-[13px] leading-snug text-muted md:line-clamp-2 md:text-base">
+        <p
+          className={
+            dek
+              ? "font-body text-pretty text-[13px] leading-snug text-muted md:text-base"
+              : "font-body line-clamp-3 text-pretty text-[13px] leading-snug text-muted md:line-clamp-2 md:text-base"
+          }
+        >
           {excerpt}
         </p>
       ) : null}
