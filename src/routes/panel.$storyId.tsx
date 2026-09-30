@@ -67,6 +67,18 @@ function Editor({ storyId }: { storyId: string }) {
   draftRef.current = draft;
   const loadedFor = useRef<string | null>(null);
   const baseFor = useRef<string | null>(null);
+  // Bumped to read the repository file again (after a draft is discarded).
+  const [baseTick, setBaseTick] = useState(0);
+
+  /**
+   * Whether a repository file is the version this editor started from: the same reading
+   * (null for a reading not published yet). Only then is it safe to publish over it.
+   */
+  function matchesStart(text: string | null): boolean {
+    if (text === null) return storyId === "new";
+    const latest = parseStoryFile(text);
+    return latest !== undefined && JSON.stringify(fromFile(latest)) === pristine.current;
+  }
 
   function isDirty(): boolean {
     const current = draftRef.current;
@@ -117,23 +129,31 @@ function Editor({ storyId }: { storyId: string }) {
     readRepoFile(token, storyFile(id))
       .then((text) => {
         if (cancelled || draftRef.current?.id !== id) return;
-        setBase(text);
+        if (matchesStart(text)) {
+          setBase(text);
+          return;
+        }
+        // The repository holds a newer text than the one on screen.
         const latest = parseStoryFile(text);
-        if (!latest || isDirty()) return;
-        const shown = fromFile(latest);
-        if (JSON.stringify(shown) === pristine.current) return;
-        pristine.current = JSON.stringify(shown);
-        setDraft(shown);
+        if (latest && !isDirty()) {
+          // Nothing typed yet: open the newer text instead.
+          const shown = fromFile(latest);
+          pristine.current = JSON.stringify(shown);
+          setDraft(shown);
+          setBase(text);
+        }
+        // Otherwise the changes on screen were made on an older text. The start stays
+        // unknown, so publishing checks again and asks before replacing the newer text.
       })
       .catch(() => {
-        // Not readable now: publishing then goes ahead without the check, as before.
+        // Not readable now: publishing reads it again and will not go ahead unchecked.
         if (!cancelled) baseFor.current = null;
       });
     return () => {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token, booted, draft?.id]);
+  }, [token, booted, draft?.id, baseTick]);
 
   // Every change is kept in this browser shortly after it is made.
   useEffect(() => {
@@ -236,8 +256,17 @@ function Editor({ storyId }: { storyId: string }) {
     setBusy(true);
     try {
       const before = useLibrary.getState().stories.find((item) => item.id === draft.id);
-      // "Publish anyway" replaces whatever is there now, knowingly.
-      const expected = anyway ? await readRepoFile(token, storyFile(draft.id)) : base;
+      let expected = base;
+      if (anyway) {
+        // "Publish anyway" replaces whatever is there now, knowingly.
+        expected = await readRepoFile(token, storyFile(draft.id));
+      } else if (expected === undefined) {
+        // The start was never confirmed (the first read failed or has not finished).
+        // Confirm it now; if the repository no longer holds that text, ask first.
+        const now = await readRepoFile(token, storyFile(draft.id));
+        if (!matchesStart(now)) throw new PublishError("stale", "start not confirmed");
+        expected = now;
+      }
       const { shown, text } = await publishStory(token, draft, before, expected);
       await upsert(shown);
       const next = structuredClone(shown);
@@ -292,6 +321,8 @@ function Editor({ storyId }: { storyId: string }) {
     setDraft(fresh);
     setBase(undefined);
     baseFor.current = null;
+    // Read the repository again, so the published text on screen is checked like any other.
+    setBaseTick((tick) => tick + 1);
     setRestored(false);
     setMediaDropped(false);
     setStale(false);
