@@ -36,6 +36,8 @@ jobs:
       # A type error stops the publish here, before anything reaches the live site.
       - name: Check the code
         run: npm run typecheck
+      - name: Run the tests
+        run: npm run test:site
       - run: npm run build:pages
       - name: Place the site at the repository root
         run: |

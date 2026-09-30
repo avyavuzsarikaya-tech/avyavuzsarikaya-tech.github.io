@@ -75,17 +75,19 @@ export function readLink(lang: Lang, storyId: string) {
 /**
  * Runs in <head> before the page paints.
  * 1. An old section link (/?s=climate) goes to the section's own address (/climate).
- * 2. A reader who chose another language earlier and opens a plain (English) address goes
- *    straight to the same page in that language. An address that already names a
- *    language is never changed, and the panel is left alone.
+ * 2. A reader who chose another language earlier and opens the plain (English) front page
+ *    or a section page goes to the same page in that language. A reading's address is
+ *    never changed, so a shared link opens in the language it was shared in. An address
+ *    that already names a language is never changed, and the panel is left alone.
  */
 const PLAIN_PAGE = `/^\\/(${[...PREFIXED, "panel"].join("|")})(\\/|$)/`;
+const FRONT_OR_SECTION = `/^\\/([a-z-]+(\\.html)?)?$/`;
 export const LANG_BOOT = [
   "try{",
   'var p=location.pathname,s=new URLSearchParams(location.search).get("s");',
   'if(p==="/"&&s&&/^[a-z-]+$/.test(s)){location.replace("/"+s)}else{',
   `var l=localStorage.getItem("${LANG_KEY}");`,
-  `if(l&&${JSON.stringify(PREFIXED)}.indexOf(l)>-1&&!${PLAIN_PAGE}.test(p)){`,
+  `if(l&&${JSON.stringify(PREFIXED)}.indexOf(l)>-1&&${FRONT_OR_SECTION}.test(p)&&!${PLAIN_PAGE}.test(p)){`,
   'location.replace("/"+l+(p==="/"?"":p)+location.search+location.hash)}}',
   "}catch(e){}",
 ].join("");
