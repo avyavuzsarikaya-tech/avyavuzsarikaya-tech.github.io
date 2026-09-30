@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SectionRouteImport } from './routes/$section'
 import { Route as PanelRouteImport } from './routes/panel'
 import { Route as PanelIndexRouteImport } from './routes/panel.index'
 import { Route as PanelStoryIdRouteImport } from './routes/panel.$storyId'
@@ -18,6 +19,11 @@ import { Route as ReadStoryIdRouteImport } from './routes/read.$storyId'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SectionRoute = SectionRouteImport.update({
+  id: '/$section',
+  path: '/$section',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PanelRoute = PanelRouteImport.update({
@@ -43,6 +49,7 @@ const ReadStoryIdRoute = ReadStoryIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$section': typeof SectionRoute
   '/panel': typeof PanelRouteWithChildren
   '/panel/$storyId': typeof PanelStoryIdRoute
   '/read/$storyId': typeof ReadStoryIdRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$section': typeof SectionRoute
   '/panel/$storyId': typeof PanelStoryIdRoute
   '/read/$storyId': typeof ReadStoryIdRoute
   '/panel': typeof PanelIndexRoute
@@ -57,6 +65,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$section': typeof SectionRoute
   '/panel': typeof PanelRouteWithChildren
   '/panel/$storyId': typeof PanelStoryIdRoute
   '/read/$storyId': typeof ReadStoryIdRoute
@@ -64,12 +73,19 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/panel' | '/panel/$storyId' | '/read/$storyId' | '/panel/'
+  fullPaths:
+    | '/'
+    | '/$section'
+    | '/panel'
+    | '/panel/$storyId'
+    | '/read/$storyId'
+    | '/panel/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/panel/$storyId' | '/read/$storyId' | '/panel'
+  to: '/' | '/$section' | '/panel/$storyId' | '/read/$storyId' | '/panel'
   id:
     | '__root__'
     | '/'
+    | '/$section'
     | '/panel'
     | '/panel/$storyId'
     | '/read/$storyId'
@@ -78,6 +94,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SectionRoute: typeof SectionRoute
   PanelRoute: typeof PanelRouteWithChildren
   ReadStoryIdRoute: typeof ReadStoryIdRoute
 }
@@ -89,6 +106,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$section': {
+      id: '/$section'
+      path: '/$section'
+      fullPath: '/$section'
+      preLoaderRoute: typeof SectionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/panel': {
@@ -136,6 +160,7 @@ const PanelRouteWithChildren = PanelRoute._addFileChildren(PanelRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SectionRoute: SectionRoute,
   PanelRoute: PanelRouteWithChildren,
   ReadStoryIdRoute: ReadStoryIdRoute,
 }

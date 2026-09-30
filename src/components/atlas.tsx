@@ -1,0 +1,258 @@
+import { Link } from "@tanstack/react-router";
+import { useFrameCopy } from "@/lib/frame-copy";
+import { useCopy } from "@/lib/i18n";
+import { useLibrary } from "@/lib/library";
+import { formatDate, paragraphs, readingMinutes, storyTitle } from "@/lib/text";
+import type { Lang, Story, Theme } from "@/lib/types";
+
+/**
+ * The front page grid and the section pages share this layout: the lead reading, the
+ * cards around it, and the index of further readings on the right.
+ */
+
+/** First paragraphs as plain text: source markers like [1] are dropped for the cards. */
+function cut(body: string, count: number): string {
+  return paragraphs(body)
+    .slice(0, count)
+    .join(" ")
+    .replace(/\s*\[\d+\]/g, "")
+    .trim();
+}
+
+function Meta({ story, lang }: { story: Story; lang: Lang }) {
+  const copy = useCopy(lang);
+  return (
+    <p className="text-xs uppercase tracking-widest text-pine">
+      {copy.themes[story.theme]}
+      <span className="hidden text-muted normal-case tracking-normal md:inline">
+        {" "}
+        · {formatDate(story.date, lang)}
+      </span>
+    </p>
+  );
+}
+
+export function Atlas({ section }: { section: Theme | "all" }) {
+  const lang = useLibrary((s) => s.lang);
+  const stories = useLibrary((s) => s.stories);
+  const restoreSeed = useLibrary((s) => s.restoreSeed);
+  const copy = useCopy(lang);
+  const frame = useFrameCopy(lang);
+
+  const all = [...stories].sort((a, b) => b.date.localeCompare(a.date));
+  const sorted = all.filter((story) => section === "all" || story.theme === section);
+  const latest = sorted[0];
+  // Three-by-three grid: the lead fills the top-left four cells, three cards run down
+  // the right and three across the bottom, the corner card belonging to both.
+  // Up to one more full row of three follows underneath.
+  const cards = sorted.slice(1, 9);
+  const alone = cards.length === 0;
+  // On phones everything stacks in one column; the grid starts at tablet width.
+  const leadSpan = alone
+    ? "md:col-span-3"
+    : cards.length === 1
+      ? "md:col-span-2"
+      : "md:col-span-2 md:row-span-2";
+  // The index lists only stories the grid does not already show.
+  const rest = section === "all" ? all.slice(9) : all;
+  // A row with fewer than three cards stretches so it never leaves a hole.
+  const cardSpan = (n: number) => {
+    if (n < 2) return "";
+    const row = Math.floor((n - 2) / 3);
+    const inRow = Math.min(3, cards.length - 2 - row * 3);
+    if (inRow === 1) return "md:col-span-3";
+    if (inRow === 2 && (n - 2) % 3 === 0) return "md:col-span-2";
+    return "";
+  };
+
+  if (stories.length === 0) {
+    return (
+      <main className="flex flex-col items-start gap-4 px-5 py-10 md:px-8">
+        <p>{copy.emptyAtlas}</p>
+        <button
+          type="button"
+          onClick={() => void restoreSeed()}
+          className="inline-flex min-h-11 items-center bg-pine px-4 text-paper"
+        >
+          {copy.restore}
+        </button>
+      </main>
+    );
+  }
+
+  const leadDek = latest?.locales[lang].dek?.trim() ?? "";
+  const leadMinutes = latest ? readingMinutes(latest.locales[lang].body) : 0;
+
+  return (
+    <main>
+      <div className="px-5 py-6 md:px-8 md:py-8">
+        <p className="kicker text-xs uppercase tracking-widest text-muted">{copy.readings}</p>
+        <h1 className="mt-1 text-2xl leading-tight md:text-3xl">
+          {section === "all" ? copy.hero : copy.themes[section]}
+        </h1>
+      </div>
+
+      <div
+        className={`grid border-t border-rule ${rest.length > 0 ? "lg:grid-cols-[minmax(0,1fr)_20rem]" : ""}`}
+      >
+        {latest ? (
+          <div className="grid grid-cols-1 self-start md:grid-cols-3">
+            <Link
+              to="/read/$storyId"
+              params={{ storyId: latest.id }}
+              className={`${leadSpan} flex min-w-0 flex-col gap-3 border-b border-rule px-5 py-7 md:border-r md:px-8 md:py-8 md:rtl:border-r-0 md:rtl:border-l`}
+            >
+              <Meta story={latest} lang={lang} />
+              {/* Without a picture the text settles at the foot of the lead frame, so the
+                  height reads as air above a headline rather than an empty box. */}
+              <div
+                className={`flex flex-col gap-3 ${latest.image || alone ? "" : "md:mt-auto md:pt-16"}`}
+              >
+                <h2
+                  className={
+                    alone
+                      ? "max-w-3xl text-3xl leading-tight md:text-5xl"
+                      : "text-3xl leading-[1.1] md:text-5xl"
+                  }
+                >
+                  {storyTitle(latest, lang)}
+                </h2>
+                {/* Like a newspaper front: title, the reading's own summary in full, reading time,
+                    then the picture. The text itself starts on the reading page. */}
+                {leadDek ? (
+                  <p
+                    className={
+                      alone
+                        ? "max-w-3xl text-pretty text-lg leading-snug text-muted md:text-xl"
+                        : "max-w-2xl text-pretty text-lg leading-snug text-muted lg:text-xl"
+                    }
+                  >
+                    {leadDek}
+                  </p>
+                ) : (
+                  <p className="font-body line-clamp-4 max-w-2xl text-pretty text-base leading-snug text-muted">
+                    {cut(latest.locales[lang].body, 1)}
+                  </p>
+                )}
+                {leadMinutes ? (
+                  <p className="text-xs uppercase tracking-widest text-muted">
+                    {leadMinutes} {copy.min}
+                  </p>
+                ) : null}
+              </div>
+              {latest.image ? (
+                <Picture story={latest} className={alone ? "max-w-3xl" : "md:aspect-[16/9]"} />
+              ) : null}
+            </Link>
+            {cards.map((story, n) => (
+              <Card key={story.id} story={story} lang={lang} span={cardSpan(n)} second={n === 0} />
+            ))}
+          </div>
+        ) : (
+          <p className="px-5 py-10 text-muted md:px-8">{frame.emptySection}</p>
+        )}
+
+        {rest.length > 0 ? (
+          <aside className="flex flex-col gap-10 px-5 py-8 md:px-8">
+            {rest.length > 0 ? (
+              <section aria-labelledby="index-title">
+                <h2
+                  id="index-title"
+                  className="kicker text-xs font-normal uppercase tracking-widest text-muted"
+                  style={{ fontFamily: "inherit" }}
+                >
+                  {frame.index}
+                </h2>
+                <ol className="mt-3 flex flex-col">
+                  {rest.map((story, n) => (
+                    <li key={story.id} className="border-b border-line last:border-b-0">
+                      <Link
+                        to="/read/$storyId"
+                        params={{ storyId: story.id }}
+                        className="grid grid-cols-[1.75rem_1fr] gap-2 py-2.5"
+                      >
+                        <span className="pt-0.5 text-xs tabular-nums text-muted">
+                          {String(n + 1).padStart(2, "0")}
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block text-sm leading-snug">
+                            {storyTitle(story, lang)}
+                          </span>
+                          <span className="mt-0.5 block text-[11px] text-muted/70">
+                            {formatDate(story.date, lang)}
+                          </span>
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            ) : null}
+          </aside>
+        ) : null}
+      </div>
+    </main>
+  );
+}
+
+function Card({
+  story,
+  lang,
+  span = "",
+  second = false,
+}: {
+  story: Story;
+  lang: Lang;
+  span?: string;
+  second?: boolean;
+}) {
+  const title = storyTitle(story, lang);
+  // The card shows the reading's own one-sentence summary, in full.
+  // Only a reading without one falls back to the start of its text.
+  const dek = story.locales[lang].dek?.trim();
+  const excerpt = dek || cut(story.locales[lang].body, 1);
+  // The second reading stands a step above the rest, so the eye moves
+  // lead, then second, then the row. Small cards part by space, not by rules.
+  return (
+    <Link
+      to="/read/$storyId"
+      params={{ storyId: story.id }}
+      className={`${span} flex min-w-0 flex-col gap-2 border-b border-line px-5 md:px-8 ${second ? "gap-3 py-6 md:py-7" : "py-5"}`}
+    >
+      {story.image ? <Picture story={story} className={second ? "" : "hidden md:block"} /> : null}
+      <Meta story={story} lang={lang} />
+      <h2
+        className={
+          second ? "text-2xl leading-tight lg:text-3xl" : "text-lg leading-snug lg:text-xl"
+        }
+      >
+        {title}
+      </h2>
+      {excerpt ? (
+        <p
+          className={[
+            "font-body text-pretty leading-snug text-muted",
+            second ? "text-base md:text-lg" : "text-[15px]",
+            dek ? "" : "line-clamp-3 md:line-clamp-2",
+          ].join(" ")}
+        >
+          {excerpt}
+        </p>
+      ) : null}
+    </Link>
+  );
+}
+
+/** The reading's painting, cropped to a steady 3:2 frame so the grid keeps its rhythm. */
+function Picture({ story, className = "" }: { story: Story; className?: string }) {
+  if (!story.image) return null;
+  return (
+    <img
+      src={story.image.src}
+      alt={story.image.credit}
+      loading="lazy"
+      decoding="async"
+      className={`${className} aspect-[3/2] w-full object-cover`}
+    />
+  );
+}

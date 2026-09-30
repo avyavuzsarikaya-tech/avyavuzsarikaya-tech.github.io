@@ -1,4 +1,4 @@
-import { readdirSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Plugin } from "vite";
 import { defineConfig } from "vite";
@@ -11,6 +11,7 @@ import { grokPwaPlugin } from "./scripts/grok-pwa-plugin.mjs";
 // @ts-expect-error JS plugin alongside the TS vite config
 import { appEnvPlugin } from "./scripts/app-env-plugin.mjs";
 import { isMigrationFile } from "./scripts/migration-plan.mjs";
+import { THEMES } from "./src/lib/types";
 
 /** The files `src/lib/db.ts` globs — same directory, same non-recursive scope. */
 function hasGlobbedMigrations(root: string): boolean {
@@ -144,6 +145,36 @@ function authPopupPlugin(): Plugin {
 
 const pages = process.env.ORBIS_PAGES === "1";
 
+/**
+ * GitHub Pages build: besides the shell (index.html, 404.html) every section and every
+ * published reading gets its own HTML file (climate.html, read/<id>.html). The host then
+ * answers those addresses with 200 instead of the 404 fallback, and each file carries
+ * the page's own title and link-preview tags for search engines and messaging apps.
+ */
+function staticPages() {
+  const dir = "content/stories";
+  const readings = readdirSync(dir)
+    .filter((name) => name.endsWith(".json"))
+    .map((name) => {
+      const story = JSON.parse(readFileSync(join(dir, name), "utf8")) as { id?: string };
+      return `/read/${story.id || name.slice(0, -5)}`;
+    });
+  return [...THEMES.map((theme) => `/${theme}`), ...readings].map((path) => ({ path }));
+}
+
+const startOptions = pages
+  ? {
+      spa: { enabled: true },
+      pages: staticPages(),
+      prerender: {
+        enabled: true,
+        crawlLinks: false,
+        autoStaticPathsDiscovery: false,
+        autoSubfolderIndex: false,
+      },
+    }
+  : undefined;
+
 // `0.0.0.0:8080` is the live-preview contract — don't change host/port.
 // The dev server starts once `src/router.tsx` and `src/routes/` exist — see
 // AGENTS.md § "First scaffold".
@@ -168,7 +199,7 @@ export default defineConfig(({ command, isPreview }) => ({
     // PWA head + ?install=1 tutorial page; runs before Start/Nitro.
     grokPwaPlugin(),
     tailwindcss(),
-    tanstackStart(pages ? { spa: { enabled: true } } : undefined),
+    tanstackStart(startOptions),
     ...(command === "build" || isPreview
       ? pages
         ? []

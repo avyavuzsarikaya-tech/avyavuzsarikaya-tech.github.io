@@ -146,8 +146,8 @@ export function Shell({
             {THEMES.map((theme) => (
               <Link
                 key={theme}
-                to="/"
-                search={{ s: theme }}
+                to="/$section"
+                params={{ section: theme }}
                 data-on={section === theme}
                 className={barItem(section === theme)}
               >
@@ -186,8 +186,8 @@ export function Shell({
                 {THEMES.map((theme) => (
                   <li key={theme}>
                     <Link
-                      to="/"
-                      search={{ s: theme }}
+                      to="/$section"
+                      params={{ section: theme }}
                       className="inline-flex min-h-9 items-center text-sm text-paper"
                     >
                       {copy.themes[theme]}

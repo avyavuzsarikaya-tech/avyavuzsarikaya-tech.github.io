@@ -5,6 +5,8 @@ import { Prose } from "@/components/prose";
 import { Shell } from "@/components/shell";
 import { langMeta, useCopy } from "@/lib/i18n";
 import { useLibrary } from "@/lib/library";
+import { SEED } from "@/lib/seed";
+import { storyHead } from "@/lib/site";
 import { formatDate, hasCopy, readingMinutes, safeHttpUrl } from "@/lib/text";
 import { LANGS } from "@/lib/types";
 
@@ -30,6 +32,12 @@ function writeType(value: number) {
 }
 
 export const Route = createFileRoute("/read/$storyId")({
+  // Title, summary and link-preview tags come from the published file of the reading.
+  head: ({ params }) =>
+    storyHead(
+      SEED.find((item) => item.id === params.storyId),
+      `/read/${params.storyId}`,
+    ),
   component: ReadingPage,
 });
 

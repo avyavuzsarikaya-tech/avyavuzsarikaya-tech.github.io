@@ -486,3 +486,8 @@ const copy: Record<Lang, Copy> = {
 export function useCopy(lang: Lang): Copy {
   return copy[lang];
 }
+
+/** The same copy, for code outside components (page titles, for instance). */
+export function copyFor(lang: Lang): Copy {
+  return copy[lang];
+}
