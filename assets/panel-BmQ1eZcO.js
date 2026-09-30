@@ -1,1 +1,0 @@
-import{D as e}from"./seed-c3585GjC.js";import{t}from"./shell-B6iGXTAd.js";import{i as n}from"./index-BlUTJExM.js";var r=e();function i(){return(0,r.jsx)(t,{children:(0,r.jsx)(n,{})})}export{i as component};
