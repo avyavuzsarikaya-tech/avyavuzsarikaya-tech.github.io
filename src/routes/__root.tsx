@@ -18,7 +18,7 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "Orbis is a reading atlas of the world. Sourced dispatches in Turkish, Arabic, English, French, and Spanish.",
+          "Orbis: sourced readings in Turkish, Arabic, English, French, and Spanish.",
       },
     ],
     links: [

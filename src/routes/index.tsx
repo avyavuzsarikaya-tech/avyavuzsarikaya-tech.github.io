@@ -115,51 +115,52 @@ function Atlas({ section }: { section: Theme | "all" }) {
             <Link
               to="/read/$storyId"
               params={{ storyId: latest.id }}
-              className={`${leadSpan} flex min-w-0 flex-col gap-3 border-b border-rule px-5 py-6 md:border-r md:px-8 md:py-6 md:rtl:border-r-0 md:rtl:border-l`}
+              className={`${leadSpan} flex min-w-0 flex-col gap-3 border-b border-rule px-5 py-7 md:border-r md:px-8 md:py-8 md:rtl:border-r-0 md:rtl:border-l`}
             >
               <Meta story={latest} lang={lang} />
-              <h2
-                className={
-                  alone
-                    ? "max-w-3xl text-3xl leading-tight md:text-5xl"
-                    : "text-xl leading-tight md:text-4xl"
-                }
+              {/* Without a picture the text settles at the foot of the lead frame, so the
+                  height reads as air above a headline rather than an empty box. */}
+              <div
+                className={`flex flex-col gap-3 ${latest.image || alone ? "" : "md:mt-auto md:pt-16"}`}
               >
-                {storyTitle(latest, lang)}
-              </h2>
-              {/* Like a newspaper front: title, the reading's own summary in full, reading time,
-                  then the picture. The text itself starts on the reading page. */}
-              {leadDek ? (
-                <p
+                <h2
                   className={
                     alone
-                      ? "max-w-3xl text-pretty text-lg leading-snug text-muted md:text-xl"
-                      : "text-pretty text-base leading-snug text-muted md:text-lg lg:text-xl"
+                      ? "max-w-3xl text-3xl leading-tight md:text-5xl"
+                      : "text-3xl leading-[1.1] md:text-5xl"
                   }
                 >
-                  {leadDek}
-                </p>
-              ) : (
-                <p className="font-body line-clamp-4 text-pretty text-sm leading-snug text-muted md:text-base">
-                  {cut(latest.locales[lang].body, 1)}
-                </p>
-              )}
-              {leadMinutes ? (
-                <p className="text-xs uppercase tracking-widest text-muted">
-                  {leadMinutes} {copy.min}
-                </p>
-              ) : null}
+                  {storyTitle(latest, lang)}
+                </h2>
+                {/* Like a newspaper front: title, the reading's own summary in full, reading time,
+                    then the picture. The text itself starts on the reading page. */}
+                {leadDek ? (
+                  <p
+                    className={
+                      alone
+                        ? "max-w-3xl text-pretty text-lg leading-snug text-muted md:text-xl"
+                        : "max-w-2xl text-pretty text-lg leading-snug text-muted lg:text-xl"
+                    }
+                  >
+                    {leadDek}
+                  </p>
+                ) : (
+                  <p className="font-body line-clamp-4 max-w-2xl text-pretty text-base leading-snug text-muted">
+                    {cut(latest.locales[lang].body, 1)}
+                  </p>
+                )}
+                {leadMinutes ? (
+                  <p className="text-xs uppercase tracking-widest text-muted">
+                    {leadMinutes} {copy.min}
+                  </p>
+                ) : null}
+              </div>
               {latest.image ? (
                 <Picture story={latest} className={alone ? "max-w-3xl" : "md:aspect-[16/9]"} />
               ) : null}
-              {section === "all" && !alone ? (
-                <span className="mt-auto pt-4">
-                  <EndMark />
-                </span>
-              ) : null}
             </Link>
             {cards.map((story, n) => (
-              <Card key={story.id} story={story} lang={lang} span={cardSpan(n)} />
+              <Card key={story.id} story={story} lang={lang} span={cardSpan(n)} second={n === 0} />
             ))}
           </div>
         ) : (
@@ -179,18 +180,20 @@ function Atlas({ section }: { section: Theme | "all" }) {
                 </h2>
                 <ol className="mt-3 flex flex-col">
                   {rest.map((story, n) => (
-                    <li key={story.id} className="border-b border-line">
+                    <li key={story.id} className="border-b border-line last:border-b-0">
                       <Link
                         to="/read/$storyId"
                         params={{ storyId: story.id }}
-                        className="grid grid-cols-[2rem_1fr] gap-2 py-3"
+                        className="grid grid-cols-[1.75rem_1fr] gap-2 py-2.5"
                       >
-                        <span className="tabular-nums text-sm text-pine">
+                        <span className="pt-0.5 text-xs tabular-nums text-muted">
                           {String(n + 1 + (all.length - rest.length)).padStart(2, "0")}
                         </span>
                         <span className="min-w-0">
-                          <span className="block leading-snug">{storyTitle(story, lang)}</span>
-                          <span className="mt-1 block text-xs text-muted">
+                          <span className="block text-sm leading-snug">
+                            {storyTitle(story, lang)}
+                          </span>
+                          <span className="mt-0.5 block text-[11px] text-muted/70">
                             {formatDate(story.date, lang)}
                           </span>
                         </span>
@@ -207,38 +210,46 @@ function Atlas({ section }: { section: Theme | "all" }) {
   );
 }
 
-function EndMark() {
-  return (
-    <span aria-hidden="true" className="mx-auto mt-1 flex w-16 items-center gap-2 md:w-24 md:gap-3">
-      <span className="h-px flex-1 bg-rule" />
-      <span className="size-1 rounded-full bg-ink md:size-1.5" />
-      <span className="h-px flex-1 bg-rule" />
-    </span>
-  );
-}
-
-function Card({ story, lang, span = "" }: { story: Story; lang: Lang; span?: string }) {
+function Card({
+  story,
+  lang,
+  span = "",
+  second = false,
+}: {
+  story: Story;
+  lang: Lang;
+  span?: string;
+  second?: boolean;
+}) {
   const title = storyTitle(story, lang);
   // The card shows the reading's own one-sentence summary, in full.
   // Only a reading without one falls back to the start of its text.
   const dek = story.locales[lang].dek?.trim();
   const excerpt = dek || cut(story.locales[lang].body, 1);
+  // The second reading stands a step above the rest, so the eye moves
+  // lead, then second, then the row. Small cards part by space, not by rules.
   return (
     <Link
       to="/read/$storyId"
       params={{ storyId: story.id }}
-      className={`${span} flex min-w-0 flex-col gap-2 border-b border-rule px-5 py-5 md:border-r md:px-8 md:py-5 md:rtl:border-r-0 md:rtl:border-l`}
+      className={`${span} flex min-w-0 flex-col gap-2 border-b border-line px-5 md:px-8 ${second ? "gap-3 py-6 md:py-7" : "py-5"}`}
     >
-      {story.image ? <Picture story={story} className="hidden md:block" /> : null}
+      {story.image ? <Picture story={story} className={second ? "" : "hidden md:block"} /> : null}
       <Meta story={story} lang={lang} />
-      <h2 className="text-xl leading-tight lg:text-2xl">{title}</h2>
+      <h2
+        className={
+          second ? "text-2xl leading-tight lg:text-3xl" : "text-lg leading-snug lg:text-xl"
+        }
+      >
+        {title}
+      </h2>
       {excerpt ? (
         <p
-          className={
-            dek
-              ? "font-body text-pretty text-base leading-snug text-muted"
-              : "font-body line-clamp-3 text-pretty text-base leading-snug text-muted md:line-clamp-2"
-          }
+          className={[
+            "font-body text-pretty leading-snug text-muted",
+            second ? "text-base md:text-lg" : "text-[15px]",
+            dek ? "" : "line-clamp-3 md:line-clamp-2",
+          ].join(" ")}
         >
           {excerpt}
         </p>
