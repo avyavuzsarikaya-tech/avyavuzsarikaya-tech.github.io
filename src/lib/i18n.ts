@@ -80,7 +80,7 @@ export type Copy = {
 
 const copy: Record<Lang, Copy> = {
   en: {
-    atlas: "Atlas",
+    atlas: "Home",
     home: "Home",
     sections: "Sections",
     panel: "Panel",
@@ -103,10 +103,10 @@ const copy: Record<Lang, Copy> = {
     sourceWord: "source",
     unwritten: "This reading has not been written in this language yet.",
     availableIn: "Written in",
-    back: "Atlas",
+    back: "← Home",
     edit: "Edit in the panel",
-    missing: "This reading is not in the atlas.",
-    loading: "Opening the atlas",
+    missing: "This reading could not be found.",
+    loading: "Loading",
     colophon: "Orbis files sourced readings. The chain of documents sits at the foot of every text.",
     themes: {
       climate: "Climate",
@@ -121,7 +121,7 @@ const copy: Record<Lang, Copy> = {
     },
     newReading: "New reading",
     restore: "Restore the opening readings",
-    emptyAtlas: "The atlas is empty.",
+    emptyAtlas: "No readings yet.",
     emptyPanel: "No readings yet.",
     panelLead:
       "Write each language yourself. File one recording per language. Until you do, that language stays silent on the reading page.",
@@ -159,7 +159,7 @@ const copy: Record<Lang, Copy> = {
     recordingOff: "No recording",
   },
   tr: {
-    atlas: "Atlas",
+    atlas: "Ana sayfa",
     home: "Ana sayfa",
     sections: "Bölümler",
     panel: "Panel",
@@ -182,10 +182,10 @@ const copy: Record<Lang, Copy> = {
     sourceWord: "kaynak",
     unwritten: "Bu okuma bu dilde henüz yazılmadı.",
     availableIn: "Yazıldığı diller",
-    back: "Atlas",
+    back: "← Ana sayfa",
     edit: "Panelde düzenle",
-    missing: "Bu okuma atlasta yok.",
-    loading: "Atlas açılıyor",
+    missing: "Bu yazı bulunamadı.",
+    loading: "Yükleniyor",
     colophon: "Orbis kaynaklı okumalar tutar. Belge zinciri her metnin dibindedir.",
     themes: {
       climate: "İklim",
@@ -200,7 +200,7 @@ const copy: Record<Lang, Copy> = {
     },
     newReading: "Yeni okuma",
     restore: "Açılış okumalarını geri getir",
-    emptyAtlas: "Atlas boş.",
+    emptyAtlas: "Henüz yazı yok.",
     emptyPanel: "Henüz okuma yok.",
     panelLead:
       "Her dili kendiniz yazın. Dil başına bir ses kaydı yükleyin. Yüklemeden o dil, okuma sayfasında sessiz kalır.",
@@ -239,7 +239,7 @@ const copy: Record<Lang, Copy> = {
     recordingOff: "Ses yok",
   },
   ar: {
-    atlas: "الأطلس",
+    atlas: "الرئيسية",
     home: "الرئيسية",
     sections: "الأقسام",
     panel: "اللوحة",
@@ -261,10 +261,10 @@ const copy: Record<Lang, Copy> = {
     sourceWord: "مصدر",
     unwritten: "لم تُكتب هذه القراءة بهذه اللغة بعد.",
     availableIn: "كُتبت في",
-    back: "الأطلس",
+    back: "→ الرئيسية",
     edit: "تحرير في اللوحة",
-    missing: "هذه القراءة ليست في الأطلس.",
-    loading: "يُفتح الأطلس",
+    missing: "لم يُعثر على هذه القراءة.",
+    loading: "جارٍ التحميل",
     colophon: "أوربيس يحفظ قراءات موثّقة. سلسلة الوثائق في ذيل كل نص.",
     themes: {
       climate: "المناخ",
@@ -279,7 +279,7 @@ const copy: Record<Lang, Copy> = {
     },
     newReading: "قراءة جديدة",
     restore: "استعد قراءات الافتتاح",
-    emptyAtlas: "الأطلس فارغ.",
+    emptyAtlas: "لا توجد قراءات بعد.",
     emptyPanel: "لا قراءات بعد.",
     panelLead:
       "اكتب كل لغة بنفسك. ارفع تسجيلًا واحدًا لكل لغة. قبل ذلك تبقى تلك اللغة صامتة في صفحة القراءة.",
@@ -318,7 +318,7 @@ const copy: Record<Lang, Copy> = {
     recordingOff: "بلا تسجيل",
   },
   fr: {
-    atlas: "Atlas",
+    atlas: "Accueil",
     home: "Accueil",
     sections: "Sections",
     panel: "Panneau",
@@ -341,10 +341,10 @@ const copy: Record<Lang, Copy> = {
     sourceWord: "source",
     unwritten: "Cette lecture n’a pas encore été écrite dans cette langue.",
     availableIn: "Écrite en",
-    back: "Atlas",
+    back: "← Accueil",
     edit: "Modifier dans le panneau",
-    missing: "Cette lecture n’est pas dans l’atlas.",
-    loading: "Ouverture de l’atlas",
+    missing: "Cette lecture est introuvable.",
+    loading: "Chargement",
     colophon: "Orbis tient des lectures sourcées. La chaîne des documents est au pied de chaque texte.",
     themes: {
       climate: "Climat",
@@ -359,7 +359,7 @@ const copy: Record<Lang, Copy> = {
     },
     newReading: "Nouvelle lecture",
     restore: "Rétablir les lectures d’ouverture",
-    emptyAtlas: "L’atlas est vide.",
+    emptyAtlas: "Aucune lecture pour l’instant.",
     emptyPanel: "Aucune lecture pour l’instant.",
     panelLead:
       "Écrivez chaque langue vous-même. Déposez un enregistrement par langue. Sans cela, cette langue reste silencieuse sur la page.",
@@ -400,7 +400,7 @@ const copy: Record<Lang, Copy> = {
     recordingOff: "Pas d’enregistrement",
   },
   es: {
-    atlas: "Atlas",
+    atlas: "Inicio",
     home: "Inicio",
     sections: "Secciones",
     panel: "Panel",
@@ -423,10 +423,10 @@ const copy: Record<Lang, Copy> = {
     sourceWord: "fuente",
     unwritten: "Esta lectura aún no está escrita en esta lengua.",
     availableIn: "Escrita en",
-    back: "Atlas",
+    back: "← Inicio",
     edit: "Editar en el panel",
-    missing: "Esta lectura no está en el atlas.",
-    loading: "Abriendo el atlas",
+    missing: "No se encontró esta lectura.",
+    loading: "Cargando",
     colophon: "Orbis guarda lecturas con fuente. La cadena de documentos queda al pie de cada texto.",
     themes: {
       climate: "Clima",
@@ -441,7 +441,7 @@ const copy: Record<Lang, Copy> = {
     },
     newReading: "Nueva lectura",
     restore: "Restaurar las lecturas de apertura",
-    emptyAtlas: "El atlas está vacío.",
+    emptyAtlas: "Todavía no hay lecturas.",
     emptyPanel: "Todavía no hay lecturas.",
     panelLead:
       "Escribe cada lengua tú mismo. Carga una grabación por lengua. Hasta entonces, esa lengua permanece en silencio en la página.",
