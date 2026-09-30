@@ -144,7 +144,7 @@ const copy: Record<Lang, Copy> = {
     upload: "Upload recording",
     replaceAudio: "Replace recording",
     removeAudio: "Remove recording",
-    audioTooBig: "Keep the recording under 4 MB.",
+    audioTooBig: "Keep the recording under 30 MB.",
     audioFail: "That file could not be read.",
     sourcesLead: "Sources are shared by every language. The number in the sentence jumps to this list. The address opens the document.",
     sourceLabel: "Document title",
@@ -223,7 +223,7 @@ const copy: Record<Lang, Copy> = {
     upload: "Ses yükle",
     replaceAudio: "Sesi değiştir",
     removeAudio: "Sesi kaldır",
-    audioTooBig: "Kayıt 4 MB altında olsun.",
+    audioTooBig: "Kayıt 30 MB altında olsun.",
     audioFail: "Dosya okunamadı.",
     sourcesLead:
       "Kaynaklar her dilde ortaktır. Cümledeki numara bu listeye gider. Adres, belgeyi açar.",
@@ -302,7 +302,7 @@ const copy: Record<Lang, Copy> = {
     upload: "رفع تسجيل",
     replaceAudio: "استبدال التسجيل",
     removeAudio: "إزالة التسجيل",
-    audioTooBig: "أبقِ التسجيل تحت ٤ ميغابايت.",
+    audioTooBig: "أبقِ التسجيل تحت ٣٠ ميغابايت.",
     audioFail: "تعذّرت قراءة الملف.",
     sourcesLead:
       "المصادر مشتركة بين كل اللغات. الرقم في الجملة يذهب إلى هذه القائمة. العنوان يفتح الوثيقة.",
@@ -384,7 +384,7 @@ const copy: Record<Lang, Copy> = {
     upload: "Déposer un enregistrement",
     replaceAudio: "Remplacer l’enregistrement",
     removeAudio: "Retirer l’enregistrement",
-    audioTooBig: "Gardez l’enregistrement sous 4 Mo.",
+    audioTooBig: "Gardez l’enregistrement sous 30 Mo.",
     audioFail: "Ce fichier n’a pas pu être lu.",
     sourcesLead:
       "Les sources sont communes à toutes les langues. Le numéro dans la phrase rejoint cette liste. L’adresse ouvre le document.",
@@ -466,7 +466,7 @@ const copy: Record<Lang, Copy> = {
     upload: "Cargar grabación",
     replaceAudio: "Sustituir grabación",
     removeAudio: "Quitar grabación",
-    audioTooBig: "Mantén la grabación por debajo de 4 MB.",
+    audioTooBig: "Mantén la grabación por debajo de 30 MB.",
     audioFail: "No se pudo leer el archivo.",
     sourcesLead:
       "Las fuentes son comunes a todas las lenguas. El número en la frase salta a esta lista. La dirección abre el documento.",

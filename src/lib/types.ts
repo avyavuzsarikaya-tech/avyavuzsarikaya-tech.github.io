@@ -34,11 +34,19 @@ export type Source = {
   url: string;
 };
 
+/** The painting shown with a reading. `src` is images/<file> in the repository. */
+export type StoryImage = {
+  src: string;
+  /** One line under the picture: painter, title, year. */
+  credit: string;
+};
+
 export type Story = {
   id: string;
   theme: Theme;
   date: string;
   sources: Source[];
+  image?: StoryImage;
   locales: Record<Lang, LocaleCopy>;
 };
 

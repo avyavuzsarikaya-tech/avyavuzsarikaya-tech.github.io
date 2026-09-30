@@ -4,4 +4,4 @@ A sourced reading atlas. Five languages, no breaking-news desk, no opinion page.
 
 Live site: https://avyavuzsarikaya-tech.github.io/
 
-Edits and recordings stay in the browser.
+Readings live in content/stories as one JSON file each. The panel (/panel) publishes straight to this repository: text to content/stories, recordings to public/audio, pictures to images/. Each save is one commit; the Publish site workflow rebuilds the pages.

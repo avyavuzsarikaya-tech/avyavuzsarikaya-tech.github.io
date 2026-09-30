@@ -1,13 +1,16 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
+import { publishMessage, useToken } from "@/components/connect";
 import { ReadingPlayer } from "@/components/player";
 import { fieldClass } from "@/components/shell";
 import { langMeta, useCopy } from "@/lib/i18n";
 import { useLibrary } from "@/lib/library";
+import { prepareImage, publishStory, unpublishStory } from "@/lib/publish";
+import { usePublishCopy } from "@/lib/publish-copy";
 import { safeHttpUrl } from "@/lib/text";
 import { blankStory, isTheme, LANGS, THEMES, type Lang, type Story } from "@/lib/types";
 
-const MAX_AUDIO = 4 * 1024 * 1024;
+const MAX_AUDIO = 30 * 1024 * 1024;
 
 export const Route = createFileRoute("/panel/$storyId")({
   component: EditorPage,
@@ -24,6 +27,10 @@ function Editor({ storyId }: { storyId: string }) {
   const upsert = useLibrary((s) => s.upsert);
   const remove = useLibrary((s) => s.remove);
   const copy = useCopy(lang);
+  const pub = usePublishCopy(lang);
+  const [token] = useToken();
+  const [busy, setBusy] = useState(false);
+  const [imageError, setImageError] = useState("");
   const navigate = useNavigate();
   const [draft, setDraft] = useState<Story | null>(null);
   const [booted, setBooted] = useState(false);
@@ -122,11 +129,39 @@ function Editor({ storyId }: { storyId: string }) {
       setError(copy.needTitle);
       return;
     }
+    if (!token) {
+      setError(pub.needConnect);
+      return;
+    }
     setError("");
-    await upsert(draft);
-    setNotice(copy.saved);
-    if (storyId === "new") {
-      await navigate({ to: "/panel/$storyId", params: { storyId: draft.id } });
+    setNotice(pub.publishing);
+    setBusy(true);
+    try {
+      const before = useLibrary.getState().stories.find((item) => item.id === draft.id);
+      const shown = await publishStory(token, draft, before);
+      await upsert(shown);
+      setDraft(structuredClone(shown));
+      setNotice(pub.published);
+      if (storyId === "new") {
+        await navigate({ to: "/panel/$storyId", params: { storyId: draft.id } });
+      }
+    } catch (err) {
+      setNotice("");
+      setError(publishMessage(pub, err));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function onImage(file: File | undefined) {
+    setImageError("");
+    if (!draft || !file) return;
+    try {
+      const src = await prepareImage(file);
+      setDraft({ ...draft, image: { src, credit: draft.image?.credit ?? "" } });
+      setNotice("");
+    } catch {
+      setImageError(pub.imageFail);
     }
   }
 
@@ -165,7 +200,25 @@ function Editor({ storyId }: { storyId: string }) {
 
   async function onRemove() {
     if (!draft) return;
-    await remove(draft.id);
+    const published = useLibrary.getState().stories.find((item) => item.id === draft.id);
+    if (published) {
+      if (!token) {
+        setConfirming(false);
+        setError(pub.needConnect);
+        return;
+      }
+      setBusy(true);
+      try {
+        await unpublishStory(token, published);
+      } catch (err) {
+        setConfirming(false);
+        setError(publishMessage(pub, err));
+        return;
+      } finally {
+        setBusy(false);
+      }
+      await remove(draft.id);
+    }
     await navigate({ to: "/panel" });
   }
 
@@ -218,13 +271,65 @@ function Editor({ storyId }: { storyId: string }) {
           </label>
         </div>
 
+        <section className="flex flex-col gap-3 border border-line bg-sheet p-4">
+          <h2 className="text-xl">{pub.image}</h2>
+          <p className="text-sm text-muted">{pub.imageHint}</p>
+          {draft.image ? (
+            <figure className="flex flex-col gap-2">
+              <img src={draft.image.src} alt="" className="max-h-80 w-full object-contain" />
+            </figure>
+          ) : null}
+          <div className="flex flex-wrap gap-3">
+            <label className="inline-flex min-h-11 w-fit cursor-pointer items-center bg-pine px-4 text-paper">
+              {draft.image ? pub.replaceImage : pub.chooseImage}
+              <input
+                type="file"
+                accept="image/*"
+                className="sr-only"
+                onChange={(event) => {
+                  void onImage(event.target.files?.[0]);
+                  event.target.value = "";
+                }}
+              />
+            </label>
+            {draft.image ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setDraft({ ...draft, image: undefined });
+                  setNotice("");
+                }}
+                className="inline-flex min-h-11 w-fit items-center border border-line px-4"
+              >
+                {pub.removeImage}
+              </button>
+            ) : null}
+          </div>
+          {imageError ? <p className="text-sm text-pine">{imageError}</p> : null}
+          {draft.image ? (
+            <label className="flex flex-col gap-2 text-sm">
+              {pub.credit}
+              <input
+                className={fieldClass()}
+                value={draft.image.credit}
+                onChange={(event) => {
+                  if (!draft.image) return;
+                  setDraft({ ...draft, image: { ...draft.image, credit: event.target.value } });
+                  setNotice("");
+                }}
+              />
+            </label>
+          ) : null}
+        </section>
+
         <label className="flex flex-col gap-2 text-sm">
           {copy.language}
           <select
             value={editLang}
             onChange={(event) => {
               const next = event.target.value;
-              if (next === "tr" || next === "ar" || next === "en" || next === "fr" || next === "es") setEditLang(next);
+              if (next === "tr" || next === "ar" || next === "en" || next === "fr" || next === "es")
+                setEditLang(next);
             }}
             className={fieldClass()}
           >
@@ -320,7 +425,10 @@ function Editor({ storyId }: { storyId: string }) {
             {[...draft.sources]
               .sort((a, b) => a.n - b.n)
               .map((source) => (
-                <li key={source.n} className="grid gap-3 border border-line p-4 md:grid-cols-[auto_1fr_auto]">
+                <li
+                  key={source.n}
+                  className="grid gap-3 border border-line p-4 md:grid-cols-[auto_1fr_auto]"
+                >
                   <span className="text-pine tabular-nums">{source.n}</span>
                   <div className="min-w-0">
                     <p>{source.label}</p>
@@ -355,7 +463,11 @@ function Editor({ storyId }: { storyId: string }) {
           <div className="grid gap-3 md:grid-cols-2">
             <label className="flex flex-col gap-2 text-sm">
               {copy.sourceLabel}
-              <input className={fieldClass()} value={label} onChange={(event) => setLabel(event.target.value)} />
+              <input
+                className={fieldClass()}
+                value={label}
+                onChange={(event) => setLabel(event.target.value)}
+              />
             </label>
             <label className="flex flex-col gap-2 text-sm">
               {copy.sourceUrl}
@@ -380,14 +492,23 @@ function Editor({ storyId }: { storyId: string }) {
 
         {error ? <p className="text-pine">{error}</p> : null}
         {notice ? <p className="text-pine">{notice}</p> : null}
+        {!token ? (
+          <p className="text-sm text-muted">
+            {pub.needConnect}{" "}
+            <Link to="/panel" className="text-pine">
+              {copy.panel}
+            </Link>
+          </p>
+        ) : null}
 
         <div className="flex flex-wrap items-center gap-3 border-t border-line pt-6">
           <button
             type="button"
             onClick={() => void onSave()}
-            className="inline-flex min-h-11 items-center bg-pine px-4 text-paper"
+            disabled={busy}
+            className="inline-flex min-h-11 items-center bg-pine px-4 text-paper disabled:opacity-60"
           >
-            {copy.save}
+            {busy ? pub.publishing : copy.save}
           </button>
           {storyId !== "new" && !confirming ? (
             <button
@@ -403,6 +524,7 @@ function Editor({ storyId }: { storyId: string }) {
               <button
                 type="button"
                 onClick={() => void onRemove()}
+                disabled={busy}
                 className="inline-flex min-h-11 items-center bg-ink px-4 text-paper"
               >
                 {copy.confirmRemove}

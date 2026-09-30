@@ -123,6 +123,9 @@ function Atlas({ section }: { section: Theme | "all" }) {
               >
                 {storyTitle(latest, lang)}
               </h2>
+              {latest.image ? (
+                <Picture story={latest} className={alone ? "max-w-3xl" : "md:aspect-[16/9]"} />
+              ) : null}
               {latest.locales[lang].dek ? (
                 <p
                   className={
@@ -219,6 +222,7 @@ function Card({ story, lang, span = "" }: { story: Story; lang: Lang; span?: str
       params={{ storyId: story.id }}
       className={`${span} flex min-w-0 flex-col gap-2 border-r border-b border-rule p-3 md:gap-2 md:px-8 md:py-5 rtl:border-r-0 rtl:border-l`}
     >
+      {story.image ? <Picture story={story} className="hidden md:block" /> : null}
       <Meta story={story} lang={lang} />
       <h2 className="text-base leading-tight md:text-xl lg:text-2xl">{title}</h2>
       {excerpt ? (
@@ -227,5 +231,19 @@ function Card({ story, lang, span = "" }: { story: Story; lang: Lang; span?: str
         </p>
       ) : null}
     </Link>
+  );
+}
+
+/** The reading's painting, cropped to a steady 3:2 frame so the grid keeps its rhythm. */
+function Picture({ story, className = "" }: { story: Story; className?: string }) {
+  if (!story.image) return null;
+  return (
+    <img
+      src={story.image.src}
+      alt={story.image.credit}
+      loading="lazy"
+      decoding="async"
+      className={`${className} aspect-[3/2] w-full object-cover`}
+    />
   );
 }

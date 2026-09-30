@@ -1,20 +1,12 @@
 import { create } from "zustand";
 import { SEED } from "@/lib/seed";
-import { isLang, isTheme, normalizeTheme, type Lang, type Story } from "@/lib/types";
+import { isLang, type Lang, type Story } from "@/lib/types";
 
-const DB_NAME = "orbis";
-const DB_STORE = "kv";
-const KEY = "stories";
-
-type Envelope = { stories: Story[]; seed?: string };
-
-/** Fingerprint of the published stories: a saved copy made from older ones is replaced. */
-const SEED_STAMP = (() => {
-  const text = JSON.stringify(SEED);
-  let h = 5381;
-  for (let i = 0; i < text.length; i++) h = ((h << 5) + h + text.charCodeAt(i)) | 0;
-  return `${text.length}-${(h >>> 0).toString(36)}`;
-})();
+/**
+ * The readings everyone sees are the published files (content/stories). Nothing is kept
+ * in the browser: the panel writes to the repository, and after a publish the store is
+ * updated in place so the editor sees the result before the site finishes rebuilding.
+ */
 
 type LibraryState = {
   ready: boolean;
@@ -27,73 +19,6 @@ type LibraryState = {
   remove: (id: string) => Promise<void>;
   restoreSeed: () => Promise<void>;
 };
-
-let memory: Envelope | null = null;
-
-function openDb(): Promise<IDBDatabase> {
-  return new Promise((resolve, reject) => {
-    const req = indexedDB.open(DB_NAME, 1);
-    req.onupgradeneeded = () => {
-      const db = req.result;
-      if (!db.objectStoreNames.contains(DB_STORE)) db.createObjectStore(DB_STORE);
-    };
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error ?? new Error("idb"));
-  });
-}
-
-function idbGet(): Promise<Envelope | undefined> {
-  return openDb().then(
-    (db) =>
-      new Promise((resolve, reject) => {
-        const tx = db.transaction(DB_STORE, "readonly");
-        const req = tx.objectStore(DB_STORE).get(KEY);
-        req.onsuccess = () => resolve(req.result as Envelope | undefined);
-        req.onerror = () => reject(req.error ?? new Error("idb"));
-      }),
-  );
-}
-
-function idbSet(value: Envelope): Promise<void> {
-  return openDb().then(
-    (db) =>
-      new Promise((resolve, reject) => {
-        const tx = db.transaction(DB_STORE, "readwrite");
-        tx.objectStore(DB_STORE).put(value, KEY);
-        tx.oncomplete = () => resolve();
-        tx.onerror = () => reject(tx.error ?? new Error("idb"));
-      }),
-  );
-}
-
-async function readEnvelope(): Promise<Envelope> {
-  if (memory) return memory;
-  try {
-    const stored = await idbGet();
-    if (stored && Array.isArray(stored.stories) && stored.seed === SEED_STAMP) {
-      memory = stored;
-      return stored;
-    }
-  } catch {
-    /* session memory below */
-  }
-  memory = { stories: structuredClone(SEED), seed: SEED_STAMP };
-  try {
-    await idbSet(memory);
-  } catch {
-    /* keep memory */
-  }
-  return memory;
-}
-
-async function writeEnvelope(stories: Story[]) {
-  memory = { stories, seed: SEED_STAMP };
-  try {
-    await idbSet(memory);
-  } catch {
-    /* session still holds the edit */
-  }
-}
 
 function readLang(): Lang {
   try {
@@ -112,21 +37,7 @@ export const useLibrary = create<LibraryState>((set, get) => ({
   stories: [],
   load: async () => {
     if (get().ready || get().loading) return;
-    set({ loading: true });
-    const envelope = await readEnvelope();
-    // Readings saved under the old two-part sections move to the new single sections.
-    const seedTheme = new Map(SEED.map((item) => [item.id, item.theme]));
-    let migrated = false;
-    const current = envelope.stories.map((item) => {
-      if (isTheme(item.theme)) return item;
-      migrated = true;
-      return { ...item, theme: seedTheme.get(item.id) ?? normalizeTheme(item.theme) };
-    });
-    const have = new Set(current.map((item) => item.id));
-    const missing = SEED.filter((item) => !have.has(item.id)).map((item) => structuredClone(item));
-    const stories = missing.length ? [...current, ...missing] : current;
-    if (missing.length || migrated) await writeEnvelope(stories);
-    set({ stories, lang: readLang(), ready: true, loading: false });
+    set({ stories: structuredClone(SEED), lang: readLang(), ready: true, loading: false });
   },
   setLang: (lang) => {
     set({ lang });
@@ -141,19 +52,11 @@ export const useLibrary = create<LibraryState>((set, get) => ({
       ? get().stories.map((item) => (item.id === story.id ? story : item))
       : [...get().stories, story];
     set({ stories: next });
-    await writeEnvelope(next);
   },
   remove: async (id) => {
-    const next = get().stories.filter((item) => item.id !== id);
-    set({ stories: next });
-    await writeEnvelope(next);
+    set({ stories: get().stories.filter((item) => item.id !== id) });
   },
   restoreSeed: async () => {
-    const have = new Set(get().stories.map((item) => item.id));
-    const missing = SEED.filter((item) => !have.has(item.id)).map((item) => structuredClone(item));
-    if (!missing.length) return;
-    const next = [...get().stories, ...missing];
-    set({ stories: next });
-    await writeEnvelope(next);
+    set({ stories: structuredClone(SEED) });
   },
 }));

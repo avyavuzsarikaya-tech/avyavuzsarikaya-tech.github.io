@@ -138,10 +138,29 @@ function Reading({ storyId }: { storyId: string }) {
               {locale.dek}
             </p>
           ) : null}
+          {story.image ? (
+            <figure className="mt-2 flex flex-col gap-2">
+              <img
+                src={story.image.src}
+                alt={story.image.credit}
+                className="block h-auto w-full"
+                decoding="async"
+              />
+              {story.image.credit ? (
+                <figcaption className="text-xs leading-snug text-muted">
+                  {story.image.credit}
+                </figcaption>
+              ) : null}
+            </figure>
+          ) : null}
           <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
             <div className="inline-flex min-w-0 max-w-full flex-col gap-3">
               <p className="text-sm text-muted">
-                {[locale.region, formatDate(story.date, lang), minutes ? `${minutes} ${copy.min}` : ""]
+                {[
+                  locale.region,
+                  formatDate(story.date, lang),
+                  minutes ? `${minutes} ${copy.min}` : "",
+                ]
                   .filter(Boolean)
                   .join(" · ")}
               </p>
