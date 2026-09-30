@@ -12,9 +12,25 @@
   --color-rule: #9a9a9a;
   --color-pine: #6e2432;
   --color-highlight: #ececee;
+  --color-panel: #0c0c0c;
   --radius-sm: 2px;
   --radius-md: 2px;
   --radius-lg: 2px;
+}
+
+/* Second scheme: burgundy header and footer, lightest beige paper, black text, dark green accents.
+   The classic scheme above stays as it is; this only applies when chosen. */
+html[data-look="bordo"] {
+  --color-paper: #fbf7ef;
+  --color-sheet: #fffdf8;
+  --color-ink: #0c0c0c;
+  --color-muted: #5b5348;
+  --color-mist: #e8d3d6;
+  --color-line: #ebe3d4;
+  --color-rule: #a99f8d;
+  --color-pine: #1d5b3f;
+  --color-highlight: #f1e8d8;
+  --color-panel: #5a1523;
 }
 
 @layer base {
@@ -102,9 +118,6 @@
   }
   .no-scrollbar::-webkit-scrollbar {
     display: none;
-  }
-  select.lang-box {
-    color-scheme: dark;
   }
   input[type="range"].seek {
     accent-color: var(--color-pine);

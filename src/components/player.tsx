@@ -1,5 +1,6 @@
 import { Pause, Play } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Pick } from "@/components/pick";
 import type { AudioClip } from "@/lib/types";
 
 const RATES = [0.75, 1, 1.25, 1.5, 2] as const;
@@ -54,6 +55,10 @@ export function ReadingPlayer({
   }, []);
 
   useEffect(() => {
+    // A new language brings a new recording: start it from the top, stopped.
+    setPlaying(false);
+    setProgress(0);
+    setDuration(0);
     const audio = new Audio(clip.dataUrl);
     audio.preload = "metadata";
     audio.playbackRate = rateRef.current;
@@ -116,7 +121,7 @@ export function ReadingPlayer({
   const pct = `${span * 100}%`;
 
   return (
-    <div className="reading-player flex flex-col gap-1.5">
+    <div className="reading-player flex w-full flex-col gap-1.5">
       <div className="flex justify-between text-sm tabular-nums text-muted">
         <span dir="ltr">{fmt(progress)}</span>
         <span dir="ltr">{fmt(duration)}</span>
@@ -155,24 +160,26 @@ export function ReadingPlayer({
             <Play className="size-4 translate-x-px" strokeWidth={1.75} aria-hidden="true" />
           )}
         </button>
-        <span className="text-sm text-pine">{listen}</span>
-        <label className="ms-auto inline-flex max-w-full cursor-pointer items-center gap-1.5 border-b border-ink py-2 text-sm text-ink">
-          <span className="text-muted">{speed}</span>
-          <select
+        <span className="text-sm text-pine">{playing ? pause : listen}</span>
+        <div className="ms-auto">
+          <Pick
+            tone="page"
+            align="end"
+            label={speed}
             value={String(rate)}
-            onChange={(event) => changeRate(Number(event.target.value))}
-            className="cursor-pointer appearance-none bg-transparent text-sm tabular-nums text-ink"
+            onChange={(value) => changeRate(Number(value))}
+            options={RATES.map((value) => ({ value: String(value), label: `${value}x` }))}
+            buttonClassName="gap-1.5 border-b border-ink py-2 text-sm text-ink"
           >
-            {RATES.map((value) => (
-              <option key={value} value={String(value)}>
-                {value}x
-              </option>
-            ))}
-          </select>
-          <span aria-hidden="true" className="text-[10px] leading-none">
-            ▾
-          </span>
-        </label>
+            <span className="text-muted">{speed}</span>
+            <span dir="ltr" className="tabular-nums">
+              {rate}x
+            </span>
+            <span aria-hidden="true" className="text-[10px] leading-none">
+              ▾
+            </span>
+          </Pick>
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
+import { LOOK_BOOT } from "@/lib/look";
 import appCss from "../styles.css?url";
 
 const APP_NAME = "Orbis";
@@ -34,6 +35,8 @@ export const Route = createRootRoute({
     <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
+        {/* Applies a saved colour scheme before the first paint. */}
+        <script dangerouslySetInnerHTML={{ __html: LOOK_BOOT }} />
       </head>
       <body>
         <PreviewHostBridge />

@@ -61,7 +61,7 @@ function TypeSize({
   const atMin = step <= 0;
   const atMax = step >= TYPE_STEPS.length - 1;
   return (
-    <div className="inline-flex items-center gap-1 self-end">
+    <div className="inline-flex shrink-0 items-center gap-1">
       <span className="sr-only">{label}</span>
       <button
         type="button"
@@ -153,8 +153,8 @@ function Reading({ storyId }: { storyId: string }) {
               ) : null}
             </figure>
           ) : null}
-          <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
-            <div className="inline-flex min-w-0 max-w-full flex-col gap-3">
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between gap-4">
               <p className="text-sm text-muted">
                 {[
                   locale.region,
@@ -164,23 +164,23 @@ function Reading({ storyId }: { storyId: string }) {
                   .filter(Boolean)
                   .join(" · ")}
               </p>
-              {locale.audio ? (
-                <ReadingPlayer
-                  clip={locale.audio}
-                  listen={copy.listen}
-                  pause={copy.pause}
-                  speed={copy.speed}
-                />
-              ) : null}
+              <TypeSize
+                step={typeStep}
+                onDown={() => setStep(typeStep - 1)}
+                onUp={() => setStep(typeStep + 1)}
+                label={copy.textSize}
+                downLabel={copy.typeDown}
+                upLabel={copy.typeUp}
+              />
             </div>
-            <TypeSize
-              step={typeStep}
-              onDown={() => setStep(typeStep - 1)}
-              onUp={() => setStep(typeStep + 1)}
-              label={copy.textSize}
-              downLabel={copy.typeDown}
-              upLabel={copy.typeUp}
-            />
+            {locale.audio ? (
+              <ReadingPlayer
+                clip={locale.audio}
+                listen={copy.listen}
+                pause={copy.pause}
+                speed={copy.speed}
+              />
+            ) : null}
           </div>
         </header>
 

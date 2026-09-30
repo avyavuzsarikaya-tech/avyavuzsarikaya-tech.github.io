@@ -9,6 +9,8 @@ export type FrameCopy = {
   principle: string;
   languages: string;
   rights: string;
+  look: string;
+  looks: { classic: string; bordo: string };
 };
 
 const frame: Record<Lang, FrameCopy> = {
@@ -20,6 +22,8 @@ const frame: Record<Lang, FrameCopy> = {
     principle: "Her okuma kamusal belgelere dayanır. Son dakika masası da görüş sayfası da yoktur.",
     languages: "Diller",
     rights: "Tüm hakları saklıdır.",
+    look: "Tema",
+    looks: { classic: "Klasik", bordo: "Bordo" },
   },
   ar: {
     all: "الكل",
@@ -29,6 +33,8 @@ const frame: Record<Lang, FrameCopy> = {
     principle: "كل قراءة تستند إلى وثائق عامة. لا مكتب للأخبار العاجلة ولا صفحة للرأي.",
     languages: "اللغات",
     rights: "جميع الحقوق محفوظة.",
+    look: "المظهر",
+    looks: { classic: "كلاسيكي", bordo: "عنابي" },
   },
   en: {
     all: "All",
@@ -38,6 +44,8 @@ const frame: Record<Lang, FrameCopy> = {
     principle: "Every reading rests on public documents. There is no breaking-news desk and no opinion page.",
     languages: "Languages",
     rights: "All rights reserved.",
+    look: "Theme",
+    looks: { classic: "Classic", bordo: "Burgundy" },
   },
   fr: {
     all: "Tout",
@@ -47,6 +55,8 @@ const frame: Record<Lang, FrameCopy> = {
     principle: "Chaque lecture s’appuie sur des documents publics. Ni desk d’urgence, ni page d’opinion.",
     languages: "Langues",
     rights: "Tous droits réservés.",
+    look: "Thème",
+    looks: { classic: "Classique", bordo: "Bordeaux" },
   },
   es: {
     all: "Todo",
@@ -56,6 +66,8 @@ const frame: Record<Lang, FrameCopy> = {
     principle: "Cada lectura se apoya en documentos públicos. No hay mesa de última hora ni página de opinión.",
     languages: "Idiomas",
     rights: "Todos los derechos reservados.",
+    look: "Tema",
+    looks: { classic: "Clásico", bordo: "Burdeos" },
   },
 };
 

@@ -1,9 +1,12 @@
 import { Link, useRouterState } from "@tanstack/react-router";
+import { Palette } from "lucide-react";
 import { useEffect, useRef } from "react";
+import { Pick } from "@/components/pick";
 import { useFrameCopy } from "@/lib/frame-copy";
 import { langMeta, useCopy } from "@/lib/i18n";
 import { useLibrary } from "@/lib/library";
-import { LANGS, THEMES, type Lang, type Theme } from "@/lib/types";
+import { LOOKS, LOOK_SWATCH, useLook, type Look } from "@/lib/look";
+import { LANGS, THEMES, type Theme } from "@/lib/types";
 
 function Meridian() {
   return (
@@ -14,45 +17,19 @@ function Meridian() {
   );
 }
 
-function LangSwitch({
-  lang,
-  onChange,
-  label,
-}: {
-  lang: Lang;
-  onChange: (lang: Lang) => void;
-  label: string;
-}) {
+function Swatch({ look }: { look: Look }) {
+  const [panel, paper] = LOOK_SWATCH[look];
   return (
-    <label className="relative inline-flex items-center">
-      <select
-        value={lang}
-        aria-label={label}
-        onChange={(event) => {
-          const next = event.target.value;
-          if (next === "tr" || next === "ar" || next === "en" || next === "fr" || next === "es")
-            onChange(next);
-        }}
-        className="lang-box min-h-11 appearance-none bg-transparent pr-4 text-xs tracking-widest text-paper"
-      >
-        {LANGS.map((code) => (
-          <option key={code} value={code} lang={langMeta[code].html}>
-            {langMeta[code].code}
-          </option>
-        ))}
-      </select>
-      <span
-        className="pointer-events-none absolute right-0 text-[10px] text-paper"
-        aria-hidden="true"
-      >
-        ▾
-      </span>
-    </label>
+    <span
+      aria-hidden="true"
+      className="me-2.5 inline-block size-3.5 shrink-0 rounded-full border border-paper/60"
+      style={{ background: `linear-gradient(135deg, ${panel} 50%, ${paper} 50%)` }}
+    />
   );
 }
 
 /**
- * Site frame shared by every page: black header, section bar, footer.
+ * Site frame shared by every page: header, section bar, footer (black, or burgundy in the second scheme).
  * `section` marks the active section in the bar ("all" on the home page with no filter).
  */
 export function Shell({
@@ -72,6 +49,7 @@ export function Shell({
   const path = useRouterState({ select: (s) => s.location.pathname });
   const inPanel = path.startsWith("/panel");
   const bar = useRef<HTMLDivElement | null>(null);
+  const [look, setLook] = useLook();
 
   // On a phone the section row scrolls sideways: bring the open section into view.
   useEffect(() => {
@@ -98,13 +76,13 @@ export function Shell({
     <div className="flex min-h-dvh flex-col bg-paper text-ink">
       <header
         dir="ltr"
-        className="flex items-center justify-between gap-4 bg-ink px-5 py-3 text-paper md:px-8"
+        className="flex items-center justify-between gap-4 bg-panel px-5 py-3 text-paper md:px-8"
       >
         <Link to="/" className="inline-flex min-h-11 items-center gap-3 text-paper">
           <Meridian />
           <span className="font-display text-xl tracking-widest">ORBIS</span>
         </Link>
-        <nav className="flex items-center gap-5 text-sm">
+        <nav className="flex items-center gap-3 text-sm md:gap-4">
           {/* The editing panel stays out of the reader's menu; open it at /panel. */}
           {inPanel ? (
             <>
@@ -116,7 +94,43 @@ export function Shell({
               </Link>
             </>
           ) : null}
-          <LangSwitch lang={lang} onChange={setLang} label={copy.language} />
+          <Pick
+            tone="panel"
+            align="end"
+            label={frame.look}
+            value={look}
+            onChange={setLook}
+            options={LOOKS.map((code) => ({
+              value: code,
+              label: (
+                <>
+                  <Swatch look={code} />
+                  {frame.looks[code]}
+                </>
+              ),
+            }))}
+            buttonClassName="min-h-11 min-w-11 justify-center text-paper"
+          >
+            <Palette className="size-4" strokeWidth={1.5} aria-hidden="true" />
+          </Pick>
+          <Pick
+            tone="panel"
+            align="end"
+            label={copy.language}
+            value={lang}
+            onChange={setLang}
+            options={LANGS.map((code) => ({
+              value: code,
+              label: langMeta[code].name,
+              lang: langMeta[code].html,
+            }))}
+            buttonClassName="min-h-11 gap-2 text-xs tracking-widest text-paper"
+          >
+            <span>{meta.code}</span>
+            <span aria-hidden="true" className="text-[10px]">
+              ▾
+            </span>
+          </Pick>
         </nav>
       </header>
 
@@ -153,7 +167,7 @@ export function Shell({
           <span className="h-px flex-1 bg-rule" />
         </div>
 
-        <footer className="bg-ink px-5 py-10 text-paper md:px-8">
+        <footer className="bg-panel px-5 py-10 text-paper md:px-8">
           <div className="grid gap-8 md:grid-cols-3">
             <div className="flex flex-col gap-3">
               <Link
@@ -201,6 +215,26 @@ export function Shell({
                       }
                     >
                       {langMeta[code].name}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-6 text-xs uppercase tracking-widest text-mist">{frame.look}</p>
+              <ul className="mt-2 flex flex-col">
+                {LOOKS.map((code) => (
+                  <li key={code}>
+                    <button
+                      type="button"
+                      aria-pressed={code === look}
+                      onClick={() => setLook(code)}
+                      className={
+                        code === look
+                          ? "inline-flex min-h-9 items-center text-sm text-paper underline underline-offset-4"
+                          : "inline-flex min-h-9 items-center text-sm text-mist hover:text-paper"
+                      }
+                    >
+                      <Swatch look={code} />
+                      {frame.looks[code]}
                     </button>
                   </li>
                 ))}
