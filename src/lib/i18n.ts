@@ -25,6 +25,10 @@ export type Copy = {
   min: string;
   listen: string;
   pause: string;
+  speed: string;
+  textSize: string;
+  typeDown: string;
+  typeUp: string;
   sources: string;
   sourceWord: string;
   unwritten: string;
@@ -91,6 +95,10 @@ const copy: Record<Lang, Copy> = {
     min: "min",
     listen: "Listen",
     pause: "Pause",
+    speed: "Speed",
+    textSize: "Type size",
+    typeDown: "Smaller type",
+    typeUp: "Larger type",
     sources: "Sources",
     sourceWord: "source",
     unwritten: "This reading has not been written in this language yet.",
@@ -166,6 +174,10 @@ const copy: Record<Lang, Copy> = {
     min: "dk",
     listen: "Dinle",
     pause: "Durdur",
+    speed: "Hız",
+    textSize: "Metin boyutu",
+    typeDown: "Daha küçük yazı",
+    typeUp: "Daha büyük yazı",
     sources: "Kaynakça",
     sourceWord: "kaynak",
     unwritten: "Bu okuma bu dilde henüz yazılmadı.",
@@ -241,6 +253,10 @@ const copy: Record<Lang, Copy> = {
     min: "د",
     listen: "استمع",
     pause: "إيقاف",
+    speed: "السرعة",
+    textSize: "حجم النص",
+    typeDown: "تصغير النص",
+    typeUp: "تكبير النص",
     sources: "المصادر",
     sourceWord: "مصدر",
     unwritten: "لم تُكتب هذه القراءة بهذه اللغة بعد.",
@@ -317,6 +333,10 @@ const copy: Record<Lang, Copy> = {
     min: "min",
     listen: "Écouter",
     pause: "Pause",
+    speed: "Vitesse",
+    textSize: "Taille du texte",
+    typeDown: "Réduire le texte",
+    typeUp: "Agrandir le texte",
     sources: "Sources",
     sourceWord: "source",
     unwritten: "Cette lecture n’a pas encore été écrite dans cette langue.",
@@ -395,6 +415,10 @@ const copy: Record<Lang, Copy> = {
     min: "min",
     listen: "Escuchar",
     pause: "Pausa",
+    speed: "Velocidad",
+    textSize: "Tamaño del texto",
+    typeDown: "Reducir el texto",
+    typeUp: "Agrandar el texto",
     sources: "Fuentes",
     sourceWord: "fuente",
     unwritten: "Esta lectura aún no está escrita en esta lengua.",

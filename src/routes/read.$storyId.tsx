@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { ReadingPlayer } from "@/components/player";
 import { Prose } from "@/components/prose";
 import { Shell } from "@/components/shell";
@@ -6,6 +7,27 @@ import { langMeta, useCopy } from "@/lib/i18n";
 import { useLibrary } from "@/lib/library";
 import { formatDate, hasCopy, readingMinutes, safeHttpUrl } from "@/lib/text";
 import { LANGS } from "@/lib/types";
+
+const TYPE_STEPS = [0.9, 1, 1.1, 1.2, 1.3] as const;
+const TYPE_KEY = "orbis-type";
+
+function readType(): number {
+  try {
+    const next = Number(localStorage.getItem(TYPE_KEY));
+    if ((TYPE_STEPS as readonly number[]).includes(next)) return next;
+  } catch {
+    /* keep default */
+  }
+  return 1;
+}
+
+function writeType(value: number) {
+  try {
+    localStorage.setItem(TYPE_KEY, String(value));
+  } catch {
+    /* ignore */
+  }
+}
 
 export const Route = createFileRoute("/read/$storyId")({
   component: ReadingPage,
@@ -21,11 +43,65 @@ function ReadingPage() {
   );
 }
 
+function TypeSize({
+  step,
+  onDown,
+  onUp,
+  label,
+  downLabel,
+  upLabel,
+}: {
+  step: number;
+  onDown: () => void;
+  onUp: () => void;
+  label: string;
+  downLabel: string;
+  upLabel: string;
+}) {
+  const atMin = step <= 0;
+  const atMax = step >= TYPE_STEPS.length - 1;
+  return (
+    <div className="inline-flex items-center gap-1 self-end">
+      <span className="sr-only">{label}</span>
+      <button
+        type="button"
+        onClick={onDown}
+        disabled={atMin}
+        aria-label={downLabel}
+        className="inline-flex size-8 items-center justify-center text-sm text-ink disabled:text-muted"
+      >
+        <span dir="ltr">A−</span>
+      </button>
+      <button
+        type="button"
+        onClick={onUp}
+        disabled={atMax}
+        aria-label={upLabel}
+        className="inline-flex size-8 items-center justify-center text-sm text-ink disabled:text-muted"
+      >
+        <span dir="ltr">A+</span>
+      </button>
+    </div>
+  );
+}
+
 function Reading({ storyId }: { storyId: string }) {
   const lang = useLibrary((s) => s.lang);
   const setLang = useLibrary((s) => s.setLang);
   const story = useLibrary((s) => s.stories.find((item) => item.id === storyId));
   const copy = useCopy(lang);
+  const [typeStep, setTypeStep] = useState(1);
+
+  useEffect(() => {
+    const saved = TYPE_STEPS.indexOf(readType() as (typeof TYPE_STEPS)[number]);
+    setTypeStep(saved === -1 ? 1 : saved);
+  }, []);
+
+  function setStep(next: number) {
+    const clamped = Math.min(TYPE_STEPS.length - 1, Math.max(0, next));
+    setTypeStep(clamped);
+    writeType(TYPE_STEPS[clamped]);
+  }
 
   if (!story) {
     return (
@@ -62,20 +138,37 @@ function Reading({ storyId }: { storyId: string }) {
               {locale.dek}
             </p>
           ) : null}
-          <div className="inline-flex w-fit max-w-full flex-col gap-3">
-            <p className="text-sm text-muted">
-              {[locale.region, formatDate(story.date, lang), minutes ? `${minutes} ${copy.min}` : ""]
-                .filter(Boolean)
-                .join(" · ")}
-            </p>
-            {locale.audio ? (
-              <ReadingPlayer clip={locale.audio} listen={copy.listen} pause={copy.pause} />
-            ) : null}
+          <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
+            <div className="inline-flex min-w-0 max-w-full flex-col gap-3">
+              <p className="text-sm text-muted">
+                {[locale.region, formatDate(story.date, lang), minutes ? `${minutes} ${copy.min}` : ""]
+                  .filter(Boolean)
+                  .join(" · ")}
+              </p>
+              {locale.audio ? (
+                <ReadingPlayer
+                  clip={locale.audio}
+                  listen={copy.listen}
+                  pause={copy.pause}
+                  speed={copy.speed}
+                />
+              ) : null}
+            </div>
+            <TypeSize
+              step={typeStep}
+              onDown={() => setStep(typeStep - 1)}
+              onUp={() => setStep(typeStep + 1)}
+              label={copy.textSize}
+              downLabel={copy.typeDown}
+              upLabel={copy.typeUp}
+            />
           </div>
         </header>
 
         {written ? (
-          <Prose body={locale.body} sourceNums={sourceNums} sourceWord={copy.sourceWord} />
+          <div style={{ fontSize: `${TYPE_STEPS[typeStep]}em` }}>
+            <Prose body={locale.body} sourceNums={sourceNums} sourceWord={copy.sourceWord} />
+          </div>
         ) : (
           <div className="flex flex-col gap-4">
             <p>{copy.unwritten}</p>
