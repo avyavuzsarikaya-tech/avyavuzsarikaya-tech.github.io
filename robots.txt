@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /panel
+
+Sitemap: https://avyavuzsarikaya-tech.github.io/sitemap.xml
