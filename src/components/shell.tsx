@@ -69,8 +69,8 @@ export function Shell({
 
   const barItem = (on: boolean) =>
     on
-      ? "inline-flex min-h-11 shrink-0 items-center border-b-2 border-ink text-ink"
-      : "inline-flex min-h-11 shrink-0 items-center border-b-2 border-transparent text-muted hover:text-ink";
+      ? "section-link inline-flex min-h-11 shrink-0 items-center border-b-2 border-ink text-ink"
+      : "section-link inline-flex min-h-11 shrink-0 items-center border-b-2 border-transparent text-muted hover:text-ink";
 
   return (
     <div className="flex min-h-dvh flex-col bg-paper text-ink">

@@ -32,6 +32,15 @@ html[data-look="bordo"] {
   --color-highlight: #f1e8d8;
   --color-panel: #5a1523;
 }
+/* In the burgundy scheme the section bar and the small grey labels
+   (Readings, Index) take the dark green too. */
+html[data-look="bordo"] .section-link,
+html[data-look="bordo"] .kicker {
+  color: var(--color-pine);
+}
+html[data-look="bordo"] .section-link[data-on="true"] {
+  border-color: var(--color-pine);
+}
 
 @layer base {
   html {
