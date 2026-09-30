@@ -62,11 +62,12 @@ function Atlas({ section }: { section: Theme | "all" }) {
   // Up to one more full row of three follows underneath.
   const cards = sorted.slice(1, 9);
   const alone = cards.length === 0;
+  // On phones everything stacks in one column; the grid starts at tablet width.
   const leadSpan = alone
-    ? "col-span-3"
+    ? "md:col-span-3"
     : cards.length === 1
-      ? "col-span-2"
-      : "col-span-2 row-span-2";
+      ? "md:col-span-2"
+      : "md:col-span-2 md:row-span-2";
   // The index lists only stories the grid does not already show.
   const rest = section === "all" ? all.slice(9) : all;
   // A row with fewer than three cards stretches so it never leaves a hole.
@@ -74,8 +75,8 @@ function Atlas({ section }: { section: Theme | "all" }) {
     if (n < 2) return "";
     const row = Math.floor((n - 2) / 3);
     const inRow = Math.min(3, cards.length - 2 - row * 3);
-    if (inRow === 1) return "col-span-3";
-    if (inRow === 2 && (n - 2) % 3 === 0) return "col-span-2";
+    if (inRow === 1) return "md:col-span-3";
+    if (inRow === 2 && (n - 2) % 3 === 0) return "md:col-span-2";
     return "";
   };
 
@@ -110,11 +111,11 @@ function Atlas({ section }: { section: Theme | "all" }) {
         className={`grid border-t border-rule ${rest.length > 0 ? "lg:grid-cols-[minmax(0,1fr)_20rem]" : ""}`}
       >
         {latest ? (
-          <div className="grid grid-cols-3 self-start">
+          <div className="grid grid-cols-1 self-start md:grid-cols-3">
             <Link
               to="/read/$storyId"
               params={{ storyId: latest.id }}
-              className={`${leadSpan} flex min-w-0 flex-col gap-2 border-r border-b border-rule p-3 md:gap-3 md:px-8 md:py-6 rtl:border-r-0 rtl:border-l`}
+              className={`${leadSpan} flex min-w-0 flex-col gap-3 border-b border-rule px-5 py-6 md:border-r md:px-8 md:py-6 md:rtl:border-r-0 md:rtl:border-l`}
             >
               <Meta story={latest} lang={lang} />
               <h2
@@ -226,17 +227,17 @@ function Card({ story, lang, span = "" }: { story: Story; lang: Lang; span?: str
     <Link
       to="/read/$storyId"
       params={{ storyId: story.id }}
-      className={`${span} flex min-w-0 flex-col gap-2 border-r border-b border-rule p-3 md:gap-2 md:px-8 md:py-5 rtl:border-r-0 rtl:border-l`}
+      className={`${span} flex min-w-0 flex-col gap-2 border-b border-rule px-5 py-5 md:border-r md:px-8 md:py-5 md:rtl:border-r-0 md:rtl:border-l`}
     >
       {story.image ? <Picture story={story} className="hidden md:block" /> : null}
       <Meta story={story} lang={lang} />
-      <h2 className="text-base leading-tight md:text-xl lg:text-2xl">{title}</h2>
+      <h2 className="text-xl leading-tight lg:text-2xl">{title}</h2>
       {excerpt ? (
         <p
           className={
             dek
-              ? "font-body text-pretty text-[13px] leading-snug text-muted md:text-base"
-              : "font-body line-clamp-3 text-pretty text-[13px] leading-snug text-muted md:line-clamp-2 md:text-base"
+              ? "font-body text-pretty text-base leading-snug text-muted"
+              : "font-body line-clamp-3 text-pretty text-base leading-snug text-muted md:line-clamp-2"
           }
         >
           {excerpt}
