@@ -1,4 +1,11 @@
-import { commit, dataUrlBase64, textToBase64, type Change } from "@/lib/github";
+import {
+  commit,
+  dataUrlBase64,
+  PublishError,
+  readRepoFile,
+  textToBase64,
+  type Change,
+} from "@/lib/github";
 import { mediaPath, mediaUrl } from "@/lib/seed";
 import { LANGS, type Story } from "@/lib/types";
 
@@ -50,11 +57,45 @@ function mediaOf(story: Story | undefined): Set<string> {
   return out;
 }
 
+/** Where a reading's file lives in the repository. */
+export function storyFile(id: string): string {
+  return `content/stories/${id}.json`;
+}
+
+/** The reading in a file's text, or undefined when there is no file or it cannot be read. */
+export function parseStoryFile(text: string | null | undefined): Story | undefined {
+  if (!text) return undefined;
+  try {
+    const story = JSON.parse(text) as Story;
+    return story && typeof story === "object" && story.locales ? story : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Publishes the draft as one commit.
+ *
+ * `base` is the reading's file as it was in the repository when editing began (null: it
+ * did not exist yet). If the file is different now, someone saved the reading from another
+ * tab or device in the meantime: nothing is written, and a "stale" error is raised, so the
+ * newer text is never overwritten silently. Without a `base`, the check is skipped.
+ *
+ * Returns the reading as the site will show it, and the file text that was written.
+ */
 export async function publishStory(
   token: string,
   draft: Story,
   before: Story | undefined,
-): Promise<Story> {
+  base?: string | null,
+): Promise<{ shown: Story; text: string }> {
+  const path = storyFile(draft.id);
+  if (base !== undefined) {
+    const now = await readRepoFile(token, path);
+    if (now !== base) throw new PublishError("stale", "changed elsewhere");
+  }
+  // Media to clean up is judged against the file being replaced, when it is known.
+  const previous = parseStoryFile(base) ?? before;
   const changes: Change[] = [];
   const file = structuredClone(draft);
   const when = stamp();
@@ -85,15 +126,13 @@ export async function publishStory(
   }
 
   const keep = mediaOf(file);
-  for (const old of mediaOf(before)) {
+  for (const old of mediaOf(previous)) {
     const path = repoPathOf(old);
     if (path && !keep.has(old)) changes.push({ path, base64: null });
   }
 
-  changes.push({
-    path: `content/stories/${file.id}.json`,
-    base64: textToBase64(`${JSON.stringify(file, null, 2)}\n`),
-  });
+  const text = `${JSON.stringify(file, null, 2)}\n`;
+  changes.push({ path, base64: textToBase64(text) });
   const title = LANGS.map((lang) => file.locales[lang].title.trim()).find(Boolean) ?? file.id;
   await commit(token, `Panel: ${title}`, changes);
 
@@ -104,11 +143,11 @@ export async function publishStory(
     if (audio) audio.dataUrl = mediaUrl(audio.dataUrl);
   }
   if (shown.image) shown.image.src = mediaUrl(shown.image.src);
-  return shown;
+  return { shown, text };
 }
 
 export async function unpublishStory(token: string, story: Story): Promise<void> {
-  const changes: Change[] = [{ path: `content/stories/${story.id}.json`, base64: null }];
+  const changes: Change[] = [{ path: storyFile(story.id), base64: null }];
   for (const old of mediaOf(story)) {
     const path = repoPathOf(old);
     if (path) changes.push({ path, base64: null });

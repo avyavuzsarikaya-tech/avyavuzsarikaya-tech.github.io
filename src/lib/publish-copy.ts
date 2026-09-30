@@ -15,6 +15,13 @@ export type PublishCopy = {
   noAccess: string;
   network: string;
   failed: string;
+  /** The reading was saved from another tab or device while this one was being edited. */
+  stale: string;
+  publishAnyway: string;
+  loadLatest: string;
+  draftRestored: string;
+  discardDraft: string;
+  draftMediaDropped: string;
   needConnect: string;
   publishing: string;
   published: string;
@@ -42,7 +49,8 @@ const PUBLISH: Record<Lang, PublishCopy> = {
     ],
     makeToken: "GitHub'da anahtar oluştur",
     tokenLabel: "GitHub anahtarı",
-    tokenHelp: "Anahtar yalnızca bu tarayıcı oturumu boyunca saklanır, tarayıcı kapanınca silinir ve yalnızca bu depoya yazabilir.",
+    tokenHelp:
+      "Anahtar yalnızca bu tarayıcı oturumu boyunca saklanır, tarayıcı kapanınca silinir ve yalnızca bu depoya yazabilir.",
     connect: "Bağlan",
     checking: "Denetleniyor…",
     connected: "Bu cihaz siteye yayın yapabilir.",
@@ -52,6 +60,14 @@ const PUBLISH: Record<Lang, PublishCopy> = {
       "Bu anahtar depoya yazamıyor. Depoyu ve Contents: Read and write iznini seçtiğinizden emin olun.",
     network: "GitHub'a ulaşılamadı. İnternet bağlantısını denetleyin.",
     failed: "Yayınlanamadı.",
+    stale:
+      "Yayınlanmadı: bu yazı siz düzenlerken başka bir sekmeden ya da cihazdan kaydedildi. Yine de yayınlarsanız o kayıt silinir. Güncel hâli açarsanız buradaki değişiklikler silinir.",
+    publishAnyway: "Yine de yayınla",
+    loadLatest: "Güncel hâli aç",
+    draftRestored: "Kaydedilmemiş taslağınız geri yüklendi.",
+    discardDraft: "Taslağı at",
+    draftMediaDropped:
+      "Yeni seçtiğiniz ses ya da görsel taslakta saklanamayacak kadar büyük. Yayınlamadan önce yeniden seçin.",
     needConnect: "Yayınlamak için önce bu cihazı panel ana sayfasından bağlayın.",
     publishing: "Yayınlanıyor…",
     published: "Yayınlandı. Site birkaç dakika içinde güncellenir.",
@@ -77,7 +93,8 @@ const PUBLISH: Record<Lang, PublishCopy> = {
     ],
     makeToken: "أنشئ مفتاحًا في GitHub",
     tokenLabel: "مفتاح GitHub",
-    tokenHelp: "يُحفظ المفتاح طوال جلسة المتصفح هذه فقط، ويُمحى عند إغلاقه، ولا يكتب إلا في هذا المستودع.",
+    tokenHelp:
+      "يُحفظ المفتاح طوال جلسة المتصفح هذه فقط، ويُمحى عند إغلاقه، ولا يكتب إلا في هذا المستودع.",
     connect: "اربط",
     checking: "جارٍ التحقق…",
     connected: "هذا الجهاز يستطيع النشر على الموقع.",
@@ -87,6 +104,14 @@ const PUBLISH: Record<Lang, PublishCopy> = {
       "هذا المفتاح لا يستطيع الكتابة في المستودع. تأكد من اختيار المستودع وإذن Contents: Read and write.",
     network: "تعذّر الوصول إلى GitHub. تحقّق من الاتصال بالإنترنت.",
     failed: "تعذّر النشر.",
+    stale:
+      "لم يُنشر: حُفظ هذا النص من علامة تبويب أو جهاز آخر أثناء تحريرك له. إن نشرت رغم ذلك فستُمحى تلك النسخة، وإن فتحت النسخة الأحدث فستُمحى تغييراتك هنا.",
+    publishAnyway: "انشر رغم ذلك",
+    loadLatest: "افتح النسخة الأحدث",
+    draftRestored: "استُعيدت مسودتك غير المحفوظة.",
+    discardDraft: "تجاهل المسودة",
+    draftMediaDropped:
+      "الصوت أو الصورة المختارة حديثًا أكبر من أن تُحفظ في المسودة. اخترها من جديد قبل النشر.",
     needConnect: "للنشر، اربط هذا الجهاز أولًا من الصفحة الرئيسية للوحة.",
     publishing: "جارٍ النشر…",
     published: "نُشر. سيُحدَّث الموقع خلال دقائق.",
@@ -112,7 +137,8 @@ const PUBLISH: Record<Lang, PublishCopy> = {
     ],
     makeToken: "Create a token on GitHub",
     tokenLabel: "GitHub token",
-    tokenHelp: "The token is kept only for this browser session, is forgotten when the browser closes, and can write only to this repository.",
+    tokenHelp:
+      "The token is kept only for this browser session, is forgotten when the browser closes, and can write only to this repository.",
     connect: "Connect",
     checking: "Checking…",
     connected: "This device can publish to the site.",
@@ -122,6 +148,14 @@ const PUBLISH: Record<Lang, PublishCopy> = {
       "This token cannot write to the repository. Make sure you picked the repository and Contents: Read and write.",
     network: "GitHub could not be reached. Check the connection.",
     failed: "Could not publish.",
+    stale:
+      "Not published: this reading was saved from another tab or device while you were editing it. Publishing anyway replaces that version; opening the latest version discards the changes here.",
+    publishAnyway: "Publish anyway",
+    loadLatest: "Open the latest version",
+    draftRestored: "Your unsaved draft was restored.",
+    discardDraft: "Discard draft",
+    draftMediaDropped:
+      "A newly chosen recording or picture is too large to keep in the draft. Choose it again before publishing.",
     needConnect: "To publish, first connect this device on the panel's front page.",
     publishing: "Publishing…",
     published: "Published. The site updates within a few minutes.",
@@ -148,7 +182,8 @@ const PUBLISH: Record<Lang, PublishCopy> = {
     ],
     makeToken: "Créer un jeton sur GitHub",
     tokenLabel: "Jeton GitHub",
-    tokenHelp: "Le jeton n’est gardé que pendant cette session du navigateur, il est oublié à sa fermeture et ne peut écrire que dans ce dépôt.",
+    tokenHelp:
+      "Le jeton n’est gardé que pendant cette session du navigateur, il est oublié à sa fermeture et ne peut écrire que dans ce dépôt.",
     connect: "Relier",
     checking: "Vérification…",
     connected: "Cet appareil peut publier sur le site.",
@@ -158,6 +193,14 @@ const PUBLISH: Record<Lang, PublishCopy> = {
       "Ce jeton ne peut pas écrire dans le dépôt. Vérifiez le dépôt choisi et Contents : Read and write.",
     network: "GitHub est injoignable. Vérifiez la connexion.",
     failed: "Publication impossible.",
+    stale:
+      "Non publié : cette lecture a été enregistrée depuis un autre onglet ou appareil pendant que vous la modifiiez. Publier quand même remplace cette version ; ouvrir la version récente efface les changements faits ici.",
+    publishAnyway: "Publier quand même",
+    loadLatest: "Ouvrir la version récente",
+    draftRestored: "Votre brouillon non enregistré a été restauré.",
+    discardDraft: "Abandonner le brouillon",
+    draftMediaDropped:
+      "Un enregistrement ou une image choisis récemment sont trop lourds pour le brouillon. Choisissez-les de nouveau avant de publier.",
     needConnect: "Pour publier, reliez d’abord cet appareil depuis l’accueil du panneau.",
     publishing: "Publication…",
     published: "Publié. Le site se met à jour en quelques minutes.",
@@ -195,6 +238,14 @@ const PUBLISH: Record<Lang, PublishCopy> = {
       "Este token no puede escribir en el repositorio. Compruebe el repositorio elegido y Contents: Read and write.",
     network: "No se pudo llegar a GitHub. Compruebe la conexión.",
     failed: "No se pudo publicar.",
+    stale:
+      "No publicado: esta lectura se guardó desde otra pestaña o dispositivo mientras la editaba. Publicar de todos modos reemplaza esa versión; abrir la versión reciente descarta los cambios hechos aquí.",
+    publishAnyway: "Publicar de todos modos",
+    loadLatest: "Abrir la versión reciente",
+    draftRestored: "Se restauró su borrador sin guardar.",
+    discardDraft: "Descartar borrador",
+    draftMediaDropped:
+      "Una grabación o imagen elegida hace poco es demasiado grande para el borrador. Vuelva a elegirla antes de publicar.",
     needConnect: "Para publicar, conecte primero este dispositivo desde la portada del panel.",
     publishing: "Publicando…",
     published: "Publicado. El sitio se actualiza en unos minutos.",

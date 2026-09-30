@@ -39,7 +39,11 @@ export function writeToken(token: string) {
 
 export class PublishError extends Error {
   constructor(
-    public kind: "auth" | "access" | "network" | "conflict" | "other",
+    /**
+     * "conflict": the branch moved during the commit (retried once).
+     * "stale": the reading was changed elsewhere after this editor opened it.
+     */
+    public kind: "auth" | "access" | "network" | "conflict" | "stale" | "other",
     message: string,
   ) {
     super(message);
@@ -76,6 +80,34 @@ const repoPath = `/repos/${REPO.owner}/${REPO.name}`;
 export async function checkToken(token: string): Promise<void> {
   const repo = await call<{ permissions?: { push?: boolean } }>(token, repoPath);
   if (!repo.permissions?.push) throw new PublishError("access", "no push");
+}
+
+/**
+ * A text file as it is on the main branch right now, or null when there is no such file.
+ * Read fresh every time (no browser cache), because it is compared before publishing.
+ */
+export async function readRepoFile(token: string, path: string): Promise<string | null> {
+  let res: Response;
+  try {
+    res = await fetch(
+      `${API}${repoPath}/contents/${path.split("/").map(encodeURIComponent).join("/")}?ref=${REPO.branch}`,
+      {
+        cache: "no-store",
+        headers: {
+          Accept: "application/vnd.github.raw+json",
+          Authorization: `Bearer ${token}`,
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+      },
+    );
+  } catch {
+    throw new PublishError("network", "network");
+  }
+  if (res.status === 404) return null;
+  if (res.status === 401) throw new PublishError("auth", "auth");
+  if (res.status === 403) throw new PublishError("access", "403");
+  if (!res.ok) throw new PublishError("other", `${res.status}`);
+  return await res.text();
 }
 
 /** A file to write (base64 content) or, with content null, to delete. */

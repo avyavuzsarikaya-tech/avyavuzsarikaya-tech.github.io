@@ -35,6 +35,11 @@ function resolve(story: Story): Story {
   };
 }
 
+/** A reading read straight from its file (the panel's copy of the latest version). */
+export function fromFile(story: Story): Story {
+  return resolve(structuredClone(story));
+}
+
 export const CARDS: StoryCard[] = INDEX.map((card) => ({
   ...card,
   theme: normalizeTheme(card.theme),
