@@ -84,9 +84,21 @@ export function Atlas({ section }: { section: Theme | "all" }) {
   return (
     <main>
       <div className="px-5 py-6 md:px-8 md:py-8">
-        <h1 className="text-2xl leading-tight md:text-3xl">
-          {section === "all" ? copy.hero : copy.themes[section]}
-        </h1>
+        {section === "all" ? (
+          <h1 className="max-w-full">
+            {/* Two faces of one sentence: the first line is the lighter facing,
+                the second the cloth. `kicker` is only the burgundy mix (#8f606a);
+                it is not set as a section label. */}
+            <span className="kicker block text-[1.375rem] leading-snug font-medium text-muted md:text-[1.75rem]">
+              {copy.heroLead}
+            </span>
+            <span className="mt-1 block max-w-[16.75rem] text-[1.8rem] leading-[1.15] md:mt-1.5 md:max-w-none md:text-[2.6rem]">
+              {copy.hero}
+            </span>
+          </h1>
+        ) : (
+          <h1 className="text-2xl leading-tight md:text-3xl">{copy.themes[section]}</h1>
+        )}
       </div>
 
       <div

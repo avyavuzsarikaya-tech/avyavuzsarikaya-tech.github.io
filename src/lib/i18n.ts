@@ -17,6 +17,8 @@ export type Copy = {
   sections: string;
   panel: string;
   language: string;
+  /** First line of the home sentence. Read with `hero` as one sentence. */
+  heroLead: string;
   hero: string;
   manifesto: string;
   listenRule: string;
@@ -89,7 +91,8 @@ const copy: Record<Lang, Copy> = {
     sections: "Sections",
     panel: "Panel",
     language: "Language",
-    hero: "A world, with its sources.",
+    heroLead: "A world",
+    hero: "reading atlas, with its sources.",
     manifesto:
       "Orbis is a reading atlas. Each dispatch is rewritten in five languages and tied to the public documents it rests on. There is no breaking-news desk, and there is no opinion page.",
     listenRule:
@@ -171,7 +174,8 @@ const copy: Record<Lang, Copy> = {
     sections: "Bölümler",
     panel: "Panel",
     language: "Dil",
-    hero: "Kaynaklarıyla bir dünya.",
+    heroLead: "Bir dünya",
+    hero: "okuma atlası, kaynaklarıyla.",
     manifesto:
       "Orbis bir okuma atlasıdır. Her metin beş dilde yeniden yazılır ve dayandığı kamusal belgelere bağlanır. Son dakika masası yoktur, görüş sayfası da yoktur.",
     listenRule:
@@ -254,7 +258,8 @@ const copy: Record<Lang, Copy> = {
     sections: "الأقسام",
     panel: "اللوحة",
     language: "اللغة",
-    hero: "عالمٌ بمصادره.",
+    heroLead: "أطلس قراءة",
+    hero: "للعالم، بمصادره.",
     manifesto:
       "أوربيس أطلس قراءة. يُعاد كتابة كل نص بخمس لغات ويُربط بالوثائق العامة التي يستند إليها. لا مكتب أخبار عاجلة هنا، ولا صفحة رأي.",
     listenRule: "يظهر زر الاستماع فقط بعد رفع تسجيل للغة التي تقرأ بها.",
@@ -336,7 +341,8 @@ const copy: Record<Lang, Copy> = {
     sections: "Sections",
     panel: "Panneau",
     language: "Langue",
-    hero: "Un monde, et ses sources.",
+    heroLead: "Un atlas de lecture",
+    hero: "du monde, avec ses sources.",
     manifesto:
       "Orbis est un atlas de lecture. Chaque texte est réécrit en cinq langues et relié aux documents publics sur lesquels il repose. Il n’y a pas de desk d’urgence, ni de page d’opinion.",
     listenRule:
@@ -421,7 +427,8 @@ const copy: Record<Lang, Copy> = {
     sections: "Secciones",
     panel: "Panel",
     language: "Lengua",
-    hero: "Un mundo, con sus fuentes.",
+    heroLead: "Un atlas de lectura",
+    hero: "del mundo, con sus fuentes.",
     manifesto:
       "Orbis es un atlas de lectura. Cada texto se reescribe en cinco lenguas y se ata a los documentos públicos en los que se apoya. No hay mesa de última hora, ni página de opinión.",
     listenRule:
