@@ -13,38 +13,16 @@ import { useLang } from "@/lib/use-lang";
  * cards around it, and the index of further readings on the right.
  */
 
-function ReadTime({
-  minutes,
-  pattern,
-  lang,
-}: {
-  minutes: number;
-  pattern: string;
-  lang: Lang;
-}) {
-  const [before = "", after = ""] = pattern.split("{n}");
-  const words =
-    lang === "ar"
-      ? "text-[11px] leading-none"
-      : "text-[10px] uppercase leading-none tracking-[0.16em]";
-  return (
-    <p className="inline-flex shrink-0 items-baseline gap-1 text-muted">
-      {before.trim() ? <span className={words}>{before.trim()}</span> : null}
-      <span className="font-display text-sm tabular-nums leading-none text-ink">{minutes}</span>
-      {after.trim() ? <span className={words}>{after.trim()}</span> : null}
-    </p>
-  );
-}
-
 function Meta({ story, lang, section }: { story: Story; lang: Lang; section: Theme | "all" }) {
   const copy = useCopy(lang);
   const minutes = story.locales[lang].minutes;
   // The section name and date close the card, under the text, so the line never sits
   // under a picture where it would read as the picture's caption. A section page names
   // its section once in its own title, so its cards skip it. The reading time sits at
-  // the far end of the same line; the figure is in the display face.
+  // the far end of the same line, plain; it is worked out from the text.
+  // In a narrow card the reading time drops under the date rather than splitting it.
   return (
-    <div className="mt-1 flex items-baseline justify-between gap-3 text-xs text-muted">
+    <div className="mt-1 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 text-xs text-muted">
       <p>
         {section === "all" ? (
           <>
@@ -52,9 +30,13 @@ function Meta({ story, lang, section }: { story: Story; lang: Lang; section: The
             {" · "}
           </>
         ) : null}
-        {formatDate(story.date, lang)}
+        <span className="whitespace-nowrap">{formatDate(story.date, lang)}</span>
       </p>
-      {minutes ? <ReadTime minutes={minutes} pattern={copy.minRead} lang={lang} /> : null}
+      {minutes ? (
+        <p className="whitespace-nowrap tabular-nums">
+          {copy.minRead.replace("{n}", String(minutes))}
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -120,7 +102,12 @@ export function Atlas({ section }: { section: Theme | "all" }) {
               className={`${leadSpan} flex min-w-0 flex-col gap-3 border-b border-rule px-5 py-7 md:border-r md:px-8 md:py-8 md:rtl:border-r-0 md:rtl:border-l`}
             >
               {latest.image ? (
-                <Picture story={latest} eager className={alone ? "max-w-3xl" : ""} />
+                <Picture
+                  story={latest}
+                  eager
+                  fill={leadSpan.includes("row-span-2")}
+                  className={alone ? "max-w-3xl" : ""}
+                />
               ) : null}
               {/* Without a picture the text settles at the foot of the lead frame, so the
                   height reads as air above a headline rather than an empty box. */}
@@ -262,18 +249,24 @@ function Card({
   );
 }
 
-/** The reading's painting, cropped to a steady 3:2 frame so the grid keeps its rhythm. */
+/**
+ * The reading's picture, cropped to a steady 3:2 frame so the grid keeps its rhythm.
+ * With `fill`, the lead picture grows taller when the cards beside it run longer, so the
+ * lead frame never ends in an empty band; it never gets shorter than 3:2.
+ */
 function Picture({
   story,
   className = "",
   eager = false,
+  fill = false,
 }: {
   story: Story;
   className?: string;
   eager?: boolean;
+  fill?: boolean;
 }) {
   if (!story.image) return null;
-  return (
+  const img = (
     <img
       src={story.image.src}
       alt={story.image.credit}
@@ -281,8 +274,19 @@ function Picture({
       height={1000}
       loading={eager ? "eager" : "lazy"}
       decoding="async"
-      className={`aspect-[3/2] w-full max-w-full object-cover ${className}`}
+      className={
+        fill
+          ? "absolute inset-0 h-full w-full object-cover"
+          : `aspect-[3/2] w-full max-w-full object-cover ${className}`
+      }
     />
+  );
+  if (!fill) return img;
+  return (
+    <div className={`relative w-full md:flex-1 ${className}`}>
+      <div aria-hidden="true" className="aspect-[3/2]" />
+      {img}
+    </div>
   );
 }
 
