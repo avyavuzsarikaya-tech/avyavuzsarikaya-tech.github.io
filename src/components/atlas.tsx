@@ -86,10 +86,9 @@ export function Atlas({ section }: { section: Theme | "all" }) {
       <div className="px-5 py-6 md:px-8 md:py-8">
         {section === "all" ? (
           <h1 className="max-w-full">
-            {/* Two faces of one sentence: the first line is the lighter facing,
-                the second the cloth. `kicker` is only the burgundy mix (#8f606a);
-                it is not set as a section label. */}
-            <span className="kicker block text-[1.375rem] leading-snug font-medium text-muted md:text-[1.75rem]">
+            {/* Opening of the sentence. One black in every scheme: italic Bodoni,
+                not a section label. */}
+            <span className="block text-[1.9rem] leading-none font-medium tracking-[-0.03em] text-[#0c0c0c] italic [font-variation-settings:'opsz'_72] md:text-[2.5rem] [[lang=ar]_&]:not-italic [[lang=ar]_&]:tracking-normal">
               {copy.heroLead}
             </span>
             <span className="mt-1 block max-w-[16.75rem] text-[1.8rem] leading-[1.15] md:mt-1.5 md:max-w-none md:text-[2.6rem]">
