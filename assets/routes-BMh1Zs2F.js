@@ -1,0 +1,1 @@
+import{t as e}from"./atlas-BRK64TUs.js";var t=e;export{t as component};
