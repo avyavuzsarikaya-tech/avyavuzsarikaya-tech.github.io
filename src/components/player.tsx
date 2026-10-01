@@ -152,17 +152,19 @@ export function ReadingPlayer({
           type="button"
           onClick={() => void toggle()}
           aria-label={playing ? pause : listen}
-          className="inline-flex size-7 shrink-0 items-center justify-center text-ink"
+          className="inline-flex h-7 shrink-0 items-center gap-x-3 text-ink"
         >
+          {/* The icon's drawing starts a little inside its box; pull it back so the
+              triangle lines up with the text column above (the region and date line). */}
           {playing ? (
-            <Pause className="size-3" strokeWidth={1.25} aria-hidden="true" />
+            <Pause className="play-icon size-3" strokeWidth={1.25} aria-hidden="true" />
           ) : (
-            <Play className="size-3 translate-x-px" strokeWidth={1.25} aria-hidden="true" />
+            <Play className="play-icon size-3" strokeWidth={1.25} aria-hidden="true" />
           )}
+          <span className="text-[11px] uppercase tracking-[0.18em]">
+            {playing ? pause : listen}
+          </span>
         </button>
-        <span className="shrink-0 text-[11px] uppercase tracking-[0.18em] text-ink">
-          {playing ? pause : listen}
-        </span>
         <div className="seek-line">
           <div className="seek-rule" aria-hidden="true">
             <span className="seek-fill" style={{ width: pct }} />
