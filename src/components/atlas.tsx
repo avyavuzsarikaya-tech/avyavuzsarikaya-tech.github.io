@@ -13,13 +13,36 @@ import { useLang } from "@/lib/use-lang";
  * cards around it, and the index of further readings on the right.
  */
 
+function ReadTime({
+  minutes,
+  pattern,
+  lang,
+}: {
+  minutes: number;
+  pattern: string;
+  lang: Lang;
+}) {
+  const [before = "", after = ""] = pattern.split("{n}");
+  const words =
+    lang === "ar"
+      ? "text-[11px] leading-none"
+      : "text-[10px] uppercase leading-none tracking-[0.16em]";
+  return (
+    <p className="inline-flex shrink-0 items-baseline gap-1 text-muted">
+      {before.trim() ? <span className={words}>{before.trim()}</span> : null}
+      <span className="font-display text-sm tabular-nums leading-none text-ink">{minutes}</span>
+      {after.trim() ? <span className={words}>{after.trim()}</span> : null}
+    </p>
+  );
+}
+
 function Meta({ story, lang, section }: { story: Story; lang: Lang; section: Theme | "all" }) {
   const copy = useCopy(lang);
   const minutes = story.locales[lang].minutes;
   // The section name and date close the card, under the text, so the line never sits
   // under a picture where it would read as the picture's caption. A section page names
   // its section once in its own title, so its cards skip it. The reading time sits at
-  // the far end of the same line, plain; it is worked out from the text.
+  // the far end of the same line; the figure is in the display face.
   return (
     <div className="mt-1 flex items-baseline justify-between gap-3 text-xs text-muted">
       <p>
@@ -31,9 +54,7 @@ function Meta({ story, lang, section }: { story: Story; lang: Lang; section: The
         ) : null}
         {formatDate(story.date, lang)}
       </p>
-      {minutes ? (
-        <p className="shrink-0 tabular-nums">{copy.minRead.replace("{n}", String(minutes))}</p>
-      ) : null}
+      {minutes ? <ReadTime minutes={minutes} pattern={copy.minRead} lang={lang} /> : null}
     </div>
   );
 }
