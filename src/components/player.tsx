@@ -145,62 +145,67 @@ export function ReadingPlayer({
   const pct = `${span * 100}%`;
 
   return (
-    <div className="reading-player flex w-full min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
-      <button
-        type="button"
-        onClick={() => void toggle()}
-        aria-label={playing ? pause : listen}
-        className="inline-flex size-7 shrink-0 items-center justify-center text-ink"
-      >
-        {playing ? (
-          <Pause className="size-3" strokeWidth={1.25} aria-hidden="true" />
-        ) : (
-          <Play className="size-3 translate-x-px" strokeWidth={1.25} aria-hidden="true" />
-        )}
-      </button>
-      <span className="shrink-0 text-[11px] uppercase tracking-[0.18em] text-ink">
-        {playing ? pause : listen}
-      </span>
-      <div className="seek-line">
-        <div className="seek-rule" aria-hidden="true">
-          <span className="seek-fill" style={{ width: pct }} />
-          <span className="seek-knob" style={{ insetInlineStart: pct }} />
+    <div className="reading-player w-full min-w-0">
+      {/* One line, always: the seek line gives up width before anything moves down. */}
+      <div className="flex w-full min-w-0 flex-nowrap items-center gap-x-2 sm:gap-x-3">
+        <button
+          type="button"
+          onClick={() => void toggle()}
+          aria-label={playing ? pause : listen}
+          className="inline-flex size-7 shrink-0 items-center justify-center text-ink"
+        >
+          {playing ? (
+            <Pause className="size-3" strokeWidth={1.25} aria-hidden="true" />
+          ) : (
+            <Play className="size-3 translate-x-px" strokeWidth={1.25} aria-hidden="true" />
+          )}
+        </button>
+        <span className="shrink-0 text-[11px] uppercase tracking-[0.18em] text-ink">
+          {playing ? pause : listen}
+        </span>
+        <div className="seek-line">
+          <div className="seek-rule" aria-hidden="true">
+            <span className="seek-fill" style={{ width: pct }} />
+            <span className="seek-knob" style={{ insetInlineStart: pct }} />
+          </div>
+          <input
+            className="seek"
+            type="range"
+            min={0}
+            max={duration || 0}
+            step={0.1}
+            value={Math.min(progress, duration || 0)}
+            aria-label={listen}
+            aria-valuetext={`${fmt(progress)} / ${fmt(duration)}`}
+            onChange={(event) => seek(Number(event.target.value))}
+          />
         </div>
-        <input
-          className="seek"
-          type="range"
-          min={0}
-          max={duration || 0}
-          step={0.1}
-          value={Math.min(progress, duration || 0)}
-          aria-label={listen}
-          aria-valuetext={`${fmt(progress)} / ${fmt(duration)}`}
-          onChange={(event) => seek(Number(event.target.value))}
-        />
+        <span dir="ltr" className="shrink-0 text-[11px] tabular-nums tracking-wide text-muted">
+          {fmt(progress)}
+          <span className="px-1 text-rule" aria-hidden="true">
+            —
+          </span>
+          {fmt(duration)}
+        </span>
+        <span className="inline-flex shrink-0">
+          <Pick
+            tone="page"
+            align="end"
+            label={speed}
+            value={String(rate)}
+            onChange={(value) => changeRate(Number(value))}
+            options={RATES.map((value) => ({ value: String(value), label: `${value}x` }))}
+            buttonClassName="gap-1 py-0 text-[11px] tracking-widest text-muted"
+          >
+            <span dir="ltr" className="tabular-nums text-ink">
+              {rate}×
+            </span>
+            <span aria-hidden="true" className="text-[9px] leading-none">
+              ▾
+            </span>
+          </Pick>
+        </span>
       </div>
-      <span dir="ltr" className="shrink-0 text-[11px] tabular-nums tracking-wide text-muted">
-        {fmt(progress)}
-        <span className="px-1 text-rule" aria-hidden="true">
-          —
-        </span>
-        {fmt(duration)}
-      </span>
-      <Pick
-        tone="page"
-        align="end"
-        label={speed}
-        value={String(rate)}
-        onChange={(value) => changeRate(Number(value))}
-        options={RATES.map((value) => ({ value: String(value), label: `${value}x` }))}
-        buttonClassName="gap-1 py-0 text-[11px] tracking-widest text-muted"
-      >
-        <span dir="ltr" className="tabular-nums text-ink">
-          {rate}×
-        </span>
-        <span aria-hidden="true" className="text-[9px] leading-none">
-          ▾
-        </span>
-      </Pick>
       {error ? (
         <p role="alert" className="flex flex-wrap items-center gap-x-3 text-sm text-muted">
           {failed}
