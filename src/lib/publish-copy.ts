@@ -32,6 +32,7 @@ export type PublishCopy = {
   replaceImage: string;
   removeImage: string;
   credit: string;
+  captionHere: string;
   imageFail: string;
 };
 
@@ -78,6 +79,7 @@ const PUBLISH: Record<Lang, PublishCopy> = {
     replaceImage: "Görseli değiştir",
     removeImage: "Görseli kaldır",
     credit: "Alt yazı (ressam, eser, yıl)",
+    captionHere: "Görsel alt yazısı (bu dilde)",
     imageFail: "Görsel okunamadı.",
   },
   ar: {
@@ -122,6 +124,7 @@ const PUBLISH: Record<Lang, PublishCopy> = {
     replaceImage: "استبدل الصورة",
     removeImage: "احذف الصورة",
     credit: "التعليق (الرسام، العمل، السنة)",
+    captionHere: "تعليق الصورة (بهذه اللغة)",
     imageFail: "تعذّرت قراءة الصورة.",
   },
   en: {
@@ -167,6 +170,7 @@ const PUBLISH: Record<Lang, PublishCopy> = {
     replaceImage: "Replace picture",
     removeImage: "Remove picture",
     credit: "Caption (painter, work, year)",
+    captionHere: "Picture caption (in this language)",
     imageFail: "The picture could not be read.",
   },
   fr: {
@@ -212,6 +216,7 @@ const PUBLISH: Record<Lang, PublishCopy> = {
     replaceImage: "Remplacer l’image",
     removeImage: "Retirer l’image",
     credit: "Légende (peintre, œuvre, année)",
+    captionHere: "Légende de l’image (dans cette langue)",
     imageFail: "L’image n’a pas pu être lue.",
   },
   es: {
@@ -257,6 +262,7 @@ const PUBLISH: Record<Lang, PublishCopy> = {
     replaceImage: "Cambiar imagen",
     removeImage: "Quitar imagen",
     credit: "Pie (pintor, obra, año)",
+    captionHere: "Pie de imagen (en este idioma)",
     imageFail: "No se pudo leer la imagen.",
   },
 };
