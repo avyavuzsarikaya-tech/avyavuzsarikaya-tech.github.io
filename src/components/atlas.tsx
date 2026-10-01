@@ -85,12 +85,12 @@ export function Atlas({ section }: { section: Theme | "all" }) {
     <main>
       <div className="px-5 py-6 md:px-8 md:py-8">
         {section === "all" ? (
-          <h1 className="max-w-full text-[1.75rem] leading-[1.12] font-medium tracking-[-0.02em] text-[#0c0c0c] md:text-[2.45rem] [[lang=ar]_&]:tracking-normal">
-            {/* One sentence, two faces of the same black: the first line is the satin, the second the cloth. */}
-            <span className="block italic [font-variation-settings:'opsz'_48] [[lang=ar]_&]:not-italic [[lang=ar]_&]:[font-variation-settings:'opsz'_18]">
+          <h1 className="max-w-full text-[#0c0c0c]">
+            {/* One sentence. The short line is the satin facing, the long line the cloth. */}
+            <span className="block text-[2rem] leading-none font-medium tracking-[-0.04em] italic [font-variation-settings:'opsz'_36] md:text-[2.7rem] [[lang=ar]_&]:not-italic [[lang=ar]_&]:tracking-normal [[lang=ar]_&]:[font-variation-settings:'opsz'_14]">
               {copy.heroLead}
             </span>
-            <span className="block max-w-[14.5rem] not-italic [font-variation-settings:'opsz'_18] md:max-w-none">
+            <span className="mt-1.5 block text-[1.25rem] leading-snug font-semibold tracking-[-0.015em] not-italic [font-variation-settings:'opsz'_14] min-[360px]:text-[1.4rem] md:mt-2 md:text-[1.9rem]">
               {copy.hero}
             </span>
           </h1>
