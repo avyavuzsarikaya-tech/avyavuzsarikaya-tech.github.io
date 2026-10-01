@@ -142,13 +142,12 @@ html[data-look="bordo"] .section-link[data-on="true"] {
     min-width: 2.5rem;
     height: 1.75rem;
   }
-  /* Reading text set flush on both sides, as in print; words break with hyphens
-     (in the page's own language) so a narrow phone column keeps even spacing. */
+  /* Reading text set flush to the start edge (left, or right in Arabic) with a
+     natural ragged end, so word spacing stays even and no words are split. */
   .reading-para {
-    text-align: justify;
-    text-justify: inter-word;
-    hyphens: auto;
-    -webkit-hyphens: auto;
+    text-align: start;
+    hyphens: manual;
+    -webkit-hyphens: manual;
     text-wrap: pretty;
   }
   .reading-player .play-icon {

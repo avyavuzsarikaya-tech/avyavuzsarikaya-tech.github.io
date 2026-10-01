@@ -9,12 +9,12 @@
   "sources": [
     {
       "n": 1,
-      "label": "FAO — Cereal Supply and Demand Brief",
+      "label": "FAO – Cereal Supply and Demand Brief",
       "url": "https://www.fao.org/worldfoodsituation/csdb/en"
     },
     {
       "n": 2,
-      "label": "AMIS — Agricultural Market Information System",
+      "label": "AMIS – Agricultural Market Information System",
       "url": "https://www.amis-outlook.org/"
     }
   ],
@@ -37,14 +37,14 @@
       "title": "How grain actually moves",
       "dek": "Wheat, maize, and rice cross borders as balance sheets before they cross them as ships.",
       "region": "Black Sea · Mekong · Paraná",
-      "body": "Wheat, maize, and rice do not travel as headlines. They travel as contracts, port drafts, and seasonal windows. The public agencies that watch those flows publish balance sheets: production, trade, and stocks left at the end of the year, country by country. [1]\n\nA balance sheet is not a forecast of price, and this atlas does not offer one. It is a way to see concentration. A small group of exporters still supplies a large share of the wheat that crosses a border. When one corridor slows, the sheet shows who else has grain to sell — and who imports enough that a delay becomes a domestic question. [2]\n\nReading the sheet well means noticing what it leaves out. Grain lost before the farm gate, cargo refused for quality, sacks that never meet a customs officer: none of these enter the line, and the gap is part of the record. [1]",
+      "body": "Wheat, maize, and rice do not travel as headlines. They travel as contracts, port drafts, and seasonal windows. The public agencies that watch those flows publish balance sheets: production, trade, and stocks left at the end of the year, country by country. [1]\n\nA balance sheet is not a forecast of price, and this atlas does not offer one. It is a way to see concentration. A small group of exporters still supplies a large share of the wheat that crosses a border. When one corridor slows, the sheet shows who else has grain to sell – and who imports enough that a delay becomes a domestic question. [2]\n\nReading the sheet well means noticing what it leaves out. Grain lost before the farm gate, cargo refused for quality, sacks that never meet a customs officer: none of these enter the line, and the gap is part of the record. [1]",
       "audio": null
     },
     "fr": {
       "title": "Comment le grain voyage vraiment",
       "dek": "Le blé, le maïs et le riz franchissent une frontière comme un bilan avant de la franchir comme un navire.",
       "region": "Mer Noire · Mékong · Paraná",
-      "body": "Le blé, le maïs et le riz ne voyagent pas comme des manchettes. Ils voyagent comme des contrats, des tirants d’eau et des fenêtres de saison. Les organismes publics qui suivent ces flux publient des bilans : production, échanges et stocks en fin d’année, pays par pays. [1]\n\nUn bilan n’est pas une prévision de prix, et cet atlas n’en propose pas. C’est une façon de voir la concentration. Un petit groupe d’exportateurs fournit encore une large part du blé qui traverse une frontière. Quand un corridor ralentit, la feuille montre qui d’autre a du grain à vendre — et qui importe assez pour qu’un retard devienne une question intérieure. [2]\n\nBien lire la feuille, c’est voir ce qu’elle laisse dehors. Grain perdu avant la ferme, cargaison refusée pour la qualité, sacs qui ne croisent jamais un douanier : rien de cela n’entre dans la ligne, et le manque fait partie du registre. [1]",
+      "body": "Le blé, le maïs et le riz ne voyagent pas comme des manchettes. Ils voyagent comme des contrats, des tirants d’eau et des fenêtres de saison. Les organismes publics qui suivent ces flux publient des bilans : production, échanges et stocks en fin d’année, pays par pays. [1]\n\nUn bilan n’est pas une prévision de prix, et cet atlas n’en propose pas. C’est une façon de voir la concentration. Un petit groupe d’exportateurs fournit encore une large part du blé qui traverse une frontière. Quand un corridor ralentit, la feuille montre qui d’autre a du grain à vendre – et qui importe assez pour qu’un retard devienne une question intérieure. [2]\n\nBien lire la feuille, c’est voir ce qu’elle laisse dehors. Grain perdu avant la ferme, cargaison refusée pour la qualité, sacs qui ne croisent jamais un douanier : rien de cela n’entre dans la ligne, et le manque fait partie du registre. [1]",
       "audio": null
     },
     "es": {

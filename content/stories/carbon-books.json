@@ -15,17 +15,17 @@
   "sources": [
     {
       "n": 1,
-      "label": "IPCC — Sixth Assessment Report, Synthesis",
+      "label": "IPCC – Sixth Assessment Report, Synthesis",
       "url": "https://www.ipcc.ch/report/ar6/syr/"
     },
     {
       "n": 2,
-      "label": "IEA — Global Methane Tracker 2026",
+      "label": "IEA – Global Methane Tracker 2026",
       "url": "https://www.iea.org/reports/global-methane-tracker-2026"
     },
     {
       "n": 3,
-      "label": "NASA Earth Science — Climate vital signs",
+      "label": "NASA Earth Science – Climate vital signs",
       "url": "https://climate.nasa.gov/"
     }
   ],
@@ -45,7 +45,7 @@
       "title": "دفاتر الكربون، متقابلة",
       "dek": "تُقرأ قوائم الجرد الوطنية وقياسات الأقمار معًا لا كعنوان عاجل، بل كمسألة محاسبة.",
       "region": "عالمي",
-      "body": "كل دولة تقدّم تقاريرها بموجب اتفاقية المناخ تحتفظ بجرد لغازات الاحتباس الحراري: دفتر لما يُحرق ويُزرع ويُخزَّن ويُطلَق. هذه الدفاتر هي السجل الرسمي. وهي أيضًا بطيئة، وتعتمد على مناهج تختلف من عاصمة إلى أخرى. [1]\n\nثمة دفتر ثانٍ يأتي الآن من المدار. تقيس الأجهزة أعمدة الميثان وتغيّر ثاني أكسيد الكربون في الغلاف الجوي، ثم يسأل العلماء إلى الوراء أي الأقاليم يمكن أن يكون مصدرها. نادرًا ما يتطابق السجلان في القراءة الأولى. كان عمل السنوات الأخيرة أن نسأل عن السبب — مكبّ نفايات غائب، معامل انبعاث مُراجع، حقل رياح — لا أن نُعلن فائزًا. [2]\n\nما زالت تقييمات التجميع ترسم الإطار. الاحترار بشري بلا لبس، وميزانية الكربون المتبقية كمية لها مدى، لا شعار. ما تغيّره الدفاتر المتقابلة هو درجة الوضوح: أي الأحواض وأي القطاعات وأي السنوات تستحق تدقيقًا أدق. [3]",
+      "body": "كل دولة تقدّم تقاريرها بموجب اتفاقية المناخ تحتفظ بجرد لغازات الاحتباس الحراري: دفتر لما يُحرق ويُزرع ويُخزَّن ويُطلَق. هذه الدفاتر هي السجل الرسمي. وهي أيضًا بطيئة، وتعتمد على مناهج تختلف من عاصمة إلى أخرى. [1]\n\nثمة دفتر ثانٍ يأتي الآن من المدار. تقيس الأجهزة أعمدة الميثان وتغيّر ثاني أكسيد الكربون في الغلاف الجوي، ثم يسأل العلماء إلى الوراء أي الأقاليم يمكن أن يكون مصدرها. نادرًا ما يتطابق السجلان في القراءة الأولى. كان عمل السنوات الأخيرة أن نسأل عن السبب – مكبّ نفايات غائب، معامل انبعاث مُراجع، حقل رياح – لا أن نُعلن فائزًا. [2]\n\nما زالت تقييمات التجميع ترسم الإطار. الاحترار بشري بلا لبس، وميزانية الكربون المتبقية كمية لها مدى، لا شعار. ما تغيّره الدفاتر المتقابلة هو درجة الوضوح: أي الأحواض وأي القطاعات وأي السنوات تستحق تدقيقًا أدق. [3]",
       "audio": {
         "name": "دفاتر الكربون، متقابلة",
         "mime": "audio/mpeg",
@@ -54,9 +54,9 @@
     },
     "en": {
       "title": "The carbon books, reconciled",
-      "dek": "National inventories and satellite measurements are being read against each other — not as a headline, but as an accounting problem.",
+      "dek": "National inventories and satellite measurements are being read against each other – not as a headline, but as an accounting problem.",
       "region": "Global",
-      "body": "Every country that reports under the climate convention keeps a greenhouse-gas inventory: a ledger of what is burned, grown, stored, and released. Those ledgers are the official record. They are also slow, and they depend on methods that differ from one capital to the next. [1]\n\nA second set of books now comes from orbit. Instruments measure methane plumes and changes in atmospheric carbon dioxide, then scientists work backward toward the regions that could have produced them. The two records rarely match on the first reading. The work of recent years has been to ask why — a missing landfill, a revised emission factor, a wind field — rather than to declare a winner. [2]\n\nSynthesis assessments still set the frame. Warming is unequivocally human-driven, and the remaining carbon budget is a quantity with a range, not a slogan. What the paired books change is the resolution: which basins, which sectors, which years deserve a closer audit. [3]",
+      "body": "Every country that reports under the climate convention keeps a greenhouse-gas inventory: a ledger of what is burned, grown, stored, and released. Those ledgers are the official record. They are also slow, and they depend on methods that differ from one capital to the next. [1]\n\nA second set of books now comes from orbit. Instruments measure methane plumes and changes in atmospheric carbon dioxide, then scientists work backward toward the regions that could have produced them. The two records rarely match on the first reading. The work of recent years has been to ask why – a missing landfill, a revised emission factor, a wind field – rather than to declare a winner. [2]\n\nSynthesis assessments still set the frame. Warming is unequivocally human-driven, and the remaining carbon budget is a quantity with a range, not a slogan. What the paired books change is the resolution: which basins, which sectors, which years deserve a closer audit. [3]",
       "audio": {
         "name": "The carbon books, reconciled",
         "mime": "audio/mpeg",
@@ -65,9 +65,9 @@
     },
     "fr": {
       "title": "Les livres du carbone, rapprochés",
-      "dek": "Les inventaires nationaux et les mesures satellitaires se lisent l’un contre l’autre — non comme une manchette, mais comme un problème de comptes.",
+      "dek": "Les inventaires nationaux et les mesures satellitaires se lisent l’un contre l’autre – non comme une manchette, mais comme un problème de comptes.",
       "region": "Monde",
-      "body": "Chaque pays qui rend compte au titre de la convention sur le climat tient un inventaire de gaz à effet de serre : un livre de ce qui est brûlé, cultivé, stocké et rejeté. Ces livres sont le registre officiel. Ils sont aussi lents, et ils reposent sur des méthodes qui diffèrent d’une capitale à l’autre. [1]\n\nUn second jeu de livres vient désormais de l’orbite. Des instruments mesurent les panaches de méthane et les variations du dioxyde de carbone atmosphérique ; les scientifiques remontent ensuite vers les régions qui ont pu les produire. Les deux registres coïncident rarement à la première lecture. Le travail de ces dernières années a consisté à demander pourquoi — une décharge absente, un facteur d’émission révisé, un champ de vent — plutôt qu’à désigner un vainqueur. [2]\n\nLes évaluations de synthèse fixent encore le cadre. Le réchauffement est sans équivoque d’origine humaine, et le budget carbone restant est une quantité dotée d’une fourchette, non un slogan. Ce que les livres rapprochés changent, c’est la résolution : quels bassins, quels secteurs, quelles années méritent un audit plus fin. [3]",
+      "body": "Chaque pays qui rend compte au titre de la convention sur le climat tient un inventaire de gaz à effet de serre : un livre de ce qui est brûlé, cultivé, stocké et rejeté. Ces livres sont le registre officiel. Ils sont aussi lents, et ils reposent sur des méthodes qui diffèrent d’une capitale à l’autre. [1]\n\nUn second jeu de livres vient désormais de l’orbite. Des instruments mesurent les panaches de méthane et les variations du dioxyde de carbone atmosphérique ; les scientifiques remontent ensuite vers les régions qui ont pu les produire. Les deux registres coïncident rarement à la première lecture. Le travail de ces dernières années a consisté à demander pourquoi – une décharge absente, un facteur d’émission révisé, un champ de vent – plutôt qu’à désigner un vainqueur. [2]\n\nLes évaluations de synthèse fixent encore le cadre. Le réchauffement est sans équivoque d’origine humaine, et le budget carbone restant est une quantité dotée d’une fourchette, non un slogan. Ce que les livres rapprochés changent, c’est la résolution : quels bassins, quels secteurs, quelles années méritent un audit plus fin. [3]",
       "audio": {
         "name": "Les livres du carbone, rapprochés",
         "mime": "audio/mpeg",
