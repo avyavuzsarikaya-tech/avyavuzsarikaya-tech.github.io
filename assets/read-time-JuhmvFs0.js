@@ -1,1 +1,0 @@
-import{K as e}from"./seed-DkSHxzcn.js";var t=e();function n({minutes:e,lang:n,pattern:r}){return(0,t.jsx)(`p`,{className:n===`ar`?`text-xs whitespace-nowrap text-muted tabular-nums`:`text-xs whitespace-nowrap text-muted uppercase tracking-widest tabular-nums`,children:r.replace(`{n}`,String(e))})}export{n as t};
