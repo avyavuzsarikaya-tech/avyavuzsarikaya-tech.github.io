@@ -23,6 +23,8 @@ export type Copy = {
   readings: string;
   homeSections: string;
   min: string;
+  /** Reading time on a card, as in "4 min read". */
+  minRead: string;
   listen: string;
   pause: string;
   speed: string;
@@ -95,6 +97,7 @@ const copy: Record<Lang, Copy> = {
     readings: "Readings",
     homeSections: "Home sections",
     min: "min",
+    minRead: "{n} min read",
     listen: "Listen",
     pause: "Pause",
     speed: "Speed",
@@ -176,6 +179,7 @@ const copy: Record<Lang, Copy> = {
     readings: "Okumalar",
     homeSections: "Ana bölümler",
     min: "dk",
+    minRead: "{n} dk okuma",
     listen: "Dinle",
     pause: "Durdur",
     speed: "Hız",
@@ -257,6 +261,7 @@ const copy: Record<Lang, Copy> = {
     readings: "قراءات",
     homeSections: "أقسام الصفحة",
     min: "د",
+    minRead: "وقت القراءة: {n} د",
     listen: "استمع",
     pause: "إيقاف",
     speed: "السرعة",
@@ -339,6 +344,7 @@ const copy: Record<Lang, Copy> = {
     readings: "Lectures",
     homeSections: "Sections",
     min: "min",
+    minRead: "{n} min de lecture",
     listen: "Écouter",
     pause: "Pause",
     speed: "Vitesse",
@@ -423,6 +429,7 @@ const copy: Record<Lang, Copy> = {
     readings: "Lecturas",
     homeSections: "Secciones",
     min: "min",
+    minRead: "{n} min de lectura",
     listen: "Escuchar",
     pause: "Pausa",
     speed: "Velocidad",

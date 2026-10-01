@@ -13,16 +13,28 @@ import { useLang } from "@/lib/use-lang";
  * cards around it, and the index of further readings on the right.
  */
 
-function Meta({ story, lang }: { story: Story; lang: Lang }) {
+function Meta({ story, lang, section }: { story: Story; lang: Lang; section: Theme | "all" }) {
   const copy = useCopy(lang);
+  const minutes = story.locales[lang].minutes;
+  // The section name and date close the card, under the text, so the line never sits
+  // under a picture where it would read as the picture's caption. A section page names
+  // its section once in its own title, so its cards skip it. The reading time sits at
+  // the far end of the same line, plain; it is worked out from the text.
   return (
-    <p className="text-xs uppercase tracking-widest text-pine">
-      {copy.themes[story.theme]}
-      <span className="hidden text-muted normal-case tracking-normal md:inline">
-        {" "}
-        · {formatDate(story.date, lang)}
-      </span>
-    </p>
+    <div className="mt-1 flex items-baseline justify-between gap-3 text-xs text-muted">
+      <p>
+        {section === "all" ? (
+          <>
+            <span className="uppercase tracking-widest text-pine">{copy.themes[story.theme]}</span>
+            {" · "}
+          </>
+        ) : null}
+        {formatDate(story.date, lang)}
+      </p>
+      {minutes ? (
+        <p className="shrink-0 tabular-nums">{copy.minRead.replace("{n}", String(minutes))}</p>
+      ) : null}
+    </div>
   );
 }
 
@@ -67,7 +79,6 @@ export function Atlas({ section }: { section: Theme | "all" }) {
   }
 
   const leadDek = latest?.locales[lang].dek?.trim() ?? "";
-  const leadMinutes = latest?.locales[lang].minutes ?? 0;
 
   return (
     <main>
@@ -90,7 +101,6 @@ export function Atlas({ section }: { section: Theme | "all" }) {
               {latest.image ? (
                 <Picture story={latest} eager className={alone ? "max-w-3xl" : ""} />
               ) : null}
-              <Meta story={latest} lang={lang} />
               {/* Without a picture the text settles at the foot of the lead frame, so the
                   height reads as air above a headline rather than an empty box. */}
               <div
@@ -105,7 +115,7 @@ export function Atlas({ section }: { section: Theme | "all" }) {
                 >
                   {storyTitle(latest, lang)}
                 </h2>
-                {/* Title, the reading's own summary in full, then reading time.
+                {/* Title, the reading's own summary in full, then section, date and the reading time.
                     The picture sits above the headline. The text itself starts on the reading page. */}
                 {leadDek ? (
                   <p
@@ -122,15 +132,18 @@ export function Atlas({ section }: { section: Theme | "all" }) {
                     {latest.locales[lang].lead}
                   </p>
                 )}
-                {leadMinutes ? (
-                  <p className="text-xs uppercase tracking-widest text-muted">
-                    {leadMinutes} {copy.min}
-                  </p>
-                ) : null}
+                <Meta story={latest} lang={lang} section={section} />
               </div>
             </Link>
             {cards.map((story, n) => (
-              <Card key={story.id} story={story} lang={lang} span={cardSpan(n)} second={n === 0} />
+              <Card
+                key={story.id}
+                story={story}
+                lang={lang}
+                section={section}
+                span={cardSpan(n)}
+                second={n === 0}
+              />
             ))}
           </div>
         ) : (
@@ -182,11 +195,13 @@ export function Atlas({ section }: { section: Theme | "all" }) {
 function Card({
   story,
   lang,
+  section,
   span = "",
   second = false,
 }: {
   story: Story;
   lang: Lang;
+  section: Theme | "all";
   span?: string;
   second?: boolean;
 }) {
@@ -203,7 +218,6 @@ function Card({
       className={`${span} flex min-w-0 flex-col gap-2 border-b border-line px-5 md:px-8 ${second ? "gap-3 py-6 md:py-7" : "py-5"}`}
     >
       {story.image ? <Picture story={story} /> : null}
-      <Meta story={story} lang={lang} />
       <h2
         className={
           second ? "text-2xl leading-tight lg:text-3xl" : "text-lg leading-snug lg:text-xl"
@@ -222,6 +236,7 @@ function Card({
           {excerpt}
         </p>
       ) : null}
+      <Meta story={story} lang={lang} section={section} />
     </Link>
   );
 }
