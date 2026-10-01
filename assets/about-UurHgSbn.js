@@ -1,1 +1,0 @@
-import{t as e}from"./about-D4BB8_rG.js";var t=e;export{t as component};
