@@ -85,14 +85,9 @@ export function Atlas({ section }: { section: Theme | "all" }) {
     <main>
       <div className="px-5 py-6 md:px-8 md:py-8">
         {section === "all" ? (
-          <h1 className="max-w-full text-[#0c0c0c]">
-            {/* One sentence. The short line is the satin facing, the long line the cloth. */}
-            <span className="block text-[2rem] leading-none font-medium tracking-[-0.04em] italic [font-variation-settings:'opsz'_36] md:text-[2.7rem] [[lang=ar]_&]:not-italic [[lang=ar]_&]:tracking-normal [[lang=ar]_&]:[font-variation-settings:'opsz'_14]">
-              {copy.heroLead}
-            </span>
-            <span className="mt-1.5 block text-[1.25rem] leading-snug font-semibold tracking-[-0.015em] not-italic [font-variation-settings:'opsz'_14] min-[360px]:text-[1.4rem] md:mt-2 md:text-[1.9rem]">
-              {copy.hero}
-            </span>
+          <h1 className="home-sentence max-w-full text-[1.15rem] leading-[1.3] min-[380px]:text-[1.45rem] md:text-[2.05rem]">
+            <span className="block">{copy.heroLead}</span>
+            <span className="block">{copy.hero}</span>
           </h1>
         ) : (
           <h1 className="text-2xl leading-tight md:text-3xl">{copy.themes[section]}</h1>
