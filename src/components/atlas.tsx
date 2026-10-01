@@ -84,8 +84,7 @@ export function Atlas({ section }: { section: Theme | "all" }) {
   return (
     <main>
       <div className="px-5 py-6 md:px-8 md:py-8">
-        <p className="kicker text-xs uppercase tracking-widest text-muted">{copy.readings}</p>
-        <h1 className="mt-1 text-2xl leading-tight md:text-3xl">
+        <h1 className="text-2xl leading-tight md:text-3xl">
           {section === "all" ? copy.hero : copy.themes[section]}
         </h1>
       </div>
