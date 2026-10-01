@@ -85,13 +85,12 @@ export function Atlas({ section }: { section: Theme | "all" }) {
     <main>
       <div className="px-5 py-6 md:px-8 md:py-8">
         {section === "all" ? (
-          <h1 className="max-w-full">
-            {/* Opening of the sentence. One black in every scheme: italic Bodoni,
-                not a section label. */}
-            <span className="block text-[1.9rem] leading-none font-medium tracking-[-0.03em] text-[#0c0c0c] italic [font-variation-settings:'opsz'_72] md:text-[2.5rem] [[lang=ar]_&]:not-italic [[lang=ar]_&]:tracking-normal">
+          <h1 className="max-w-full text-[1.75rem] leading-[1.12] font-medium tracking-[-0.02em] text-[#0c0c0c] md:text-[2.45rem] [[lang=ar]_&]:tracking-normal">
+            {/* One sentence, two faces of the same black: the first line is the satin, the second the cloth. */}
+            <span className="block italic [font-variation-settings:'opsz'_48] [[lang=ar]_&]:not-italic [[lang=ar]_&]:[font-variation-settings:'opsz'_18]">
               {copy.heroLead}
             </span>
-            <span className="mt-1 block max-w-[16.75rem] text-[1.8rem] leading-[1.15] md:mt-1.5 md:max-w-none md:text-[2.6rem]">
+            <span className="block max-w-[14.5rem] not-italic [font-variation-settings:'opsz'_18] md:max-w-none">
               {copy.hero}
             </span>
           </h1>
