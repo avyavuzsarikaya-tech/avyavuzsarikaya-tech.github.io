@@ -1,0 +1,1 @@
+import{t as e}from"./atlas-x_BKPRUd.js";var t=e;export{t as component};
