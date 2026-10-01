@@ -37,9 +37,16 @@ export type Source = {
 /** The painting shown with a reading. `src` is images/<file> in the repository. */
 export type StoryImage = {
   src: string;
-  /** One line under the picture: painter, title, year. */
+  /** One line under the picture: painter, title, year. Used when a language has no caption of its own. */
   credit: string;
+  /** The same line written for each language; an empty or missing one falls back to `credit`. */
+  captions?: Partial<Record<Lang, string>>;
 };
+
+/** The line under the picture in this language. */
+export function captionOf(image: StoryImage, lang: Lang): string {
+  return image.captions?.[lang]?.trim() || image.credit;
+}
 
 export type Story = {
   id: string;

@@ -142,6 +142,15 @@ html[data-look="bordo"] .section-link[data-on="true"] {
     min-width: 2.5rem;
     height: 1.75rem;
   }
+  /* Reading text set flush on both sides, as in print; words break with hyphens
+     (in the page's own language) so a narrow phone column keeps even spacing. */
+  .reading-para {
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    text-wrap: pretty;
+  }
   .reading-player .play-icon {
     flex-shrink: 0;
     margin-inline-start: -3px;

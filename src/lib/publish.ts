@@ -121,6 +121,13 @@ export async function publishStory(
       file.image.src = mediaPath(file.image.src);
     }
     file.image.credit = file.image.credit.trim();
+    const captions = Object.fromEntries(
+      Object.entries(file.image.captions ?? {})
+        .map(([lang, line]) => [lang, (line ?? "").trim()])
+        .filter(([, line]) => line),
+    );
+    if (Object.keys(captions).length) file.image.captions = captions;
+    else delete file.image.captions;
   } else {
     delete file.image;
   }
