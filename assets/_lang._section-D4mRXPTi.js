@@ -1,1 +1,0 @@
-import{K as e,j as t}from"./seed-3CAOFBiF.js";import{i as n}from"./index-B0ANprnf.js";import{n as r}from"./atlas-x_BKPRUd.js";var i=e();function a(){let{section:e}=n.useParams();return(0,i.jsx)(r,{theme:t(e)})}export{a as component};
