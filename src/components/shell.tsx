@@ -11,11 +11,25 @@ import { LOOKS, LOOK_SWATCH, useLook, type Look } from "@/lib/look";
 import { LANGS, THEMES, type Lang, type Theme } from "@/lib/types";
 import { useLang } from "@/lib/use-lang";
 
-function Meridian() {
+/** The mark beside the name. In the header it is a size smaller on a phone. */
+function Meridian({ header = false }: { header?: boolean }) {
   return (
-    <span className="relative inline-flex h-8 w-8 items-center justify-center" aria-hidden="true">
-      <span className="absolute h-8 w-px bg-paper" />
-      <span className="size-2 rounded-full bg-paper" />
+    <span
+      className={
+        header
+          ? "relative inline-flex h-6 w-6 items-center justify-center md:h-8 md:w-8"
+          : "relative inline-flex h-8 w-8 items-center justify-center"
+      }
+      aria-hidden="true"
+    >
+      <span
+        className={header ? "absolute h-6 w-px bg-paper md:h-8" : "absolute h-8 w-px bg-paper"}
+      />
+      <span
+        className={
+          header ? "size-1.5 rounded-full bg-paper md:size-2" : "size-2 rounded-full bg-paper"
+        }
+      />
     </span>
   );
 }
@@ -36,7 +50,7 @@ function HeaderSwatch({ look }: { look: Look }) {
   return (
     <span
       aria-hidden="true"
-      className="block size-[18px] rounded-full border border-paper/70 transition-colors group-hover:border-paper group-aria-expanded:border-paper"
+      className="block size-[15px] rounded-full border md:size-[18px] border-paper/70 transition-colors group-hover:border-paper group-aria-expanded:border-paper"
       style={{ background: `linear-gradient(135deg, ${panel} 50%, ${paper} 50%)` }}
     />
   );
@@ -46,7 +60,7 @@ function Caret() {
   return (
     <svg
       viewBox="0 0 8 5"
-      className="mb-px size-2 shrink-0 opacity-70 transition-transform duration-150 group-hover:opacity-100 group-aria-expanded:rotate-180 group-aria-expanded:opacity-100"
+      className="mb-px size-[7px] shrink-0 opacity-70 md:size-2 transition-transform duration-150 group-hover:opacity-100 group-aria-expanded:rotate-180 group-aria-expanded:opacity-100"
       aria-hidden="true"
     >
       <path d="M.75.75 4 4.25 7.25.75" fill="none" stroke="currentColor" strokeWidth="1" />
@@ -106,7 +120,7 @@ export function Shell({
     <div className="flex min-h-dvh flex-col bg-paper text-ink">
       <header
         dir="ltr"
-        className="flex items-center justify-between gap-4 bg-panel px-5 py-3 text-paper md:px-8"
+        className="flex items-center justify-between gap-3 bg-panel px-5 py-2 text-paper md:gap-4 md:px-8 md:py-3"
       >
         <div className="flex items-center gap-1">
           <button
@@ -116,17 +130,25 @@ export function Shell({
             aria-controls="site-menu"
             aria-label={frame.menu}
             onClick={() => setMenuOpen(true)}
-            className="inline-flex size-11 shrink-0 items-center justify-start text-paper"
+            className="inline-flex h-11 w-9 shrink-0 items-center justify-start text-paper md:w-11"
           >
-            <span className="flex w-[18px] flex-col gap-[5px]" aria-hidden="true">
+            <span
+              className="flex w-[15px] flex-col gap-[4px] md:w-[18px] md:gap-[5px]"
+              aria-hidden="true"
+            >
               <span className="h-px w-full bg-current" />
               <span className="h-px w-full bg-current" />
               <span className="h-px w-full bg-current" />
             </span>
           </button>
-          <Link {...homeLink(lang)} className="inline-flex min-h-11 items-center gap-3 text-paper">
-            <Meridian />
-            <span className="font-display text-xl tracking-widest">ORBIS</span>
+          <Link
+            {...homeLink(lang)}
+            className="inline-flex min-h-11 items-center gap-2 text-paper md:gap-3"
+          >
+            <Meridian header />
+            <span className="font-display text-base tracking-[0.12em] md:text-xl md:tracking-widest">
+              ORBIS
+            </span>
           </Link>
         </div>
         <nav className="flex items-center gap-3 text-sm md:gap-4">
@@ -157,11 +179,11 @@ export function Shell({
                   </>
                 ),
               }))}
-              buttonClassName="group inline-flex size-11 items-center justify-center text-paper"
+              buttonClassName="group inline-flex h-11 w-9 items-center justify-center text-paper md:w-11"
             >
               <HeaderSwatch look={look} />
             </Pick>
-            <span aria-hidden="true" className="h-3.5 w-px bg-paper/35" />
+            <span aria-hidden="true" className="h-3 w-px bg-paper/35 md:h-3.5" />
             <Pick
               tone="panel"
               align="end"
@@ -173,7 +195,7 @@ export function Shell({
                 label: langMeta[code].name,
                 lang: langMeta[code].html,
               }))}
-              buttonClassName="group inline-flex h-11 items-center gap-1.5 ps-3 pe-0.5 text-[11px] tracking-[0.22em] text-paper"
+              buttonClassName="group inline-flex h-11 items-center gap-1 ps-2.5 pe-0.5 text-[10px] tracking-[0.2em] text-paper md:gap-1.5 md:ps-3 md:text-[11px] md:tracking-[0.22em]"
             >
               <span>{meta.code}</span>
               <Caret />
@@ -222,9 +244,7 @@ export function Shell({
           </div>
         </nav>
 
-        <div className="flex-1">
-          {children}
-        </div>
+        <div className="flex-1">{children}</div>
 
         <div aria-hidden="true" className="flex items-center gap-3 px-5 pt-12 pb-10 md:px-8">
           <span className="h-px flex-1 bg-rule" />

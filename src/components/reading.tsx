@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ReadingPlayer } from "@/components/player";
 import { Prose } from "@/components/prose";
+import { ReadTime } from "@/components/read-time";
 import { Shell } from "@/components/shell";
 import { langMeta, useCopy } from "@/lib/i18n";
 import { homeLink, readLink, rememberLang } from "@/lib/lang-path";
@@ -161,21 +162,14 @@ function Reading({ story }: { story: Story | null }) {
           ) : null}
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between gap-4">
-              <p className="text-sm text-muted">
-                {[locale.region, formatDate(story.date, lang)].filter(Boolean).join(" · ")}
-                {minutes ? (
-                  <>
-                    {" · "}
-                    <span
-                      className={
-                        lang === "ar" ? "tabular-nums" : "uppercase tracking-widest tabular-nums"
-                      }
-                    >
-                      {minutes} {copy.min}
-                    </span>
-                  </>
-                ) : null}
-              </p>
+              {/* Place and date on the first line; the reading time under them, set as on
+                  the cards, so it no longer pulls the spaced capitals into the date line. */}
+              <div className="flex flex-col items-start gap-1">
+                <p className="text-sm text-muted">
+                  {[locale.region, formatDate(story.date, lang)].filter(Boolean).join(" · ")}
+                </p>
+                {minutes ? <ReadTime minutes={minutes} lang={lang} pattern={copy.minRead} /> : null}
+              </div>
               <TypeSize
                 step={typeStep}
                 onDown={() => setStep(typeStep - 1)}

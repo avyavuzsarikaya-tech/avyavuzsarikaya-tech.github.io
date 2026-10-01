@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { ReadTime } from "@/components/read-time";
 import { Shell } from "@/components/shell";
 import { useFrameCopy } from "@/lib/frame-copy";
 import { useCopy } from "@/lib/i18n";
@@ -18,11 +19,12 @@ function Meta({ story, lang, section }: { story: Story; lang: Lang; section: The
   const minutes = story.locales[lang].minutes;
   // The section name and date close the card, under the text, so the line never sits
   // under a picture where it would read as the picture's caption. A section page names
-  // its section once in its own title, so its cards skip it. The reading time sits at
-  // the far end of the same line, plain; it is worked out from the text.
-  // In a narrow card the reading time drops under the date rather than splitting it.
+  // its section once in its own title, so its cards skip it. The reading time, worked
+  // out from the text, always takes its own line under the date, in every card and at
+  // every width, so it never jumps from the far right to under the date when a card
+  // narrows.
   return (
-    <div className="mt-1 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 text-xs text-muted">
+    <div className="mt-1 flex flex-col items-start gap-1 text-xs text-muted">
       <p>
         {section === "all" ? (
           <>
@@ -32,17 +34,7 @@ function Meta({ story, lang, section }: { story: Story; lang: Lang; section: The
         ) : null}
         <span className="whitespace-nowrap">{formatDate(story.date, lang)}</span>
       </p>
-      {minutes ? (
-        <p
-          className={
-            lang === "ar"
-              ? "whitespace-nowrap tabular-nums"
-              : "whitespace-nowrap uppercase tracking-widest tabular-nums"
-          }
-        >
-          {copy.minRead.replace("{n}", String(minutes))}
-        </p>
-      ) : null}
+      {minutes ? <ReadTime minutes={minutes} lang={lang} pattern={copy.minRead} /> : null}
     </div>
   );
 }
