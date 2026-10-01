@@ -33,7 +33,13 @@ function Meta({ story, lang, section }: { story: Story; lang: Lang; section: The
         <span className="whitespace-nowrap">{formatDate(story.date, lang)}</span>
       </p>
       {minutes ? (
-        <p className="whitespace-nowrap tabular-nums">
+        <p
+          className={
+            lang === "ar"
+              ? "whitespace-nowrap tabular-nums"
+              : "whitespace-nowrap uppercase tracking-widest tabular-nums"
+          }
+        >
           {copy.minRead.replace("{n}", String(minutes))}
         </p>
       ) : null}

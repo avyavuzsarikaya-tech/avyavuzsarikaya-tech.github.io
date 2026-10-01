@@ -162,13 +162,19 @@ function Reading({ story }: { story: Story | null }) {
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between gap-4">
               <p className="text-sm text-muted">
-                {[
-                  locale.region,
-                  formatDate(story.date, lang),
-                  minutes ? `${minutes} ${copy.min}` : "",
-                ]
-                  .filter(Boolean)
-                  .join(" · ")}
+                {[locale.region, formatDate(story.date, lang)].filter(Boolean).join(" · ")}
+                {minutes ? (
+                  <>
+                    {" · "}
+                    <span
+                      className={
+                        lang === "ar" ? "tabular-nums" : "uppercase tracking-widest tabular-nums"
+                      }
+                    >
+                      {minutes} {copy.min}
+                    </span>
+                  </>
+                ) : null}
               </p>
               <TypeSize
                 step={typeStep}
