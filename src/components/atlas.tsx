@@ -5,7 +5,7 @@ import { useCopy } from "@/lib/i18n";
 import { readLink } from "@/lib/lang-path";
 import { CARDS } from "@/lib/seed";
 import { formatDate, storyTitle } from "@/lib/text";
-import type { Lang, StoryCard as Story, Theme } from "@/lib/types";
+import { captionOf, type Lang, type StoryCard as Story, type Theme } from "@/lib/types";
 import { useLang } from "@/lib/use-lang";
 
 /**
@@ -228,11 +228,12 @@ function Card({
 
 /** The reading's painting, cropped to a steady 3:2 frame so the grid keeps its rhythm. */
 function Picture({ story, className = "" }: { story: Story; className?: string }) {
+  const lang = useLang();
   if (!story.image) return null;
   return (
     <img
       src={story.image.src}
-      alt={story.image.credit}
+      alt={captionOf(story.image, lang)}
       loading="lazy"
       decoding="async"
       className={`${className} aspect-[3/2] w-full object-cover`}

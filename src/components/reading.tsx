@@ -6,7 +6,7 @@ import { Shell } from "@/components/shell";
 import { langMeta, useCopy } from "@/lib/i18n";
 import { homeLink, readLink, rememberLang } from "@/lib/lang-path";
 import { formatDate, hasCopy, readingMinutes, safeHttpUrl } from "@/lib/text";
-import { LANGS, type Story } from "@/lib/types";
+import { captionOf, LANGS, type Story } from "@/lib/types";
 import { useLang } from "@/lib/use-lang";
 
 /**
@@ -139,13 +139,13 @@ function Reading({ story }: { story: Story | null }) {
             <figure className="mt-2 flex flex-col gap-2">
               <img
                 src={story.image.src}
-                alt={story.image.credit}
+                alt={captionOf(story.image, lang)}
                 className="block h-auto w-full"
                 decoding="async"
               />
-              {story.image.credit ? (
+              {captionOf(story.image, lang) ? (
                 <figcaption className="text-xs leading-snug text-muted">
-                  {story.image.credit}
+                  {captionOf(story.image, lang)}
                 </figcaption>
               ) : null}
             </figure>
