@@ -2,6 +2,10 @@
   "id": "sample-sea-level",
   "theme": "science",
   "date": "2025-04-02",
+  "image": {
+    "src": "images/sample-sea-level.jpg",
+    "credit": "A wooden post in shallow water beside a concrete pier."
+  },
   "sources": [],
   "locales": {
     "tr": {

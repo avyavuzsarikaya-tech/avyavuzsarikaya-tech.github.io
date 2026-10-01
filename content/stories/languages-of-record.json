@@ -2,6 +2,10 @@
   "id": "languages-of-record",
   "theme": "culture",
   "date": "2026-02-08",
+  "image": {
+    "src": "images/languages-of-record.jpg",
+    "credit": "Closed books, blank paper and a lamp on an archive table."
+  },
   "sources": [
     {
       "n": 1,

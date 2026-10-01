@@ -6,7 +6,7 @@ import { Shell } from "@/components/shell";
 import { langMeta, useCopy } from "@/lib/i18n";
 import { homeLink, readLink, rememberLang } from "@/lib/lang-path";
 import { formatDate, hasCopy, readingMinutes, safeHttpUrl } from "@/lib/text";
-import { captionOf, LANGS, type Story } from "@/lib/types";
+import { LANGS, type Lang, type Story } from "@/lib/types";
 import { useLang } from "@/lib/use-lang";
 
 /**
@@ -23,6 +23,14 @@ export function ReadingPage({ story }: { story: Story | null }) {
 
 const TYPE_STEPS = [0.9, 1, 1.1, 1.2, 1.3] as const;
 const TYPE_KEY = "orbis-type";
+
+const AI_NOTE: Record<Lang, string> = {
+  tr: "Yapay zekâ ile üretilmiş görsel",
+  en: "AI-generated image",
+  ar: "صورة مولّدة بالذكاء الاصطناعي",
+  fr: "Image générée par IA",
+  es: "Imagen generada por IA",
+};
 
 function readType(): number {
   try {
@@ -136,18 +144,19 @@ function Reading({ story }: { story: Story | null }) {
             </p>
           ) : null}
           {story.image ? (
-            <figure className="mt-2 flex flex-col gap-2">
+            <figure className="mt-2 flex max-w-full flex-col gap-2">
               <img
                 src={story.image.src}
-                alt={captionOf(story.image, lang)}
-                className="block h-auto w-full"
+                alt={story.image.credit}
+                width={1500}
+                height={1000}
+                loading="lazy"
                 decoding="async"
+                className="block h-auto w-full max-w-full"
               />
-              {captionOf(story.image, lang) ? (
-                <figcaption className="text-xs leading-snug text-muted">
-                  {captionOf(story.image, lang)}
-                </figcaption>
-              ) : null}
+              <figcaption className="text-xs leading-snug text-muted">
+                {story.image.credit ? `${story.image.credit} · ${AI_NOTE[lang]}` : AI_NOTE[lang]}
+              </figcaption>
             </figure>
           ) : null}
           <div className="flex flex-col gap-3">

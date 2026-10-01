@@ -2,6 +2,10 @@
   "id": "sample-city-light",
   "theme": "health",
   "date": "2024-12-17",
+  "image": {
+    "src": "images/sample-city-light.jpg",
+    "credit": "An unmade bed and a window onto city lights."
+  },
   "sources": [],
   "locales": {
     "tr": {

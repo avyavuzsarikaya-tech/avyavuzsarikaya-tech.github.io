@@ -2,6 +2,10 @@
   "id": "sample-consumption",
   "theme": "research",
   "date": "2025-04-30",
+  "image": {
+    "src": "images/sample-consumption.jpg",
+    "credit": "Apples, pears and a ceramic pitcher on a linen cloth."
+  },
   "sources": [],
   "locales": {
     "tr": {

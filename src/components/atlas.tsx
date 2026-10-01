@@ -5,7 +5,7 @@ import { useCopy } from "@/lib/i18n";
 import { readLink } from "@/lib/lang-path";
 import { CARDS } from "@/lib/seed";
 import { formatDate, storyTitle } from "@/lib/text";
-import { captionOf, type Lang, type StoryCard as Story, type Theme } from "@/lib/types";
+import type { Lang, StoryCard as Story, Theme } from "@/lib/types";
 import { useLang } from "@/lib/use-lang";
 
 /**
@@ -87,6 +87,9 @@ export function Atlas({ section }: { section: Theme | "all" }) {
               {...readLink(lang, latest.id)}
               className={`${leadSpan} flex min-w-0 flex-col gap-3 border-b border-rule px-5 py-7 md:border-r md:px-8 md:py-8 md:rtl:border-r-0 md:rtl:border-l`}
             >
+              {latest.image ? (
+                <Picture story={latest} eager className={alone ? "max-w-3xl" : ""} />
+              ) : null}
               <Meta story={latest} lang={lang} />
               {/* Without a picture the text settles at the foot of the lead frame, so the
                   height reads as air above a headline rather than an empty box. */}
@@ -102,8 +105,8 @@ export function Atlas({ section }: { section: Theme | "all" }) {
                 >
                   {storyTitle(latest, lang)}
                 </h2>
-                {/* Like a newspaper front: title, the reading's own summary in full, reading time,
-                    then the picture. The text itself starts on the reading page. */}
+                {/* Title, the reading's own summary in full, then reading time.
+                    The picture sits above the headline. The text itself starts on the reading page. */}
                 {leadDek ? (
                   <p
                     className={
@@ -125,9 +128,6 @@ export function Atlas({ section }: { section: Theme | "all" }) {
                   </p>
                 ) : null}
               </div>
-              {latest.image ? (
-                <Picture story={latest} className={alone ? "max-w-3xl" : "md:aspect-[16/9]"} />
-              ) : null}
             </Link>
             {cards.map((story, n) => (
               <Card key={story.id} story={story} lang={lang} span={cardSpan(n)} second={n === 0} />
@@ -202,7 +202,7 @@ function Card({
       {...readLink(lang, story.id)}
       className={`${span} flex min-w-0 flex-col gap-2 border-b border-line px-5 md:px-8 ${second ? "gap-3 py-6 md:py-7" : "py-5"}`}
     >
-      {story.image ? <Picture story={story} className={second ? "" : "hidden md:block"} /> : null}
+      {story.image ? <Picture story={story} /> : null}
       <Meta story={story} lang={lang} />
       <h2
         className={
@@ -227,16 +227,25 @@ function Card({
 }
 
 /** The reading's painting, cropped to a steady 3:2 frame so the grid keeps its rhythm. */
-function Picture({ story, className = "" }: { story: Story; className?: string }) {
-  const lang = useLang();
+function Picture({
+  story,
+  className = "",
+  eager = false,
+}: {
+  story: Story;
+  className?: string;
+  eager?: boolean;
+}) {
   if (!story.image) return null;
   return (
     <img
       src={story.image.src}
-      alt={captionOf(story.image, lang)}
-      loading="lazy"
+      alt={story.image.credit}
+      width={1500}
+      height={1000}
+      loading={eager ? "eager" : "lazy"}
       decoding="async"
-      className={`${className} aspect-[3/2] w-full object-cover`}
+      className={`aspect-[3/2] w-full max-w-full object-cover ${className}`}
     />
   );
 }

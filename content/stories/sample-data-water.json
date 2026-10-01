@@ -2,6 +2,10 @@
   "id": "sample-data-water",
   "theme": "technology",
   "date": "2025-03-12",
+  "image": {
+    "src": "images/sample-data-water.jpg",
+    "credit": "Plain metal cabinets beside a channel of still water."
+  },
   "sources": [],
   "locales": {
     "tr": {

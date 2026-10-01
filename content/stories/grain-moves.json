@@ -2,6 +2,10 @@
   "id": "grain-moves",
   "theme": "economy",
   "date": "2025-11-04",
+  "image": {
+    "src": "images/grain-moves.jpg",
+    "credit": "Piles of wheat, maize and rice on a warehouse floor."
+  },
   "sources": [
     {
       "n": 1,

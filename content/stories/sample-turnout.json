@@ -2,6 +2,10 @@
   "id": "sample-turnout",
   "theme": "politics",
   "date": "2024-11-26",
+  "image": {
+    "src": "images/sample-turnout.jpg",
+    "credit": "Empty chairs facing a plain box in a quiet hall."
+  },
   "sources": [],
   "locales": {
     "tr": {

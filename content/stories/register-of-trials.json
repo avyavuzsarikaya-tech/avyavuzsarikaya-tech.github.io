@@ -2,6 +2,10 @@
   "id": "register-of-trials",
   "theme": "research",
   "date": "2025-08-19",
+  "image": {
+    "src": "images/register-of-trials.jpg",
+    "credit": "A closed notebook, a glass of water and cotton gloves."
+  },
   "sources": [
     {
       "n": 1,

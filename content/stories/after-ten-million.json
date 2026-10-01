@@ -2,6 +2,10 @@
   "id": "after-ten-million",
   "theme": "politics",
   "date": "2026-01-20",
+  "image": {
+    "src": "images/after-ten-million.jpg",
+    "credit": "Mid-rise apartment blocks under an overcast sky."
+  },
   "sources": [
     {
       "n": 1,

@@ -2,6 +2,10 @@
   "id": "sample-bread-diabetes",
   "theme": "health",
   "date": "2025-05-22",
+  "image": {
+    "src": "images/sample-bread-diabetes.jpg",
+    "credit": "Two loaves, wheat grains and a glass of water."
+  },
   "sources": [],
   "locales": {
     "tr": {

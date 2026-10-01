@@ -2,6 +2,10 @@
   "id": "sample-cuisine",
   "theme": "culture",
   "date": "2025-01-28",
+  "image": {
+    "src": "images/sample-cuisine.jpg",
+    "credit": "Soup, bread, tomatoes and herbs on a wooden table."
+  },
   "sources": [],
   "locales": {
     "tr": {

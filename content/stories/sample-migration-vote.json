@@ -2,6 +2,10 @@
   "id": "sample-migration-vote",
   "theme": "politics",
   "date": "2025-07-10",
+  "image": {
+    "src": "images/sample-migration-vote.jpg",
+    "credit": "A worn suitcase beside empty chairs in a waiting room."
+  },
   "sources": [],
   "locales": {
     "tr": {

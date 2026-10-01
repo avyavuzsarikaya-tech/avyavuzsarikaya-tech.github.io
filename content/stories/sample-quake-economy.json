@@ -2,6 +2,10 @@
   "id": "sample-quake-economy",
   "theme": "economy",
   "date": "2025-06-18",
+  "image": {
+    "src": "images/sample-quake-economy.jpg",
+    "credit": "A crack in a plaster wall and fallen bricks."
+  },
   "sources": [],
   "locales": {
     "tr": {

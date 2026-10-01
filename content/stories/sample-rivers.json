@@ -2,6 +2,10 @@
   "id": "sample-rivers",
   "theme": "environment",
   "date": "2025-02-19",
+  "image": {
+    "src": "images/sample-rivers.jpg",
+    "credit": "A thin stream across a wide bed of stones."
+  },
   "sources": [],
   "locales": {
     "tr": {
