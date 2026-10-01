@@ -161,34 +161,14 @@ function Reading({ story }: { story: Story | null }) {
           ) : null}
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between gap-4">
-              <p className="flex flex-wrap items-baseline text-sm text-muted">
-                {[locale.region, formatDate(story.date, lang)].filter(Boolean).map((part, i) => (
-                  <span key={i}>
-                    {i > 0 ? (
-                      <span className="px-1.5" aria-hidden="true">
-                        ·
-                      </span>
-                    ) : null}
-                    {part}
-                  </span>
-                ))}
-                {minutes ? (
-                  <span>
-                    <span className="px-1.5" aria-hidden="true">
-                      ·
-                    </span>
-                    <span className="font-display tabular-nums text-ink">{minutes}</span>
-                    <span
-                      className={
-                        lang === "ar"
-                          ? "ms-1 text-[0.85em]"
-                          : "ms-1 text-[0.7em] uppercase tracking-[0.14em]"
-                      }
-                    >
-                      {copy.min}
-                    </span>
-                  </span>
-                ) : null}
+              <p className="text-sm text-muted">
+                {[
+                  locale.region,
+                  formatDate(story.date, lang),
+                  minutes ? `${minutes} ${copy.min}` : "",
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
               </p>
               <TypeSize
                 step={typeStep}
