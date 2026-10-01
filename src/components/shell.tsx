@@ -225,26 +225,6 @@ export function Shell({
                   </li>
                 ))}
               </ul>
-              <p className="mt-6 text-xs uppercase tracking-widest text-mist">{frame.look}</p>
-              <ul className="mt-2 flex flex-col">
-                {LOOKS.map((code) => (
-                  <li key={code}>
-                    <button
-                      type="button"
-                      aria-pressed={code === look}
-                      onClick={() => setLook(code)}
-                      className={
-                        code === look
-                          ? "inline-flex min-h-9 items-center text-sm text-paper underline underline-offset-4"
-                          : "inline-flex min-h-9 items-center text-sm text-mist hover:text-paper"
-                      }
-                    >
-                      <Swatch look={code} />
-                      {frame.looks[code]}
-                    </button>
-                  </li>
-                ))}
-              </ul>
             </div>
           </div>
           <p className="mt-10 border-t border-muted pt-6 text-xs text-mist">
