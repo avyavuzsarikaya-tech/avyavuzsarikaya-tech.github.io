@@ -1,0 +1,1 @@
+import{t as e}from"./atlas-C43P3dr_.js";var t=e;export{t as component};
