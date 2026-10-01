@@ -145,11 +145,22 @@ export function ReadingPlayer({
   const pct = `${span * 100}%`;
 
   return (
-    <div className="reading-player flex w-full flex-col gap-1.5">
-      <div className="flex justify-between text-sm tabular-nums text-muted">
-        <span dir="ltr">{fmt(progress)}</span>
-        <span dir="ltr">{fmt(duration)}</span>
-      </div>
+    <div className="reading-player flex w-full min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
+      <button
+        type="button"
+        onClick={() => void toggle()}
+        aria-label={playing ? pause : listen}
+        className="inline-flex size-7 shrink-0 items-center justify-center text-ink"
+      >
+        {playing ? (
+          <Pause className="size-3" strokeWidth={1.25} aria-hidden="true" />
+        ) : (
+          <Play className="size-3 translate-x-px" strokeWidth={1.25} aria-hidden="true" />
+        )}
+      </button>
+      <span className="shrink-0 text-[11px] uppercase tracking-[0.18em] text-ink">
+        {playing ? pause : listen}
+      </span>
       <div className="seek-line">
         <div className="seek-rule" aria-hidden="true">
           <span className="seek-fill" style={{ width: pct }} />
@@ -167,44 +178,29 @@ export function ReadingPlayer({
           onChange={(event) => seek(Number(event.target.value))}
         />
       </div>
-      <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
-        <button
-          type="button"
-          onClick={() => void toggle()}
-          aria-label={playing ? pause : listen}
-          className={
-            playing
-              ? "inline-flex size-10 shrink-0 items-center justify-center border border-pine bg-paper text-ink"
-              : "inline-flex size-10 shrink-0 items-center justify-center border border-ink bg-paper text-ink"
-          }
-        >
-          {playing ? (
-            <Pause className="size-4" strokeWidth={1.75} aria-hidden="true" />
-          ) : (
-            <Play className="size-4 translate-x-px" strokeWidth={1.75} aria-hidden="true" />
-          )}
-        </button>
-        <span className="text-sm text-pine">{playing ? pause : listen}</span>
-        <div className="ms-auto">
-          <Pick
-            tone="page"
-            align="end"
-            label={speed}
-            value={String(rate)}
-            onChange={(value) => changeRate(Number(value))}
-            options={RATES.map((value) => ({ value: String(value), label: `${value}x` }))}
-            buttonClassName="gap-1.5 border-b border-ink py-2 text-sm text-ink"
-          >
-            <span className="text-muted">{speed}</span>
-            <span dir="ltr" className="tabular-nums">
-              {rate}x
-            </span>
-            <span aria-hidden="true" className="text-[10px] leading-none">
-              ▾
-            </span>
-          </Pick>
-        </div>
-      </div>
+      <span dir="ltr" className="shrink-0 text-[11px] tabular-nums tracking-wide text-muted">
+        {fmt(progress)}
+        <span className="px-1 text-rule" aria-hidden="true">
+          —
+        </span>
+        {fmt(duration)}
+      </span>
+      <Pick
+        tone="page"
+        align="end"
+        label={speed}
+        value={String(rate)}
+        onChange={(value) => changeRate(Number(value))}
+        options={RATES.map((value) => ({ value: String(value), label: `${value}x` }))}
+        buttonClassName="gap-1 py-0 text-[11px] tracking-widest text-muted"
+      >
+        <span dir="ltr" className="tabular-nums text-ink">
+          {rate}×
+        </span>
+        <span aria-hidden="true" className="text-[9px] leading-none">
+          ▾
+        </span>
+      </Pick>
       {error ? (
         <p role="alert" className="flex flex-wrap items-center gap-x-3 text-sm text-muted">
           {failed}
