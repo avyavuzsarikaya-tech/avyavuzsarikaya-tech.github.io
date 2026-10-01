@@ -1,10 +1,11 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Palette } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { SiteMenu } from "@/components/menu";
 import { Pick } from "@/components/pick";
+import { aboutCopy } from "@/lib/about-copy";
 import { useFrameCopy } from "@/lib/frame-copy";
 import { langMeta, useCopy } from "@/lib/i18n";
-import { homeLink, rememberLang, sectionLink, withLang } from "@/lib/lang-path";
+import { aboutLink, homeLink, rememberLang, sectionLink, withLang } from "@/lib/lang-path";
 import { useLibrary } from "@/lib/library";
 import { LOOKS, LOOK_SWATCH, useLook, type Look } from "@/lib/look";
 import { LANGS, THEMES, type Lang, type Theme } from "@/lib/types";
@@ -30,6 +31,29 @@ function Swatch({ look }: { look: Look }) {
   );
 }
 
+function HeaderSwatch({ look }: { look: Look }) {
+  const [panel, paper] = LOOK_SWATCH[look];
+  return (
+    <span
+      aria-hidden="true"
+      className="block size-[18px] rounded-full border border-paper/70 transition-colors group-hover:border-paper group-aria-expanded:border-paper"
+      style={{ background: `linear-gradient(135deg, ${panel} 50%, ${paper} 50%)` }}
+    />
+  );
+}
+
+function Caret() {
+  return (
+    <svg
+      viewBox="0 0 8 5"
+      className="mb-px size-2 shrink-0 opacity-70 transition-transform duration-150 group-hover:opacity-100 group-aria-expanded:rotate-180 group-aria-expanded:opacity-100"
+      aria-hidden="true"
+    >
+      <path d="M.75.75 4 4.25 7.25.75" fill="none" stroke="currentColor" strokeWidth="1" />
+    </svg>
+  );
+}
+
 /**
  * Site frame shared by every page: header, section bar, footer (black, or burgundy in the second scheme).
  * `section` marks the active section in the bar ("all" on the home page with no filter).
@@ -50,7 +74,9 @@ export function Shell({
   const path = useRouterState({ select: (s) => s.location.pathname });
   const inPanel = path.startsWith("/panel");
   const bar = useRef<HTMLDivElement | null>(null);
+  const menuButton = useRef<HTMLButtonElement | null>(null);
   const [look, setLook] = useLook();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // On a phone the section row scrolls sideways: bring the open section into view.
   useEffect(() => {
@@ -82,10 +108,27 @@ export function Shell({
         dir="ltr"
         className="flex items-center justify-between gap-4 bg-panel px-5 py-3 text-paper md:px-8"
       >
-        <Link {...homeLink(lang)} className="inline-flex min-h-11 items-center gap-3 text-paper">
-          <Meridian />
-          <span className="font-display text-xl tracking-widest">ORBIS</span>
-        </Link>
+        <div className="flex items-center gap-1">
+          <button
+            ref={menuButton}
+            type="button"
+            aria-expanded={menuOpen}
+            aria-controls="site-menu"
+            aria-label={frame.menu}
+            onClick={() => setMenuOpen(true)}
+            className="inline-flex size-11 shrink-0 items-center justify-start text-paper"
+          >
+            <span className="flex w-[18px] flex-col gap-[5px]" aria-hidden="true">
+              <span className="h-px w-full bg-current" />
+              <span className="h-px w-full bg-current" />
+              <span className="h-px w-full bg-current" />
+            </span>
+          </button>
+          <Link {...homeLink(lang)} className="inline-flex min-h-11 items-center gap-3 text-paper">
+            <Meridian />
+            <span className="font-display text-xl tracking-widest">ORBIS</span>
+          </Link>
+        </div>
         <nav className="flex items-center gap-3 text-sm md:gap-4">
           {/* The editing panel stays out of the reader's menu; open it at /panel. */}
           {inPanel ? (
@@ -98,45 +141,60 @@ export function Shell({
               </Link>
             </>
           ) : null}
-          <Pick
-            tone="panel"
-            align="end"
-            label={frame.look}
-            value={look}
-            onChange={setLook}
-            options={LOOKS.map((code) => ({
-              value: code,
-              label: (
-                <>
-                  <Swatch look={code} />
-                  {frame.looks[code]}
-                </>
-              ),
-            }))}
-            buttonClassName="min-h-11 min-w-11 justify-center text-paper"
-          >
-            <Palette className="size-4" strokeWidth={1.5} aria-hidden="true" />
-          </Pick>
-          <Pick
-            tone="panel"
-            align="end"
-            label={copy.language}
-            value={lang}
-            onChange={setLang}
-            options={LANGS.map((code) => ({
-              value: code,
-              label: langMeta[code].name,
-              lang: langMeta[code].html,
-            }))}
-            buttonClassName="min-h-11 gap-2 text-xs tracking-widest text-paper"
-          >
-            <span>{meta.code}</span>
-            <span aria-hidden="true" className="text-[10px]">
-              ▾
-            </span>
-          </Pick>
+          <div className="flex items-center text-paper">
+            <Pick
+              tone="panel"
+              align="end"
+              label={frame.look}
+              value={look}
+              onChange={setLook}
+              options={LOOKS.map((code) => ({
+                value: code,
+                label: (
+                  <>
+                    <Swatch look={code} />
+                    {frame.looks[code]}
+                  </>
+                ),
+              }))}
+              buttonClassName="group inline-flex size-11 items-center justify-center text-paper"
+            >
+              <HeaderSwatch look={look} />
+            </Pick>
+            <span aria-hidden="true" className="h-3.5 w-px bg-paper/35" />
+            <Pick
+              tone="panel"
+              align="end"
+              label={copy.language}
+              value={lang}
+              onChange={setLang}
+              options={LANGS.map((code) => ({
+                value: code,
+                label: langMeta[code].name,
+                lang: langMeta[code].html,
+              }))}
+              buttonClassName="group inline-flex h-11 items-center gap-1.5 ps-3 pe-0.5 text-[11px] tracking-[0.22em] text-paper"
+            >
+              <span>{meta.code}</span>
+              <Caret />
+            </Pick>
+          </div>
         </nav>
       </header>
+      {menuOpen ? (
+        <SiteMenu
+          lang={lang}
+          section={section}
+          path={path}
+          look={look}
+          onClose={() => {
+            setMenuOpen(false);
+            menuButton.current?.focus();
+          }}
+          onLang={setLang}
+          onLook={setLook}
+        />
+      ) : null}
 
       <div dir={meta.dir} lang={meta.html} className="flex flex-1 flex-col">
         <nav aria-label={copy.sections} className="section-bar relative border-b border-rule">
@@ -184,6 +242,12 @@ export function Shell({
               >
                 <Meridian />
                 <span className="font-display text-lg tracking-widest">ORBIS</span>
+              </Link>
+              <Link
+                {...aboutLink(lang)}
+                className="inline-flex min-h-9 items-center self-start text-sm text-paper"
+              >
+                {aboutCopy(lang).title}
               </Link>
               <p className="text-sm text-mist">{copy.colophon}</p>
             </div>

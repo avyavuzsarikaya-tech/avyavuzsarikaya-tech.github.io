@@ -1,3 +1,4 @@
+import { aboutCopy } from "@/lib/about-copy";
 import { copyFor } from "@/lib/i18n";
 import { DEFAULT_LANG, publicPath } from "@/lib/lang-path";
 import { LANGS, type Lang, type StoryCard, type Theme } from "@/lib/types";
@@ -129,6 +130,21 @@ export function sectionHead(lang: Lang, theme: Theme) {
     meta: pageMeta({
       title: `${name} — ${SITE_NAME}`,
       description: SECTION_DESCRIPTION[lang](name),
+      url: publicPath(lang, path),
+      lang,
+    }),
+    links: addressLinks(lang, path, LANGS),
+  };
+}
+
+/** Head of the About page in one language. */
+export function aboutHead(lang: Lang) {
+  const about = aboutCopy(lang);
+  const path = "/about";
+  return {
+    meta: pageMeta({
+      title: `${about.title} — ${SITE_NAME}`,
+      description: clip(about.body),
       url: publicPath(lang, path),
       lang,
     }),

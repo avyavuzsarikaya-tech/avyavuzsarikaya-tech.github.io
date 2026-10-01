@@ -11,6 +11,8 @@ export type FrameCopy = {
   rights: string;
   look: string;
   looks: { classic: string; bordo: string };
+  menu: string;
+  close: string;
 };
 
 const frame: Record<Lang, FrameCopy> = {
@@ -24,6 +26,8 @@ const frame: Record<Lang, FrameCopy> = {
     rights: "Tüm hakları saklıdır.",
     look: "Tema",
     looks: { classic: "Klasik", bordo: "Bordo" },
+    menu: "Menü",
+    close: "Kapat",
   },
   ar: {
     all: "الكل",
@@ -35,6 +39,8 @@ const frame: Record<Lang, FrameCopy> = {
     rights: "جميع الحقوق محفوظة.",
     look: "المظهر",
     looks: { classic: "كلاسيكي", bordo: "عنابي" },
+    menu: "القائمة",
+    close: "إغلاق",
   },
   en: {
     all: "All",
@@ -46,6 +52,8 @@ const frame: Record<Lang, FrameCopy> = {
     rights: "All rights reserved.",
     look: "Theme",
     looks: { classic: "Classic", bordo: "Burgundy" },
+    menu: "Menu",
+    close: "Close",
   },
   fr: {
     all: "Tout",
@@ -57,6 +65,8 @@ const frame: Record<Lang, FrameCopy> = {
     rights: "Tous droits réservés.",
     look: "Thème",
     looks: { classic: "Classique", bordo: "Bordeaux" },
+    menu: "Menu",
+    close: "Fermer",
   },
   es: {
     all: "Todo",
@@ -68,6 +78,8 @@ const frame: Record<Lang, FrameCopy> = {
     rights: "Todos los derechos reservados.",
     look: "Tema",
     looks: { classic: "Clásico", bordo: "Burdeos" },
+    menu: "Menú",
+    close: "Cerrar",
   },
 };
 

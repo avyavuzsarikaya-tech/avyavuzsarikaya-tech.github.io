@@ -39,6 +39,8 @@ export type StoryImage = {
   src: string;
   /** Short description. Gray caption under the picture, and the image alt text. */
   credit: string;
+  /** Optional line per language, kept for the editing panel. The reading page uses `credit`. */
+  captions?: Partial<Record<Lang, string>>;
 };
 
 export type Story = {

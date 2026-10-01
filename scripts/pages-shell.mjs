@@ -37,6 +37,10 @@ for (const lang of LANGS) {
       file: `${prefix.slice(1)}${prefix ? "/" : ""}${theme}.html`,
       loc: `${prefix}/${theme}`,
     })),
+    {
+      file: `${prefix.slice(1)}${prefix ? "/" : ""}about.html`,
+      loc: `${prefix}/about`,
+    },
     ...stories.map((story) => ({
       file: `${prefix.slice(1)}${prefix ? "/" : ""}read/${story.id}.html`,
       loc: `${prefix}/read/${story.id}`,

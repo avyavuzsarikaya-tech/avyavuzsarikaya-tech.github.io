@@ -163,6 +163,7 @@ function staticPages() {
     // A language's front page is a folder (tr/index.html), so /tr/ opens without a redirect.
     paths.push(lang === "en" ? "/" : `${prefix}/`);
     for (const theme of THEMES) paths.push(`${prefix}/${theme}`);
+    paths.push(`${prefix}/about`);
     for (const id of ids) paths.push(`${prefix}/read/${id}`);
   }
   return paths.map((path) => ({ path }));

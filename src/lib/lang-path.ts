@@ -72,6 +72,12 @@ export function readLink(lang: Lang, storyId: string) {
     : ({ to: "/$lang/read/$storyId", params: { lang, storyId } } as const);
 }
 
+export function aboutLink(lang: Lang) {
+  return lang === DEFAULT_LANG
+    ? ({ to: "/about" } as const)
+    : ({ to: "/$lang/about", params: { lang } } as const);
+}
+
 /**
  * Runs in <head> before the page paints.
  * 1. An old section link (/?s=climate) goes to the section's own address (/climate).
