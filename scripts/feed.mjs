@@ -2,6 +2,14 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { readStoryIndex } from "./story-index-plugin.mjs";
 
+const FEED_COPY = {
+  en: { language: "", description: (name) => `Sourced readings from ${name}.` },
+  tr: { language: "Türkçe", description: (name) => `${name}'ten kaynaklı okumalar.` },
+  ar: { language: "العربية", description: (name) => `قراءات موثّقة من ${name}.` },
+  fr: { language: "Français", description: (name) => `Lectures sourcées d'${name}.` },
+  es: { language: "Español", description: (name) => `Lecturas con fuentes de ${name}.` },
+};
+
 const escapeXml = (value) =>
   String(value).replace(/[&<>"']/g, (char) => {
     return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" }[char];
@@ -10,6 +18,7 @@ const escapeXml = (value) =>
 /** Write one RSS 2.0 feed per language after the static pages and sitemap exist. */
 export function writeFeeds({ root, langs, site, name }) {
   const stories = readStoryIndex("content/stories")
+    .filter((story) => !story.id.startsWith("sample-"))
     .map((story) => {
       const date = new Date(story.date);
       if (Number.isNaN(date.getTime())) {
@@ -20,6 +29,8 @@ export function writeFeeds({ root, langs, site, name }) {
     .sort((a, b) => b.date.getTime() - a.date.getTime());
 
   for (const lang of langs) {
+    const feedCopy = FEED_COPY[lang];
+    const title = feedCopy.language ? `${name} (${feedCopy.language})` : name;
     const prefix = lang === "en" ? "" : `/${lang}`;
     const items = stories
       .filter((story) => story.locales[lang]?.written)
@@ -42,9 +53,9 @@ export function writeFeeds({ root, langs, site, name }) {
       '<?xml version="1.0" encoding="UTF-8"?>',
       '<rss version="2.0">',
       "  <channel>",
-      `    <title>${escapeXml(name)} (${escapeXml(lang)})</title>`,
+      `    <title>${escapeXml(title)}</title>`,
       `    <link>${escapeXml(`${site}${prefix}/`)}</link>`,
-      `    <description>${escapeXml(`${name} readings (${lang}).`)}</description>`,
+      `    <description>${escapeXml(feedCopy.description(name))}</description>`,
       `    <language>${escapeXml(lang)}</language>`,
       ...items,
       "  </channel>",

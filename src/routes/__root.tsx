@@ -10,7 +10,7 @@ import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { langMeta } from "@/lib/i18n";
 import { LANG_BOOT, langFromPath } from "@/lib/lang-path";
 import { LOOK_BOOT } from "@/lib/look";
-import { pageMeta, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
+import { feedLink, pageMeta, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
 import appCss from "../styles.css?url";
 
 // Only the families the stylesheet uses. Google serves Arabic in its own file, which a
@@ -45,10 +45,12 @@ function RootDocument() {
   // Reader pages are written in the language of their address, so the document says so
   // from the first byte. The panel sets its own language once it opens.
   const path = useRouterState({ select: (s) => s.location.pathname });
-  const meta = langMeta[path.startsWith("/panel") ? "en" : langFromPath(path)];
+  const lang = path.startsWith("/panel") ? "en" : langFromPath(path);
+  const meta = langMeta[lang];
   return (
     <html lang={meta.html} dir={meta.dir} suppressHydrationWarning>
       <head>
+        <link {...feedLink(lang)} />
         <HeadContent />
         {/* Before the first paint: the reader's language (plain addresses only), then the
             saved colour scheme. */}
