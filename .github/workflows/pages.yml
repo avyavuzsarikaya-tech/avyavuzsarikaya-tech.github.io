@@ -7,6 +7,7 @@ on:
       - "*.html"
       - robots.txt
       - sitemap.xml
+      - feed.xml
       - read/**
       - tr/**
       - ar/**
@@ -41,7 +42,7 @@ jobs:
       - run: npm run build:pages
       - name: Place the site at the repository root
         run: |
-          cp dist/client/.nojekyll dist/client/favicon.svg dist/client/og.jpg dist/client/robots.txt dist/client/sitemap.xml .
+          cp dist/client/.nojekyll dist/client/favicon.svg dist/client/og.jpg dist/client/robots.txt dist/client/sitemap.xml dist/client/feed.xml .
           # index.html, 404.html and one page per English section (climate.html, …); _shell.html stays out.
           for f in dist/client/*.html; do
             case "$(basename "$f")" in _shell.html) ;; *) cp "$f" . ;; esac
@@ -56,7 +57,7 @@ jobs:
           if [ -d dist/client/audio ]; then cp -a dist/client/audio audio; fi
           git config user.name "avyavuzsarikaya-tech"
           git config user.email "335169178+avyavuzsarikaya-tech@users.noreply.github.com"
-          git add -A .nojekyll favicon.svg og.jpg robots.txt sitemap.xml assets read tr ar fr es
+          git add -A .nojekyll favicon.svg og.jpg robots.txt sitemap.xml feed.xml assets read tr ar fr es
           git add -A -- $(cd dist/client && ls *.html | grep -v '^_shell.html$')
           if [ -d __grok ]; then git add -A __grok; fi
           if [ -d audio ]; then git add -A audio; fi

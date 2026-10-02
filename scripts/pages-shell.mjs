@@ -1,10 +1,11 @@
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { readStoryIndex } from "./story-index-plugin.mjs";
+import { writeFeeds } from "./feed.mjs";
 
 /**
  * After `vite build` (see vite.config.ts): checks that every page was written out, makes
- * the shell the host's 404 page, and writes the sitemap and robots.txt.
+ * the shell the host's 404 page, and writes the sitemap, RSS feeds and robots.txt.
  */
 
 const root = join(process.cwd(), "dist", "client");
@@ -26,7 +27,9 @@ const listOf = (file, name) =>
 const LANGS = listOf("src/lib/types.ts", "LANGS");
 const THEMES = listOf("src/lib/types.ts", "THEMES");
 const stories = readStoryIndex("content/stories");
-const site = readFileSync("src/lib/site.ts", "utf8").match(/SITE_URL = "([^"]+)"/)[1];
+const siteSource = readFileSync("src/lib/site.ts", "utf8");
+const site = siteSource.match(/SITE_URL = "([^"]+)"/)[1];
+const name = siteSource.match(/SITE_NAME = "([^"]+)"/)[1];
 
 const urls = [];
 for (const lang of LANGS) {
@@ -68,6 +71,7 @@ const sitemap = [
   "",
 ].join("\n");
 writeFileSync(join(root, "sitemap.xml"), sitemap);
+writeFeeds({ root, langs: LANGS, site, name });
 writeFileSync(
   join(root, "robots.txt"),
   `User-agent: *\nDisallow: /panel\n\nSitemap: ${site}/sitemap.xml\n`,

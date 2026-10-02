@@ -41,6 +41,15 @@ const OG_LOCALE: Record<Lang, string> = {
 type Meta = Record<string, unknown>;
 type Link = Record<string, string>;
 
+function feedLink(lang: Lang): Link {
+  return {
+    rel: "alternate",
+    type: "application/rss+xml",
+    title: `${SITE_NAME} (${lang})`,
+    href: absoluteUrl(publicPath(lang, "/feed.xml")),
+  };
+}
+
 export function absoluteUrl(path: string): string {
   if (/^https?:\/\//.test(path)) return path;
   return `${SITE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
@@ -97,7 +106,10 @@ export function pageMeta({
  * so a search engine shows the Turkish page to a Turkish reader.
  */
 function addressLinks(lang: Lang, path: string, langs: readonly Lang[]): Link[] {
-  const links: Link[] = [{ rel: "canonical", href: absoluteUrl(publicPath(lang, path)) }];
+  const links: Link[] = [
+    { rel: "canonical", href: absoluteUrl(publicPath(lang, path)) },
+    feedLink(lang),
+  ];
   for (const code of langs) {
     links.push({ rel: "alternate", hrefLang: code, href: absoluteUrl(publicPath(code, path)) });
   }
@@ -155,7 +167,10 @@ export function aboutHead(lang: Lang) {
 /** Head of a reading page in one language. */
 export function storyHead(card: StoryCard | undefined, lang: Lang) {
   if (!card) {
-    return { meta: [{ title: SITE_NAME }, { name: "robots", content: "noindex" }] };
+    return {
+      meta: [{ title: SITE_NAME }, { name: "robots", content: "noindex" }],
+      links: [feedLink(lang)],
+    };
   }
   const path = `/read/${card.id}`;
   const written = LANGS.filter((code) => card.locales[code].written);
@@ -204,6 +219,6 @@ export function storyHead(card: StoryCard | undefined, lang: Lang) {
           ]
         : [{ name: "robots", content: "noindex" }]),
     ],
-    links: own === lang ? addressLinks(lang, path, written) : [],
+    links: own === lang ? addressLinks(lang, path, written) : [feedLink(lang)],
   };
 }
