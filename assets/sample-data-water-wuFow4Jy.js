@@ -1,4 +1,4 @@
-var e={id:`sample-data-water`,theme:`technology`,date:`2025-03-12`,image:{src:`images/sample-data-water.jpg`,credit:`Plain metal cabinets beside a channel of still water.`},sources:[],locales:{tr:{title:`Veri merkezleri ne kadar su harcar?`,dek:`Deneme yazısı.`,region:`Deneme`,body:`Bu bir deneme yazısıdır. Sayfa düzenini denemek için konulmuştur; içindeki metin gerçek bir araştırmaya dayanmaz.
+var e={id:`sample-data-water`,theme:`technology`,date:`2025-03-12`,image:{src:`images/sample-data-water.jpg`,credit:`Plain metal cabinets beside a channel of still water.`},sources:[],locales:{tr:{title:`Veri merkezleri ne kadar su harcar?`,dek:`Örnek yazı.`,region:`Deneme`,body:`Bu bir deneme yazısıdır. Sayfa düzenini denemek için konulmuştur; içindeki metin gerçek bir araştırmaya dayanmaz.
 
 Bu başlıktaki asıl yazı, kaynaklarıyla birlikte daha sonra yayımlanacak.`,audio:null},ar:{title:`كم من الماء تستهلك مراكز البيانات؟`,dek:`قراءة تجريبية.`,region:`تجريبي`,body:`هذه قراءة تجريبية، وُضعت لاختبار تصميم الصفحة، ونصّها لا يستند إلى أي بحث.
 

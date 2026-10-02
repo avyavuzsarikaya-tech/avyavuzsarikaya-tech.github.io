@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
-    <title>Orbis (ar)</title>
+    <title>Orbis (العربية)</title>
     <link>https://avyavuzsarikaya-tech.github.io/ar/</link>
-    <description>Orbis readings (ar).</description>
+    <description>قراءات موثّقة من Orbis.</description>
     <language>ar</language>
     <item>
       <title>دفاتر الكربون، متقابلة</title>
@@ -39,76 +39,6 @@
       <description>الدراسة التي لا تدخل سجلًا عامًا يصعب العثور عليها، ويصعب عدّها.</description>
       <pubDate>Tue, 19 Aug 2025 00:00:00 GMT</pubDate>
       <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/ar/read/register-of-trials</guid>
-    </item>
-    <item>
-      <title>هل تدفع الهجرة الناخبين نحو اليمين؟</title>
-      <link>https://avyavuzsarikaya-tech.github.io/ar/read/sample-migration-vote</link>
-      <description>قراءة تجريبية.</description>
-      <pubDate>Thu, 10 Jul 2025 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/ar/read/sample-migration-vote</guid>
-    </item>
-    <item>
-      <title>كم سنة يكلّف الزلزال اقتصاد بلد؟</title>
-      <link>https://avyavuzsarikaya-tech.github.io/ar/read/sample-quake-economy</link>
-      <description>قراءة تجريبية.</description>
-      <pubDate>Wed, 18 Jun 2025 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/ar/read/sample-quake-economy</guid>
-    </item>
-    <item>
-      <title>الخبز على المائدة، والسكري</title>
-      <link>https://avyavuzsarikaya-tech.github.io/ar/read/sample-bread-diabetes</link>
-      <description>قراءة تجريبية.</description>
-      <pubDate>Thu, 22 May 2025 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/ar/read/sample-bread-diabetes</guid>
-    </item>
-    <item>
-      <title>هل يعني الاستهلاك الأكثر حياة أفضل؟</title>
-      <link>https://avyavuzsarikaya-tech.github.io/ar/read/sample-consumption</link>
-      <description>قراءة تجريبية.</description>
-      <pubDate>Wed, 30 Apr 2025 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/ar/read/sample-consumption</guid>
-    </item>
-    <item>
-      <title>كيف يُقاس مستوى سطح البحر؟</title>
-      <link>https://avyavuzsarikaya-tech.github.io/ar/read/sample-sea-level</link>
-      <description>قراءة تجريبية.</description>
-      <pubDate>Wed, 02 Apr 2025 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/ar/read/sample-sea-level</guid>
-    </item>
-    <item>
-      <title>كم من الماء تستهلك مراكز البيانات؟</title>
-      <link>https://avyavuzsarikaya-tech.github.io/ar/read/sample-data-water</link>
-      <description>قراءة تجريبية.</description>
-      <pubDate>Wed, 12 Mar 2025 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/ar/read/sample-data-water</guid>
-    </item>
-    <item>
-      <title>لماذا تجفّ الأنهار؟</title>
-      <link>https://avyavuzsarikaya-tech.github.io/ar/read/sample-rivers</link>
-      <description>قراءة تجريبية.</description>
-      <pubDate>Wed, 19 Feb 2025 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/ar/read/sample-rivers</guid>
-    </item>
-    <item>
-      <title>كيف يبني المطبخ هوية أمة؟</title>
-      <link>https://avyavuzsarikaya-tech.github.io/ar/read/sample-cuisine</link>
-      <description>قراءة تجريبية.</description>
-      <pubDate>Tue, 28 Jan 2025 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/ar/read/sample-cuisine</guid>
-    </item>
-    <item>
-      <title>كيف تؤثّر أضواء المدينة في النوم؟</title>
-      <link>https://avyavuzsarikaya-tech.github.io/ar/read/sample-city-light</link>
-      <description>قراءة تجريبية.</description>
-      <pubDate>Tue, 17 Dec 2024 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/ar/read/sample-city-light</guid>
-    </item>
-    <item>
-      <title>لماذا تتراجع نسبة المشاركة في الانتخابات؟</title>
-      <link>https://avyavuzsarikaya-tech.github.io/ar/read/sample-turnout</link>
-      <description>قراءة تجريبية.</description>
-      <pubDate>Tue, 26 Nov 2024 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/ar/read/sample-turnout</guid>
     </item>
   </channel>
 </rss>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
-    <title>Orbis (en)</title>
+    <title>Orbis</title>
     <link>https://avyavuzsarikaya-tech.github.io/</link>
-    <description>Orbis readings (en).</description>
+    <description>Sourced readings from Orbis.</description>
     <language>en</language>
     <item>
       <title>The carbon books, reconciled</title>
@@ -39,76 +39,6 @@
       <description>A study that never enters a public register is harder to find, and harder to count.</description>
       <pubDate>Tue, 19 Aug 2025 00:00:00 GMT</pubDate>
       <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/read/register-of-trials</guid>
-    </item>
-    <item>
-      <title>Does migration move voters to the right?</title>
-      <link>https://avyavuzsarikaya-tech.github.io/read/sample-migration-vote</link>
-      <description>A sample reading.</description>
-      <pubDate>Thu, 10 Jul 2025 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/read/sample-migration-vote</guid>
-    </item>
-    <item>
-      <title>How many years does an earthquake cost an economy?</title>
-      <link>https://avyavuzsarikaya-tech.github.io/read/sample-quake-economy</link>
-      <description>A sample reading.</description>
-      <pubDate>Wed, 18 Jun 2025 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/read/sample-quake-economy</guid>
-    </item>
-    <item>
-      <title>Bread on the table, and diabetes</title>
-      <link>https://avyavuzsarikaya-tech.github.io/read/sample-bread-diabetes</link>
-      <description>A sample reading.</description>
-      <pubDate>Thu, 22 May 2025 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/read/sample-bread-diabetes</guid>
-    </item>
-    <item>
-      <title>Does consuming more mean living better?</title>
-      <link>https://avyavuzsarikaya-tech.github.io/read/sample-consumption</link>
-      <description>A sample reading.</description>
-      <pubDate>Wed, 30 Apr 2025 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/read/sample-consumption</guid>
-    </item>
-    <item>
-      <title>How is sea level measured?</title>
-      <link>https://avyavuzsarikaya-tech.github.io/read/sample-sea-level</link>
-      <description>A sample reading.</description>
-      <pubDate>Wed, 02 Apr 2025 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/read/sample-sea-level</guid>
-    </item>
-    <item>
-      <title>How much water do data centres use?</title>
-      <link>https://avyavuzsarikaya-tech.github.io/read/sample-data-water</link>
-      <description>A sample reading.</description>
-      <pubDate>Wed, 12 Mar 2025 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/read/sample-data-water</guid>
-    </item>
-    <item>
-      <title>Why are rivers running dry?</title>
-      <link>https://avyavuzsarikaya-tech.github.io/read/sample-rivers</link>
-      <description>A sample reading.</description>
-      <pubDate>Wed, 19 Feb 2025 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/read/sample-rivers</guid>
-    </item>
-    <item>
-      <title>How does a cuisine build a nation’s identity?</title>
-      <link>https://avyavuzsarikaya-tech.github.io/read/sample-cuisine</link>
-      <description>A sample reading.</description>
-      <pubDate>Tue, 28 Jan 2025 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/read/sample-cuisine</guid>
-    </item>
-    <item>
-      <title>How do city lights affect sleep?</title>
-      <link>https://avyavuzsarikaya-tech.github.io/read/sample-city-light</link>
-      <description>A sample reading.</description>
-      <pubDate>Tue, 17 Dec 2024 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/read/sample-city-light</guid>
-    </item>
-    <item>
-      <title>Why is election turnout falling?</title>
-      <link>https://avyavuzsarikaya-tech.github.io/read/sample-turnout</link>
-      <description>A sample reading.</description>
-      <pubDate>Tue, 26 Nov 2024 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/read/sample-turnout</guid>
     </item>
   </channel>
 </rss>

@@ -1,4 +1,4 @@
-var e={id:`sample-city-light`,theme:`health`,date:`2024-12-17`,image:{src:`images/sample-city-light.jpg`,credit:`An unmade bed and a window onto city lights.`},sources:[],locales:{tr:{title:`Şehir ışıkları uykuyu nasıl etkiler?`,dek:`Deneme yazısı.`,region:`Deneme`,body:`Bu bir deneme yazısıdır. Sayfa düzenini denemek için konulmuştur; içindeki metin gerçek bir araştırmaya dayanmaz.
+var e={id:`sample-city-light`,theme:`health`,date:`2024-12-17`,image:{src:`images/sample-city-light.jpg`,credit:`An unmade bed and a window onto city lights.`},sources:[],locales:{tr:{title:`Şehir ışıkları uykuyu nasıl etkiler?`,dek:`Örnek yazı.`,region:`Deneme`,body:`Bu bir deneme yazısıdır. Sayfa düzenini denemek için konulmuştur; içindeki metin gerçek bir araştırmaya dayanmaz.
 
 Bu başlıktaki asıl yazı, kaynaklarıyla birlikte daha sonra yayımlanacak.`,audio:null},ar:{title:`كيف تؤثّر أضواء المدينة في النوم؟`,dek:`قراءة تجريبية.`,region:`تجريبي`,body:`هذه قراءة تجريبية، وُضعت لاختبار تصميم الصفحة، ونصّها لا يستند إلى أي بحث.
 

@@ -1,4 +1,4 @@
-var e={id:`sample-rivers`,theme:`environment`,date:`2025-02-19`,image:{src:`images/sample-rivers.jpg`,credit:`A thin stream across a wide bed of stones.`},sources:[],locales:{tr:{title:`Nehirler neden kuruyor?`,dek:`Deneme yazısı.`,region:`Deneme`,body:`Bu bir deneme yazısıdır. Sayfa düzenini denemek için konulmuştur; içindeki metin gerçek bir araştırmaya dayanmaz.
+var e={id:`sample-rivers`,theme:`environment`,date:`2025-02-19`,image:{src:`images/sample-rivers.jpg`,credit:`A thin stream across a wide bed of stones.`},sources:[],locales:{tr:{title:`Nehirler neden kuruyor?`,dek:`Örnek yazı.`,region:`Deneme`,body:`Bu bir deneme yazısıdır. Sayfa düzenini denemek için konulmuştur; içindeki metin gerçek bir araştırmaya dayanmaz.
 
 Bu başlıktaki asıl yazı, kaynaklarıyla birlikte daha sonra yayımlanacak.`,audio:null},ar:{title:`لماذا تجفّ الأنهار؟`,dek:`قراءة تجريبية.`,region:`تجريبي`,body:`هذه قراءة تجريبية، وُضعت لاختبار تصميم الصفحة، ونصّها لا يستند إلى أي بحث.
 

@@ -1,4 +1,4 @@
-var e={id:`sample-cuisine`,theme:`culture`,date:`2025-01-28`,image:{src:`images/sample-cuisine.jpg`,credit:`Soup, bread, tomatoes and herbs on a wooden table.`},sources:[],locales:{tr:{title:`Mutfak, bir milletin kimliğini nasıl kurar?`,dek:`Deneme yazısı.`,region:`Deneme`,body:`Bu bir deneme yazısıdır. Sayfa düzenini denemek için konulmuştur; içindeki metin gerçek bir araştırmaya dayanmaz.
+var e={id:`sample-cuisine`,theme:`culture`,date:`2025-01-28`,image:{src:`images/sample-cuisine.jpg`,credit:`Soup, bread, tomatoes and herbs on a wooden table.`},sources:[],locales:{tr:{title:`Mutfak, bir milletin kimliğini nasıl kurar?`,dek:`Örnek yazı.`,region:`Deneme`,body:`Bu bir deneme yazısıdır. Sayfa düzenini denemek için konulmuştur; içindeki metin gerçek bir araştırmaya dayanmaz.
 
 Bu başlıktaki asıl yazı, kaynaklarıyla birlikte daha sonra yayımlanacak.`,audio:null},ar:{title:`كيف يبني المطبخ هوية أمة؟`,dek:`قراءة تجريبية.`,region:`تجريبي`,body:`هذه قراءة تجريبية، وُضعت لاختبار تصميم الصفحة، ونصّها لا يستند إلى أي بحث.
 

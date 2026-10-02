@@ -1,0 +1,1 @@
+import{t as e}from"./atlas-BwPFfn3d.js";var t=e;export{t as component};

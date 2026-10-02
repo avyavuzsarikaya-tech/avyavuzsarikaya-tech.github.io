@@ -1,4 +1,4 @@
-var e={id:`sample-bread-diabetes`,theme:`health`,date:`2025-05-22`,image:{src:`images/sample-bread-diabetes.jpg`,credit:`Two loaves, wheat grains and a glass of water.`},sources:[],locales:{tr:{title:`Sofradaki ekmek ve diyabet`,dek:`Deneme yazısı.`,region:`Deneme`,body:`Bu bir deneme yazısıdır. Sayfa düzenini denemek için konulmuştur; içindeki metin gerçek bir araştırmaya dayanmaz.
+var e={id:`sample-bread-diabetes`,theme:`health`,date:`2025-05-22`,image:{src:`images/sample-bread-diabetes.jpg`,credit:`Two loaves, wheat grains and a glass of water.`},sources:[],locales:{tr:{title:`Sofradaki ekmek ve diyabet`,dek:`Örnek yazı.`,region:`Deneme`,body:`Bu bir deneme yazısıdır. Sayfa düzenini denemek için konulmuştur; içindeki metin gerçek bir araştırmaya dayanmaz.
 
 Bu başlıktaki asıl yazı, kaynaklarıyla birlikte daha sonra yayımlanacak.`,audio:null},ar:{title:`الخبز على المائدة، والسكري`,dek:`قراءة تجريبية.`,region:`تجريبي`,body:`هذه قراءة تجريبية، وُضعت لاختبار تصميم الصفحة، ونصّها لا يستند إلى أي بحث.
 

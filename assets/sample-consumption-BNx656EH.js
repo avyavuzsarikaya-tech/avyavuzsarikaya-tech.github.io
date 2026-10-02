@@ -1,4 +1,4 @@
-var e={id:`sample-consumption`,theme:`research`,date:`2025-04-30`,image:{src:`images/sample-consumption.jpg`,credit:`Apples, pears and a ceramic pitcher on a linen cloth.`},sources:[],locales:{tr:{title:`Daha çok tüketmek, daha iyi yaşamak mı?`,dek:`Deneme yazısı.`,region:`Deneme`,body:`Bu bir deneme yazısıdır. Sayfa düzenini denemek için konulmuştur; içindeki metin gerçek bir araştırmaya dayanmaz.
+var e={id:`sample-consumption`,theme:`research`,date:`2025-04-30`,image:{src:`images/sample-consumption.jpg`,credit:`Apples, pears and a ceramic pitcher on a linen cloth.`},sources:[],locales:{tr:{title:`Daha çok tüketmek, daha iyi yaşamak mı?`,dek:`Örnek yazı.`,region:`Deneme`,body:`Bu bir deneme yazısıdır. Sayfa düzenini denemek için konulmuştur; içindeki metin gerçek bir araştırmaya dayanmaz.
 
 Bu başlıktaki asıl yazı, kaynaklarıyla birlikte daha sonra yayımlanacak.`,audio:null},ar:{title:`هل يعني الاستهلاك الأكثر حياة أفضل؟`,dek:`قراءة تجريبية.`,region:`تجريبي`,body:`هذه قراءة تجريبية، وُضعت لاختبار تصميم الصفحة، ونصّها لا يستند إلى أي بحث.
 

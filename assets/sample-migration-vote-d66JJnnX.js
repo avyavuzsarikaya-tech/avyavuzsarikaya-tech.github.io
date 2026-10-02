@@ -1,4 +1,4 @@
-var e={id:`sample-migration-vote`,theme:`politics`,date:`2025-07-10`,image:{src:`images/sample-migration-vote.jpg`,credit:`A worn suitcase beside empty chairs in a waiting room.`},sources:[],locales:{tr:{title:`Göç, seçmenleri sağa mı kaydırıyor?`,dek:`Deneme yazısı.`,region:`Deneme`,body:`Bu bir deneme yazısıdır. Sayfa düzenini denemek için konulmuştur; içindeki metin gerçek bir araştırmaya dayanmaz.
+var e={id:`sample-migration-vote`,theme:`politics`,date:`2025-07-10`,image:{src:`images/sample-migration-vote.jpg`,credit:`A worn suitcase beside empty chairs in a waiting room.`},sources:[],locales:{tr:{title:`Göç, seçmenleri sağa mı kaydırıyor?`,dek:`Örnek yazı.`,region:`Deneme`,body:`Bu bir deneme yazısıdır. Sayfa düzenini denemek için konulmuştur; içindeki metin gerçek bir araştırmaya dayanmaz.
 
 Bu başlıktaki asıl yazı, kaynaklarıyla birlikte daha sonra yayımlanacak.`,audio:null},ar:{title:`هل تدفع الهجرة الناخبين نحو اليمين؟`,dek:`قراءة تجريبية.`,region:`تجريبي`,body:`هذه قراءة تجريبية، وُضعت لاختبار تصميم الصفحة، ونصّها لا يستند إلى أي بحث.
 

@@ -1,4 +1,4 @@
-var e={id:`sample-turnout`,theme:`politics`,date:`2024-11-26`,image:{src:`images/sample-turnout.jpg`,credit:`Empty chairs facing a plain box in a quiet hall.`},sources:[],locales:{tr:{title:`Seçimlere katılım neden düşüyor?`,dek:`Deneme yazısı.`,region:`Deneme`,body:`Bu bir deneme yazısıdır. Sayfa düzenini denemek için konulmuştur; içindeki metin gerçek bir araştırmaya dayanmaz.
+var e={id:`sample-turnout`,theme:`politics`,date:`2024-11-26`,image:{src:`images/sample-turnout.jpg`,credit:`Empty chairs facing a plain box in a quiet hall.`},sources:[],locales:{tr:{title:`Seçimlere katılım neden düşüyor?`,dek:`Örnek yazı.`,region:`Deneme`,body:`Bu bir deneme yazısıdır. Sayfa düzenini denemek için konulmuştur; içindeki metin gerçek bir araştırmaya dayanmaz.
 
 Bu başlıktaki asıl yazı, kaynaklarıyla birlikte daha sonra yayımlanacak.`,audio:null},ar:{title:`لماذا تتراجع نسبة المشاركة في الانتخابات؟`,dek:`قراءة تجريبية.`,region:`تجريبي`,body:`هذه قراءة تجريبية، وُضعت لاختبار تصميم الصفحة، ونصّها لا يستند إلى أي بحث.
 

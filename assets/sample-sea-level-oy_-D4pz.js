@@ -1,4 +1,4 @@
-var e={id:`sample-sea-level`,theme:`science`,date:`2025-04-02`,image:{src:`images/sample-sea-level.jpg`,credit:`A wooden post in shallow water beside a concrete pier.`},sources:[],locales:{tr:{title:`Deniz seviyesi nasıl ölçülür?`,dek:`Deneme yazısı.`,region:`Deneme`,body:`Bu bir deneme yazısıdır. Sayfa düzenini denemek için konulmuştur; içindeki metin gerçek bir araştırmaya dayanmaz.
+var e={id:`sample-sea-level`,theme:`science`,date:`2025-04-02`,image:{src:`images/sample-sea-level.jpg`,credit:`A wooden post in shallow water beside a concrete pier.`},sources:[],locales:{tr:{title:`Deniz seviyesi nasıl ölçülür?`,dek:`Örnek yazı.`,region:`Deneme`,body:`Bu bir deneme yazısıdır. Sayfa düzenini denemek için konulmuştur; içindeki metin gerçek bir araştırmaya dayanmaz.
 
 Bu başlıktaki asıl yazı, kaynaklarıyla birlikte daha sonra yayımlanacak.`,audio:null},ar:{title:`كيف يُقاس مستوى سطح البحر؟`,dek:`قراءة تجريبية.`,region:`تجريبي`,body:`هذه قراءة تجريبية، وُضعت لاختبار تصميم الصفحة، ونصّها لا يستند إلى أي بحث.
 
