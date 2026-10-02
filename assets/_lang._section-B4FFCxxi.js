@@ -1,1 +1,0 @@
-import{Q as e,R as t}from"./seed-DbQ-WcPu.js";import{i as n}from"./index-ChzX_Osl.js";import{n as r}from"./atlas-BwPFfn3d.js";var i=e();function a(){let{section:e}=n.useParams();return(0,i.jsx)(r,{theme:t(e)})}export{a as component};

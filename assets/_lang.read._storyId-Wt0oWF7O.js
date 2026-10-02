@@ -1,1 +1,0 @@
-import{Q as e}from"./seed-DbQ-WcPu.js";import{t}from"./index-ChzX_Osl.js";import{t as n}from"./reading-CXdZ5G-g.js";var r=e();function i(){return(0,r.jsx)(n,{story:t.useLoaderData()})}export{i as component};
