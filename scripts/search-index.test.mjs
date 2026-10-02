@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { writeSearchIndex } from "./search-index.mjs";
+import { readSearchIndex, writeSearchIndex } from "./search-index.mjs";
+import { storyIndexPlugin } from "./story-index-plugin.mjs";
 
 function fixture(t) {
   const stories = mkdtempSync(join(tmpdir(), "orbis-stories-"));
@@ -33,17 +34,19 @@ function fullStory(id, date) {
 }
 
 const read = (out, lang) =>
-  JSON.parse(readFileSync(join(out, lang === "en" ? "search.json" : `${lang}/search.json`), "utf8"));
+  JSON.parse(readFileSync(join(out, "assets", "search", `${lang}.json`), "utf8"));
 
-test("writes one index per language, English at the root, the rest under their prefix", (t) => {
+test("writes all five indexes under assets/search, without root or language-folder indexes", (t) => {
   const { stories, out } = fixture(t);
   writeFileSync(join(stories, "a.json"), JSON.stringify(fullStory("a", "2026-01-01")));
   writeSearchIndex(out, stories);
   for (const lang of ["en", "tr", "ar", "fr", "es"]) {
-    const file = lang === "en" ? join(out, "search.json") : join(out, lang, "search.json");
+    const file = join(out, "assets", "search", `${lang}.json`);
     assert.ok(existsSync(file), `${lang} index missing`);
     assert.equal(read(out, lang).length, 1);
+    assert.ok(!existsSync(join(out, lang, "search.json")));
   }
+  assert.ok(!existsSync(join(out, "search.json")));
 });
 
 test("records carry id, theme, date, title, dek, region and a cleaned body", (t) => {
@@ -103,4 +106,56 @@ test("the id falls back to the file name and records come newest first", (t) => 
     read(out, "en").map((r) => r.id),
     ["newer", "from-file"],
   );
+});
+
+test("the index includes the final paragraph, with no drafts or media payloads", (t) => {
+  const { stories, out } = fixture(t);
+  const story = fullStory("deep", "2026-01-01");
+  story.locales.en.body = "Introduction.\n\nMiddle paragraph.\n\nWetlands in the final paragraph. [2]";
+  story.locales.en.audio = { dataUrl: "data:audio/mp3;base64,secret" };
+  writeFileSync(join(stories, "deep.json"), JSON.stringify(story));
+  writeFileSync(join(stories, "draft.json"), JSON.stringify({
+    ...fullStory("draft", "2026-02-01"), status: "draft",
+  }));
+  writeSearchIndex(out, stories);
+  const records = read(out, "en");
+  assert.deepEqual(records, readSearchIndex(stories, "en"));
+  assert.equal(records.length, 1);
+  assert.match(records[0].body, /Wetlands in the final paragraph/);
+  assert.ok(!JSON.stringify(records).includes("secret"));
+});
+
+test("local preview serves the same per-language JSON before the HTML fallback", (t) => {
+  const { stories } = fixture(t);
+  const story = fullStory("a", "2026-01-01");
+  writeFileSync(join(stories, "a.json"), JSON.stringify(story));
+  const plugin = storyIndexPlugin();
+  // configResolved expects <root>/content/stories; direct an isolated root there.
+  const root = mkdtempSync(join(tmpdir(), "orbis-preview-"));
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  mkdirSync(join(root, "content", "stories"), { recursive: true });
+  writeFileSync(join(root, "content", "stories", "a.json"), JSON.stringify(story));
+  plugin.configResolved({ root });
+  let middleware;
+  plugin.configureServer({
+    middlewares: { use: (handler) => { middleware = handler; } },
+    watcher: { on() {} },
+  });
+  for (const lang of ["en", "tr", "ar", "fr", "es"]) {
+    const headers = {};
+    let body;
+    const response = {
+      setHeader: (name, value) => { headers[name] = value; },
+      end: (value) => { body = value; },
+    };
+    middleware({ url: `/assets/search/${lang}.json`, method: "GET" }, response,
+      () => assert.fail("Search fell through to the HTML fallback"));
+    assert.match(headers["Content-Type"], /application\/json/);
+    assert.equal(JSON.parse(body)[0].title, story.locales[lang].title);
+  }
+  for (const url of ["/assets/search/de.json", "/search.json", "/tr/search.json"]) {
+    let passed = false;
+    middleware({ url, method: "GET" }, {}, () => { passed = true; });
+    assert.ok(passed, url);
+  }
 });

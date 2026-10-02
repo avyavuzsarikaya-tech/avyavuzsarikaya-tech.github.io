@@ -4,7 +4,8 @@ import { copyFor } from "./i18n.ts";
 
 /**
  * Search over the reading cards already on the page (virtual:orbis-index): title,
- * summary, region, section name and first paragraph, in the language of the page.
+ * summary, region and section name, plus the full text in the language of the page.
+ * Full texts come from assets/search/<lang>.json only when the reader searches.
  * Nothing is sent anywhere; the site stays a set of static files.
  *
  * Every query word must begin a word somewhere in the reading ("clim" finds "climate",
@@ -20,6 +21,8 @@ export type SearchCopy = {
   /** Number of results; {n} is replaced. */
   count: (n: number) => string;
   empty: string;
+  loading: string;
+  failed: string;
   description: string;
 };
 
@@ -31,6 +34,8 @@ const COPY: Record<Lang, SearchCopy> = {
     submit: "Ara",
     count: (n) => `${n} sonuç`,
     empty: "Aramanızla eşleşen okuma bulunamadı.",
+    loading: "Arama hazırlanıyor…",
+    failed: "Arama verileri yüklenemedi. Lütfen tekrar deneyin.",
     description: "Orbis okumalarında arama.",
   },
   ar: {
@@ -41,6 +46,8 @@ const COPY: Record<Lang, SearchCopy> = {
     count: (n) =>
       n === 1 ? "نتيجة واحدة" : n === 2 ? "نتيجتان" : n <= 10 ? `${n} نتائج` : `${n} نتيجة`,
     empty: "لا توجد قراءات مطابقة لبحثك.",
+    loading: "جارٍ تجهيز البحث…",
+    failed: "تعذّر تحميل بيانات البحث. يُرجى المحاولة مرة أخرى.",
     description: "البحث في قراءات أوربيس.",
   },
   en: {
@@ -50,6 +57,8 @@ const COPY: Record<Lang, SearchCopy> = {
     submit: "Search",
     count: (n) => (n === 1 ? "1 result" : `${n} results`),
     empty: "No readings match your search.",
+    loading: "Preparing search…",
+    failed: "Search data could not be loaded. Please try again.",
     description: "Search the readings on Orbis.",
   },
   fr: {
@@ -59,6 +68,8 @@ const COPY: Record<Lang, SearchCopy> = {
     submit: "Chercher",
     count: (n) => (n <= 1 ? `${n} résultat` : `${n} résultats`),
     empty: "Aucune lecture ne correspond à votre recherche.",
+    loading: "Préparation de la recherche…",
+    failed: "Impossible de charger les données de recherche. Veuillez réessayer.",
     description: "Rechercher dans les lectures d’Orbis.",
   },
   es: {
@@ -68,12 +79,44 @@ const COPY: Record<Lang, SearchCopy> = {
     submit: "Buscar",
     count: (n) => (n === 1 ? "1 resultado" : `${n} resultados`),
     empty: "Ninguna lectura coincide con su búsqueda.",
+    loading: "Preparando la búsqueda…",
+    failed: "No se pudieron cargar los datos de búsqueda. Inténtelo de nuevo.",
     description: "Buscar en las lecturas de Orbis.",
   },
 };
 
 export function searchCopy(lang: Lang): SearchCopy {
   return COPY[lang];
+}
+
+/** Language indexes are published with the site's other static assets. */
+export function searchIndexUrl(lang: Lang, baseUrl: string): string {
+  const base = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
+  return `${base}assets/search/${lang}.json`;
+}
+
+/** Do not mistake an HTML fallback or malformed data for an empty search index. */
+export function readSearchBodies(value: unknown): ReadonlyMap<string, string> {
+  if (!Array.isArray(value)) throw new Error("Invalid search index");
+  const bodies = new Map<string, string>();
+  for (const record of value) {
+    if (!record || typeof record.id !== "string" || typeof record.body !== "string") {
+      throw new Error("Invalid search record");
+    }
+    bodies.set(record.id, record.body);
+  }
+  return bodies;
+}
+
+export async function loadSearchBodies(
+  lang: Lang,
+  baseUrl: string,
+  signal?: AbortSignal,
+  request: typeof fetch = fetch,
+): Promise<ReadonlyMap<string, string>> {
+  const response = await request(searchIndexUrl(lang, baseUrl), { signal });
+  if (!response.ok) throw new Error(`Search index: HTTP ${response.status}`);
+  return readSearchBodies(await response.json());
 }
 
 /**
@@ -139,6 +182,21 @@ type Fields = [string[], number][];
  * keystroke does not fold every reading again.
  */
 const prepared = new WeakMap<StoryCard, Partial<Record<Lang, Fields>>>();
+const preparedBodies = new WeakMap<ReadonlyMap<string, string>, Map<string, string[]>>();
+
+function bodyWords(bodies: ReadonlyMap<string, string>, id: string): string[] {
+  let cache = preparedBodies.get(bodies);
+  if (!cache) {
+    cache = new Map();
+    preparedBodies.set(bodies, cache);
+  }
+  let words = cache.get(id);
+  if (!words) {
+    words = fieldWords(bodies.get(id) ?? "");
+    cache.set(id, words);
+  }
+  return words;
+}
 
 function fieldsOf(card: StoryCard, lang: Lang): Fields {
   let byLang = prepared.get(card);
@@ -163,16 +221,26 @@ function fieldsOf(card: StoryCard, lang: Lang): Fields {
 
 /**
  * Readings in this language whose text holds every word of the query. A hit in the title
- * counts most, then the summary, region and section, then the first paragraph; equal
+ * counts most, then the summary, region and section, then the full text; equal
  * scores keep the newest first.
  */
-export function searchCards(cards: StoryCard[], lang: Lang, query: string): StoryCard[] {
+export function searchCards(
+  cards: StoryCard[],
+  lang: Lang,
+  query: string,
+  bodies?: ReadonlyMap<string, string>,
+): StoryCard[] {
   const words = terms(query);
   if (words.length === 0) return [];
   const scored: { card: StoryCard; score: number }[] = [];
   for (const card of cards) {
     if (!card.locales[lang].written) continue;
-    const fields = fieldsOf(card, lang);
+    // An index entry must still have a current published card, and vice versa.
+    if (bodies && !bodies.has(card.id)) continue;
+    const cardFields = fieldsOf(card, lang);
+    const fields: Fields = bodies
+      ? [...cardFields.slice(0, 3), [bodyWords(bodies, card.id), 1]]
+      : cardFields;
     let score = 0;
     let all = true;
     for (const word of words) {

@@ -2,6 +2,7 @@ import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { readStoryIndex } from "./story-index-plugin.mjs";
 import { writeFeeds } from "./feed.mjs";
+import { writeSearchIndex } from "./search-index.mjs";
 
 /**
  * After `vite build` (see vite.config.ts): checks that every page was written out, makes
@@ -78,6 +79,7 @@ const sitemap = [
 ].join("\n");
 writeFileSync(join(root, "sitemap.xml"), sitemap);
 writeFeeds({ root, langs: LANGS, site, name });
+writeSearchIndex(root);
 writeFileSync(
   join(root, "robots.txt"),
   `User-agent: *\nDisallow: /panel\n\nSitemap: ${site}/sitemap.xml\n`,

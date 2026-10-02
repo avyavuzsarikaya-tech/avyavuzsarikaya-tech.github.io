@@ -4,8 +4,8 @@ import { join } from "node:path";
 /**
  * Static search index: one JSON file per language with the full plain text of every
  * published reading — title, summary and body. The page loads only its own language's
- * file and searches it in the browser; no server is involved. English lives at
- * search.json, the other languages at <lang>/search.json, mirroring the address layout.
+ * file and searches it in the browser; no server is involved. All five indexes live
+ * under assets/search/<lang>.json, so the existing assets publication includes them.
  */
 
 const LANGS = ["tr", "ar", "en", "fr", "es"];
@@ -26,7 +26,8 @@ function plain(body) {
     .trim();
 }
 
-export function writeSearchIndex(outDir, storiesDir = "content/stories") {
+/** Shared by static builds and the local preview endpoint. */
+export function readSearchIndex(storiesDir, lang) {
   const stories = readdirSync(storiesDir)
     .filter((name) => name.endsWith(".json"))
     .sort()
@@ -38,29 +39,31 @@ export function writeSearchIndex(outDir, storiesDir = "content/stories") {
     })
     .sort((a, b) => String(b.date).localeCompare(String(a.date)));
 
+  return stories.flatMap((story) => {
+    const copy = story.locales?.[lang] ?? {};
+    const body = plain(copy.body ?? "");
+    // A reading without text in this language is not in this language's index.
+    if (!body) return [];
+    return [
+      {
+        id: story.id,
+        theme: story.theme,
+        date: story.date,
+        title: copy.title ?? "",
+        dek: copy.dek ?? "",
+        region: copy.region ?? "",
+        body,
+      },
+    ];
+  });
+}
+
+export function writeSearchIndex(outDir, storiesDir = "content/stories") {
+  const dir = join(outDir, "assets", "search");
+  mkdirSync(dir, { recursive: true });
   for (const lang of LANGS) {
-    const records = stories.flatMap((story) => {
-      const copy = story.locales?.[lang] ?? {};
-      const body = plain(copy.body ?? "");
-      // A reading without text in this language is not in this language's index.
-      if (!body) return [];
-      return [
-        {
-          id: story.id,
-          theme: story.theme,
-          date: story.date,
-          title: copy.title ?? "",
-          dek: copy.dek ?? "",
-          region: copy.region ?? "",
-          body,
-        },
-      ];
-    });
-    const dir = lang === "en" ? outDir : join(outDir, lang);
-    mkdirSync(dir, { recursive: true });
-    writeFileSync(join(dir, "search.json"), `${JSON.stringify(records, null, 2)}\n`);
-    console.log(
-      `[search] ${records.length} readings in ${lang === "en" ? "." : lang}/search.json`,
-    );
+    const records = readSearchIndex(storiesDir, lang);
+    writeFileSync(join(dir, `${lang}.json`), `${JSON.stringify(records, null, 2)}\n`);
+    console.log(`[search] ${records.length} readings in assets/search/${lang}.json`);
   }
 }

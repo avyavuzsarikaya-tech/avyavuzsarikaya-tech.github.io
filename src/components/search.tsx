@@ -5,7 +5,8 @@ import { SearchMark } from "@/components/search-mark";
 import { FrameTools, Shell } from "@/components/shell";
 import { useCopy } from "@/lib/i18n";
 import { readLink } from "@/lib/lang-path";
-import { searchCards, searchCopy } from "@/lib/search";
+import { loadSearchBodies, searchCards, searchCopy } from "@/lib/search";
+import type { Lang } from "@/lib/types";
 import { CARDS } from "@/lib/seed";
 import { formatDate, storyTitle } from "@/lib/text";
 import { useLang } from "@/lib/use-lang";
@@ -35,6 +36,13 @@ export function SearchPage() {
   // so the written page and the open page start out the same.
   const [ready, setReady] = useState(false);
   const [query, setQuery] = useState("");
+  const [index, setIndex] = useState<{
+    lang: Lang;
+    bodies: ReadonlyMap<string, string>;
+  } | null>(null);
+  const [failedLang, setFailedLang] = useState<Lang | null>(null);
+  const [requestAttempt, setRequestAttempt] = useState(0);
+  const hasQuery = query.trim().length > 0;
 
   useEffect(() => {
     const q = queryFromAddress(window.location.search);
@@ -54,8 +62,30 @@ export function SearchPage() {
     return () => window.clearTimeout(timer);
   }, [query, ready, path, navigate]);
 
-  const results = useMemo(() => searchCards(CARDS, lang, query), [lang, query]);
-  const searching = ready && query.trim().length > 0;
+  // Download one language only, on the first nonempty query. Cancelling the request
+  // prevents an old language or an unmounted page from replacing the current index.
+  useEffect(() => {
+    if (!ready || !hasQuery || index?.lang === lang) return;
+    const controller = new AbortController();
+    setFailedLang(null);
+    void loadSearchBodies(lang, import.meta.env.BASE_URL, controller.signal)
+      .then((bodies) => {
+        if (!controller.signal.aborted) setIndex({ lang, bodies });
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setFailedLang(lang);
+      });
+    return () => controller.abort();
+  }, [lang, ready, hasQuery, index, requestAttempt]);
+
+  const bodies = index?.lang === lang ? index.bodies : undefined;
+  const results = useMemo(
+    () => (bodies ? searchCards(CARDS, lang, query, bodies) : []),
+    [lang, query, bodies],
+  );
+  const searching = ready && hasQuery && bodies !== undefined;
+  const pending = ready && hasQuery && !bodies && failedLang !== lang;
+  const failed = ready && hasQuery && !bodies && failedLang === lang;
 
   return (
     <Shell>
@@ -73,6 +103,7 @@ export function SearchPage() {
             className="group flex items-center gap-3 border-b border-rule pb-2.5 focus-within:border-ink"
             onSubmit={(event) => {
               event.preventDefault();
+              if (failedLang === lang) setRequestAttempt((attempt) => attempt + 1);
               const q = query.trim();
               input.current?.blur();
               void navigate({
@@ -159,6 +190,11 @@ export function SearchPage() {
         {searching && results.length === 0 ? (
           <p aria-live="polite" className="px-5 pt-2 pb-10 text-[15px] text-muted md:px-8">
             {words.empty}
+          </p>
+        ) : null}
+        {pending || failed ? (
+          <p role="status" className="px-5 pt-2 pb-10 text-[15px] text-muted md:px-8">
+            {pending ? words.loading : words.failed}
           </p>
         ) : null}
       </main>

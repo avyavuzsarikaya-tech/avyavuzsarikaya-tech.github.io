@@ -1,5 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { readSearchIndex } from "./search-index.mjs";
 
 /**
  * `virtual:orbis-index`: a short card for every reading in content/stories — title,
@@ -85,6 +86,22 @@ export function storyIndexPlugin() {
       return `export default ${JSON.stringify(readStoryIndex(dir))};`;
     },
     configureServer(server) {
+      // The same language-specific JSON as the static build, before the HTML fallback.
+      server.middlewares.use((req, res, next) => {
+        const path = (req.url ?? "").split("?", 1)[0];
+        const match = /^\/assets\/search\/([a-z]{2})\.json$/.exec(path);
+        const lang = match?.[1];
+        if (!match || !LANGS.includes(lang)) return next();
+        if (req.method !== "GET" && req.method !== "HEAD") return next();
+        try {
+          const json = JSON.stringify(readSearchIndex(dir, lang));
+          res.setHeader("Content-Type", "application/json; charset=utf-8");
+          res.setHeader("Cache-Control", "no-store");
+          res.end(req.method === "HEAD" ? "" : json);
+        } catch (error) {
+          next(error);
+        }
+      });
       // While editing locally: a new or changed story file refreshes the index.
       const refresh = (file) => {
         if (!file.startsWith(dir)) return;

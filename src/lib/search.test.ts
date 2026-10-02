@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { fold, searchCards, searchCopy, terms } from "./search.ts";
+import {
+  fold, loadSearchBodies, readSearchBodies, searchCards, searchCopy, searchIndexUrl, terms,
+} from "./search.ts";
 import type { Lang, LocaleCard, StoryCard } from "./types.ts";
 
 const LANGS: Lang[] = ["tr", "ar", "en", "fr", "es"];
@@ -132,4 +134,83 @@ test("the same cards answer repeated queries in more than one language", () => {
   assert.deepEqual(ids(searchCards([c], "tr", "cocuk")), ["a"]);
   assert.deepEqual(ids(searchCards([c], "en", "child")), ["a"]);
   assert.deepEqual(ids(searchCards([c], "tr", "çocuk")), ["a"]);
+});
+
+test("full text finds a word beyond the first paragraph in every language", () => {
+  const endings: Record<Lang, [string, string]> = {
+    en: ["The final paragraph discusses wetlands.", "wetland"],
+    tr: ["Son paragraf çocukların göçünü anlatıyor.", "cocuk goc"],
+    ar: ["تتناول الفقرة الأخيرة الاقتصاد والهجرة.", "اقتصاد هجره"],
+    fr: ["Le dernier paragraphe décrit une œuvre.", "oeuvre"],
+    es: ["El último párrafo explica la acción.", "accion"],
+  };
+  for (const lang of LANGS) {
+    const cards = [card("a", lang, { title: "Report", lead: "Introduction." })];
+    const [ending, query] = endings[lang];
+    assert.deepEqual(searchCards(cards, lang, query), []);
+    const bodies = readSearchBodies([{ id: "a", body: `Introduction. ${ending}` }]);
+    assert.deepEqual(ids(searchCards(cards, lang, query, bodies)), ["a"], lang);
+  }
+});
+
+test("full text retains ranking and requires every query term to match", () => {
+  const cards = [
+    card("body", "en", { title: "Report" }),
+    card("title", "en", { title: "Wetlands report" }),
+  ];
+  const bodies = new Map([
+    ["body", "Introduction. Wetlands in the final paragraph."],
+    ["title", "Introduction. A final paragraph."],
+  ]);
+  assert.deepEqual(ids(searchCards(cards, "en", "wetland", bodies)), ["title", "body"]);
+  assert.deepEqual(ids(searchCards(cards, "en", "report wetland", bodies)), ["title", "body"]);
+  assert.deepEqual(searchCards(cards, "en", "wetland missing", bodies), []);
+});
+
+test("a stale index cannot resurrect a removed reading or search another language", () => {
+  const cards = [card("a", "en", { title: "Current" }), card("b", "en", { title: "Old" })];
+  const bodies = new Map([["a", "Wetlands"], ["removed", "Wetlands"]]);
+  assert.deepEqual(ids(searchCards(cards, "en", "wetland", bodies)), ["a"]);
+  assert.deepEqual(searchCards(cards, "en", "old", bodies), []);
+  assert.deepEqual(searchCards(cards, "fr", "wetland", bodies), []);
+});
+
+test("full-text caches stay separate for each downloaded language and version", () => {
+  const c = card("a", "en", { title: "Report" });
+  c.locales.tr = locale({ title: "Rapor" });
+  const en = new Map([["a", "Wetlands"]]);
+  const tr = new Map([["a", "Çocukların göçü"]]);
+  assert.deepEqual(ids(searchCards([c], "en", "wetland", en)), ["a"]);
+  assert.deepEqual(searchCards([c], "tr", "wetland", tr), []);
+  assert.deepEqual(ids(searchCards([c], "tr", "cocuk", tr)), ["a"]);
+  assert.deepEqual(searchCards([c], "en", "wetland", new Map([["a", "Updated text"]])), []);
+});
+
+test("only the selected language index is requested, respecting the site's base path", async () => {
+  for (const lang of LANGS) {
+    const expected = `/orbis/assets/search/${lang}.json`;
+    assert.equal(searchIndexUrl(lang, "/orbis"), expected);
+    assert.equal(searchIndexUrl(lang, "/"), `/assets/search/${lang}.json`);
+    const controller = new AbortController();
+    const request: typeof fetch = async (url, options) => {
+      assert.equal(url, expected);
+      assert.equal(options?.signal, controller.signal);
+      return Response.json([{ id: "a", body: "A final paragraph." }]);
+    };
+    const bodies = await loadSearchBodies(lang, "/orbis/", controller.signal, request);
+    assert.equal(bodies.get("a"), "A final paragraph.");
+  }
+});
+
+test("HTTP errors, HTML fallbacks and malformed records are not empty results", async () => {
+  await assert.rejects(
+    loadSearchBodies("en", "/", undefined, async () => new Response("Missing", { status: 404 })),
+    /HTTP 404/,
+  );
+  await assert.rejects(
+    loadSearchBodies("tr", "/", undefined, async () => new Response("<!doctype html>")),
+  );
+  assert.throws(() => readSearchBodies({}), /Invalid search index/);
+  assert.throws(() => readSearchBodies([{ id: "a" }]), /Invalid search record/);
+  assert.equal(readSearchBodies([]).size, 0);
 });
