@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { SiteMenu } from "@/components/menu";
 import { Pick } from "@/components/pick";
 import { aboutCopy } from "@/lib/about-copy";
@@ -17,17 +17,21 @@ function Meridian({ header = false }: { header?: boolean }) {
     <span
       className={
         header
-          ? "relative inline-flex h-6 w-6 items-center justify-center md:h-8 md:w-8"
+          ? "relative inline-flex h-8 w-6 items-center justify-center md:h-12 md:w-8 lg:h-16 lg:w-10"
           : "relative inline-flex h-8 w-8 items-center justify-center"
       }
       aria-hidden="true"
     >
       <span
-        className={header ? "absolute h-6 w-px bg-paper md:h-8" : "absolute h-8 w-px bg-paper"}
+        className={
+          header ? "absolute h-8 w-px bg-paper md:h-12 lg:h-16" : "absolute h-8 w-px bg-paper"
+        }
       />
       <span
         className={
-          header ? "size-1.5 rounded-full bg-paper md:size-2" : "size-2 rounded-full bg-paper"
+          header
+            ? "size-2 rounded-full bg-paper md:size-2.5 lg:size-3"
+            : "size-2 rounded-full bg-paper"
         }
       />
     </span>
@@ -39,7 +43,7 @@ function Swatch({ look }: { look: Look }) {
   return (
     <span
       aria-hidden="true"
-      className="me-2.5 inline-block size-3.5 shrink-0 rounded-full border border-paper/60"
+      className="me-2.5 inline-block size-3.5 shrink-0 rounded-full border border-ink/30"
       style={{ background: `linear-gradient(135deg, ${panel} 50%, ${paper} 50%)` }}
     />
   );
@@ -50,7 +54,7 @@ function HeaderSwatch({ look }: { look: Look }) {
   return (
     <span
       aria-hidden="true"
-      className="block size-[15px] rounded-full border md:size-[18px] border-paper/70 transition-colors group-hover:border-paper group-aria-expanded:border-paper"
+      className="block size-[12px] rounded-full border border-ink/40 transition-colors md:size-[15px] group-hover:border-ink group-aria-expanded:border-ink"
       style={{ background: `linear-gradient(135deg, ${panel} 50%, ${paper} 50%)` }}
     />
   );
@@ -65,6 +69,90 @@ function Caret() {
     >
       <path d="M.75.75 4 4.25 7.25.75" fill="none" stroke="currentColor" strokeWidth="1" />
     </svg>
+  );
+}
+
+type Tools = {
+  openMenu: () => void;
+  menuOpen: boolean;
+  menuButton: React.RefObject<HTMLButtonElement | null>;
+  look: Look;
+  setLook: (look: Look) => void;
+  lang: Lang;
+  setLang: (lang: Lang) => void;
+};
+
+const ToolsContext = createContext<Tools | null>(null);
+
+/**
+ * Menu, colour scheme and language, set small on the paper at the head of each page
+ * (beside the home sentence, a section's name, or a reading's way back), so the
+ * black masthead carries the name alone.
+ */
+export function FrameTools() {
+  const tools = useContext(ToolsContext);
+  const lang = useLang();
+  const copy = useCopy(lang);
+  const frame = useFrameCopy(lang);
+  if (!tools) return null;
+  return (
+    <div dir="ltr" className="flex shrink-0 items-center gap-0.5 text-muted md:gap-2">
+      <Pick
+        tone="page"
+        align="end"
+        label={frame.look}
+        value={tools.look}
+        onChange={tools.setLook}
+        options={LOOKS.map((code) => ({
+          value: code,
+          label: (
+            <>
+              <Swatch look={code} />
+              {frame.looks[code]}
+            </>
+          ),
+        }))}
+        buttonClassName="group inline-flex h-11 w-7 items-center justify-center md:w-9"
+      >
+        <HeaderSwatch look={tools.look} />
+      </Pick>
+      <Pick
+        tone="page"
+        align="end"
+        label={copy.language}
+        value={tools.lang}
+        onChange={tools.setLang}
+        options={LANGS.map((code) => ({
+          value: code,
+          label: langMeta[code].name,
+          lang: langMeta[code].html,
+        }))}
+        buttonClassName="group inline-flex h-11 items-center gap-1 px-1 text-[10px] tracking-[0.18em] hover:text-ink md:px-2 md:text-[11px]"
+      >
+        <span>{langMeta[tools.lang].code}</span>
+        <span className="hidden md:inline-flex">
+          <Caret />
+        </span>
+      </Pick>
+      <button
+        ref={tools.menuButton}
+        type="button"
+        aria-expanded={tools.menuOpen}
+        aria-controls="site-menu"
+        aria-label={frame.menu}
+        onClick={tools.openMenu}
+        className="inline-flex h-11 w-7 shrink-0 items-center justify-end hover:text-ink md:w-9"
+      >
+        <span
+          className="flex w-[14px] flex-col gap-[4px] md:w-[17px] md:gap-[5px]"
+          aria-hidden="true"
+        >
+          <span className="h-px w-full bg-current" />
+          <span className="h-px w-full bg-current" />
+          <span className="h-px w-full bg-current" />
+        </span>
+      </button>
+    </div>
   );
 }
 
@@ -113,210 +201,164 @@ export function Shell({
 
   const barItem = (on: boolean) =>
     on
-      ? "section-link inline-flex min-h-11 shrink-0 items-center border-b-2 border-ink text-ink"
-      : "section-link inline-flex min-h-11 shrink-0 items-center border-b-2 border-transparent text-muted hover:text-ink";
+      ? "section-link inline-flex min-h-10 shrink-0 md:min-h-9 items-center border-b-2 border-ink text-ink"
+      : "section-link inline-flex min-h-10 shrink-0 md:min-h-9 items-center border-b-2 border-transparent text-muted hover:text-ink";
+
+  const tools: Tools = {
+    openMenu: () => setMenuOpen(true),
+    menuOpen,
+    menuButton,
+    look,
+    setLook,
+    lang,
+    setLang,
+  };
 
   return (
-    <div className="flex min-h-dvh flex-col bg-paper text-ink">
-      <header
-        dir="ltr"
-        className="flex items-center justify-between gap-3 bg-panel px-5 py-2 text-paper md:gap-4 md:px-8 md:py-3"
-      >
-        <div className="flex items-center gap-1">
-          <button
-            ref={menuButton}
-            type="button"
-            aria-expanded={menuOpen}
-            aria-controls="site-menu"
-            aria-label={frame.menu}
-            onClick={() => setMenuOpen(true)}
-            className="inline-flex h-11 w-9 shrink-0 items-center justify-start text-paper md:w-11"
-          >
-            <span
-              className="flex w-[15px] flex-col gap-[4px] md:w-[18px] md:gap-[5px]"
-              aria-hidden="true"
-            >
-              <span className="h-px w-full bg-current" />
-              <span className="h-px w-full bg-current" />
-              <span className="h-px w-full bg-current" />
-            </span>
-          </button>
+    <ToolsContext.Provider value={tools}>
+      <div className="flex min-h-dvh flex-col bg-paper text-ink">
+        {/* The masthead carries the name alone, as a newspaper's does. Menu, language and
+          colour scheme sit on the paper below, beside the page's own heading. */}
+        <header
+          dir="ltr"
+          className="relative flex items-center justify-center bg-panel px-5 py-5 text-paper md:py-7 lg:py-10"
+        >
           <Link
             {...homeLink(lang)}
-            className="inline-flex min-h-11 items-center gap-2 text-paper md:gap-3"
+            className="inline-flex min-h-11 items-center gap-2 text-paper md:gap-3 lg:gap-4"
           >
             <Meridian header />
-            <span className="font-display text-base tracking-[0.12em] md:text-xl md:tracking-widest">
+            <span className="font-display text-[2rem] leading-none tracking-[0.14em] md:text-5xl md:tracking-[0.16em] lg:text-7xl">
               ORBIS
             </span>
           </Link>
-        </div>
-        <nav className="flex items-center gap-3 text-sm md:gap-4">
           {/* The editing panel stays out of the reader's menu; open it at /panel. */}
           {inPanel ? (
-            <>
+            <nav className="absolute inset-y-0 end-5 flex items-center gap-3 text-sm md:end-8">
               <Link {...homeLink(lang)} className="inline-flex min-h-11 items-center text-mist">
                 {copy.atlas}
               </Link>
               <Link to="/panel" className="inline-flex min-h-11 items-center text-paper">
                 {copy.panel}
               </Link>
-            </>
+            </nav>
           ) : null}
-          <div className="flex items-center text-paper">
-            <Pick
-              tone="panel"
-              align="end"
-              label={frame.look}
-              value={look}
-              onChange={setLook}
-              options={LOOKS.map((code) => ({
-                value: code,
-                label: (
-                  <>
-                    <Swatch look={code} />
-                    {frame.looks[code]}
-                  </>
-                ),
-              }))}
-              buttonClassName="group inline-flex h-11 w-9 items-center justify-center text-paper md:w-11"
+        </header>
+        {menuOpen ? (
+          <SiteMenu
+            lang={lang}
+            section={section}
+            path={path}
+            look={look}
+            onClose={() => {
+              setMenuOpen(false);
+              menuButton.current?.focus();
+            }}
+            onLang={setLang}
+            onLook={setLook}
+          />
+        ) : null}
+
+        <div dir={meta.dir} lang={meta.html} className="flex flex-1 flex-col">
+          <nav aria-label={copy.sections} className="section-bar relative border-b border-rule">
+            <div
+              ref={bar}
+              className="no-scrollbar flex gap-5 overflow-x-auto px-5 text-[13px] tracking-wide whitespace-nowrap md:gap-7 md:px-8"
             >
-              <HeaderSwatch look={look} />
-            </Pick>
-            <span aria-hidden="true" className="h-3 w-px bg-paper/35 md:h-3.5" />
-            <Pick
-              tone="panel"
-              align="end"
-              label={copy.language}
-              value={lang}
-              onChange={setLang}
-              options={LANGS.map((code) => ({
-                value: code,
-                label: langMeta[code].name,
-                lang: langMeta[code].html,
-              }))}
-              buttonClassName="group inline-flex h-11 items-center gap-1 ps-2.5 pe-0.5 text-[10px] tracking-[0.2em] text-paper md:gap-1.5 md:ps-3 md:text-[11px] md:tracking-[0.22em]"
-            >
-              <span>{meta.code}</span>
-              <Caret />
-            </Pick>
-          </div>
-        </nav>
-      </header>
-      {menuOpen ? (
-        <SiteMenu
-          lang={lang}
-          section={section}
-          path={path}
-          look={look}
-          onClose={() => {
-            setMenuOpen(false);
-            menuButton.current?.focus();
-          }}
-          onLang={setLang}
-          onLook={setLook}
-        />
-      ) : null}
-
-      <div dir={meta.dir} lang={meta.html} className="flex flex-1 flex-col">
-        <nav aria-label={copy.sections} className="section-bar relative border-b border-rule">
-          <div
-            ref={bar}
-            className="no-scrollbar flex gap-5 overflow-x-auto px-5 text-[13px] tracking-wide whitespace-nowrap md:gap-7 md:px-8"
-          >
-            <Link
-              {...homeLink(lang)}
-              data-on={section === "all"}
-              className={barItem(section === "all")}
-            >
-              {copy.home}
-            </Link>
-            {THEMES.map((theme) => (
-              <Link
-                key={theme}
-                {...sectionLink(lang, theme)}
-                data-on={section === theme}
-                className={barItem(section === theme)}
-              >
-                {copy.themes[theme]}
-              </Link>
-            ))}
-          </div>
-        </nav>
-
-        <div className="flex-1">{children}</div>
-
-        <div aria-hidden="true" className="flex items-center gap-3 px-5 pt-12 pb-10 md:px-8">
-          <span className="h-px flex-1 bg-rule" />
-          <span className="size-1.5 rounded-full bg-ink" />
-          <span className="h-px flex-1 bg-rule" />
-        </div>
-
-        <footer className="bg-panel px-5 py-10 text-paper md:px-8">
-          <div className="grid gap-8 md:grid-cols-3">
-            <div className="flex flex-col gap-3">
               <Link
                 {...homeLink(lang)}
-                dir="ltr"
-                className="inline-flex min-h-11 items-center gap-3 self-start text-paper"
+                data-on={section === "all"}
+                className={barItem(section === "all")}
               >
-                <Meridian />
-                <span className="font-display text-lg tracking-widest">ORBIS</span>
+                {copy.home}
               </Link>
-              <Link
-                {...aboutLink(lang)}
-                className="inline-flex min-h-9 items-center self-start text-sm text-paper"
-              >
-                {aboutCopy(lang).title}
-              </Link>
-              <p className="text-sm text-mist">{copy.colophon}</p>
+              {THEMES.map((theme) => (
+                <Link
+                  key={theme}
+                  {...sectionLink(lang, theme)}
+                  data-on={section === theme}
+                  className={barItem(section === theme)}
+                >
+                  {copy.themes[theme]}
+                </Link>
+              ))}
             </div>
-            <div>
-              <p className="text-xs uppercase tracking-widest text-mist">{copy.sections}</p>
-              <ul className="mt-2 grid w-fit grid-cols-2 gap-x-6">
-                {THEMES.map((theme) => (
-                  <li key={theme}>
-                    <Link
-                      {...sectionLink(lang, theme)}
-                      className="inline-flex min-h-9 items-center text-sm text-paper"
-                    >
-                      {copy.themes[theme]}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-widest text-mist">{frame.languages}</p>
-              <ul className="mt-2 flex flex-col">
-                {LANGS.map((code) => (
-                  <li key={code}>
-                    <button
-                      type="button"
-                      lang={langMeta[code].html}
-                      onClick={() => {
-                        setLang(code);
-                        window.scrollTo({ top: 0 });
-                      }}
-                      className={
-                        code === lang
-                          ? "inline-flex min-h-9 items-center text-sm text-paper underline underline-offset-4"
-                          : "inline-flex min-h-9 items-center text-sm text-mist hover:text-paper"
-                      }
-                    >
-                      {langMeta[code].name}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          </nav>
+
+          <div className="flex-1">{children}</div>
+
+          <div aria-hidden="true" className="flex items-center gap-3 px-5 pt-12 pb-10 md:px-8">
+            <span className="h-px flex-1 bg-rule" />
+            <span className="size-1.5 rounded-full bg-ink" />
+            <span className="h-px flex-1 bg-rule" />
           </div>
-          <p className="mt-10 border-t border-muted pt-6 text-xs text-mist">
-            © {new Date().getFullYear()} Orbis. {frame.rights}
-          </p>
-        </footer>
+
+          <footer className="bg-panel px-5 py-10 text-paper md:px-8">
+            <div className="grid gap-8 md:grid-cols-3">
+              <div className="flex flex-col gap-3">
+                <Link
+                  {...homeLink(lang)}
+                  dir="ltr"
+                  className="inline-flex min-h-11 items-center gap-3 self-start text-paper"
+                >
+                  <Meridian />
+                  <span className="font-display text-lg tracking-widest">ORBIS</span>
+                </Link>
+                <Link
+                  {...aboutLink(lang)}
+                  className="inline-flex min-h-9 items-center self-start text-sm text-paper"
+                >
+                  {aboutCopy(lang).title}
+                </Link>
+                <p className="text-sm text-mist">{copy.colophon}</p>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-widest text-mist">{copy.sections}</p>
+                <ul className="mt-2 grid w-fit grid-cols-2 gap-x-6">
+                  {THEMES.map((theme) => (
+                    <li key={theme}>
+                      <Link
+                        {...sectionLink(lang, theme)}
+                        className="inline-flex min-h-9 items-center text-sm text-paper"
+                      >
+                        {copy.themes[theme]}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-widest text-mist">{frame.languages}</p>
+                <ul className="mt-2 flex flex-col">
+                  {LANGS.map((code) => (
+                    <li key={code}>
+                      <button
+                        type="button"
+                        lang={langMeta[code].html}
+                        onClick={() => {
+                          setLang(code);
+                          window.scrollTo({ top: 0 });
+                        }}
+                        className={
+                          code === lang
+                            ? "inline-flex min-h-9 items-center text-sm text-paper underline underline-offset-4"
+                            : "inline-flex min-h-9 items-center text-sm text-mist hover:text-paper"
+                        }
+                      >
+                        {langMeta[code].name}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            <p className="mt-10 border-t border-muted pt-6 text-xs text-mist">
+              © {new Date().getFullYear()} Orbis. {frame.rights}
+            </p>
+          </footer>
+        </div>
       </div>
-    </div>
+    </ToolsContext.Provider>
   );
 }
 

@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ReadTime } from "@/components/read-time";
-import { Shell } from "@/components/shell";
+import { FrameTools, Shell } from "@/components/shell";
 import { useFrameCopy } from "@/lib/frame-copy";
 import { useCopy } from "@/lib/i18n";
 import { readLink } from "@/lib/lang-path";
@@ -83,14 +83,27 @@ export function Atlas({ section }: { section: Theme | "all" }) {
 
   return (
     <main>
-      <div className="px-5 py-6 md:px-8 md:py-8">
+      {/* Menu, language and scheme sit on the first line of the heading: the box that holds
+          them takes the heading's own size and line height, so its middle is that line's
+          middle in every language and at every width. */}
+      <div className="flex items-start justify-between gap-4 px-5 py-3.5 md:px-8 md:py-5">
         {section === "all" ? (
-          <h1 className="home-sentence max-w-full text-[1.15rem] leading-[1.3] min-[380px]:text-[1.45rem] md:text-[2.05rem]">
-            <span className="block">{copy.heroLead}</span>
-            <span className="block">{copy.hero}</span>
-          </h1>
+          <>
+            <h1 className="home-sentence min-w-0 text-[1.15rem] leading-[1.3] min-[380px]:text-[1.45rem] md:text-[2.05rem]">
+              <span className="block">{copy.heroLead}</span>
+              <span className="block">{copy.hero}</span>
+            </h1>
+            <div className="flex h-[1.3em] shrink-0 items-center text-[1.15rem] min-[380px]:text-[1.45rem] md:text-[2.05rem]">
+              <FrameTools />
+            </div>
+          </>
         ) : (
-          <h1 className="text-2xl leading-tight md:text-3xl">{copy.themes[section]}</h1>
+          <>
+            <h1 className="min-w-0 text-2xl leading-tight md:text-3xl">{copy.themes[section]}</h1>
+            <div className="flex h-[1.25em] shrink-0 items-center text-2xl md:text-3xl">
+              <FrameTools />
+            </div>
+          </>
         )}
       </div>
 
@@ -101,7 +114,7 @@ export function Atlas({ section }: { section: Theme | "all" }) {
           <div className="grid grid-cols-1 self-start md:grid-cols-3">
             <Link
               {...readLink(lang, latest.id)}
-              className={`${leadSpan} flex min-w-0 flex-col gap-3 border-b border-rule px-5 py-7 md:border-r md:px-8 md:py-8 md:rtl:border-r-0 md:rtl:border-l`}
+              className={`${leadSpan} flex min-w-0 flex-col gap-3 border-b border-line px-5 py-7 md:border-r md:px-8 md:py-8 md:rtl:border-r-0 md:rtl:border-l`}
             >
               {latest.image ? (
                 <Picture
@@ -225,12 +238,12 @@ function Card({
   return (
     <Link
       {...readLink(lang, story.id)}
-      className={`${span} flex min-w-0 flex-col gap-2 border-b border-line px-5 md:px-8 ${second ? "gap-3 py-6 md:py-7" : "py-5"}`}
+      className={`${span} flex min-w-0 flex-col gap-2 border-b border-line px-5 md:px-8 ${second ? "gap-3 py-6 md:py-8" : "py-5 md:py-8"}`}
     >
       {story.image ? <Picture story={story} /> : null}
       <h2
         className={
-          second ? "text-2xl leading-tight lg:text-3xl" : "text-lg leading-snug lg:text-xl"
+          second ? "text-2xl leading-tight lg:text-xl xl:text-3xl" : "text-lg leading-snug lg:text-xl"
         }
       >
         {title}
@@ -246,7 +259,9 @@ function Card({
           {excerpt}
         </p>
       ) : null}
-      <Meta story={story} lang={lang} section={section} />
+      <div className="md:mt-auto">
+        <Meta story={story} lang={lang} section={section} />
+      </div>
     </Link>
   );
 }

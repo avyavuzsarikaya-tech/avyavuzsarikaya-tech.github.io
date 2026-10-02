@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { aboutCopy } from "@/lib/about-copy";
-import { Shell } from "@/components/shell";
+import { FrameTools, Shell } from "@/components/shell";
 import { useCopy } from "@/lib/i18n";
 import { homeLink } from "@/lib/lang-path";
 import { paragraphs } from "@/lib/text";
@@ -20,6 +20,7 @@ export function AboutPage() {
             <Link {...homeLink(lang)} className="inline-flex min-h-11 items-center text-pine">
               {copy.back}
             </Link>
+            <FrameTools />
           </div>
           <h1 className="text-4xl md:text-5xl">{about.title}</h1>
           <div className="flex flex-col gap-6">

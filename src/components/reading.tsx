@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { ReadingPlayer } from "@/components/player";
 import { Prose } from "@/components/prose";
 import { ReadTime } from "@/components/read-time";
-import { Shell } from "@/components/shell";
+import { FrameTools, Shell } from "@/components/shell";
 import { langMeta, useCopy } from "@/lib/i18n";
 import { homeLink, readLink, rememberLang } from "@/lib/lang-path";
 import { formatDate, hasCopy, readingMinutes, safeHttpUrl } from "@/lib/text";
@@ -134,6 +134,7 @@ function Reading({ story }: { story: Story | null }) {
           <Link {...homeLink(lang)} className="inline-flex min-h-11 items-center text-pine">
             {copy.back}
           </Link>
+          <FrameTools />
         </div>
 
         <header className="flex flex-col gap-4">
