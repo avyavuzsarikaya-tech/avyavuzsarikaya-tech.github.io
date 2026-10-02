@@ -1,0 +1,1 @@
+import{t as e}from"./about-BI7EL_lJ.js";var t=e;export{t as component};

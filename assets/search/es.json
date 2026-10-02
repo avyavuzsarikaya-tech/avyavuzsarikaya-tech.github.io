@@ -1,0 +1,137 @@
+[
+  {
+    "id": "carbon-books",
+    "theme": "climate",
+    "date": "2026-03-12",
+    "title": "Los libros del carbono, conciliados",
+    "dek": "Los inventarios nacionales y las mediciones por satélite se leen uno contra el otro: no como un titular, sino como un problema de contabilidad.",
+    "region": "Global",
+    "body": "Cada país que informa bajo la convención del clima lleva un inventario de gases de efecto invernadero: un libro de lo que se quema, se cultiva, se almacena y se libera. Esos libros son el registro oficial. También son lentos, y dependen de métodos que cambian de una capital a otra. Un segundo juego de libros llega ahora desde la órbita. Los instrumentos miden penachos de metano y cambios en el dióxido de carbono atmosférico; después, los científicos preguntan hacia atrás qué regiones pudieron producirlos. Los dos registros rara vez coinciden en la primera lectura. El trabajo de los últimos años ha sido preguntar por qué —un vertedero ausente, un factor de emisión revisado, un campo de viento— en lugar de declarar un ganador. Las evaluaciones de síntesis siguen marcando el marco. El calentamiento es inequívocamente humano, y el presupuesto de carbono restante es una cantidad con un rango, no un lema. Lo que cambian los libros puestos en paralelo es la resolución: qué cuencas, qué sectores, qué años merecen una auditoría más fina."
+  },
+  {
+    "id": "languages-of-record",
+    "theme": "culture",
+    "date": "2026-02-08",
+    "title": "Qué lenguas guardan el registro",
+    "dek": "Una cifra pública puede ser cuidadosa y, aun así, detenerse en la frontera de la lengua en que se publicó.",
+    "region": "Global",
+    "body": "La mayoría de la gente sigue encontrándose con el Estado en una lengua. Una guía escolar, una nota censal, una instrucción de salud son fuentes. Si solo existen en una lengua que una ciudad no habla en casa, el registro es formalmente público y en la práctica está cerrado. El recuento de la UNESCO sobre las lenguas en la educación mide una parte de esa brecha: una porción amplia de quienes aprenden no estudia en una lengua que entiende bien. Los sistemas estadísticos tienen su propia forma del mismo problema. Las notas de los indicadores, los glosarios y los métodos suelen publicarse una sola vez, en la lengua de trabajo de la oficina que los produjo. Otra oficina puede citar la cifra sin poder revisar la definición. La base de los Objetivos de Desarrollo Sostenible es uno de los pocos libros mundiales que intenta mantener la lista de indicadores en más de una lengua de las Naciones Unidas; incluso ahí, la profundidad de la traducción es desigual. La comparación que importa es simple. Tomar una afirmación. Contar las lenguas en las que un lector puede abrir la nota de origen, no una paráfrasis. Ese número es el ancho real de la fuente."
+  },
+  {
+    "id": "after-ten-million",
+    "theme": "politics",
+    "date": "2026-01-20",
+    "title": "Después de diez millones",
+    "dek": "Una megaciudad era una excepción. El registro público ya tiene bastantes para comparar la planificación, no el perfil de las torres.",
+    "region": "Lagos · Daca · São Paulo",
+    "body": "Las Naciones Unidas cuentan una megaciudad a partir de diez millones de habitantes. Ese umbral marcaba una rareza. Hoy marca una clase lo bastante amplia para comparar: cómo se planifican el agua, el ferrocarril y la vivienda cuando una ciudad deja de ser una excepción en las tablas. Las tablas de población no dicen cómo se aloja a esos residentes. Las encuestas de hogares y las cuentas nacionales siguen discrepando sobre los asentamientos informales, y la discrepancia es el asunto, no una nota. Una ciudad puede crecer en el registro mientras el número de viviendas con servicios apenas se mueve. La comparación útil no es un ranking de torres. Es si el registro público —censo, conexiones, permisos de obra— puede leerse en la misma década que las personas a las que describe."
+  },
+  {
+    "id": "grain-moves",
+    "theme": "economy",
+    "date": "2025-11-04",
+    "title": "Cómo se mueve de verdad el grano",
+    "dek": "El trigo, el maíz y el arroz cruzan una frontera como balance antes de cruzarla como barco.",
+    "region": "Mar Negro · Mekong · Paraná",
+    "body": "El trigo, el maíz y el arroz no viajan como titulares. Viajan como contratos, calados de puerto y ventanas de temporada. Los organismos públicos que siguen esos flujos publican balances: producción, comercio y existencias al cierre del año, país por país. Un balance no es un pronóstico de precio, y este atlas no ofrece uno. Es una forma de ver la concentración. Un grupo pequeño de exportadores sigue aportando una parte grande del trigo que cruza una frontera. Cuando un corredor se frena, la hoja muestra quién más tiene grano para vender — y quién importa lo bastante para que un retraso se vuelva una pregunta interna. Leer bien la hoja es notar lo que deja fuera. Grano perdido antes de la puerta de la finca, carga rechazada por calidad, sacos que nunca ven a un aduanero: nada de eso entra en la línea, y el hueco es parte del registro."
+  },
+  {
+    "id": "register-of-trials",
+    "theme": "research",
+    "date": "2025-08-19",
+    "title": "El registro de los ensayos",
+    "dek": "Un estudio que no entra en un registro público es más difícil de encontrar y más difícil de contar.",
+    "region": "Global",
+    "body": "Un ensayo clínico es un plan antes de ser un resultado. El plan — quién entra, qué se compara, qué desenlace cuenta — puede depositarse en un registro público antes de que se vea al primer participante. La Organización Mundial de la Salud mantiene un portal que busca en los registros que cumplen su norma, no en una sola lista nacional. El mayor de esos registros lo lleva la Biblioteca Nacional de Medicina de Estados Unidos. Es un libro, no el estante entero. Un ensayo anotado allí puede estar anotado también en otro registro, y un ensayo que no está en ninguno falta tanto al recuento como a la lectura posterior de lo que se preguntó. Las revistas que siguen las recomendaciones de los editores médicos tratan el registro como parte del expediente, no como una cortesía. El punto, para este atlas, es estrecho. Un resultado que no se puede recorrer de vuelta hasta una pregunta registrada es una fuente más delgada que uno que sí se puede."
+  },
+  {
+    "id": "sample-migration-vote",
+    "theme": "politics",
+    "date": "2025-07-10",
+    "title": "¿La migración empuja a los votantes hacia la derecha?",
+    "dek": "Una lectura de prueba.",
+    "region": "Prueba",
+    "body": "Esta es una lectura de prueba. Está aquí para probar el diseño de la página; el texto no se basa en ninguna investigación. La lectura real con este título se publicará más adelante, con sus fuentes."
+  },
+  {
+    "id": "sample-quake-economy",
+    "theme": "economy",
+    "date": "2025-06-18",
+    "title": "¿Cuántos años le cuesta un terremoto a una economía?",
+    "dek": "Una lectura de prueba.",
+    "region": "Prueba",
+    "body": "Esta es una lectura de prueba. Está aquí para probar el diseño de la página; el texto no se basa en ninguna investigación. La lectura real con este título se publicará más adelante, con sus fuentes."
+  },
+  {
+    "id": "sample-bread-diabetes",
+    "theme": "health",
+    "date": "2025-05-22",
+    "title": "El pan en la mesa, y la diabetes",
+    "dek": "Una lectura de prueba.",
+    "region": "Prueba",
+    "body": "Esta es una lectura de prueba. Está aquí para probar el diseño de la página; el texto no se basa en ninguna investigación. La lectura real con este título se publicará más adelante, con sus fuentes."
+  },
+  {
+    "id": "sample-consumption",
+    "theme": "research",
+    "date": "2025-04-30",
+    "title": "¿Consumir más es vivir mejor?",
+    "dek": "Una lectura de prueba.",
+    "region": "Prueba",
+    "body": "Esta es una lectura de prueba. Está aquí para probar el diseño de la página; el texto no se basa en ninguna investigación. La lectura real con este título se publicará más adelante, con sus fuentes."
+  },
+  {
+    "id": "sample-sea-level",
+    "theme": "science",
+    "date": "2025-04-02",
+    "title": "¿Cómo se mide el nivel del mar?",
+    "dek": "Una lectura de prueba.",
+    "region": "Prueba",
+    "body": "Esta es una lectura de prueba. Está aquí para probar el diseño de la página; el texto no se basa en ninguna investigación. La lectura real con este título se publicará más adelante, con sus fuentes."
+  },
+  {
+    "id": "sample-data-water",
+    "theme": "technology",
+    "date": "2025-03-12",
+    "title": "¿Cuánta agua consumen los centros de datos?",
+    "dek": "Una lectura de prueba.",
+    "region": "Prueba",
+    "body": "Esta es una lectura de prueba. Está aquí para probar el diseño de la página; el texto no se basa en ninguna investigación. La lectura real con este título se publicará más adelante, con sus fuentes."
+  },
+  {
+    "id": "sample-rivers",
+    "theme": "environment",
+    "date": "2025-02-19",
+    "title": "¿Por qué se secan los ríos?",
+    "dek": "Una lectura de prueba.",
+    "region": "Prueba",
+    "body": "Esta es una lectura de prueba. Está aquí para probar el diseño de la página; el texto no se basa en ninguna investigación. La lectura real con este título se publicará más adelante, con sus fuentes."
+  },
+  {
+    "id": "sample-cuisine",
+    "theme": "culture",
+    "date": "2025-01-28",
+    "title": "¿Cómo construye una cocina la identidad de una nación?",
+    "dek": "Una lectura de prueba.",
+    "region": "Prueba",
+    "body": "Esta es una lectura de prueba. Está aquí para probar el diseño de la página; el texto no se basa en ninguna investigación. La lectura real con este título se publicará más adelante, con sus fuentes."
+  },
+  {
+    "id": "sample-city-light",
+    "theme": "health",
+    "date": "2024-12-17",
+    "title": "¿Cómo afectan las luces de la ciudad al sueño?",
+    "dek": "Una lectura de prueba.",
+    "region": "Prueba",
+    "body": "Esta es una lectura de prueba. Está aquí para probar el diseño de la página; el texto no se basa en ninguna investigación. La lectura real con este título se publicará más adelante, con sus fuentes."
+  },
+  {
+    "id": "sample-turnout",
+    "theme": "politics",
+    "date": "2024-11-26",
+    "title": "¿Por qué cae la participación electoral?",
+    "dek": "Una lectura de prueba.",
+    "region": "Prueba",
+    "body": "Esta es una lectura de prueba. Está aquí para probar el diseño de la página; el texto no se basa en ninguna investigación. La lectura real con este título se publicará más adelante, con sus fuentes."
+  }
+]

@@ -1,0 +1,137 @@
+[
+  {
+    "id": "carbon-books",
+    "theme": "climate",
+    "date": "2026-03-12",
+    "title": "The carbon books, reconciled",
+    "dek": "National inventories and satellite measurements are being read against each other – not as a headline, but as an accounting problem.",
+    "region": "Global",
+    "body": "Every country that reports under the climate convention keeps a greenhouse-gas inventory: a ledger of what is burned, grown, stored, and released. Those ledgers are the official record. They are also slow, and they depend on methods that differ from one capital to the next. A second set of books now comes from orbit. Instruments measure methane plumes and changes in atmospheric carbon dioxide, then scientists work backward toward the regions that could have produced them. The two records rarely match on the first reading. The work of recent years has been to ask why – a missing landfill, a revised emission factor, a wind field – rather than to declare a winner. Synthesis assessments still set the frame. Warming is unequivocally human-driven, and the remaining carbon budget is a quantity with a range, not a slogan. What the paired books change is the resolution: which basins, which sectors, which years deserve a closer audit."
+  },
+  {
+    "id": "languages-of-record",
+    "theme": "culture",
+    "date": "2026-02-08",
+    "title": "Which languages keep the record",
+    "dek": "A public figure can be careful and still stop at the border of the language it was released in.",
+    "region": "Global",
+    "body": "Most people still meet the state in a language. School guidance, a census note, a health instruction: each is a source. When they exist only in a language a city does not speak at home, the record is formally public and practically closed. UNESCO’s account of languages in education puts a measure on one part of that gap: a large share of learners are not taught in a language they understand well. Statistical systems have their own version of the same problem. Indicator notes, glossaries, and methods are often published once, in the working language of the office that produced them. Another office can cite the figure without being able to check the definition. The Sustainable Development Goals database is one of the few global ledgers that tries to keep the indicator list in more than one UN language – and even there, the depth of translation is uneven. The comparison worth making is simple. Take one claim. Count the languages in which a reader can open the underlying note, not a paraphrase. That count is the real width of the source."
+  },
+  {
+    "id": "after-ten-million",
+    "theme": "politics",
+    "date": "2026-01-20",
+    "title": "After ten million",
+    "dek": "A megacity used to be an exception. The public record now has enough of them to compare the planning, not the skyline.",
+    "region": "Lagos · Dhaka · São Paulo",
+    "body": "The United Nations counts a megacity at ten million inhabitants. The line used to mark a rarity. It now marks a class large enough to compare: how water, rail, and housing are planned when a city is no longer an exception in the tables. Population tables do not say how those residents are housed. Household surveys and national accounts still disagree on informal settlements, and the disagreement is the substance, not a footnote. A city can be officially growing while the count of serviced homes barely moves. The useful comparison is not a ranking of towers. It is whether the public record – census, utility connections, building permits – can be read in the same decade as the people it describes."
+  },
+  {
+    "id": "grain-moves",
+    "theme": "economy",
+    "date": "2025-11-04",
+    "title": "How grain actually moves",
+    "dek": "Wheat, maize, and rice cross borders as balance sheets before they cross them as ships.",
+    "region": "Black Sea · Mekong · Paraná",
+    "body": "Wheat, maize, and rice do not travel as headlines. They travel as contracts, port drafts, and seasonal windows. The public agencies that watch those flows publish balance sheets: production, trade, and stocks left at the end of the year, country by country. A balance sheet is not a forecast of price, and this atlas does not offer one. It is a way to see concentration. A small group of exporters still supplies a large share of the wheat that crosses a border. When one corridor slows, the sheet shows who else has grain to sell – and who imports enough that a delay becomes a domestic question. Reading the sheet well means noticing what it leaves out. Grain lost before the farm gate, cargo refused for quality, sacks that never meet a customs officer: none of these enter the line, and the gap is part of the record."
+  },
+  {
+    "id": "register-of-trials",
+    "theme": "research",
+    "date": "2025-08-19",
+    "title": "The register of trials",
+    "dek": "A study that never enters a public register is harder to find, and harder to count.",
+    "region": "Global",
+    "body": "A clinical trial is a plan before it is a result. The plan – who is enrolled, what is compared, which outcome counts – can be filed in a public register before the first participant is seen. The World Health Organization keeps a portal that searches the registries meeting its standard, rather than a single national list. The largest of those registries is run by the United States National Library of Medicine. It is one book, not the whole shelf. A trial recorded there may also be recorded in another registry, and a trial recorded nowhere is missing from both the count and the later reading of what was asked. Journals that follow the medical editors’ recommendations treat registration as part of the record, not as a courtesy. The point for this atlas is narrow. A result that cannot be walked back to a registered question is a thinner source than one that can."
+  },
+  {
+    "id": "sample-migration-vote",
+    "theme": "politics",
+    "date": "2025-07-10",
+    "title": "Does migration move voters to the right?",
+    "dek": "A sample reading.",
+    "region": "Sample",
+    "body": "This is a sample reading. It is here to test the page layout; the text does not rest on any research. The real reading under this title will be published later, with its sources."
+  },
+  {
+    "id": "sample-quake-economy",
+    "theme": "economy",
+    "date": "2025-06-18",
+    "title": "How many years does an earthquake cost an economy?",
+    "dek": "A sample reading.",
+    "region": "Sample",
+    "body": "This is a sample reading. It is here to test the page layout; the text does not rest on any research. The real reading under this title will be published later, with its sources."
+  },
+  {
+    "id": "sample-bread-diabetes",
+    "theme": "health",
+    "date": "2025-05-22",
+    "title": "Bread on the table, and diabetes",
+    "dek": "A sample reading.",
+    "region": "Sample",
+    "body": "This is a sample reading. It is here to test the page layout; the text does not rest on any research. The real reading under this title will be published later, with its sources."
+  },
+  {
+    "id": "sample-consumption",
+    "theme": "research",
+    "date": "2025-04-30",
+    "title": "Does consuming more mean living better?",
+    "dek": "A sample reading.",
+    "region": "Sample",
+    "body": "This is a sample reading. It is here to test the page layout; the text does not rest on any research. The real reading under this title will be published later, with its sources."
+  },
+  {
+    "id": "sample-sea-level",
+    "theme": "science",
+    "date": "2025-04-02",
+    "title": "How is sea level measured?",
+    "dek": "A sample reading.",
+    "region": "Sample",
+    "body": "This is a sample reading. It is here to test the page layout; the text does not rest on any research. The real reading under this title will be published later, with its sources."
+  },
+  {
+    "id": "sample-data-water",
+    "theme": "technology",
+    "date": "2025-03-12",
+    "title": "How much water do data centres use?",
+    "dek": "A sample reading.",
+    "region": "Sample",
+    "body": "This is a sample reading. It is here to test the page layout; the text does not rest on any research. The real reading under this title will be published later, with its sources."
+  },
+  {
+    "id": "sample-rivers",
+    "theme": "environment",
+    "date": "2025-02-19",
+    "title": "Why are rivers running dry?",
+    "dek": "A sample reading.",
+    "region": "Sample",
+    "body": "This is a sample reading. It is here to test the page layout; the text does not rest on any research. The real reading under this title will be published later, with its sources."
+  },
+  {
+    "id": "sample-cuisine",
+    "theme": "culture",
+    "date": "2025-01-28",
+    "title": "How does a cuisine build a nation’s identity?",
+    "dek": "A sample reading.",
+    "region": "Sample",
+    "body": "This is a sample reading. It is here to test the page layout; the text does not rest on any research. The real reading under this title will be published later, with its sources."
+  },
+  {
+    "id": "sample-city-light",
+    "theme": "health",
+    "date": "2024-12-17",
+    "title": "How do city lights affect sleep?",
+    "dek": "A sample reading.",
+    "region": "Sample",
+    "body": "This is a sample reading. It is here to test the page layout; the text does not rest on any research. The real reading under this title will be published later, with its sources."
+  },
+  {
+    "id": "sample-turnout",
+    "theme": "politics",
+    "date": "2024-11-26",
+    "title": "Why is election turnout falling?",
+    "dek": "A sample reading.",
+    "region": "Sample",
+    "body": "This is a sample reading. It is here to test the page layout; the text does not rest on any research. The real reading under this title will be published later, with its sources."
+  }
+]
