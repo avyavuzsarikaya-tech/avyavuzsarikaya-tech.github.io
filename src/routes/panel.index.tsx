@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ConnectBox } from "@/components/connect";
+import { editorialCopy } from "@/lib/editorial";
 import { langMeta, useCopy } from "@/lib/i18n";
 import { useLibrary } from "@/lib/library";
 import { storyTitle } from "@/lib/text";
@@ -49,6 +50,9 @@ function PanelHome() {
                 <div className="md:col-span-8">
                   <p className="text-xs uppercase tracking-widest text-pine">
                     {copy.themes[story.theme]}
+                    {story.status === "draft" ? (
+                      <span className="text-muted"> · {editorialCopy(lang).draftMark}</span>
+                    ) : null}
                   </p>
                   <h2 className="mt-2 text-2xl">{storyTitle(story, lang) || copy.unwritten}</h2>
                 </div>

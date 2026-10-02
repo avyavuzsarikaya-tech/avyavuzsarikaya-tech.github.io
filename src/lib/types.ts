@@ -39,12 +39,16 @@ export type StoryImage = {
   src: string;
   /** Short description. Gray caption under the picture, and the image alt text. */
   credit: string;
-  /** Optional line per language, kept for the editing panel. The reading page uses `credit`. */
+  /** Localized description for both the caption and alternative text. */
   captions?: Partial<Record<Lang, string>>;
 };
 
 export type Story = {
   id: string;
+  /** Missing status preserves publication of existing files. */
+  status?: "draft" | "published";
+  author?: string;
+  updatedAt?: string;
   theme: Theme;
   date: string;
   sources: Source[];
@@ -111,6 +115,8 @@ export type LocaleCard = {
 /** A reading as listed on the front page; the full text is loaded when it is opened. */
 export type StoryCard = {
   id: string;
+  author?: string;
+  updatedAt?: string;
   /** File name in content/stories. */
   file: string;
   theme: Theme;

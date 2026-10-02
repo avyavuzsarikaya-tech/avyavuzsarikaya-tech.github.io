@@ -4,6 +4,7 @@ import { ReadingPlayer } from "@/components/player";
 import { Prose } from "@/components/prose";
 import { ReadTime } from "@/components/read-time";
 import { FrameTools, Shell } from "@/components/shell";
+import { byline, editorialCopy, imageCaption } from "@/lib/editorial";
 import { langMeta, useCopy } from "@/lib/i18n";
 import { homeLink, readLink, rememberLang } from "@/lib/lang-path";
 import { formatDate, hasCopy, readingMinutes, safeHttpUrl } from "@/lib/text";
@@ -121,6 +122,9 @@ function Reading({ story }: { story: Story | null }) {
   }
 
   const locale = story.locales[lang];
+  const editorial = editorialCopy(lang);
+  const by = byline(story.author, lang);
+  const caption = imageCaption(story.image, lang);
   const minutes = readingMinutes(locale.body);
   const written = hasCopy(story, lang);
   const sourceNums = new Set(story.sources.map((source) => source.n));
@@ -149,7 +153,7 @@ function Reading({ story }: { story: Story | null }) {
             <figure className="mt-2 flex max-w-full flex-col gap-2">
               <img
                 src={story.image.src}
-                alt={story.image.credit}
+                alt={caption}
                 width={1500}
                 height={1000}
                 loading="lazy"
@@ -157,7 +161,7 @@ function Reading({ story }: { story: Story | null }) {
                 className="block h-auto w-full max-w-full"
               />
               <figcaption className="text-xs leading-snug text-muted">
-                {story.image.credit ? `${story.image.credit} · ${AI_NOTE[lang]}` : AI_NOTE[lang]}
+                {caption ? `${caption} · ${AI_NOTE[lang]}` : AI_NOTE[lang]}
               </figcaption>
             </figure>
           ) : null}
@@ -166,9 +170,15 @@ function Reading({ story }: { story: Story | null }) {
               {/* Place and date on the first line; the reading time under them, set as on
                   the cards, so it no longer pulls the spaced capitals into the date line. */}
               <div className="flex flex-col items-start gap-1">
+                {by ? <p className="text-sm text-muted">{by}</p> : null}
                 <p className="text-sm text-muted">
                   {[locale.region, formatDate(story.date, lang)].filter(Boolean).join(" · ")}
                 </p>
+                {story.updatedAt && story.updatedAt !== story.date ? (
+                  <p className="text-sm text-muted">
+                    {editorial.updated}: {formatDate(story.updatedAt, lang)}
+                  </p>
+                ) : null}
                 {minutes ? <ReadTime minutes={minutes} lang={lang} pattern={copy.minRead} /> : null}
               </div>
               <TypeSize

@@ -36,8 +36,10 @@ export function readStoryIndex(dir) {
   return readdirSync(dir)
     .filter((name) => name.endsWith(".json"))
     .sort()
-    .map((file) => {
+    .flatMap((file) => {
       const story = JSON.parse(readFileSync(join(dir, file), "utf8"));
+      // Drafts remain available to the editor but never enter public pages or the sitemap.
+      if (story.status === "draft") return [];
       const locales = {};
       for (const lang of LANGS) {
         const copy = story.locales?.[lang] ?? {};
@@ -51,14 +53,18 @@ export function readStoryIndex(dir) {
           written: body.trim().length > 0,
         };
       }
-      return {
-        id: story.id || file.slice(0, -5),
-        file,
-        theme: story.theme,
-        date: story.date,
-        ...(story.image ? { image: story.image } : {}),
-        locales,
-      };
+      return [
+        {
+          id: story.id || file.slice(0, -5),
+          file,
+          theme: story.theme,
+          date: story.date,
+          ...(story.author ? { author: story.author } : {}),
+          ...(story.updatedAt ? { updatedAt: story.updatedAt } : {}),
+          ...(story.image ? { image: story.image } : {}),
+          locales,
+        },
+      ];
     });
 }
 

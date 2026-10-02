@@ -186,6 +186,15 @@ export function storyHead(card: StoryCard | undefined, lang: Lang) {
                 headline: title,
                 description,
                 datePublished: card.date,
+                ...(card.updatedAt ? { dateModified: card.updatedAt } : {}),
+                ...(card.author?.trim()
+                  ? {
+                      author: {
+                        "@type": "Person",
+                        name: card.author.trim(),
+                      },
+                    }
+                  : {}),
                 inLanguage: lang,
                 image: [absoluteUrl(image)],
                 mainEntityOfPage: absoluteUrl(url),

@@ -16,6 +16,7 @@ import {
 } from "@/lib/publish";
 import { usePublishCopy } from "@/lib/publish-copy";
 import { fromFile } from "@/lib/seed";
+import { editorialCopy } from "@/lib/editorial";
 import { safeHttpUrl } from "@/lib/text";
 import { blankStory, isTheme, LANGS, THEMES, type Lang, type Story } from "@/lib/types";
 
@@ -37,6 +38,7 @@ function Editor({ storyId }: { storyId: string }) {
   const remove = useLibrary((s) => s.remove);
   const copy = useCopy(lang);
   const pub = usePublishCopy(lang);
+  const editorial = editorialCopy(lang);
   const [token] = useToken();
   const [busy, setBusy] = useState(false);
   const [imageError, setImageError] = useState("");
@@ -464,6 +466,42 @@ function Editor({ storyId }: { storyId: string }) {
               value={draft.date}
               onChange={(event) => setDraft({ ...draft, date: event.target.value })}
             />
+          </label>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <label className="flex flex-col gap-2 text-sm">
+            {editorial.author}
+            <input
+              className={fieldClass()}
+              value={draft.author ?? ""}
+              onChange={(event) => setDraft({ ...draft, author: event.target.value })}
+            />
+          </label>
+          <label className="flex flex-col gap-2 text-sm">
+            {editorial.updated}
+            <input
+              type="date"
+              className={fieldClass()}
+              value={draft.updatedAt ?? ""}
+              onChange={(event) =>
+                setDraft({ ...draft, updatedAt: event.target.value || undefined })
+              }
+            />
+          </label>
+          <label className="flex flex-col gap-2 text-sm">
+            {editorial.status}
+            <select
+              className={fieldClass()}
+              value={draft.status ?? "published"}
+              onChange={(event) => {
+                const status = event.target.value;
+                if (status === "draft" || status === "published") setDraft({ ...draft, status });
+              }}
+            >
+              <option value="draft">{editorial.draft}</option>
+              <option value="published">{editorial.published}</option>
+            </select>
           </label>
         </div>
 

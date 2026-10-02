@@ -200,7 +200,7 @@ const copy: Record<Lang, Copy> = {
     edit: "Panelde düzenle",
     missing: "Bu yazı bulunamadı.",
     loading: "Yükleniyor",
-    colophon: "Orbis kaynaklı okumalar tutar. Belge zinciri her metnin dibindedir.",
+    colophon: "Orbis, kaynaklara dayanan okuma metinleri sunar. Her yazının kaynakları metnin sonunda yer alır.",
     themes: {
       climate: "İklim",
       environment: "Çevre",

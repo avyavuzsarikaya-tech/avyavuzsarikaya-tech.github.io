@@ -98,6 +98,11 @@ export async function publishStory(
   const previous = parseStoryFile(base) ?? before;
   const changes: Change[] = [];
   const file = structuredClone(draft);
+  // Only a draft carries a status: a file without one is published, as every older file is.
+  if (file.status !== "draft") delete file.status;
+  if (file.author?.trim()) file.author = file.author.trim();
+  else delete file.author;
+  if (!file.updatedAt?.trim()) delete file.updatedAt;
   const when = stamp();
 
   for (const lang of LANGS) {

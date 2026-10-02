@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ReadTime } from "@/components/read-time";
 import { FrameTools, Shell } from "@/components/shell";
 import { useFrameCopy } from "@/lib/frame-copy";
+import { editorialCopy, imageCaption } from "@/lib/editorial";
 import { useCopy } from "@/lib/i18n";
 import { readLink } from "@/lib/lang-path";
 import { CARDS } from "@/lib/seed";
@@ -41,7 +42,8 @@ function Meta({ story, lang, section }: { story: Story; lang: Lang; section: The
 
 export function Atlas({ section }: { section: Theme | "all" }) {
   const lang = useLang();
-  const stories = CARDS;
+  // A reading not yet written in this language stays off this language's pages.
+  const stories = CARDS.filter((story) => story.locales[lang].written);
   const copy = useCopy(lang);
   const frame = useFrameCopy(lang);
 
@@ -59,8 +61,13 @@ export function Atlas({ section }: { section: Theme | "all" }) {
     : cards.length === 1
       ? "md:col-span-2"
       : "md:col-span-2 md:row-span-2";
-  // The index lists only stories the grid does not already show.
-  const rest = section === "all" ? all.slice(9) : all;
+  // The index lists only stories the grid does not already show. On a section page that is
+  // this section's overflow first, then the readings of the other sections.
+  const own = section === "all" ? [] : sorted.slice(9);
+  const others = section === "all" ? [] : all.filter((story) => story.theme !== section);
+  const rest = section === "all" ? all.slice(9) : [...own, ...others];
+  const restTitle =
+    section === "all" || own.length > 0 ? frame.index : editorialCopy(lang).otherReadings;
   // A row with fewer than three cards stretches so it never leaves a hole.
   const cardSpan = (n: number) => {
     if (n < 2) return "";
@@ -183,7 +190,7 @@ export function Atlas({ section }: { section: Theme | "all" }) {
                   className="kicker text-xs font-normal uppercase tracking-widest text-muted"
                   style={{ fontFamily: "inherit" }}
                 >
-                  {frame.index}
+                  {restTitle}
                 </h2>
                 <ol className="mt-3 flex flex-col">
                   {rest.map((story, n) => (
@@ -244,7 +251,9 @@ function Card({
       {story.image ? <Picture story={story} /> : null}
       <h2
         className={
-          second ? "text-2xl leading-tight lg:text-xl xl:text-3xl" : "text-lg leading-snug lg:text-xl"
+          second
+            ? "text-2xl leading-tight lg:text-xl xl:text-3xl"
+            : "text-lg leading-snug lg:text-xl"
         }
       >
         {title}
@@ -283,11 +292,12 @@ function Picture({
   eager?: boolean;
   fill?: boolean;
 }) {
+  const lang = useLang();
   if (!story.image) return null;
   const img = (
     <img
       src={story.image.src}
-      alt={story.image.credit}
+      alt={imageCaption(story.image, lang)}
       width={1500}
       height={1000}
       loading={eager ? "eager" : "lazy"}
