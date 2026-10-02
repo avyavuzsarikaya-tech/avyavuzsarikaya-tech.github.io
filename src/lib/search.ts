@@ -1,147 +1,194 @@
-import type { Lang } from "@/lib/types";
+import type { Lang, StoryCard } from "@/lib/types";
+// Relative import with the extension, so the tests can load this file directly with node.
+import { copyFor } from "./i18n.ts";
 
 /**
- * Search over the static per-language index (scripts/search-index.mjs writes it).
- * Query and fields pass through the same per-language normalization, so İ/ı, ç/c,
- * é/e and أ/ا meet on common ground. Every query word must appear somewhere in the
- * entry; matching a word's beginning is enough ("clim" finds "climate").
+ * Search over the reading cards already on the page (virtual:orbis-index): title,
+ * summary, region, section name and first paragraph, in the language of the page.
+ * Nothing is sent anywhere; the site stays a set of static files.
+ *
+ * Every query word must begin a word somewhere in the reading ("clim" finds "climate",
+ * "war" does not find "software"). In Arabic a word also counts without the article
+ * and the particles joined to it, so "اقتصاد" finds "الاقتصاد" and "للاقتصاد".
  */
 
-export type SearchEntry = {
-  id: string;
-  theme: string;
-  date: string;
+export type SearchCopy = {
   title: string;
-  dek: string;
-  region: string;
-  body: string;
+  label: string;
+  placeholder: string;
+  submit: string;
+  /** Number of results; {n} is replaced. */
+  count: (n: number) => string;
+  empty: string;
+  description: string;
 };
 
-export type SearchHit = SearchEntry & { score: number };
+const COPY: Record<Lang, SearchCopy> = {
+  tr: {
+    title: "Arama",
+    label: "Okumalarda ara",
+    placeholder: "Okumalarda ara",
+    submit: "Ara",
+    count: (n) => `${n} sonuç`,
+    empty: "Aramanızla eşleşen okuma bulunamadı.",
+    description: "Orbis okumalarında arama.",
+  },
+  ar: {
+    title: "البحث",
+    label: "ابحث في القراءات",
+    placeholder: "ابحث في القراءات",
+    submit: "بحث",
+    count: (n) =>
+      n === 1 ? "نتيجة واحدة" : n === 2 ? "نتيجتان" : n <= 10 ? `${n} نتائج` : `${n} نتيجة`,
+    empty: "لا توجد قراءات مطابقة لبحثك.",
+    description: "البحث في قراءات أوربيس.",
+  },
+  en: {
+    title: "Search",
+    label: "Search the readings",
+    placeholder: "Search the readings",
+    submit: "Search",
+    count: (n) => (n === 1 ? "1 result" : `${n} results`),
+    empty: "No readings match your search.",
+    description: "Search the readings on Orbis.",
+  },
+  fr: {
+    title: "Recherche",
+    label: "Chercher dans les lectures",
+    placeholder: "Chercher dans les lectures",
+    submit: "Chercher",
+    count: (n) => (n <= 1 ? `${n} résultat` : `${n} résultats`),
+    empty: "Aucune lecture ne correspond à votre recherche.",
+    description: "Rechercher dans les lectures d’Orbis.",
+  },
+  es: {
+    title: "Búsqueda",
+    label: "Buscar en las lecturas",
+    placeholder: "Buscar en las lecturas",
+    submit: "Buscar",
+    count: (n) => (n === 1 ? "1 resultado" : `${n} resultados`),
+    empty: "Ninguna lectura coincide con su búsqueda.",
+    description: "Buscar en las lecturas de Orbis.",
+  },
+};
 
-const TITLE = 3;
-const DEK = 2;
-const BODY = 1; // body and region
-const LIMIT = 20;
+export function searchCopy(lang: Lang): SearchCopy {
+  return COPY[lang];
+}
 
 /**
  * Arabic marks that carry no letter: harakat, superscript alef, tatweel and Quranic
- * annotation signs. U+0660–U+066D (Arabic-Indic digits, ٪ and separators) sit between
- * the harakat and the superscript alef and must stay, so the range is split around them.
+ * annotation signs. Arabic-Indic digits and ٪ (U+0660–U+066D) sit between the harakat
+ * and the superscript alef and must stay, so the range is split around them.
  */
-const ARABIC_MARKS = /[ً-ٰٟـؐ-ؚۖ-ۭ]/g;
+// eslint-disable-next-line no-misleading-character-class -- a range of separate marks, nothing is combined
+const ARABIC_MARKS = /[\u064B-\u065F\u0670\u0640\u0610-\u061A\u06D6-\u06ED]/g;
 
-/** The definite article with the particles that attach before it, longest first. */
+/** The Arabic article with the particles joined before it, longest first. */
 const ARABIC_ARTICLE = /^(?:وال|فال|بال|كال|لل|ال)(?=..)/;
 
-/** Turkish letters a reader may type without: "cocuk" should find "çocuk". */
-const TURKISH_FOLD: Record<string, string> = {
-  ç: "c", ğ: "g", ı: "i", ö: "o", ş: "s", ü: "u", â: "a", î: "i", û: "u",
-};
-
-export function normalize(text: string, lang: Lang): string {
-  let out = text;
-  if (lang === "tr") {
-    // Turkish folds İ→i and I→ı first (a plain toLowerCase would give i̇ and i),
-    // then every Turkish letter meets its plain one.
-    out = out.toLocaleLowerCase("tr").replace(/[çğıöşüâîû]/g, (c) => TURKISH_FOLD[c]);
-  } else {
-    out = out.toLowerCase();
-  }
-  if (lang === "fr" || lang === "es") {
-    // é, ñ, ç… become their base letters: split the accents off, then drop them.
-    out = out
-      .normalize("NFD")
-      .replace(/[̀-ͯ]/g, "")
-      .replace(/œ/g, "oe")
-      .replace(/æ/g, "ae");
-  }
-  if (lang === "ar") {
-    out = out
-      .replace(ARABIC_MARKS, "")
-      .replace(/[أإآٱ]/g, "ا")
-      .replace(/ة/g, "ه")
-      .replace(/ى/g, "ي");
-  }
-  return out.replace(/\s+/g, " ").trim();
+/**
+ * Text folded for matching: case, accents and Arabic vowel marks do not count, and the
+ * Turkish dotless and dotted i match each other. "istanbul" finds "İstanbul", "isik"
+ * finds "ışık", "cocuk" finds "çocuk", "ecole" finds "école", "oeuvre" finds "œuvre",
+ * "كتاب" finds "كِتَاب"; digits, Arabic ones included, stay as they are.
+ */
+export function fold(text: string): string {
+  return text
+    .replace(/İ/g, "i")
+    .replace(/I/g, "i")
+    .toLowerCase()
+    .replace(/ı/g, "i")
+    .replace(/œ/g, "oe")
+    .replace(/æ/g, "ae")
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(ARABIC_MARKS, "")
+    .replace(/[أإآٱ]/g, "ا")
+    .replace(/ة/g, "ه")
+    .replace(/ى/g, "ي")
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .trim();
 }
 
-/** The words of a text, normalized, without the punctuation stuck to their edges. */
-function words(text: string, lang: Lang): string[] {
-  const normalized = normalize(text, lang);
-  if (!normalized) return [];
-  return normalized
+/** An Arabic word without its article: الاقتصاد → اقتصاد. Other words pass through. */
+function bare(word: string): string {
+  return word.replace(ARABIC_ARTICLE, "");
+}
+
+/** The words of a query, folded; an Arabic word with the article searches its bare form. */
+export function terms(query: string): string[] {
+  return fold(query).split(" ").filter(Boolean).map(bare);
+}
+
+/** The words of a field, folded; an Arabic word with the article is kept both ways. */
+function fieldWords(text: string): string[] {
+  return fold(text)
     .split(" ")
-    .map((word) => word.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, ""))
-    .filter(Boolean);
+    .filter(Boolean)
+    .flatMap((word) => {
+      const stripped = bare(word);
+      return stripped === word ? [word] : [word, stripped];
+    });
 }
 
-/** An Arabic word without its article: الاقتصاد → اقتصاد. Other languages pass through. */
-function bare(word: string, lang: Lang): string {
-  return lang === "ar" ? word.replace(ARABIC_ARTICLE, "") : word;
-}
+type Fields = [string[], number][];
 
 /**
- * Words of a field as the search compares them. In Arabic each word is kept as written
- * and, when it carries the article, once more without it, so "اقتصاد" finds "الاقتصاد".
+ * Each card is split into words once per language and kept, so a search on every
+ * keystroke does not fold every reading again.
  */
-function fieldWords(text: string, lang: Lang): string[] {
-  const list = words(text, lang);
-  if (lang !== "ar") return list;
-  return list.flatMap((word) => {
-    const stripped = bare(word, lang);
-    return stripped === word ? [word] : [word, stripped];
-  });
-}
+const prepared = new WeakMap<StoryCard, Partial<Record<Lang, Fields>>>();
 
-type Prepared = { entry: SearchEntry; title: string[]; dek: string[]; body: string[] };
-
-/**
- * Each index is split into words once per language and kept for later queries, so a
- * search on every keystroke does not re-read every reading. The cache lets go of an
- * index as soon as the page does.
- */
-const prepared = new WeakMap<SearchEntry[], Map<Lang, Prepared[]>>();
-
-function prepare(index: SearchEntry[], lang: Lang): Prepared[] {
-  let byLang = prepared.get(index);
+function fieldsOf(card: StoryCard, lang: Lang): Fields {
+  let byLang = prepared.get(card);
   if (!byLang) {
-    byLang = new Map();
-    prepared.set(index, byLang);
+    byLang = {};
+    prepared.set(card, byLang);
   }
-  let list = byLang.get(lang);
-  if (!list) {
-    list = index.map((entry) => ({
-      entry,
-      title: fieldWords(entry.title, lang),
-      dek: fieldWords(entry.dek, lang),
-      body: [...fieldWords(entry.region, lang), ...fieldWords(entry.body, lang)],
-    }));
-    byLang.set(lang, list);
+  let fields = byLang[lang];
+  if (!fields) {
+    const copy = card.locales[lang];
+    const themes = copyFor(lang).themes;
+    fields = [
+      [fieldWords(copy.title), 5],
+      [fieldWords(copy.dek), 3],
+      [fieldWords(`${copy.region} ${themes[card.theme]}`), 2],
+      [fieldWords(copy.lead), 1],
+    ];
+    byLang[lang] = fields;
   }
-  return list;
+  return fields;
 }
 
-export function search(index: SearchEntry[], query: string, lang: Lang): SearchHit[] {
-  // A query word with the article searches for its bare form, which matches both
-  // the word with the article and without it.
-  const terms = words(query, lang).map((term) => bare(term, lang));
-  if (terms.length === 0) return [];
-  const hits = prepare(index, lang).flatMap(({ entry, title, dek, body }) => {
+/**
+ * Readings in this language whose text holds every word of the query. A hit in the title
+ * counts most, then the summary, region and section, then the first paragraph; equal
+ * scores keep the newest first.
+ */
+export function searchCards(cards: StoryCard[], lang: Lang, query: string): StoryCard[] {
+  const words = terms(query);
+  if (words.length === 0) return [];
+  const scored: { card: StoryCard; score: number }[] = [];
+  for (const card of cards) {
+    if (!card.locales[lang].written) continue;
+    const fields = fieldsOf(card, lang);
     let score = 0;
-    for (const term of terms) {
-      // A word counts once, in the best field it appears in.
-      if (title.some((word) => word.startsWith(term))) score += TITLE;
-      else if (dek.some((word) => word.startsWith(term))) score += DEK;
-      else if (body.some((word) => word.startsWith(term))) score += BODY;
-      else return []; // every query word must match
+    let all = true;
+    for (const word of words) {
+      let hit = 0;
+      for (const [list, weight] of fields) {
+        if (list.some((w) => w.startsWith(word))) hit += weight;
+      }
+      if (!hit) {
+        all = false;
+        break;
+      }
+      score += hit;
     }
-    return [{ ...entry, score }];
-  });
-  return hits
-    .sort(
-      (a, b) =>
-        b.score - a.score || b.date.localeCompare(a.date) || a.id.localeCompare(b.id),
-    )
-    .slice(0, LIMIT);
+    if (all) scored.push({ card, score });
+  }
+  return scored
+    .sort((a, b) => b.score - a.score || b.card.date.localeCompare(a.card.date))
+    .map((entry) => entry.card);
 }
