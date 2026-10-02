@@ -1,0 +1,1 @@
+import{t as e}from"./about-EOvNS5Gm.js";var t=e;export{t as component};
