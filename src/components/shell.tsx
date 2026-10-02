@@ -17,7 +17,6 @@ import {
 } from "@/lib/lang-path";
 import { useLibrary } from "@/lib/library";
 import { LOOKS, LOOK_SWATCH, useLook, type Look } from "@/lib/look";
-import { feedLink } from "@/lib/site";
 import { LANGS, THEMES, type Lang, type Theme } from "@/lib/types";
 import { useLang } from "@/lib/use-lang";
 
@@ -348,14 +347,6 @@ export function Shell({
               <div>
                 <p className="text-xs uppercase tracking-widest text-mist">
                   {frame.languages}
-                  <a
-                    href={feedLink(lang).href}
-                    title={feedLink(lang).title}
-                    dir="ltr"
-                    className="ms-4 text-paper hover:underline underline-offset-4"
-                  >
-                    RSS
-                  </a>
                 </p>
                 <ul className="mt-2 flex flex-col">
                   {LANGS.map((code) => (
