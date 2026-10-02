@@ -58,6 +58,16 @@ html[data-look="bordo"] .section-link[data-on="true"] {
   font-family: "Noto Naskh Arabic", Georgia, serif;
   font-variation-settings: normal;
 }
+/* On a wide screen the sentence runs on one line and is set a little lighter. */
+@media (min-width: 768px) {
+  .home-sentence {
+    font-weight: 500;
+    font-variation-settings: "opsz" 16, "wght" 500;
+  }
+  :lang(ar) .home-sentence {
+    font-variation-settings: normal;
+  }
+}
 
 @layer base {
   html {

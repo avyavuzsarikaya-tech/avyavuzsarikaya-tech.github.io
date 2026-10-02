@@ -90,8 +90,9 @@ export function Atlas({ section }: { section: Theme | "all" }) {
         {section === "all" ? (
           <>
             <h1 className="home-sentence min-w-0 text-[1.15rem] leading-[1.3] min-[380px]:text-[1.45rem] md:text-[2.05rem]">
-              <span className="block">{copy.heroLead}</span>
-              <span className="block">{copy.hero}</span>
+              {/* Two lines on a phone, one line on a wider screen. */}
+              <span className="block md:inline">{copy.heroLead}</span>{" "}
+              <span className="block md:inline">{copy.hero}</span>
             </h1>
             <div className="flex h-[1.3em] shrink-0 items-center text-[1.15rem] min-[380px]:text-[1.45rem] md:text-[2.05rem]">
               <FrameTools />

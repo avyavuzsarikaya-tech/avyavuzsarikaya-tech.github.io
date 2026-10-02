@@ -263,7 +263,7 @@ export function Shell({
           <nav aria-label={copy.sections} className="section-bar relative border-b border-rule">
             <div
               ref={bar}
-              className="no-scrollbar flex gap-5 overflow-x-auto px-5 text-[13px] tracking-wide whitespace-nowrap md:gap-7 md:px-8"
+              className="no-scrollbar flex gap-5 overflow-x-auto px-5 text-[13px] tracking-wide whitespace-nowrap md:gap-7 md:px-8 lg:justify-between lg:text-[15px]"
             >
               <Link
                 {...homeLink(lang)}
