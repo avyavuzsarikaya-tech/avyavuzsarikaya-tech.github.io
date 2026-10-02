@@ -4,7 +4,8 @@ import { useEffect, useRef } from "react";
 import { aboutCopy } from "@/lib/about-copy";
 import { useFrameCopy } from "@/lib/frame-copy";
 import { langMeta, useCopy } from "@/lib/i18n";
-import { aboutLink, homeLink, sectionLink, stripLang } from "@/lib/lang-path";
+import { aboutLink, homeLink, searchLink, sectionLink, stripLang } from "@/lib/lang-path";
+import { searchCopy } from "@/lib/search";
 import { LOOKS, LOOK_SWATCH, type Look } from "@/lib/look";
 import { LANGS, THEMES, type Lang, type Theme } from "@/lib/types";
 
@@ -12,7 +13,7 @@ import { LANGS, THEMES, type Lang, type Theme } from "@/lib/types";
  * Pages under the section list. Contact and the newsletter are added here later;
  * nothing else in the menu has to move.
  */
-const MENU_PAGES = ["about"] as const;
+const MENU_PAGES = ["search", "about"] as const;
 
 function Swatch({ look }: { look: Look }) {
   const [panel, paper] = LOOK_SWATCH[look];
@@ -53,6 +54,7 @@ export function SiteMenu({
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
   const onAbout = stripLang(path) === "/about";
+  const onSearch = stripLang(path) === "/search";
   const item = (on: boolean) =>
     on
       ? "inline-flex min-h-11 items-center text-sm text-ink underline underline-offset-4"
@@ -135,7 +137,13 @@ export function SiteMenu({
           <nav aria-label={aboutCopy(lang).title}>
             <ul className="flex flex-col">
               {MENU_PAGES.map((page) =>
-                page === "about" ? (
+                page === "search" ? (
+                  <li key={page}>
+                    <Link {...searchLink(lang)} className={item(onSearch)} onClick={onClose}>
+                      {searchCopy(lang).title}
+                    </Link>
+                  </li>
+                ) : page === "about" ? (
                   <li key={page}>
                     <Link {...aboutLink(lang)} className={item(onAbout)} onClick={onClose}>
                       {aboutCopy(lang).title}

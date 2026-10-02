@@ -225,3 +225,10 @@ html[data-look="bordo"] .section-link[data-on="true"] {
     }
   }
 }
+
+/* The search field draws no browser clear button: the field stays a plain line of text. */
+.search-field::-webkit-search-cancel-button,
+.search-field::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}

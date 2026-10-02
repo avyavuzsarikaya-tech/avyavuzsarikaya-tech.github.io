@@ -2,10 +2,19 @@ import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { SiteMenu } from "@/components/menu";
 import { Pick } from "@/components/pick";
+import { SearchMark } from "@/components/search-mark";
+import { searchCopy } from "@/lib/search";
 import { aboutCopy } from "@/lib/about-copy";
 import { useFrameCopy } from "@/lib/frame-copy";
 import { langMeta, useCopy } from "@/lib/i18n";
-import { aboutLink, homeLink, rememberLang, sectionLink, withLang } from "@/lib/lang-path";
+import {
+  aboutLink,
+  homeLink,
+  rememberLang,
+  searchLink,
+  sectionLink,
+  withLang,
+} from "@/lib/lang-path";
 import { useLibrary } from "@/lib/library";
 import { LOOKS, LOOK_SWATCH, useLook, type Look } from "@/lib/look";
 import { feedLink } from "@/lib/site";
@@ -86,7 +95,7 @@ type Tools = {
 const ToolsContext = createContext<Tools | null>(null);
 
 /**
- * Menu, colour scheme and language, set small on the paper at the head of each page
+ * Search, menu, colour scheme and language, set small on the paper at the head of each page
  * (beside the home sentence, a section's name, or a reading's way back), so the
  * black masthead carries the name alone.
  */
@@ -135,6 +144,14 @@ export function FrameTools() {
           <Caret />
         </span>
       </Pick>
+      <Link
+        {...searchLink(lang)}
+        aria-label={searchCopy(lang).title}
+        title={searchCopy(lang).title}
+        className="inline-flex h-11 w-7 shrink-0 items-center justify-center hover:text-ink md:w-9"
+      >
+        <SearchMark className="size-[15px] md:size-[18px]" />
+      </Link>
       <button
         ref={tools.menuButton}
         type="button"

@@ -1,6 +1,7 @@
 import { aboutCopy } from "@/lib/about-copy";
 import { copyFor, langMeta } from "@/lib/i18n";
 import { DEFAULT_LANG, publicPath } from "@/lib/lang-path";
+import { searchCopy } from "@/lib/search";
 import { LANGS, type Lang, type StoryCard, type Theme } from "@/lib/types";
 
 /**
@@ -157,6 +158,27 @@ export function aboutHead(lang: Lang) {
       url: publicPath(lang, path),
       lang,
     }),
+    links: addressLinks(lang, path, LANGS),
+  };
+}
+
+/**
+ * Head of the search page in one language. A results page is not a page to index, but
+ * its links are followed.
+ */
+export function searchHead(lang: Lang) {
+  const words = searchCopy(lang);
+  const path = "/search";
+  return {
+    meta: [
+      ...pageMeta({
+        title: `${words.title} — ${SITE_NAME}`,
+        description: words.description,
+        url: publicPath(lang, path),
+        lang,
+      }),
+      { name: "robots", content: "noindex, follow" },
+    ],
     links: addressLinks(lang, path, LANGS),
   };
 }

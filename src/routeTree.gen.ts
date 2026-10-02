@@ -13,8 +13,10 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as SectionRouteImport } from './routes/$section'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as PanelRouteImport } from './routes/panel'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as LangSectionRouteImport } from './routes/$lang.$section'
 import { Route as LangAboutRouteImport } from './routes/$lang.about'
+import { Route as LangSearchRouteImport } from './routes/$lang.search'
 import { Route as PanelIndexRouteImport } from './routes/panel.index'
 import { Route as PanelStoryIdRouteImport } from './routes/panel.$storyId'
 import { Route as ReadStoryIdRouteImport } from './routes/read.$storyId'
@@ -40,6 +42,11 @@ const PanelRoute = PanelRouteImport.update({
   path: '/panel',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LangSectionRoute = LangSectionRouteImport.update({
   id: '/$lang/$section',
   path: '/$lang/$section',
@@ -48,6 +55,11 @@ const LangSectionRoute = LangSectionRouteImport.update({
 const LangAboutRoute = LangAboutRouteImport.update({
   id: '/$lang/about',
   path: '/$lang/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangSearchRoute = LangSearchRouteImport.update({
+  id: '/$lang/search',
+  path: '/$lang/search',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PanelIndexRoute = PanelIndexRouteImport.update({
@@ -76,8 +88,10 @@ export interface FileRoutesByFullPath {
   '/$section': typeof SectionRoute
   '/about': typeof AboutRoute
   '/panel': typeof PanelRouteWithChildren
+  '/search': typeof SearchRoute
   '/$lang/$section': typeof LangSectionRoute
   '/$lang/about': typeof LangAboutRoute
+  '/$lang/search': typeof LangSearchRoute
   '/panel/$storyId': typeof PanelStoryIdRoute
   '/read/$storyId': typeof ReadStoryIdRoute
   '/panel/': typeof PanelIndexRoute
@@ -87,8 +101,10 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$section': typeof SectionRoute
   '/about': typeof AboutRoute
+  '/search': typeof SearchRoute
   '/$lang/$section': typeof LangSectionRoute
   '/$lang/about': typeof LangAboutRoute
+  '/$lang/search': typeof LangSearchRoute
   '/panel/$storyId': typeof PanelStoryIdRoute
   '/read/$storyId': typeof ReadStoryIdRoute
   '/panel': typeof PanelIndexRoute
@@ -100,8 +116,10 @@ export interface FileRoutesById {
   '/$section': typeof SectionRoute
   '/about': typeof AboutRoute
   '/panel': typeof PanelRouteWithChildren
+  '/search': typeof SearchRoute
   '/$lang/$section': typeof LangSectionRoute
   '/$lang/about': typeof LangAboutRoute
+  '/$lang/search': typeof LangSearchRoute
   '/panel/$storyId': typeof PanelStoryIdRoute
   '/read/$storyId': typeof ReadStoryIdRoute
   '/panel/': typeof PanelIndexRoute
@@ -114,8 +132,10 @@ export interface FileRouteTypes {
     | '/$section'
     | '/about'
     | '/panel'
+    | '/search'
     | '/$lang/$section'
     | '/$lang/about'
+    | '/$lang/search'
     | '/panel/$storyId'
     | '/read/$storyId'
     | '/panel/'
@@ -125,8 +145,10 @@ export interface FileRouteTypes {
     | '/'
     | '/$section'
     | '/about'
+    | '/search'
     | '/$lang/$section'
     | '/$lang/about'
+    | '/$lang/search'
     | '/panel/$storyId'
     | '/read/$storyId'
     | '/panel'
@@ -137,8 +159,10 @@ export interface FileRouteTypes {
     | '/$section'
     | '/about'
     | '/panel'
+    | '/search'
     | '/$lang/$section'
     | '/$lang/about'
+    | '/$lang/search'
     | '/panel/$storyId'
     | '/read/$storyId'
     | '/panel/'
@@ -150,8 +174,10 @@ export interface RootRouteChildren {
   SectionRoute: typeof SectionRoute
   AboutRoute: typeof AboutRoute
   PanelRoute: typeof PanelRouteWithChildren
+  SearchRoute: typeof SearchRoute
   LangSectionRoute: typeof LangSectionRoute
   LangAboutRoute: typeof LangAboutRoute
+  LangSearchRoute: typeof LangSearchRoute
   ReadStoryIdRoute: typeof ReadStoryIdRoute
   LangReadStoryIdRoute: typeof LangReadStoryIdRoute
 }
@@ -186,6 +212,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PanelRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/$lang/$section': {
       id: '/$lang/$section'
       path: '/$lang/$section'
@@ -198,6 +231,13 @@ declare module '@tanstack/react-router' {
       path: '/$lang/about'
       fullPath: '/$lang/about'
       preLoaderRoute: typeof LangAboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/search': {
+      id: '/$lang/search'
+      path: '/$lang/search'
+      fullPath: '/$lang/search'
+      preLoaderRoute: typeof LangSearchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/panel/': {
@@ -248,8 +288,10 @@ const rootRouteChildren: RootRouteChildren = {
   SectionRoute: SectionRoute,
   AboutRoute: AboutRoute,
   PanelRoute: PanelRouteWithChildren,
+  SearchRoute: SearchRoute,
   LangSectionRoute: LangSectionRoute,
   LangAboutRoute: LangAboutRoute,
+  LangSearchRoute: LangSearchRoute,
   ReadStoryIdRoute: ReadStoryIdRoute,
   LangReadStoryIdRoute: LangReadStoryIdRoute,
 }

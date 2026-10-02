@@ -150,7 +150,7 @@ const pages = process.env.ORBIS_PAGES === "1";
 /**
  * GitHub Pages build: every page is written out as its own HTML file with its text
  * already in it — the front pages (index.html, tr/index.html, …), every section
- * (climate.html, tr/climate.html, …) and every reading in every language
+ * (climate.html, tr/climate.html, …), the search page (search.html, tr/search.html, …) and every reading in every language
  * (read/<id>.html, tr/read/<id>.html, …). The host answers those addresses with 200, and
  * each file carries its page's title, language alternates and link-preview tags.
  * The shell (404.html) covers everything else, the panel included.
@@ -164,6 +164,7 @@ function staticPages() {
     paths.push(lang === "en" ? "/" : `${prefix}/`);
     for (const theme of THEMES) paths.push(`${prefix}/${theme}`);
     paths.push(`${prefix}/about`);
+    paths.push(`${prefix}/search`);
     for (const id of ids) paths.push(`${prefix}/read/${id}`);
   }
   return paths.map((path) => ({ path }));

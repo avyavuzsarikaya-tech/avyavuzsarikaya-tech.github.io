@@ -44,6 +44,12 @@ for (const lang of LANGS) {
       file: `${prefix.slice(1)}${prefix ? "/" : ""}about.html`,
       loc: `${prefix}/about`,
     },
+    // The search page is written out but stays out of the sitemap: nothing to index.
+    {
+      file: `${prefix.slice(1)}${prefix ? "/" : ""}search.html`,
+      loc: `${prefix}/search`,
+      listed: false,
+    },
     ...stories.map((story) => ({
       file: `${prefix.slice(1)}${prefix ? "/" : ""}read/${story.id}.html`,
       loc: `${prefix}/read/${story.id}`,

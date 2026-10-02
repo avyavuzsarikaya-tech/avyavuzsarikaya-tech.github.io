@@ -72,6 +72,12 @@ export function readLink(lang: Lang, storyId: string) {
     : ({ to: "/$lang/read/$storyId", params: { lang, storyId } } as const);
 }
 
+export function searchLink(lang: Lang) {
+  return lang === DEFAULT_LANG
+    ? ({ to: "/search" } as const)
+    : ({ to: "/$lang/search", params: { lang } } as const);
+}
+
 export function aboutLink(lang: Lang) {
   return lang === DEFAULT_LANG
     ? ({ to: "/about" } as const)
