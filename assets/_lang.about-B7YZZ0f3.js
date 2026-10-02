@@ -1,1 +1,0 @@
-import{t as e}from"./about-BIBtJXYV.js";var t=e;export{t as component};
