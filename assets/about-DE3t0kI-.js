@@ -1,0 +1,1 @@
+import{t as e}from"./about-CQBfwoqu.js";var t=e;export{t as component};
