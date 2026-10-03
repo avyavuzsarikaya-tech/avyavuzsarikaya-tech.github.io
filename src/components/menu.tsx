@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { X } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { Check, ChevronDown, Search, X } from "lucide-react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { aboutCopy } from "@/lib/about-copy";
 import { useFrameCopy } from "@/lib/frame-copy";
 import { langMeta, useCopy } from "@/lib/i18n";
@@ -10,20 +10,82 @@ import { LOOKS, LOOK_SWATCH, type Look } from "@/lib/look";
 import { LANGS, THEMES, type Lang, type Theme } from "@/lib/types";
 
 /**
- * Pages under the section list. Contact and the newsletter are added here later;
+ * Pages under the three lists. Contact and the newsletter are added here later;
  * nothing else in the menu has to move.
  */
 const MENU_PAGES = ["search", "about"] as const;
+
+/** The three lists of the menu. Only one is open at a time. */
+type Group = "sections" | "languages" | "look";
 
 function Swatch({ look }: { look: Look }) {
   const [panel, paper] = LOOK_SWATCH[look];
   return (
     <span
       aria-hidden="true"
-      className="me-2.5 inline-block size-3.5 shrink-0 rounded-full border border-ink/20"
+      className="me-3 inline-block size-4 shrink-0 rounded-full border border-ink"
       style={{ background: `linear-gradient(135deg, ${panel} 50%, ${paper} 50%)` }}
     />
   );
+}
+
+/**
+ * One list of the menu: a bold heading that shows the current choice on the
+ * other side, and under it, when open, a framed box with the choices.
+ */
+function MenuGroup({
+  title,
+  current,
+  open,
+  onToggle,
+  children,
+}: {
+  title: string;
+  current?: string;
+  open: boolean;
+  onToggle: () => void;
+  children: ReactNode;
+}) {
+  const boxId = useId();
+  return (
+    <div className="border-b border-mist">
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={boxId}
+        onClick={onToggle}
+        className="flex min-h-15 w-full items-center justify-between gap-3 px-5 text-start"
+      >
+        <span className="text-xl font-bold text-ink">{title}</span>
+        <span className="flex items-center gap-2.5">
+          {current ? <span className="text-base text-muted">{current}</span> : null}
+          <ChevronDown
+            aria-hidden="true"
+            strokeWidth={1.5}
+            className={`size-4 shrink-0 text-ink transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          />
+        </span>
+      </button>
+      {open ? (
+        <ul id={boxId} className="mx-5 mb-4 mt-1 flex flex-col border border-mist bg-sheet">
+          {children}
+        </ul>
+      ) : null}
+    </div>
+  );
+}
+
+/** Row style inside a list box; the chosen one is black and bold, with a tick. */
+function rowClass(on: boolean, first: boolean) {
+  return [
+    "flex min-h-11 w-full items-center justify-between gap-3 px-4 text-start text-[17px]",
+    first ? "" : "border-t border-line",
+    on ? "font-bold text-ink" : "text-muted hover:text-ink",
+  ].join(" ");
+}
+
+function Tick({ on }: { on: boolean }) {
+  return on ? <Check aria-hidden="true" strokeWidth={1.75} className="size-4 shrink-0 text-ink" /> : null;
 }
 
 /**
@@ -55,10 +117,14 @@ export function SiteMenu({
   onCloseRef.current = onClose;
   const onAbout = stripLang(path) === "/about";
   const onSearch = stripLang(path) === "/search";
-  const item = (on: boolean) =>
+  const [openGroup, setOpenGroup] = useState<Group | null>("sections");
+  const toggle = (group: Group) => setOpenGroup((now) => (now === group ? null : group));
+  const currentSection =
+    section === "all" ? copy.home : section ? copy.themes[section] : undefined;
+  const page = (on: boolean) =>
     on
-      ? "inline-flex min-h-11 items-center text-sm text-ink underline underline-offset-4"
-      : "inline-flex min-h-11 items-center text-sm text-muted hover:text-ink";
+      ? "inline-flex min-h-12 items-center gap-3 text-[17px] text-ink underline underline-offset-4"
+      : "inline-flex min-h-12 items-center gap-3 text-[17px] text-muted hover:text-ink";
 
   useEffect(() => {
     const body = document.body;
@@ -110,42 +176,103 @@ export function SiteMenu({
             <X className="size-5" strokeWidth={1.5} aria-hidden="true" />
           </button>
         </div>
-        <div className="flex flex-1 flex-col gap-8 overflow-y-auto px-5 py-6">
+        <div className="flex flex-1 flex-col overflow-y-auto">
           <nav aria-label={copy.sections}>
-            <p className="text-xs uppercase tracking-widest text-muted">{copy.sections}</p>
-            <ul className="mt-1 flex flex-col">
+            <MenuGroup
+              title={copy.sections}
+              current={currentSection}
+              open={openGroup === "sections"}
+              onToggle={() => toggle("sections")}
+            >
               <li>
-                <Link {...homeLink(lang)} data-on={section === "all"} className={item(section === "all")} onClick={onClose}>
+                <Link
+                  {...homeLink(lang)}
+                  aria-current={section === "all" ? "page" : undefined}
+                  className={rowClass(section === "all", true)}
+                  onClick={onClose}
+                >
                   {copy.home}
+                  <Tick on={section === "all"} />
                 </Link>
               </li>
               {THEMES.map((theme) => (
                 <li key={theme}>
                   <Link
                     {...sectionLink(lang, theme)}
-                    data-on={section === theme}
-                    className={item(section === theme)}
+                    aria-current={section === theme ? "page" : undefined}
+                    className={rowClass(section === theme, false)}
                     onClick={onClose}
                   >
                     {copy.themes[theme]}
+                    <Tick on={section === theme} />
                   </Link>
                 </li>
               ))}
-            </ul>
+            </MenuGroup>
           </nav>
 
-          <nav aria-label={aboutCopy(lang).title}>
+          <MenuGroup
+            title={frame.languages}
+            current={meta.name}
+            open={openGroup === "languages"}
+            onToggle={() => toggle("languages")}
+          >
+            {LANGS.map((code, i) => (
+              <li key={code}>
+                <button
+                  type="button"
+                  lang={langMeta[code].html}
+                  aria-pressed={code === lang}
+                  onClick={() => {
+                    onLang(code);
+                    onClose();
+                  }}
+                  className={rowClass(code === lang, i === 0)}
+                >
+                  {langMeta[code].name}
+                  <Tick on={code === lang} />
+                </button>
+              </li>
+            ))}
+          </MenuGroup>
+
+          <MenuGroup
+            title={frame.look}
+            current={frame.looks[look]}
+            open={openGroup === "look"}
+            onToggle={() => toggle("look")}
+          >
+            {LOOKS.map((code, i) => (
+              <li key={code}>
+                <button
+                  type="button"
+                  aria-pressed={code === look}
+                  onClick={() => onLook(code)}
+                  className={rowClass(code === look, i === 0)}
+                >
+                  <span className="flex items-center">
+                    <Swatch look={code} />
+                    {frame.looks[code]}
+                  </span>
+                  <Tick on={code === look} />
+                </button>
+              </li>
+            ))}
+          </MenuGroup>
+
+          <nav aria-label={aboutCopy(lang).title} className="px-5 pb-6 pt-4">
             <ul className="flex flex-col">
-              {MENU_PAGES.map((page) =>
-                page === "search" ? (
-                  <li key={page}>
-                    <Link {...searchLink(lang)} className={item(onSearch)} onClick={onClose}>
+              {MENU_PAGES.map((item) =>
+                item === "search" ? (
+                  <li key={item}>
+                    <Link {...searchLink(lang)} className={page(onSearch)} onClick={onClose}>
+                      <Search aria-hidden="true" strokeWidth={1.5} className="size-4 shrink-0" />
                       {searchCopy(lang).title}
                     </Link>
                   </li>
-                ) : page === "about" ? (
-                  <li key={page}>
-                    <Link {...aboutLink(lang)} className={item(onAbout)} onClick={onClose}>
+                ) : item === "about" ? (
+                  <li key={item}>
+                    <Link {...aboutLink(lang)} className={page(onAbout)} onClick={onClose}>
                       {aboutCopy(lang).title}
                     </Link>
                   </li>
@@ -153,46 +280,6 @@ export function SiteMenu({
               )}
             </ul>
           </nav>
-
-          <div>
-            <p className="text-xs uppercase tracking-widest text-muted">{frame.languages}</p>
-            <ul className="mt-1 flex flex-col">
-              {LANGS.map((code) => (
-                <li key={code}>
-                  <button
-                    type="button"
-                    lang={langMeta[code].html}
-                    onClick={() => {
-                      onLang(code);
-                      onClose();
-                    }}
-                    className={item(code === lang)}
-                  >
-                    {langMeta[code].name}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <p className="text-xs uppercase tracking-widest text-muted">{frame.look}</p>
-            <ul className="mt-1 flex flex-col">
-              {LOOKS.map((code) => (
-                <li key={code}>
-                  <button
-                    type="button"
-                    aria-pressed={code === look}
-                    onClick={() => onLook(code)}
-                    className={item(code === look)}
-                  >
-                    <Swatch look={code} />
-                    {frame.looks[code]}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
       </div>
     </div>
