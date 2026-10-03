@@ -172,10 +172,11 @@ function Reading({ story }: { story: Story | null }) {
             <figure className="mt-2 flex max-w-full flex-col gap-2">
               <video
                 controls
-                preload="metadata"
+                preload="none"
                 playsInline
+                autoPlay={false}
                 controlsList="nodownload"
-                src={`${story.video.src}#t=0.1`}
+                src={story.video.src}
                 aria-label={videoCaption || AI_VIDEO_NOTE[lang]}
                 className="block aspect-video h-auto w-full max-w-full bg-ink"
               />
