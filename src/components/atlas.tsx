@@ -12,7 +12,9 @@ import { useLang } from "@/lib/use-lang";
 
 /**
  * The front page and the section pages share this layout: the lead reading across the
- * page, then the other readings in ruled columns under it.
+ * page, then the other readings in ruled columns under it. On a wide screen the front
+ * page alone breaks that row into an editorial grid; a phone, a tablet and every section
+ * page keep the ruled columns.
  */
 
 function Meta({ story, lang, section }: { story: Story; lang: Lang; section: Theme | "all" }) {
@@ -99,14 +101,33 @@ export function Atlas({ section }: { section: Theme | "all" }) {
         {latest ? (
           <div className="self-start">
             {/* The lead runs across the page: its words on one side, its picture on the
-                other; on a phone the picture comes first and the words under it. */}
+                other; on a phone the picture comes first and the words under it. On a
+                wide front page the picture takes the wider share. */}
             <Link
               {...readLink(lang, latest.id)}
-              className={`grid grid-cols-1 gap-6 border-b border-line px-5 py-7 md:px-8 md:py-10 ${latest.image ? "md:grid-cols-2 md:items-center md:gap-10" : ""}`}
+              className={`grid grid-cols-1 gap-6 border-b border-line px-5 py-7 md:px-8 md:py-10 ${
+                latest.image ? "md:grid-cols-2 md:items-center md:gap-10" : ""
+              } ${home ? "lg:grid-cols-12 lg:items-center lg:gap-14 lg:px-10 lg:py-12" : ""}`}
             >
-              {latest.image ? <Picture story={latest} eager className="md:order-2" /> : null}
-              <div className="flex flex-col gap-3 md:order-1">
-                <h2 className="text-3xl leading-[1.1] md:text-5xl">{storyTitle(latest, lang)}</h2>
+              {latest.image ? (
+                <Picture
+                  story={latest}
+                  eager
+                  className={home ? "md:order-2 lg:col-span-7 lg:aspect-[16/10]" : "md:order-2"}
+                />
+              ) : null}
+              <div
+                className={`flex flex-col gap-3 md:order-1 ${
+                  home ? "lg:col-span-5 lg:justify-center lg:gap-5 lg:pe-2" : ""
+                }`}
+              >
+                <h2
+                  className={`text-3xl leading-[1.1] md:text-5xl ${
+                    home ? "lg:text-[3.35rem] lg:leading-[1.04]" : ""
+                  }`}
+                >
+                  {storyTitle(latest, lang)}
+                </h2>
                 {/* Title, the reading's own summary in full, then section, date and the reading time. */}
                 {leadDek ? (
                   <p className="max-w-2xl text-pretty text-lg leading-snug text-muted lg:text-xl">
@@ -123,23 +144,27 @@ export function Atlas({ section }: { section: Theme | "all" }) {
             {/* The other readings stand side by side, parted by thin rules, text only, so
                 every column starts and ends on the same lines. On the front page they make
                 one row of five columns taller than they are wide; a tablet shows the first
-                three of them, a phone all five one under another. */}
+                three of them, a phone all five one under another. A wide front page replaces
+                that row with the editorial grid below. */}
             {home ? (
               cards.length ? (
-                <div
-                  className={`grid grid-cols-1 divide-y divide-line border-b border-line md:divide-x md:divide-y-0 ${HOME_COLS[cards.length]}`}
-                >
-                  {cards.map((story, n) => (
-                    <Column
-                      key={story.id}
-                      story={story}
-                      lang={lang}
-                      section={section}
-                      tall
-                      className={n >= 3 ? "md:hidden lg:flex" : ""}
-                    />
-                  ))}
-                </div>
+                <>
+                  <div
+                    className={`grid grid-cols-1 divide-y divide-line border-b border-line md:divide-x md:divide-y-0 lg:hidden ${HOME_COLS[cards.length]}`}
+                  >
+                    {cards.map((story, n) => (
+                      <Column
+                        key={story.id}
+                        story={story}
+                        lang={lang}
+                        section={section}
+                        tall
+                        className={n >= 3 ? "md:hidden lg:flex" : ""}
+                      />
+                    ))}
+                  </div>
+                  <HomeDesk cards={cards} lang={lang} section={section} />
+                </>
               ) : null
             ) : (
               chunk(cards, 4).map((row) => (
@@ -157,7 +182,6 @@ export function Atlas({ section }: { section: Theme | "all" }) {
         ) : (
           <p className="px-5 py-10 text-muted md:px-8">{frame.emptySection}</p>
         )}
-
       </div>
     </main>
   );
@@ -220,6 +244,102 @@ function Column({
         </p>
       ) : null}
       <div className="md:mt-auto">
+        <Meta story={story} lang={lang} section={section} />
+      </div>
+    </Link>
+  );
+}
+
+/**
+ * The wide front page under the lead: two readings across, then the rest in a ruled row.
+ * Pictures sit in the card when a reading has one. Hidden below a laptop.
+ */
+function HomeDesk({
+  cards,
+  lang,
+  section,
+}: {
+  cards: Story[];
+  lang: Lang;
+  section: Theme | "all";
+}) {
+  const [lead, beside, ...rest] = cards;
+  return (
+    <div className="hidden border-b border-line lg:block">
+      <div className="grid grid-cols-12 divide-x divide-line">
+        {lead ? (
+          <DeskCard
+            story={lead}
+            lang={lang}
+            section={section}
+            large
+            className={beside ? "col-span-7" : "col-span-12"}
+          />
+        ) : null}
+        {beside ? (
+          <DeskCard story={beside} lang={lang} section={section} className="col-span-5" />
+        ) : null}
+      </div>
+      {rest.length ? (
+        <div
+          className={`grid divide-x divide-line border-t border-line ${
+            rest.length === 1 ? "grid-cols-1" : rest.length === 2 ? "grid-cols-2" : "grid-cols-3"
+          }`}
+        >
+          {rest.map((story) => (
+            <DeskCard key={story.id} story={story} lang={lang} section={section} />
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+/** One reading in the wide front-page grid: picture, title, summary, then the meta line. */
+function DeskCard({
+  story,
+  lang,
+  section,
+  large = false,
+  className = "",
+}: {
+  story: Story;
+  lang: Lang;
+  section: Theme | "all";
+  large?: boolean;
+  className?: string;
+}) {
+  const dek = story.locales[lang].dek?.trim();
+  const excerpt = dek || story.locales[lang].lead;
+  return (
+    <Link
+      {...readLink(lang, story.id)}
+      className={`flex min-w-0 flex-col gap-4 px-8 py-8 ${className}`}
+    >
+      {story.image ? (
+        <img
+          src={story.image.src}
+          alt={imageCaption(story.image, lang)}
+          width={1500}
+          height={1000}
+          loading="lazy"
+          decoding="async"
+          className={`w-full object-cover ${large ? "aspect-[3/2]" : "aspect-[16/10]"}`}
+        />
+      ) : null}
+      <h2 className={large ? "text-[1.85rem] leading-[1.12]" : "text-xl leading-snug"}>
+        {storyTitle(story, lang)}
+      </h2>
+      {excerpt ? (
+        <p
+          className={`font-body text-pretty leading-snug text-muted ${large ? "text-base" : "text-[15px]"} ${
+            dek ? "" : "line-clamp-3"
+          }`}
+        >
+          {excerpt}
+        </p>
+      ) : null}
+      <div className="mt-auto">
         <Meta story={story} lang={lang} section={section} />
       </div>
     </Link>
