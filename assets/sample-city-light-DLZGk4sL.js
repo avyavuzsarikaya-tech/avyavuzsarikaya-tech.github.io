@@ -8,4 +8,4 @@ The real reading under this title will be published later, with its sources.`,au
 
 La vraie lecture sous ce titre sera publiée plus tard, avec ses sources.`,audio:null},es:{title:`¿Cómo afectan las luces de la ciudad al sueño?`,dek:`Una lectura de prueba.`,region:`Prueba`,body:`Esta es una lectura de prueba. Está aquí para probar el diseño de la página; el texto no se basa en ninguna investigación.
 
-La lectura real con este título se publicará más adelante, con sus fuentes.`,audio:null}}};export{e as default};
+La lectura real con este título se publicará más adelante, con sus fuentes.`,audio:null}},video:{src:`videos/sample-city-light.mp4`,poster:`images/sample-city-light.jpg`,credit:`City lamps, a bedside light, and dawn over the roofs.`,captions:{tr:`Şehir lambaları, yatak başı ışığı ve çatılar üstünde şafak.`,en:`City lamps, a bedside light, and dawn over the roofs.`,ar:`مصابيح المدينة، ضوء بجانب السرير، وفجر فوق الأسطح.`,fr:`Lampes de la ville, une lumière de chevet, et l'aube sur les toits.`,es:`Faroles de la ciudad, una luz de cabecera y el alba sobre los tejados.`}}};export{e as default};
