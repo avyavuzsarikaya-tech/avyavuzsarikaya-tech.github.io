@@ -1,0 +1,1 @@
+import{t as e}from"./search-DfSIE-5V.js";var t=e;export{t as component};
