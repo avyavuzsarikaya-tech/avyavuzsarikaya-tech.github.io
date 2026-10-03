@@ -166,7 +166,25 @@ function Reading({ story }: { story: Story | null }) {
               {locale.dek}
             </p>
           ) : null}
-          {story.image ? (
+          {/* One picture at the top of a reading: a reading with a video shows the video
+              in the picture's place; the picture stays on the cards. */}
+          {story.video ? (
+            <figure className="mt-2 flex max-w-full flex-col gap-2">
+              <video
+                controls
+                preload="metadata"
+                playsInline
+                controlsList="nodownload"
+                poster={story.video.poster}
+                src={story.video.poster ? story.video.src : `${story.video.src}#t=0.1`}
+                aria-label={videoCaption || AI_VIDEO_NOTE[lang]}
+                className="block aspect-video h-auto w-full max-w-full bg-ink"
+              />
+              <figcaption className="text-xs leading-snug text-muted">
+                {videoCaption ? `${videoCaption} · ${AI_VIDEO_NOTE[lang]}` : AI_VIDEO_NOTE[lang]}
+              </figcaption>
+            </figure>
+          ) : story.image ? (
             <figure className="mt-2 flex max-w-full flex-col gap-2">
               <img
                 src={story.image.src}
@@ -219,24 +237,6 @@ function Reading({ story }: { story: Story | null }) {
             ) : null}
           </div>
         </header>
-
-        {story.video ? (
-          <figure className="flex max-w-full flex-col gap-2">
-            <video
-              controls
-              preload="metadata"
-              playsInline
-              controlsList="nodownload"
-              poster={story.video.poster}
-              src={story.video.src}
-              aria-label={videoCaption || AI_VIDEO_NOTE[lang]}
-              className="block aspect-video h-auto w-full max-w-full bg-ink"
-            />
-            <figcaption className="text-xs leading-snug text-muted">
-              {videoCaption ? `${videoCaption} · ${AI_VIDEO_NOTE[lang]}` : AI_VIDEO_NOTE[lang]}
-            </figcaption>
-          </figure>
-        ) : null}
 
         <StoryVideos storyId={story.id} lang={lang} />
 
