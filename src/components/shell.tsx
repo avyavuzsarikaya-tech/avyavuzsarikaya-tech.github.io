@@ -97,10 +97,9 @@ type Tools = {
 const ToolsContext = createContext<Tools | null>(null);
 
 /**
- * Search, menu, colour scheme and language. From tablet width up they sit in the masthead,
- * at its far end (place "masthead"); on a phone, where the masthead has no room beside the
- * name, they sit small on the paper at the head of each page, beside the home sentence, a
- * section's name or a reading's way back (place "page", hidden from tablet width up).
+ * Search, menu, colour scheme and language. The masthead carries the name alone, so they
+ * sit small on the paper at the head of each page, beside the home sentence, a section's
+ * name or a reading's way back (place "page"), at every width.
  */
 /** A head and shoulders, drawn in the same thin line as the search mark. */
 function PersonMark() {
@@ -134,7 +133,7 @@ export function FrameTools({ place = "page" }: { place?: "page" | "masthead" }) 
       className={
         dark
           ? "hidden shrink-0 items-center gap-2 text-mist md:flex"
-          : "flex shrink-0 items-center gap-0.5 text-muted md:hidden"
+          : "flex shrink-0 items-center gap-0.5 text-muted"
       }
     >
       <Pick
@@ -316,8 +315,8 @@ export function Shell({
   return (
     <ToolsContext.Provider value={tools}>
       <div className="flex min-h-dvh flex-col bg-paper text-ink">
-        {/* The masthead carries the name in the middle and, from tablet width up, the
-          site's motto under it and the tools at its far end. */}
+        {/* The masthead carries the name alone, in the middle, at every width. The motto
+          and the tools sit on the paper at the head of each page. */}
         <header
           dir="ltr"
           className="relative flex flex-col items-center justify-center bg-panel px-5 py-5 text-paper md:py-6 lg:py-8"
@@ -331,20 +330,6 @@ export function Shell({
               ORBIS
             </span>
           </Link>
-          {!inPanel ? (
-            <>
-              <p
-                dir={meta.dir}
-                lang={meta.html}
-                className="mt-2 hidden text-sm tracking-wide text-mist md:block lg:mt-3 lg:text-base"
-              >
-                {copy.heroLead} {copy.hero}
-              </p>
-              <div className="absolute inset-y-0 end-5 hidden items-center md:flex md:end-8">
-                <FrameTools place="masthead" />
-              </div>
-            </>
-          ) : null}
           {/* The editing panel stays out of the reader's menu; open it at /panel. */}
           {inPanel ? (
             <nav className="absolute inset-y-0 end-5 flex items-center gap-3 text-sm md:end-8">

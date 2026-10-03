@@ -11,8 +11,8 @@ import type { Lang, StoryCard as Story, Theme } from "@/lib/types";
 import { useLang } from "@/lib/use-lang";
 
 /**
- * The front page grid and the section pages share this layout: the lead reading, the
- * cards around it, and the index of further readings on the right.
+ * The front page and the section pages share this layout: the lead reading across the
+ * page, then the other readings in ruled columns under it.
  */
 
 function Meta({ story, lang, section }: { story: Story; lang: Lang; section: Theme | "all" }) {
@@ -50,8 +50,11 @@ export function Atlas({ section }: { section: Theme | "all" }) {
   const all = [...stories].sort((a, b) => b.date.localeCompare(a.date));
   const sorted = all.filter((story) => section === "all" || story.theme === section);
   const latest = sorted[0];
-  // The lead across the page, then every other reading in rows of four.
-  const cards = sorted.slice(1);
+  // The lead across the page, then the other readings in rows. The front page carries a
+  // single row of five tall columns under the lead; a section page keeps all its readings
+  // in rows of four.
+  const home = section === "all";
+  const cards = home ? sorted.slice(1, 1 + HOME_COLUMNS) : sorted.slice(1);
 
   if (stories.length === 0) {
     return (
@@ -68,11 +71,9 @@ export function Atlas({ section }: { section: Theme | "all" }) {
       {/* Menu, language and scheme sit on the first line of the heading: the box that holds
           them takes the heading's own size and line height, so its middle is that line's
           middle in every language and at every width. */}
-      {/* On the front page this row holds the motto and the tools on a phone only; from
-          tablet width up both sit in the masthead, and the row stays for screen readers. */}
-      <div
-        className={`flex items-start justify-between gap-4 px-5 py-3.5 md:px-8 md:py-5 ${section === "all" ? "md:sr-only" : ""}`}
-      >
+      {/* On the front page this row holds the motto and the tools at every width; the
+          masthead above it carries the name alone. */}
+      <div className="flex items-start justify-between gap-4 px-5 py-3.5 md:px-8 md:py-5">
         {section === "all" ? (
           <>
             <h1 className="home-sentence min-w-0 text-[1.15rem] leading-[1.3] min-[380px]:text-[1.45rem] md:text-[2.05rem]">
@@ -119,18 +120,39 @@ export function Atlas({ section }: { section: Theme | "all" }) {
                 <Meta story={latest} lang={lang} section={section} />
               </div>
             </Link>
-            {/* The other readings stand side by side in rows of four, parted by thin rules,
-                text only, so every column starts and ends on the same lines. */}
-            {chunk(cards, 4).map((row) => (
-              <div
-                key={row[0].id}
-                className={`grid grid-cols-1 divide-y divide-line border-b border-line md:divide-x md:divide-y-0 ${COLS[row.length]}`}
-              >
-                {row.map((story) => (
-                  <Column key={story.id} story={story} lang={lang} section={section} />
-                ))}
-              </div>
-            ))}
+            {/* The other readings stand side by side, parted by thin rules, text only, so
+                every column starts and ends on the same lines. On the front page they make
+                one row of five columns taller than they are wide; a tablet shows the first
+                three of them, a phone all five one under another. */}
+            {home ? (
+              cards.length ? (
+                <div
+                  className={`grid grid-cols-1 divide-y divide-line border-b border-line md:divide-x md:divide-y-0 ${HOME_COLS[cards.length]}`}
+                >
+                  {cards.map((story, n) => (
+                    <Column
+                      key={story.id}
+                      story={story}
+                      lang={lang}
+                      section={section}
+                      tall
+                      className={n >= 3 ? "md:hidden lg:flex" : ""}
+                    />
+                  ))}
+                </div>
+              ) : null
+            ) : (
+              chunk(cards, 4).map((row) => (
+                <div
+                  key={row[0].id}
+                  className={`grid grid-cols-1 divide-y divide-line border-b border-line md:divide-x md:divide-y-0 ${COLS[row.length]}`}
+                >
+                  {row.map((story) => (
+                    <Column key={story.id} story={story} lang={lang} section={section} />
+                  ))}
+                </div>
+              ))
+            )}
           </div>
         ) : (
           <p className="px-5 py-10 text-muted md:px-8">{frame.emptySection}</p>
@@ -148,6 +170,18 @@ const COLS: Record<number, string> = {
   4: "md:grid-cols-4",
 };
 
+/** How many readings stand in the front page's row under the lead. */
+const HOME_COLUMNS = 5;
+
+/** The front page row: three columns on a tablet, all five from a laptop up. */
+const HOME_COLS: Record<number, string> = {
+  1: "md:grid-cols-1",
+  2: "md:grid-cols-2",
+  3: "md:grid-cols-3",
+  4: "md:grid-cols-3 lg:grid-cols-4",
+  5: "md:grid-cols-3 lg:grid-cols-5",
+};
+
 function chunk<T>(items: T[], size: number): T[][] {
   const rows: T[][] = [];
   for (let i = 0; i < items.length; i += size) rows.push(items.slice(i, i + size));
@@ -155,13 +189,27 @@ function chunk<T>(items: T[], size: number): T[][] {
 }
 
 /** One reading in the row of columns: title, its one-sentence summary, then the meta line. */
-function Column({ story, lang, section }: { story: Story; lang: Lang; section: Theme | "all" }) {
+function Column({
+  story,
+  lang,
+  section,
+  tall = false,
+  className = "",
+}: {
+  story: Story;
+  lang: Lang;
+  section: Theme | "all";
+  tall?: boolean;
+  className?: string;
+}) {
   const dek = story.locales[lang].dek?.trim();
   const excerpt = dek || story.locales[lang].lead;
+  // A tall column is at least a third taller than it is wide from tablet width up; a
+  // longer text makes it taller still, and its neighbours follow, so the row stays even.
   return (
     <Link
       {...readLink(lang, story.id)}
-      className="flex min-w-0 flex-col gap-2 px-5 py-6 md:py-8 lg:px-6"
+      className={`flex min-w-0 flex-col gap-2 px-5 py-6 md:py-8 lg:px-6 ${tall ? "md:aspect-[3/4]" : ""} ${className}`}
     >
       <h2 className="text-lg leading-snug">{storyTitle(story, lang)}</h2>
       {excerpt ? (
