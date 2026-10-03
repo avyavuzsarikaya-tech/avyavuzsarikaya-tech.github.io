@@ -3,12 +3,15 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { SiteMenu } from "@/components/menu";
 import { Pick } from "@/components/pick";
 import { SearchMark } from "@/components/search-mark";
+import { membersOn } from "@/lib/members/config";
+import { membersCopy } from "@/lib/members/copy";
 import { searchCopy } from "@/lib/search";
 import { aboutCopy } from "@/lib/about-copy";
 import { useFrameCopy } from "@/lib/frame-copy";
 import { langMeta, useCopy } from "@/lib/i18n";
 import {
   aboutLink,
+  accountLink,
   homeLink,
   rememberLang,
   searchLink,
@@ -58,12 +61,12 @@ function Swatch({ look }: { look: Look }) {
   );
 }
 
-function HeaderSwatch({ look }: { look: Look }) {
+function HeaderSwatch({ look, dark = false }: { look: Look; dark?: boolean }) {
   const [panel, paper] = LOOK_SWATCH[look];
   return (
     <span
       aria-hidden="true"
-      className="block size-[12px] rounded-full border border-ink/40 transition-colors md:size-[15px] group-hover:border-ink group-aria-expanded:border-ink"
+      className={`block size-[12px] rounded-full border transition-colors md:size-[15px] ${dark ? "border-paper/60 group-hover:border-paper group-aria-expanded:border-paper" : "border-ink/40 group-hover:border-ink group-aria-expanded:border-ink"}`}
       style={{ background: `linear-gradient(135deg, ${panel} 50%, ${paper} 50%)` }}
     />
   );
@@ -94,20 +97,48 @@ type Tools = {
 const ToolsContext = createContext<Tools | null>(null);
 
 /**
- * Search, menu, colour scheme and language, set small on the paper at the head of each page
- * (beside the home sentence, a section's name, or a reading's way back), so the
- * black masthead carries the name alone.
+ * Search, menu, colour scheme and language. From tablet width up they sit in the masthead,
+ * at its far end (place "masthead"); on a phone, where the masthead has no room beside the
+ * name, they sit small on the paper at the head of each page, beside the home sentence, a
+ * section's name or a reading's way back (place "page", hidden from tablet width up).
  */
-export function FrameTools() {
+/** A head and shoulders, drawn in the same thin line as the search mark. */
+function PersonMark() {
+  return (
+    <svg
+      viewBox="0 0 20 20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      aria-hidden="true"
+      className="size-[15px] md:size-[18px]"
+    >
+      <circle cx="10" cy="6.5" r="3.5" />
+      <path d="M3 18c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function FrameTools({ place = "page" }: { place?: "page" | "masthead" }) {
   const tools = useContext(ToolsContext);
   const lang = useLang();
   const copy = useCopy(lang);
   const frame = useFrameCopy(lang);
   if (!tools) return null;
+  const dark = place === "masthead";
+  const tone = dark ? "panel" : "page";
+  const hover = dark ? "hover:text-paper" : "hover:text-ink";
   return (
-    <div dir="ltr" className="flex shrink-0 items-center gap-0.5 text-muted md:gap-2">
+    <div
+      dir="ltr"
+      className={
+        dark
+          ? "hidden shrink-0 items-center gap-2 text-mist md:flex"
+          : "flex shrink-0 items-center gap-0.5 text-muted md:hidden"
+      }
+    >
       <Pick
-        tone="page"
+        tone={tone}
         align="end"
         label={frame.look}
         value={tools.look}
@@ -123,10 +154,10 @@ export function FrameTools() {
         }))}
         buttonClassName="group inline-flex h-11 w-7 items-center justify-center md:w-9"
       >
-        <HeaderSwatch look={tools.look} />
+        <HeaderSwatch look={tools.look} dark={dark} />
       </Pick>
       <Pick
-        tone="page"
+        tone={tone}
         align="end"
         label={copy.language}
         value={tools.lang}
@@ -136,29 +167,39 @@ export function FrameTools() {
           label: langMeta[code].name,
           lang: langMeta[code].html,
         }))}
-        buttonClassName="group inline-flex h-11 items-center gap-1 px-1 text-[10px] tracking-[0.18em] hover:text-ink md:px-2 md:text-[11px]"
+        buttonClassName={`group inline-flex h-11 items-center gap-1 px-1 text-[10px] tracking-[0.18em] ${hover} md:px-2 md:text-[11px]`}
       >
         <span>{langMeta[tools.lang].code}</span>
         <span className="hidden md:inline-flex">
           <Caret />
         </span>
       </Pick>
+      {membersOn ? (
+        <Link
+          {...accountLink(lang)}
+          aria-label={membersCopy(lang).account}
+          title={membersCopy(lang).account}
+          className={`inline-flex h-11 w-7 shrink-0 items-center justify-center ${hover} md:w-9`}
+        >
+          <PersonMark />
+        </Link>
+      ) : null}
       <Link
         {...searchLink(lang)}
         aria-label={searchCopy(lang).title}
         title={searchCopy(lang).title}
-        className="inline-flex h-11 w-7 shrink-0 items-center justify-center hover:text-ink md:w-9"
+        className={`inline-flex h-11 w-7 shrink-0 items-center justify-center ${hover} md:w-9`}
       >
         <SearchMark className="size-[15px] md:size-[18px]" />
       </Link>
       <button
-        ref={tools.menuButton}
+        ref={dark ? undefined : tools.menuButton}
         type="button"
         aria-expanded={tools.menuOpen}
         aria-controls="site-menu"
         aria-label={frame.menu}
         onClick={tools.openMenu}
-        className="inline-flex h-11 w-7 shrink-0 items-center justify-end hover:text-ink md:w-9"
+        className={`inline-flex h-11 w-7 shrink-0 items-center justify-end ${hover} md:w-9`}
       >
         <span
           className="flex w-[14px] flex-col gap-[4px] md:w-[17px] md:gap-[5px]"
@@ -275,21 +316,35 @@ export function Shell({
   return (
     <ToolsContext.Provider value={tools}>
       <div className="flex min-h-dvh flex-col bg-paper text-ink">
-        {/* The masthead carries the name alone, as a newspaper's does. Menu, language and
-          colour scheme sit on the paper below, beside the page's own heading. */}
+        {/* The masthead carries the name in the middle and, from tablet width up, the
+          site's motto under it and the tools at its far end. */}
         <header
           dir="ltr"
-          className="relative flex items-center justify-center bg-panel px-5 py-5 text-paper md:py-7 lg:py-10"
+          className="relative flex flex-col items-center justify-center bg-panel px-5 py-5 text-paper md:py-6 lg:py-8"
         >
           <Link
             {...homeLink(lang)}
             className="inline-flex min-h-11 items-center gap-2 text-paper md:gap-3 lg:gap-4"
           >
             <Meridian header />
-            <span className="font-display text-[2rem] leading-none tracking-[0.14em] md:text-6xl md:tracking-[0.16em] lg:text-8xl">
+            <span className="font-display text-[2rem] leading-none tracking-[0.14em] md:text-5xl md:tracking-[0.16em] lg:text-7xl">
               ORBIS
             </span>
           </Link>
+          {!inPanel ? (
+            <>
+              <p
+                dir={meta.dir}
+                lang={meta.html}
+                className="mt-2 hidden text-sm tracking-wide text-mist md:block lg:mt-3 lg:text-base"
+              >
+                {copy.heroLead} {copy.hero}
+              </p>
+              <div className="absolute inset-y-0 end-5 hidden items-center md:flex md:end-8">
+                <FrameTools place="masthead" />
+              </div>
+            </>
+          ) : null}
           {/* The editing panel stays out of the reader's menu; open it at /panel. */}
           {inPanel ? (
             <nav className="absolute inset-y-0 end-5 flex items-center gap-3 text-sm md:end-8">
@@ -310,7 +365,11 @@ export function Shell({
             look={look}
             onClose={() => {
               setMenuOpen(false);
-              menuButton.current?.focus();
+              // Back to whichever menu button is on screen: the masthead's or the page's.
+              const buttons = document.querySelectorAll<HTMLButtonElement>(
+                'button[aria-controls="site-menu"]',
+              );
+              ([...buttons].find((b) => b.offsetParent !== null) ?? menuButton.current)?.focus();
             }}
             onLang={setLang}
             onLook={setLook}

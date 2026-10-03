@@ -63,6 +63,7 @@ export function readStoryIndex(dir) {
           ...(story.author ? { author: story.author } : {}),
           ...(story.updatedAt ? { updatedAt: story.updatedAt } : {}),
           ...(story.image ? { image: story.image } : {}),
+          ...(story.membersOnly === true ? { membersOnly: true } : {}),
           locales,
         },
       ];

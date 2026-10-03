@@ -123,8 +123,8 @@ export function SiteMenu({
     section === "all" ? copy.home : section ? copy.themes[section] : undefined;
   const page = (on: boolean) =>
     on
-      ? "inline-flex min-h-12 items-center gap-3 text-[17px] text-ink underline underline-offset-4"
-      : "inline-flex min-h-12 items-center gap-3 text-[17px] text-muted hover:text-ink";
+      ? "inline-flex min-h-12 items-center gap-3 text-[17px] font-bold text-ink underline underline-offset-4"
+      : "inline-flex min-h-12 items-center gap-3 text-[17px] font-bold text-muted hover:text-ink";
 
   useEffect(() => {
     const body = document.body;
@@ -266,8 +266,8 @@ export function SiteMenu({
                 item === "search" ? (
                   <li key={item}>
                     <Link {...searchLink(lang)} className={page(onSearch)} onClick={onClose}>
-                      <Search aria-hidden="true" strokeWidth={1.5} className="size-4 shrink-0" />
                       {searchCopy(lang).title}
+                      <Search aria-hidden="true" strokeWidth={1.5} className="size-4 shrink-0" />
                     </Link>
                   </li>
                 ) : item === "about" ? (

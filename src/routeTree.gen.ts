@@ -12,10 +12,13 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SectionRouteImport } from './routes/$section'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AccountRouteImport } from './routes/account'
+import { Route as EditorRouteImport } from './routes/editor'
 import { Route as PanelRouteImport } from './routes/panel'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as LangSectionRouteImport } from './routes/$lang.$section'
 import { Route as LangAboutRouteImport } from './routes/$lang.about'
+import { Route as LangAccountRouteImport } from './routes/$lang.account'
 import { Route as LangSearchRouteImport } from './routes/$lang.search'
 import { Route as PanelIndexRouteImport } from './routes/panel.index'
 import { Route as PanelStoryIdRouteImport } from './routes/panel.$storyId'
@@ -37,6 +40,16 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EditorRoute = EditorRouteImport.update({
+  id: '/editor',
+  path: '/editor',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PanelRoute = PanelRouteImport.update({
   id: '/panel',
   path: '/panel',
@@ -55,6 +68,11 @@ const LangSectionRoute = LangSectionRouteImport.update({
 const LangAboutRoute = LangAboutRouteImport.update({
   id: '/$lang/about',
   path: '/$lang/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangAccountRoute = LangAccountRouteImport.update({
+  id: '/$lang/account',
+  path: '/$lang/account',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LangSearchRoute = LangSearchRouteImport.update({
@@ -87,10 +105,13 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$section': typeof SectionRoute
   '/about': typeof AboutRoute
+  '/account': typeof AccountRoute
+  '/editor': typeof EditorRoute
   '/panel': typeof PanelRouteWithChildren
   '/search': typeof SearchRoute
   '/$lang/$section': typeof LangSectionRoute
   '/$lang/about': typeof LangAboutRoute
+  '/$lang/account': typeof LangAccountRoute
   '/$lang/search': typeof LangSearchRoute
   '/panel/$storyId': typeof PanelStoryIdRoute
   '/read/$storyId': typeof ReadStoryIdRoute
@@ -101,9 +122,12 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$section': typeof SectionRoute
   '/about': typeof AboutRoute
+  '/account': typeof AccountRoute
+  '/editor': typeof EditorRoute
   '/search': typeof SearchRoute
   '/$lang/$section': typeof LangSectionRoute
   '/$lang/about': typeof LangAboutRoute
+  '/$lang/account': typeof LangAccountRoute
   '/$lang/search': typeof LangSearchRoute
   '/panel/$storyId': typeof PanelStoryIdRoute
   '/read/$storyId': typeof ReadStoryIdRoute
@@ -115,10 +139,13 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$section': typeof SectionRoute
   '/about': typeof AboutRoute
+  '/account': typeof AccountRoute
+  '/editor': typeof EditorRoute
   '/panel': typeof PanelRouteWithChildren
   '/search': typeof SearchRoute
   '/$lang/$section': typeof LangSectionRoute
   '/$lang/about': typeof LangAboutRoute
+  '/$lang/account': typeof LangAccountRoute
   '/$lang/search': typeof LangSearchRoute
   '/panel/$storyId': typeof PanelStoryIdRoute
   '/read/$storyId': typeof ReadStoryIdRoute
@@ -131,10 +158,13 @@ export interface FileRouteTypes {
     | '/'
     | '/$section'
     | '/about'
+    | '/account'
+    | '/editor'
     | '/panel'
     | '/search'
     | '/$lang/$section'
     | '/$lang/about'
+    | '/$lang/account'
     | '/$lang/search'
     | '/panel/$storyId'
     | '/read/$storyId'
@@ -145,9 +175,12 @@ export interface FileRouteTypes {
     | '/'
     | '/$section'
     | '/about'
+    | '/account'
+    | '/editor'
     | '/search'
     | '/$lang/$section'
     | '/$lang/about'
+    | '/$lang/account'
     | '/$lang/search'
     | '/panel/$storyId'
     | '/read/$storyId'
@@ -158,10 +191,13 @@ export interface FileRouteTypes {
     | '/'
     | '/$section'
     | '/about'
+    | '/account'
+    | '/editor'
     | '/panel'
     | '/search'
     | '/$lang/$section'
     | '/$lang/about'
+    | '/$lang/account'
     | '/$lang/search'
     | '/panel/$storyId'
     | '/read/$storyId'
@@ -173,10 +209,13 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SectionRoute: typeof SectionRoute
   AboutRoute: typeof AboutRoute
+  AccountRoute: typeof AccountRoute
+  EditorRoute: typeof EditorRoute
   PanelRoute: typeof PanelRouteWithChildren
   SearchRoute: typeof SearchRoute
   LangSectionRoute: typeof LangSectionRoute
   LangAboutRoute: typeof LangAboutRoute
+  LangAccountRoute: typeof LangAccountRoute
   LangSearchRoute: typeof LangSearchRoute
   ReadStoryIdRoute: typeof ReadStoryIdRoute
   LangReadStoryIdRoute: typeof LangReadStoryIdRoute
@@ -205,6 +244,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/editor': {
+      id: '/editor'
+      path: '/editor'
+      fullPath: '/editor'
+      preLoaderRoute: typeof EditorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/panel': {
       id: '/panel'
       path: '/panel'
@@ -231,6 +284,13 @@ declare module '@tanstack/react-router' {
       path: '/$lang/about'
       fullPath: '/$lang/about'
       preLoaderRoute: typeof LangAboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/account': {
+      id: '/$lang/account'
+      path: '/$lang/account'
+      fullPath: '/$lang/account'
+      preLoaderRoute: typeof LangAccountRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$lang/search': {
@@ -287,10 +347,13 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SectionRoute: SectionRoute,
   AboutRoute: AboutRoute,
+  AccountRoute: AccountRoute,
+  EditorRoute: EditorRoute,
   PanelRoute: PanelRouteWithChildren,
   SearchRoute: SearchRoute,
   LangSectionRoute: LangSectionRoute,
   LangAboutRoute: LangAboutRoute,
+  LangAccountRoute: LangAccountRoute,
   LangSearchRoute: LangSearchRoute,
   ReadStoryIdRoute: ReadStoryIdRoute,
   LangReadStoryIdRoute: LangReadStoryIdRoute,

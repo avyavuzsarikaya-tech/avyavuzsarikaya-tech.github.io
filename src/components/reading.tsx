@@ -2,6 +2,8 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ReadingPlayer } from "@/components/player";
 import { Prose } from "@/components/prose";
+import { Comments } from "@/components/members/comments";
+import { LockNote, StoryVideos, useMemberText } from "@/components/members/locked";
 import { ReadTime } from "@/components/read-time";
 import { FrameTools, Shell } from "@/components/shell";
 import { byline, editorialCopy, imageCaption } from "@/lib/editorial";
@@ -98,6 +100,9 @@ function Reading({ story }: { story: Story | null }) {
   const lang = useLang();
   const copy = useCopy(lang);
   const [typeStep, setTypeStep] = useState(1);
+  const membersOnly = story?.membersOnly === true;
+  // A paid member's full text of a members-only reading; null for everyone else.
+  const fullText = useMemberText(story?.id, lang, membersOnly);
 
   useEffect(() => {
     const saved = TYPE_STEPS.indexOf(readType() as (typeof TYPE_STEPS)[number]);
@@ -125,7 +130,8 @@ function Reading({ story }: { story: Story | null }) {
   const editorial = editorialCopy(lang);
   const by = byline(story.author, lang);
   const caption = imageCaption(story.image, lang);
-  const minutes = readingMinutes(locale.body);
+  const body = fullText ?? locale.body;
+  const minutes = readingMinutes(body);
   const written = hasCopy(story, lang);
   const sourceNums = new Set(story.sources.map((source) => source.n));
   const sources = [...story.sources].sort((a, b) => a.n - b.n);
@@ -203,9 +209,14 @@ function Reading({ story }: { story: Story | null }) {
           </div>
         </header>
 
+        <StoryVideos storyId={story.id} lang={lang} />
+
         {written ? (
-          <div style={{ fontSize: `${TYPE_STEPS[typeStep]}em` }}>
-            <Prose body={locale.body} sourceNums={sourceNums} sourceWord={copy.sourceWord} />
+          <div className="flex flex-col gap-8">
+            <div style={{ fontSize: `${TYPE_STEPS[typeStep]}em` }}>
+              <Prose body={body} sourceNums={sourceNums} sourceWord={copy.sourceWord} />
+            </div>
+            {membersOnly && fullText === null ? <LockNote lang={lang} /> : null}
           </div>
         ) : (
           <div className="flex flex-col gap-4">
@@ -264,6 +275,8 @@ function Reading({ story }: { story: Story | null }) {
             </ol>
           </section>
         ) : null}
+
+        <Comments storyId={story.id} lang={lang} />
       </div>
     </main>
   );

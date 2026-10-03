@@ -53,6 +53,11 @@ export type Story = {
   date: string;
   sources: Source[];
   image?: StoryImage;
+  /**
+   * Members-only reading: the bodies in this file are only the opening, readable by all;
+   * the full text of each language is written in the editor panel and kept in Supabase.
+   */
+  membersOnly?: boolean;
   locales: Record<Lang, LocaleCopy>;
 };
 
@@ -122,5 +127,7 @@ export type StoryCard = {
   theme: Theme;
   date: string;
   image?: StoryImage;
+  /** The story file holds only the opening; see Story.membersOnly. */
+  membersOnly?: boolean;
   locales: Record<Lang, LocaleCard>;
 };
