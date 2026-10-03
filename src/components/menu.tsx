@@ -18,6 +18,35 @@ const MENU_PAGES = ["search", "about"] as const;
 /** The three lists of the menu. Only one is open at a time. */
 type Group = "sections" | "languages" | "look";
 
+/**
+ * The menu opens with the lists as the reader last left them: a list closed by hand stays
+ * closed the next time the menu is opened. Kept for the visit and in the browser; the
+ * first time, Sections is open.
+ */
+const OPEN_KEY = "orbis-menu-open";
+let lastOpen: Group | null | undefined;
+
+function readOpen(): Group | null {
+  if (lastOpen !== undefined) return lastOpen;
+  try {
+    const stored = window.localStorage.getItem(OPEN_KEY);
+    if (stored === "none") return null;
+    if (stored === "sections" || stored === "languages" || stored === "look") return stored;
+  } catch {
+    // Storage blocked: fall back to the first-time default.
+  }
+  return "sections";
+}
+
+function saveOpen(group: Group | null) {
+  lastOpen = group;
+  try {
+    window.localStorage.setItem(OPEN_KEY, group ?? "none");
+  } catch {
+    // Storage blocked: the choice still holds for this visit.
+  }
+}
+
 function Swatch({ look }: { look: Look }) {
   const [panel, paper] = LOOK_SWATCH[look];
   return (
@@ -117,8 +146,12 @@ export function SiteMenu({
   onCloseRef.current = onClose;
   const onAbout = stripLang(path) === "/about";
   const onSearch = stripLang(path) === "/search";
-  const [openGroup, setOpenGroup] = useState<Group | null>("sections");
-  const toggle = (group: Group) => setOpenGroup((now) => (now === group ? null : group));
+  const [openGroup, setOpenGroup] = useState<Group | null>(readOpen);
+  const toggle = (group: Group) => {
+    const next = openGroup === group ? null : group;
+    saveOpen(next);
+    setOpenGroup(next);
+  };
   const currentSection =
     section === "all" ? copy.home : section ? copy.themes[section] : undefined;
   const page = (on: boolean) =>
