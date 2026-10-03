@@ -46,7 +46,6 @@
   },
   "video": {
     "src": "videos/sample-city-light.mp4",
-    "poster": "images/sample-city-light.jpg",
     "credit": "City lamps, a bedside light, and dawn over the roofs.",
     "captions": {
       "tr": "Şehir lambaları, yatak başı ışığı ve çatılar üstünde şafak.",

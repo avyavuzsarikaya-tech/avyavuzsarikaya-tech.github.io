@@ -175,8 +175,7 @@ function Reading({ story }: { story: Story | null }) {
                 preload="metadata"
                 playsInline
                 controlsList="nodownload"
-                poster={story.video.poster}
-                src={story.video.poster ? story.video.src : `${story.video.src}#t=0.1`}
+                src={`${story.video.src}#t=0.1`}
                 aria-label={videoCaption || AI_VIDEO_NOTE[lang]}
                 className="block aspect-video h-auto w-full max-w-full bg-ink"
               />
