@@ -1,0 +1,1 @@
+import{t as e}from"./about-BDIH3t5c.js";var t=e;export{t as component};
