@@ -55,12 +55,14 @@ jobs:
           for lang in tr ar fr es; do cp -a "dist/client/$lang" "$lang"; done
           if [ -d dist/client/__grok ]; then cp -a dist/client/__grok __grok; fi
           if [ -d dist/client/audio ]; then cp -a dist/client/audio audio; fi
+          if [ -d dist/client/videos ]; then rm -rf videos; cp -a dist/client/videos videos; fi
           git config user.name "avyavuzsarikaya-tech"
           git config user.email "335169178+avyavuzsarikaya-tech@users.noreply.github.com"
           git add -A .nojekyll favicon.svg og.jpg robots.txt sitemap.xml feed.xml assets read tr ar fr es
           git add -A -- $(cd dist/client && ls *.html | grep -v '^_shell.html$')
           if [ -d __grok ]; then git add -A __grok; fi
           if [ -d audio ]; then git add -A audio; fi
+          if [ -d videos ]; then git add -A videos; fi
           if git diff --staged --quiet; then
             echo "Site already current"
             exit 0

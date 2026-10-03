@@ -43,5 +43,17 @@
       "body": "Esta es una lectura de prueba. Está aquí para probar el diseño de la página; el texto no se basa en ninguna investigación.\n\nLa lectura real con este título se publicará más adelante, con sus fuentes.",
       "audio": null
     }
+  },
+  "video": {
+    "src": "videos/sample-city-light.mp4",
+    "poster": "images/sample-city-light.jpg",
+    "credit": "City lamps, a bedside light, and dawn over the roofs.",
+    "captions": {
+      "tr": "Şehir lambaları, yatak başı ışığı ve çatılar üstünde şafak.",
+      "en": "City lamps, a bedside light, and dawn over the roofs.",
+      "ar": "مصابيح المدينة، ضوء بجانب السرير، وفجر فوق الأسطح.",
+      "fr": "Lampes de la ville, une lumière de chevet, et l'aube sur les toits.",
+      "es": "Faroles de la ciudad, una luz de cabecera y el alba sobre los tejados."
+    }
   }
 }

@@ -6,17 +6,6 @@
     "src": "images/sample-quake-economy.jpg",
     "credit": "A crack in a plaster wall and fallen bricks."
   },
-  "video": {
-    "src": "videos/sample-quake-economy.mp4",
-    "credit": "A street being rebuilt after an earthquake.",
-    "captions": {
-      "tr": "Depremden sonra yeniden yapılan bir sokak.",
-      "en": "A street being rebuilt after an earthquake.",
-      "ar": "شارع يُعاد بناؤه بعد زلزال.",
-      "fr": "Une rue reconstruite après un séisme.",
-      "es": "Una calle reconstruida tras un terremoto."
-    }
-  },
   "sources": [],
   "locales": {
     "tr": {
