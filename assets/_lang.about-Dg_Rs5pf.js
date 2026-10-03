@@ -1,0 +1,1 @@
+import{t as e}from"./about-CF2Umo5y.js";var t=e;export{t as component};
