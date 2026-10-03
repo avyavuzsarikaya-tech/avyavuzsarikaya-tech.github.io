@@ -137,6 +137,13 @@ export async function publishStory(
     delete file.image;
   }
 
+  // A video is placed in videos/ by hand; the panel only keeps its paths as stored.
+  if (file.video) {
+    file.video.src = mediaPath(file.video.src);
+    if (file.video.poster) file.video.poster = mediaPath(file.video.poster);
+    else delete file.video.poster;
+  }
+
   const keep = mediaOf(file);
   for (const old of mediaOf(previous)) {
     const path = repoPathOf(old);
@@ -155,6 +162,10 @@ export async function publishStory(
     if (audio) audio.dataUrl = mediaUrl(audio.dataUrl);
   }
   if (shown.image) shown.image.src = mediaUrl(shown.image.src);
+  if (shown.video) {
+    shown.video.src = mediaUrl(shown.video.src);
+    if (shown.video.poster) shown.video.poster = mediaUrl(shown.video.poster);
+  }
   return { shown, text };
 }
 

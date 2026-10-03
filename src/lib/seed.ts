@@ -31,6 +31,13 @@ function resolve(story: Story): Story {
     ...story,
     theme: normalizeTheme(story.theme),
     image: story.image ? { ...story.image, src: mediaUrl(story.image.src) } : undefined,
+    video: story.video
+      ? {
+          ...story.video,
+          src: mediaUrl(story.video.src),
+          poster: story.video.poster ? mediaUrl(story.video.poster) : undefined,
+        }
+      : undefined,
     locales,
   };
 }

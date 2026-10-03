@@ -36,6 +36,14 @@ const AI_NOTE: Record<Lang, string> = {
   es: "Imagen generada por IA",
 };
 
+const AI_VIDEO_NOTE: Record<Lang, string> = {
+  tr: "Yapay zekâ ile üretilmiş video",
+  en: "AI-generated video",
+  ar: "فيديو مولّد بالذكاء الاصطناعي",
+  fr: "Vidéo générée par IA",
+  es: "Vídeo generado por IA",
+};
+
 function readType(): number {
   try {
     const next = Number(localStorage.getItem(TYPE_KEY));
@@ -130,6 +138,9 @@ function Reading({ story }: { story: Story | null }) {
   const editorial = editorialCopy(lang);
   const by = byline(story.author, lang);
   const caption = imageCaption(story.image, lang);
+  const videoCaption = story.video
+    ? story.video.captions?.[lang]?.trim() || story.video.credit?.trim() || ""
+    : "";
   const body = fullText ?? locale.body;
   const minutes = readingMinutes(body);
   const written = hasCopy(story, lang);
@@ -208,6 +219,24 @@ function Reading({ story }: { story: Story | null }) {
             ) : null}
           </div>
         </header>
+
+        {story.video ? (
+          <figure className="flex max-w-full flex-col gap-2">
+            <video
+              controls
+              preload="metadata"
+              playsInline
+              controlsList="nodownload"
+              poster={story.video.poster}
+              src={story.video.src}
+              aria-label={videoCaption || AI_VIDEO_NOTE[lang]}
+              className="block aspect-video h-auto w-full max-w-full bg-ink"
+            />
+            <figcaption className="text-xs leading-snug text-muted">
+              {videoCaption ? `${videoCaption} · ${AI_VIDEO_NOTE[lang]}` : AI_VIDEO_NOTE[lang]}
+            </figcaption>
+          </figure>
+        ) : null}
 
         <StoryVideos storyId={story.id} lang={lang} />
 

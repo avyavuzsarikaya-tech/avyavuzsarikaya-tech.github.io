@@ -43,6 +43,18 @@ export type StoryImage = {
   captions?: Partial<Record<Lang, string>>;
 };
 
+/**
+ * A video shown with a reading, open to every reader. `src` is videos/<file> in the
+ * repository; `poster` is the still shown before it plays (usually the reading's picture).
+ */
+export type StoryVideo = {
+  src: string;
+  poster?: string;
+  /** Short description. Gray caption under the video. */
+  credit?: string;
+  captions?: Partial<Record<Lang, string>>;
+};
+
 export type Story = {
   id: string;
   /** Missing status preserves publication of existing files. */
@@ -53,6 +65,7 @@ export type Story = {
   date: string;
   sources: Source[];
   image?: StoryImage;
+  video?: StoryVideo;
   /**
    * Members-only reading: the bodies in this file are only the opening, readable by all;
    * the full text of each language is written in the editor panel and kept in Supabase.
