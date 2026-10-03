@@ -1,0 +1,1 @@
+import{t as e}from"./atlas-CPt5vioz.js";var t=e;export{t as component};
