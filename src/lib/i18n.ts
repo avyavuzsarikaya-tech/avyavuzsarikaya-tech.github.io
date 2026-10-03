@@ -91,7 +91,7 @@ const copy: Record<Lang, Copy> = {
     sections: "Sections",
     panel: "Panel",
     language: "Language",
-    heroLead: "A world",
+    heroLead: "The world",
     hero: "reading atlas.",
     manifesto:
       "Orbis is a reading atlas. Each dispatch is rewritten in five languages and tied to the public documents it rests on. There is no breaking-news desk, and there is no opinion page.",
@@ -174,7 +174,7 @@ const copy: Record<Lang, Copy> = {
     sections: "Bölümler",
     panel: "Panel",
     language: "Dil",
-    heroLead: "Bir dünya",
+    heroLead: "Dünya",
     hero: "okuma atlası.",
     manifesto:
       "Orbis bir okuma atlasıdır. Her metin beş dilde yeniden yazılır ve dayandığı kamusal belgelere bağlanır. Son dakika masası yoktur, görüş sayfası da yoktur.",
@@ -259,7 +259,7 @@ const copy: Record<Lang, Copy> = {
     panel: "اللوحة",
     language: "اللغة",
     heroLead: "أطلس قراءة",
-    hero: "للعالم.",
+    hero: "العالم.",
     manifesto:
       "أوربيس أطلس قراءة. يُعاد كتابة كل نص بخمس لغات ويُربط بالوثائق العامة التي يستند إليها. لا مكتب أخبار عاجلة هنا، ولا صفحة رأي.",
     listenRule: "يظهر زر الاستماع فقط بعد رفع تسجيل للغة التي تقرأ بها.",
@@ -341,7 +341,7 @@ const copy: Record<Lang, Copy> = {
     sections: "Sections",
     panel: "Panneau",
     language: "Langue",
-    heroLead: "Un atlas de lecture",
+    heroLead: "L’atlas de lecture",
     hero: "du monde.",
     manifesto:
       "Orbis est un atlas de lecture. Chaque texte est réécrit en cinq langues et relié aux documents publics sur lesquels il repose. Il n’y a pas de desk d’urgence, ni de page d’opinion.",
@@ -427,7 +427,7 @@ const copy: Record<Lang, Copy> = {
     sections: "Secciones",
     panel: "Panel",
     language: "Lengua",
-    heroLead: "Un atlas de lectura",
+    heroLead: "El atlas de lectura",
     hero: "del mundo.",
     manifesto:
       "Orbis es un atlas de lectura. Cada texto se reescribe en cinco lenguas y se ata a los documentos públicos en los que se apoya. No hay mesa de última hora, ni página de opinión.",
