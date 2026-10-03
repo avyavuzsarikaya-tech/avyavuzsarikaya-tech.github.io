@@ -54,11 +54,11 @@ function MenuGroup({
         aria-expanded={open}
         aria-controls={boxId}
         onClick={onToggle}
-        className="flex min-h-15 w-full items-center justify-between gap-3 px-5 text-start"
+        className="flex min-h-13 w-full items-center justify-between gap-3 px-5 text-start"
       >
-        <span className="text-xl font-bold text-ink">{title}</span>
+        <span className="text-[17px] font-bold text-ink">{title}</span>
         <span className="flex items-center gap-2.5">
-          {current ? <span className="text-base text-muted">{current}</span> : null}
+          {current ? <span className="text-[15px] text-muted">{current}</span> : null}
           <ChevronDown
             aria-hidden="true"
             strokeWidth={1.5}
@@ -162,8 +162,8 @@ export function SiteMenu({
         lang={meta.html}
         className="absolute inset-y-0 start-0 flex w-full max-w-sm flex-col bg-paper text-ink shadow-lg"
       >
-        <div className="flex items-center justify-between gap-4 border-b border-rule px-5 py-3">
-          <span dir="ltr" className="font-display text-lg tracking-widest">
+        <div className="flex items-center justify-between gap-4 border-b border-rule px-5 py-5">
+          <span dir="ltr" className="font-display text-[2rem] leading-none tracking-[0.14em]">
             ORBIS
           </span>
           <button
