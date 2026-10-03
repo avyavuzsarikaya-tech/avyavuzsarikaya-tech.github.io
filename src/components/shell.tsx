@@ -286,7 +286,7 @@ export function Shell({
             className="inline-flex min-h-11 items-center gap-2 text-paper md:gap-3 lg:gap-4"
           >
             <Meridian header />
-            <span className="font-display text-[2rem] leading-none tracking-[0.14em] md:text-5xl md:tracking-[0.16em] lg:text-7xl">
+            <span className="font-display text-[2rem] leading-none tracking-[0.14em] md:text-6xl md:tracking-[0.16em] lg:text-8xl">
               ORBIS
             </span>
           </Link>
