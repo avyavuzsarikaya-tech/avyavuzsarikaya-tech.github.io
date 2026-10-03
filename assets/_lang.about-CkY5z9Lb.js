@@ -1,0 +1,1 @@
+import{t as e}from"./about-SW2L-mW2.js";var t=e;export{t as component};
