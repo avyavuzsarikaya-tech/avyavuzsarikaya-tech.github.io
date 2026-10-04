@@ -13,8 +13,7 @@ import { useLang } from "@/lib/use-lang";
 /**
  * The front page and the section pages share this layout: the lead reading across the
  * page, then the other readings in ruled columns under it. From tablet width up the front
- * page alone breaks that row into an editorial grid on tablets and horizontal rows on
- * desktop; a phone and every section page keep the ruled columns.
+ * page alone shows horizontal rows; a phone and every section page keep the ruled columns.
  */
 
 function Meta({ story, lang, section }: { story: Story; lang: Lang; section: Theme | "all" }) {
@@ -221,7 +220,7 @@ function HomeDesk({
 }) {
   const [lead, beside, ...rest] = cards;
   return (
-    <div className="hidden border-b border-line md:block lg:hidden">
+    <div className="hidden border-b border-line">
       <div className="grid grid-cols-12 divide-x divide-line">
         {lead ? (
           <DeskCard
@@ -261,7 +260,7 @@ function HomeList({
   section: Theme | "all";
 }) {
   return (
-    <div className="hidden divide-y divide-line border-b border-line lg:block">
+    <div className="hidden divide-y divide-line border-b border-line md:block">
       {cards.map((story) => {
         const dek = story.locales[lang].dek?.trim();
         const excerpt = dek || story.locales[lang].lead;
