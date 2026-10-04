@@ -94,11 +94,15 @@ export function accountLink(lang: Lang, back?: string) {
 
 /**
  * Runs in <head> before the page paints.
+ * The site always opens in English. Language is never inferred from the browser
+ * language or from location. A choice is stored only when the reader picks a
+ * language in the menu (see rememberLang), and the next visit to a plain address
+ * opens in that language.
  * 1. An old section link (/?s=climate) goes to the section's own address (/climate).
- * 2. A reader who chose another language earlier and opens the plain (English) front page
- *    or a section page goes to the same page in that language. A reading's address is
- *    never changed, so a shared link opens in the language it was shared in. An address
- *    that already names a language is never changed, and the panel is left alone.
+ * 2. A stored manual choice other than English sends a plain front page or section
+ *    page to that language. A reading's address is never changed, so a shared link
+ *    opens in the language it was shared in. An address that already names a
+ *    language is never changed, and the panel is left alone.
  */
 const PLAIN_PAGE = `/^\\/(${[...PREFIXED, "panel", "editor"].join("|")})(\\/|$)/`;
 const FRONT_OR_SECTION = `/^\\/([a-z-]+(\\.html)?)?$/`;

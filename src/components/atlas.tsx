@@ -209,10 +209,10 @@ function HomeCell({
       }}
       className="flex min-w-0 flex-col gap-3 border-r border-b border-rule p-4 md:p-8"
     >
-      <h2 className={lead ? "text-2xl leading-[1.12] md:text-4xl" : "text-base leading-snug md:text-xl"}>
+      <h2 className={lead ? "cell-title text-2xl leading-[1.12] md:text-4xl" : "cell-title text-base leading-snug md:text-xl"}>
         {storyTitle(story, lang)}
       </h2>
-      {summary ? <p className="font-body text-pretty text-[15px] leading-snug text-muted">{summary}</p> : null}
+      {summary ? <p className="cell-summary text-pretty">{summary}</p> : null}
       <span aria-hidden="true" className="mt-auto block h-px w-8 bg-ink" />
     </Link>
   );
