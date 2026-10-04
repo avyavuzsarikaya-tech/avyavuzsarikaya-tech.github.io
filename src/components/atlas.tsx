@@ -13,8 +13,8 @@ import { useLang } from "@/lib/use-lang";
 /**
  * The front page and the section pages share this layout: the lead reading across the
  * page, then the other readings in ruled columns under it. From tablet width up the front
- * page alone breaks that row into an editorial grid; a phone and every section page keep
- * the ruled columns.
+ * page alone breaks that row into an editorial grid on tablets and horizontal rows on
+ * desktop; a phone and every section page keep the ruled columns.
  */
 
 function Meta({ story, lang, section }: { story: Story; lang: Lang; section: Theme | "all" }) {
@@ -136,6 +136,7 @@ export function Atlas({ section }: { section: Theme | "all" }) {
                     ))}
                   </div>
                   <HomeDesk cards={cards} lang={lang} section={section} />
+                  <HomeList cards={cards} lang={lang} section={section} />
                 </>
               ) : null
             ) : (
@@ -220,7 +221,7 @@ function HomeDesk({
 }) {
   const [lead, beside, ...rest] = cards;
   return (
-    <div className="hidden border-b border-line md:block">
+    <div className="hidden border-b border-line md:block lg:hidden">
       <div className="grid grid-cols-12 divide-x divide-line">
         {lead ? (
           <DeskCard
@@ -246,6 +247,53 @@ function HomeDesk({
           ))}
         </div>
       ) : null}
+    </div>
+  );
+}
+
+function HomeList({
+  cards,
+  lang,
+  section,
+}: {
+  cards: Story[];
+  lang: Lang;
+  section: Theme | "all";
+}) {
+  return (
+    <div className="hidden divide-y divide-line border-b border-line lg:block">
+      {cards.map((story) => {
+        const dek = story.locales[lang].dek?.trim();
+        const excerpt = dek || story.locales[lang].lead;
+        return (
+          <Link
+            key={story.id}
+            {...readLink(lang, story.id)}
+            className="grid min-w-0 grid-cols-[11rem_minmax(0,1fr)_11rem] items-start gap-8 px-10 py-8"
+          >
+            <div className="min-w-0">
+              {story.image ? (
+                <Picture story={story} className="aspect-[3/2]" />
+              ) : null}
+            </div>
+            <div className="flex min-w-0 flex-col gap-3">
+              <h2 className="text-xl leading-snug">{storyTitle(story, lang)}</h2>
+              {excerpt ? (
+                <p
+                  className={`font-body text-pretty text-[15px] leading-snug text-muted ${
+                    dek ? "" : "line-clamp-3"
+                  }`}
+                >
+                  {excerpt}
+                </p>
+              ) : null}
+            </div>
+            <div className="min-w-0">
+              <Meta story={story} lang={lang} section={section} />
+            </div>
+          </Link>
+        );
+      })}
     </div>
   );
 }
