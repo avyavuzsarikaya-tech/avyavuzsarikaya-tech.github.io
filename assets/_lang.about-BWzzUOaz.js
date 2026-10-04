@@ -1,0 +1,1 @@
+import{t as e}from"./about-DO0KA_mU.js";var t=e;export{t as component};
