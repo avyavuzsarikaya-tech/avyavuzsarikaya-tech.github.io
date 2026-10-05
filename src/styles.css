@@ -257,3 +257,24 @@ html[data-look="bordo"] .section-link[data-on="true"] {
   -webkit-appearance: none;
   appearance: none;
 }
+
+.reading-entry-byline {
+}
+.reading-entry-kicker { order: 3; }
+.reading-entry-byline { order: 4; margin-top: -0.25rem; }
+
+/* Homepage cards do not carry those class names. Same order only: title, summary, section and reading time. */
+a.group:has(.paper-title) > .paper-title,
+a.group:has(.paper-title) > div.flex.flex-col > .paper-title {
+  order: 1;
+}
+a.group:has(.paper-title) > p.font-body,
+a.group:has(.paper-title) > div.flex.flex-col > p.font-body {
+  order: 2;
+}
+a.group:has(.paper-title) > p.text-pine,
+a.group:has(.paper-title) > div.flex.flex-col > p.text-pine,
+a.group:has(.paper-title) > p.tabular-nums,
+a.group:has(.paper-title) > div.flex.flex-col > p.tabular-nums {
+  order: 3;
+}
