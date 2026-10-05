@@ -1,0 +1,1 @@
+import{t as e}from"./about-CiD4qmkl.js";var t=e;export{t as component};
