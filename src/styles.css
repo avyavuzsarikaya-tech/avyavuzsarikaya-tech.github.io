@@ -102,10 +102,10 @@ html[data-look="bordo"] .section-link[data-on="true"] {
   margin-top: 0.15rem;
   padding-top: 0.85rem;
   font-family: "Source Serif 4", Georgia, serif;
-  font-style: normal;
-  font-weight: 500;
+  font-style: italic;
+  font-weight: 400;
   font-optical-sizing: none;
-  font-variation-settings: "opsz" 18, "wght" 500;
+  font-variation-settings: "opsz" 18, "wght" 400;
   font-size: 1.2rem;
   line-height: 1.45;
   letter-spacing: -0.011em;
@@ -122,6 +122,8 @@ html[data-look="bordo"] .section-link[data-on="true"] {
 }
 :lang(ar) .reading-dek {
   font-family: "Noto Naskh Arabic", Georgia, serif;
+  font-style: normal;
+  font-weight: 500;
   font-variation-settings: normal;
   letter-spacing: 0;
   line-height: 1.75;
