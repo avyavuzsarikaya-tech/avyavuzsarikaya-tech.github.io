@@ -94,6 +94,39 @@ html[data-look="bordo"] .section-link[data-on="true"] {
   }
 }
 
+/* Standfirst under a reading title. Roman, not italic; a short rule keeps it
+   with the headline and off the picture. */
+.reading-dek {
+  position: relative;
+  max-width: 38rem;
+  margin-top: 0.15rem;
+  padding-top: 0.85rem;
+  font-family: "Source Serif 4", Georgia, serif;
+  font-style: normal;
+  font-weight: 500;
+  font-optical-sizing: none;
+  font-variation-settings: "opsz" 18, "wght" 500;
+  font-size: 1.2rem;
+  line-height: 1.45;
+  letter-spacing: -0.011em;
+  color: #2c2c2c;
+}
+.reading-dek::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  inset-inline-start: 0;
+  width: 2.25rem;
+  height: 1px;
+  background: var(--color-pine);
+}
+:lang(ar) .reading-dek {
+  font-family: "Noto Naskh Arabic", Georgia, serif;
+  font-variation-settings: normal;
+  letter-spacing: 0;
+  line-height: 1.75;
+}
+
 /* Front page records: each layer opens and closes in height and opacity together.
    Depth 1 shows titles, 2 adds the summary, 3 adds the reading time and a small picture. */
 .records .record-layer {

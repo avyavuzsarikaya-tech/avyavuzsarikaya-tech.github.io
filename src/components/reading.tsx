@@ -163,11 +163,7 @@ function Reading({ story }: { story: Story | null }) {
         <header ref={readStart} className="flex flex-col gap-4">
           <p className="text-xs uppercase tracking-widest text-pine">{copy.themes[story.theme]}</p>
           <h1 className="text-4xl md:text-5xl">{locale.title || story.locales.en.title}</h1>
-          {locale.dek ? (
-            <p className={lang === "ar" ? "text-lg text-muted" : "text-lg text-muted italic"}>
-              {locale.dek}
-            </p>
-          ) : null}
+          {locale.dek ? <p className="reading-dek">{locale.dek}</p> : null}
           {/* One picture at the top of a reading: a reading with a video shows the video
               in the picture's place; the picture stays on the cards. */}
           {story.video ? (
