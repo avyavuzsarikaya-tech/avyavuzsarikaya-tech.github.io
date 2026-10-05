@@ -1,29 +1,33 @@
 import { useEffect, useState } from "react";
 
-/** Colour schemes for the whole site. "classic" is the original black-and-grey one. */
-export const LOOKS = ["classic", "bordo"] as const;
+/** Colour schemes for the whole site. "classic" is the original black-and-grey one;
+ * "night" is the dark one, for reading in a dim room. */
+export const LOOKS = ["classic", "bordo", "night"] as const;
 export type Look = (typeof LOOKS)[number];
 
 export const LOOK_KEY = "orbis-look";
 
 /** Browser bar colour for each scheme (matches the header). */
-const BAR: Record<Look, string> = { classic: "#0c0c0c", bordo: "#5a1523" };
+const BAR: Record<Look, string> = { classic: "#0c0c0c", bordo: "#5a1523", night: "#050505" };
 
 /** Swatches shown next to each scheme's name in the menus: panel, paper. */
 export const LOOK_SWATCH: Record<Look, [string, string]> = {
   classic: ["#0c0c0c", "#f4f4f5"],
   bordo: ["#5a1523", "#fbf7ef"],
+  // The dark scheme is the classic disc turned over: light where classic is dark.
+  night: ["#e7e4dd", "#161616"],
 };
 
 /**
  * Runs in <head> before the page paints, so a reader who chose burgundy
  * never sees a flash of the black header first.
  */
-export const LOOK_BOOT = `try{if(localStorage.getItem("${LOOK_KEY}")==="bordo"){document.documentElement.setAttribute("data-look","bordo");var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content","${BAR.bordo}")}}catch(e){}`;
+export const LOOK_BOOT = `try{var l=localStorage.getItem("${LOOK_KEY}"),b=${JSON.stringify(BAR)};if(l&&l!=="classic"&&b[l]){document.documentElement.setAttribute("data-look",l);var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",b[l])}}catch(e){}`;
 
 function readLook(): Look {
   try {
-    return localStorage.getItem(LOOK_KEY) === "bordo" ? "bordo" : "classic";
+    const saved = localStorage.getItem(LOOK_KEY);
+    return (LOOKS as readonly string[]).includes(saved ?? "") ? (saved as Look) : "classic";
   } catch {
     return "classic";
   }

@@ -183,7 +183,7 @@ export function SiteMenu({
       <button
         type="button"
         aria-label={frame.close}
-        className="absolute inset-0 bg-ink/40"
+        className="menu-scrim absolute inset-0 bg-ink/40"
         onClick={onClose}
       />
       <div

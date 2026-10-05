@@ -35,6 +35,32 @@ function Meta({ story, lang, section }: { story: Story; lang: Lang; section: The
   );
 }
 
+
+/**
+ * Today's date under the home sentence, in the reader's language, as a printed paper
+ * carries it under its name. The pages are built ahead of time, so the date is filled in
+ * by the reader's own browser; the line keeps its height meanwhile so nothing moves.
+ */
+function Dateline({ lang }: { lang: Lang }) {
+  const [today, setToday] = useState("");
+  useEffect(() => {
+    const locale = lang === "ar" ? "ar-u-nu-latn" : langMeta[lang].html;
+    setToday(
+      new Intl.DateTimeFormat(locale, {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }).format(new Date()),
+    );
+  }, [lang]);
+  return (
+    <p className="mt-1 min-h-[1.5em] text-[10px] uppercase leading-[1.5] tracking-widest text-muted md:mt-1.5 md:text-[11px]">
+      {today}
+    </p>
+  );
+}
+
 export function Atlas({ section }: { section: Theme | "all" }) {
   const lang = useLang();
   const stories = CARDS.filter((story) => story.locales[lang].written);
@@ -62,10 +88,13 @@ export function Atlas({ section }: { section: Theme | "all" }) {
       <div className="flex items-start justify-between gap-4 px-5 py-3.5 md:px-8 md:py-5">
         {section === "all" ? (
           <>
-            <h1 className="home-sentence min-w-0 text-[1.15rem] leading-[1.3] min-[380px]:text-[1.45rem] md:text-[2.05rem]">
-              <span className="block md:inline">{copy.heroLead}</span>{" "}
-              <span className="block md:inline">{copy.hero}</span>
-            </h1>
+            <div className="min-w-0">
+              <h1 className="home-sentence text-[1.15rem] leading-[1.3] min-[380px]:text-[1.45rem] md:text-[2.05rem]">
+                <span className="block md:inline">{copy.heroLead}</span>{" "}
+                <span className="block md:inline">{copy.hero}</span>
+              </h1>
+              <Dateline lang={lang} />
+            </div>
             <div className="flex h-[1.3em] shrink-0 items-center text-[1.15rem] min-[380px]:text-[1.45rem] md:text-[2.05rem]">
               <FrameTools />
             </div>
