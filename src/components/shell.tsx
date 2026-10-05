@@ -29,20 +29,20 @@ function Meridian({ header = false }: { header?: boolean }) {
     <span
       className={
         header
-          ? "relative inline-flex h-8 w-6 items-center justify-center md:h-12 md:w-8 lg:h-16 lg:w-10"
+          ? "relative inline-flex h-12 w-7 items-center justify-center md:h-16 md:w-9 lg:h-20 lg:w-11"
           : "relative inline-flex h-8 w-8 items-center justify-center"
       }
       aria-hidden="true"
     >
       <span
         className={
-          header ? "absolute h-8 w-px bg-paper md:h-12 lg:h-16" : "absolute h-8 w-px bg-paper"
+          header ? "absolute h-12 w-px bg-paper md:h-16 lg:h-20" : "absolute h-8 w-px bg-paper"
         }
       />
       <span
         className={
           header
-            ? "size-2 rounded-full bg-paper md:size-2.5 lg:size-3"
+            ? "size-2.5 rounded-full bg-paper md:size-3 lg:size-3.5"
             : "size-2 rounded-full bg-paper"
         }
       />
@@ -326,7 +326,7 @@ export function Shell({
             className="inline-flex min-h-11 items-center gap-2 text-paper md:gap-3 lg:gap-4"
           >
             <Meridian header />
-            <span className="font-display text-[2rem] leading-none tracking-[0.14em] md:text-5xl md:tracking-[0.16em] lg:text-7xl">
+            <span className="masthead-name text-[3.5rem] leading-none md:text-[5rem] lg:text-[6.5rem]">
               ORBIS
             </span>
           </Link>
@@ -405,7 +405,7 @@ export function Shell({
                   className="inline-flex min-h-11 items-center gap-3 self-start text-paper"
                 >
                   <Meridian />
-                  <span className="font-display text-xl tracking-widest">ORBIS</span>
+                  <span className="masthead-name text-[1.75rem] leading-none">ORBIS</span>
                 </Link>
                 <Link
                   {...aboutLink(lang)}

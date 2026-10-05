@@ -58,29 +58,30 @@ html[data-look="bordo"] .section-link[data-on="true"] {
   font-family: "Noto Naskh Arabic", Georgia, serif;
   font-variation-settings: normal;
 }
-/* Homepage cells only. A condensed plain serif, letter-spacing closed to normal.
-   The lead cell keeps the larger size set in the markup. Both colour schemes
-   use the same sizes and the same near-black summary. */
-.cell-title {
-  font-family: "Petrona", "Times New Roman", Times, serif;
-  font-weight: 600;
-  font-stretch: 75%;
-  font-optical-sizing: none;
-  font-variation-settings: "wdth" 75, "opsz" 16, "wght" 600;
-  letter-spacing: 0;
+/* The name in the masthead, the footer and the menu: Playfair Display, bold, slightly
+   spaced. It is Latin in every language, so Arabic pages keep the same face for it. */
+.masthead-name {
+  font-family: "Playfair Display", "Times New Roman", serif;
+  font-weight: 700;
+  font-optical-sizing: auto;
+  font-variation-settings: normal;
+  letter-spacing: 0.06em;
 }
-:lang(ar) .cell-title {
-  font-family: "Noto Naskh Arabic", Georgia, serif;
-  font-stretch: normal;
+/* Front page card titles. Weight and size are set in the markup per card. */
+.paper-title {
+  font-family: "Playfair Display", "Times New Roman", serif;
+  font-optical-sizing: auto;
   font-variation-settings: normal;
   letter-spacing: 0;
 }
-.cell-summary {
-  font-family: "Times New Roman", Times, "Noto Naskh Arabic", serif;
-  font-size: 13px;
-  line-height: 1.15;
+/* Arabic letters join, so spaced-out labels would break the words apart. */
+:lang(ar) :is(.tracking-wide, .tracking-wider, .tracking-widest) {
   letter-spacing: 0;
-  color: #141414;
+}
+:lang(ar) .paper-title {
+  font-family: "Noto Naskh Arabic", Georgia, serif;
+  font-weight: 600;
+  line-height: 1.4;
 }
 /* On a wide screen the sentence runs on one line and is set a little lighter. */
 @media (min-width: 768px) {

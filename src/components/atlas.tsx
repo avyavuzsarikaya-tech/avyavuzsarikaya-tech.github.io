@@ -12,7 +12,7 @@ import { useLang } from "@/lib/use-lang";
 
 /**
  * Section pages keep the lead reading and ruled columns. The front page alone
- * is a touching line grid: a tall lead cell, then the other readings.
+ * is a newspaper page: a large pictured lead, a narrow column beside it, then the rest.
  */
 
 function Meta({ story, lang, section }: { story: Story; lang: Lang; section: Theme | "all" }) {
@@ -151,70 +151,189 @@ function cellSummary(story: Story, lang: Lang): string {
   return oneSentence(dek || story.locales[lang].lead);
 }
 
+/**
+ * The front page is laid out like a newspaper page. On a wide screen: the lead reading
+ * with its picture across two columns on the left, two readings with pictures in the
+ * narrow right column, then a row of two pictured readings and a corner reading without
+ * a picture, and below a thick rule the rest in columns of four, text only. On a phone:
+ * the lead with its picture, then every other reading as text, a thick rule every third.
+ */
 function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
   const dir = langMeta[lang].dir;
+  const [lead, ...rest] = stories;
+  const side = rest.slice(0, 2);
+  const bottom = rest.slice(2, 4);
+  const corner = rest[4];
+  const more = rest.slice(5);
+  if (!lead) return null;
+  return (
+    <div dir={dir}>
+      <div className="md:hidden">
+        <Link {...readLink(lang, lead.id)} className="group flex flex-col border-b-[3px] border-ink">
+          <CardPicture story={lead} lang={lang} ratio="aspect-[16/10]" eager />
+          <div className="flex flex-col gap-2 px-5 pt-3.5 pb-5">
+            <CardBody story={lead} lang={lang} size="lead" />
+          </div>
+        </Link>
+        <ol className="px-5">
+          {rest.map((story, index) => (
+            <li
+              key={story.id}
+              className={
+                index === rest.length - 1
+                  ? ""
+                  : index % 3 === 2
+                    ? "border-b-[3px] border-ink"
+                    : "border-b border-ink"
+              }
+            >
+              <Link {...readLink(lang, story.id)} className="group flex flex-col gap-2 py-4">
+                <CardBody story={story} lang={lang} size="list" />
+              </Link>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <div className="hidden px-8 md:block">
+        <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,0.85fr)] border-b border-ink">
+          <Link
+            {...readLink(lang, lead.id)}
+            style={{ gridColumn: "1 / span 2", gridRow: "1 / span 2" }}
+            className="group flex min-w-0 flex-col gap-3 border-e border-ink py-7 pe-7"
+          >
+            <CardPicture story={lead} lang={lang} ratio="aspect-[16/10]" eager />
+            <CardBody story={lead} lang={lang} size="lead" />
+          </Link>
+          {side.map((story, index) => (
+            <Link
+              key={story.id}
+              {...readLink(lang, story.id)}
+              style={{ gridColumn: "3", gridRow: String(index + 1) }}
+              className="group flex min-w-0 flex-col gap-2.5 border-b border-ink py-7 ps-6"
+            >
+              <CardPicture story={story} lang={lang} ratio="aspect-[2/1]" />
+              <CardBody story={story} lang={lang} size="side" />
+            </Link>
+          ))}
+          {bottom.map((story, index) => (
+            <Link
+              key={story.id}
+              {...readLink(lang, story.id)}
+              style={{ gridColumn: String(index + 1), gridRow: "3" }}
+              className={`group flex min-w-0 flex-col gap-2.5 border-t border-e border-ink py-6 ${
+                index === 0 ? "pe-6" : "px-6"
+              }`}
+            >
+              <CardPicture story={story} lang={lang} ratio="aspect-[2/1]" />
+              <CardBody story={story} lang={lang} size="bottom" />
+            </Link>
+          ))}
+          {corner ? (
+            <Link
+              {...readLink(lang, corner.id)}
+              style={{ gridColumn: "3", gridRow: "3" }}
+              className="group flex min-w-0 flex-col gap-2.5 py-6 ps-6"
+            >
+              <CardBody story={corner} lang={lang} size="corner" />
+            </Link>
+          ) : null}
+        </div>
+
+        {more.length > 0 ? (
+          <div className="mt-7 border-t-[3px] border-ink">
+            {chunk(more, 4).map((row, rowIndex) => (
+              <div
+                key={row[0].id}
+                className={`grid grid-cols-4 ${rowIndex > 0 ? "border-t border-ink" : ""}`}
+              >
+                {row.map((story, index) => (
+                  <Link
+                    key={story.id}
+                    {...readLink(lang, story.id)}
+                    className={`group flex min-w-0 flex-col gap-2 py-5 ${
+                      index === 0 ? "pe-5" : "border-s border-ink px-5"
+                    }`}
+                  >
+                    <CardBody story={story} lang={lang} size="more" />
+                  </Link>
+                ))}
+              </div>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+type CardSize = "lead" | "side" | "bottom" | "corner" | "more" | "list";
+
+const CARD_TITLE: Record<CardSize, string> = {
+  lead: "font-extrabold text-[1.95rem] leading-[1.1] md:text-[2.4rem] md:leading-[1.08] lg:text-[2.9rem]",
+  side: "font-bold text-[1.3rem] leading-[1.15] lg:text-[1.45rem]",
+  bottom: "font-bold text-[1.35rem] leading-[1.15] lg:text-[1.55rem]",
+  corner: "font-bold text-[1.45rem] leading-[1.15] lg:text-[1.7rem]",
+  more: "font-bold text-[1.15rem] leading-[1.2] lg:text-[1.25rem]",
+  list: "font-bold text-[1.45rem] leading-[1.15]",
+};
+
+const CARD_SUMMARY: Record<CardSize, string> = {
+  lead: "text-[1.0625rem] leading-[1.35] md:text-[1.3rem]",
+  side: "text-base leading-[1.35]",
+  bottom: "text-base leading-[1.35]",
+  corner: "text-[1.0625rem] leading-[1.38]",
+  more: "",
+  list: "text-base leading-[1.35]",
+};
+
+/** Section name, title, the one-sentence summary and the reading time, in that order. */
+function CardBody({ story, lang, size }: { story: Story; lang: Lang; size: CardSize }) {
+  const copy = useCopy(lang);
+  const summary = size === "more" ? "" : cellSummary(story, lang);
+  const minutes = story.locales[lang].minutes;
   return (
     <>
-      <div dir={dir} className="grid grid-cols-2 border-l border-rule md:hidden">
-        {stories.map((story, index) => (
-          <HomeCell key={story.id} story={story} lang={lang} place={phonePlace(index)} lead={index === 0} />
-        ))}
-      </div>
-      <div dir={dir} className="hidden border-l border-rule md:grid md:grid-cols-3">
-        {stories.map((story, index) => (
-          <HomeCell key={story.id} story={story} lang={lang} place={deskPlace(index)} lead={index === 0} />
-        ))}
-      </div>
+      <p
+        className={
+          lang === "ar" ? "text-sm leading-snug text-pine" : "text-xs leading-snug uppercase tracking-[0.14em] text-pine"
+        }
+      >
+        {copy.themes[story.theme]}
+      </p>
+      <h2
+        className={`paper-title text-ink underline-offset-[0.14em] decoration-1 group-hover:underline ${CARD_TITLE[size]}`}
+      >
+        {storyTitle(story, lang)}
+      </h2>
+      {summary ? <p className={`font-body text-pretty text-ink ${CARD_SUMMARY[size]}`}>{summary}</p> : null}
+      {minutes ? <ReadTime minutes={minutes} lang={lang} pattern={copy.minRead} /> : null}
     </>
   );
 }
 
-function phonePlace(index: number): { column: number; row: number; rowSpan?: number } {
-  if (index === 0) return { column: 1, row: 1, rowSpan: 2 };
-  if (index === 1) return { column: 2, row: 1 };
-  if (index === 2) return { column: 2, row: 2 };
-  const n = index - 3;
-  return { column: (n % 2) + 1, row: 3 + Math.floor(n / 2) };
-}
-
-function deskPlace(index: number): { column: number; row: number; columnSpan?: number; rowSpan?: number } {
-  if (index === 0) return { column: 1, row: 1, columnSpan: 2, rowSpan: 2 };
-  if (index === 1) return { column: 3, row: 1 };
-  if (index === 2) return { column: 3, row: 2 };
-  if (index === 3) return { column: 3, row: 3 };
-  if (index === 4) return { column: 1, row: 3 };
-  if (index === 5) return { column: 2, row: 3 };
-  const n = index - 6;
-  return { column: (n % 3) + 1, row: 4 + Math.floor(n / 3) };
-}
-
-function HomeCell({
+function CardPicture({
   story,
   lang,
-  place,
-  lead,
+  ratio,
+  eager = false,
 }: {
   story: Story;
   lang: Lang;
-  place: { column: number; row: number; columnSpan?: number; rowSpan?: number };
-  lead: boolean;
+  ratio: string;
+  eager?: boolean;
 }) {
-  const summary = cellSummary(story, lang);
+  if (!story.image) return null;
   return (
-    <Link
-      {...readLink(lang, story.id)}
-      style={{
-        gridColumn: `${place.column} / span ${place.columnSpan ?? 1}`,
-        gridRow: `${place.row} / span ${place.rowSpan ?? 1}`,
-      }}
-      className="flex min-w-0 flex-col gap-3 border-r border-b border-rule p-4 md:p-8"
-    >
-      <h2 className={lead ? "cell-title text-2xl leading-[1.12] md:text-4xl" : "cell-title text-base leading-snug md:text-xl"}>
-        {storyTitle(story, lang)}
-      </h2>
-      {summary ? <p className="cell-summary text-pretty">{summary}</p> : null}
-      <span aria-hidden="true" className="mt-auto block h-px w-8 bg-ink" />
-    </Link>
+    <img
+      src={story.image.src}
+      alt={imageCaption(story.image, lang)}
+      width={1500}
+      height={1000}
+      loading={eager ? "eager" : "lazy"}
+      decoding="async"
+      className={`block w-full object-cover ${ratio}`}
+    />
   );
 }
 

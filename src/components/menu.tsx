@@ -196,7 +196,7 @@ export function SiteMenu({
         className="absolute inset-y-0 start-0 flex w-full max-w-sm flex-col bg-paper text-ink shadow-lg"
       >
         <div className="flex items-center justify-between gap-4 border-b border-rule px-5 py-5">
-          <span dir="ltr" className="font-display text-[2rem] leading-none tracking-[0.14em]">
+          <span dir="ltr" className="masthead-name text-[2rem] leading-none">
             ORBIS
           </span>
           <button
