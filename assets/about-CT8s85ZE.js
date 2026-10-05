@@ -1,0 +1,1 @@
+import{t as e}from"./about-DajXe_Ql.js";var t=e;export{t as component};
