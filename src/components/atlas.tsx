@@ -269,7 +269,7 @@ function DocumentChain({ story, lang }: { story: Story; lang: Lang }) {
           className="flex w-full items-center gap-3 py-4 text-start md:gap-5"
         >
           <span className={`shrink-0 ${label}`}>{words.chain}</span>
-          <span className="paper-title min-w-0 flex-1 truncate text-[0.95rem] text-ink">
+          <span className="paper-title min-w-0 flex-1 text-[0.95rem] text-ink max-md:line-clamp-2 max-md:leading-snug md:truncate">
             {storyTitle(story, lang)}
           </span>
           <span
@@ -308,7 +308,7 @@ function DocumentChain({ story, lang }: { story: Story; lang: Lang }) {
                       target="_blank"
                       rel="noopener noreferrer"
                       tabIndex={open ? 0 : -1}
-                      className="group flex min-w-0 flex-1 flex-col justify-center border border-line bg-sheet px-3 py-2 hover:border-ink"
+                      className="group flex min-w-0 flex-1 flex-col justify-center border border-line bg-sheet px-3 py-1 hover:border-ink md:py-2"
                     >
                       {issuer ? (
                         <span className={`truncate ${label} !text-muted`}>{issuer}</span>
@@ -392,9 +392,9 @@ function Records({
               role="radio"
               aria-checked={depth === step}
               onClick={() => choose(step)}
-              className={`border border-ink px-3 py-1 text-xs whitespace-nowrap transition-colors duration-200 md:px-3.5 ${
+              className={`border border-ink px-3 py-1 text-xs whitespace-nowrap transition-colors duration-150 md:px-3.5 ${
                 step > 1 ? "-ms-px" : ""
-              } ${depth === step ? "bg-ink text-paper" : "bg-transparent text-ink hover:bg-highlight"} ${
+              } ${depth === step ? "bg-ink text-paper" : "bg-transparent text-ink hover:bg-highlight active:bg-line"} ${
                 lang === "ar" ? "" : "uppercase tracking-[0.1em]"
               }`}
             >
@@ -463,7 +463,7 @@ function Records({
                         height={160}
                         loading="lazy"
                         decoding="async"
-                        className="block aspect-square w-20 object-cover md:w-28"
+                        className="block aspect-square w-24 object-cover md:w-28"
                       />
                     </div>
                   </div>

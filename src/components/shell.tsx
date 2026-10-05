@@ -285,6 +285,24 @@ export function Shell({
     on?.scrollIntoView({ inline: "center", block: "nearest" });
   }, [section, lang]);
 
+  // The fade at the end of the section row goes away once the row is scrolled to its end.
+  // In right-to-left Arabic scrollLeft runs negative, so its size is what counts.
+  useEffect(() => {
+    const row = bar.current;
+    if (!row) return;
+    const mark = () => {
+      const end = Math.abs(row.scrollLeft) + row.clientWidth >= row.scrollWidth - 2;
+      row.parentElement?.setAttribute("data-end", String(end));
+    };
+    mark();
+    row.addEventListener("scroll", mark, { passive: true });
+    window.addEventListener("resize", mark);
+    return () => {
+      row.removeEventListener("scroll", mark);
+      window.removeEventListener("resize", mark);
+    };
+  }, [section, lang]);
+
   useEffect(() => {
     document.documentElement.lang = meta.html;
     document.documentElement.dir = meta.dir;

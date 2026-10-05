@@ -222,9 +222,13 @@ html[data-look="bordo"] .section-link[data-on="true"] {
     position: absolute;
     inset-block: 0;
     inset-inline-end: 0;
-    width: 2rem;
+    width: 2.5rem;
     pointer-events: none;
     background: linear-gradient(to right, transparent, var(--color-paper));
+    transition: opacity 150ms ease;
+  }
+  .section-bar[data-end="true"]::after {
+    opacity: 0;
   }
   [dir="rtl"] .section-bar::after {
     background: linear-gradient(to left, transparent, var(--color-paper));
