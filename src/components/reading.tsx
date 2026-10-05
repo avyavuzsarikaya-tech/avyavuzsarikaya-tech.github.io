@@ -4,12 +4,11 @@ import { ReadingPlayer } from "@/components/player";
 import { Prose } from "@/components/prose";
 import { Comments } from "@/components/members/comments";
 import { LockNote, StoryVideos, useMemberText } from "@/components/members/locked";
-import { ReadTime } from "@/components/read-time";
 import { FrameTools, Shell } from "@/components/shell";
 import { byline, editorialCopy, imageCaption } from "@/lib/editorial";
 import { langMeta, useCopy } from "@/lib/i18n";
 import { homeLink, readLink, rememberLang } from "@/lib/lang-path";
-import { formatDate, hasCopy, readingMinutes, safeHttpUrl } from "@/lib/text";
+import { formatDate, hasCopy, safeHttpUrl } from "@/lib/text";
 import { LANGS, type Lang, type Story } from "@/lib/types";
 import { useLang } from "@/lib/use-lang";
 
@@ -142,7 +141,6 @@ function Reading({ story }: { story: Story | null }) {
     ? story.video.captions?.[lang]?.trim() || story.video.credit?.trim() || ""
     : "";
   const body = fullText ?? locale.body;
-  const minutes = readingMinutes(body);
   const written = hasCopy(story, lang);
   const sourceNums = new Set(story.sources.map((source) => source.n));
   const sources = [...story.sources].sort((a, b) => a.n - b.n);
@@ -214,7 +212,6 @@ function Reading({ story }: { story: Story | null }) {
                     {editorial.updated}: {formatDate(story.updatedAt, lang)}
                   </p>
                 ) : null}
-                {minutes ? <ReadTime minutes={minutes} lang={lang} pattern={copy.minRead} /> : null}
               </div>
               <TypeSize
                 step={typeStep}

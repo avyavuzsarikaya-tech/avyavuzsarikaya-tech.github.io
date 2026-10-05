@@ -1,9 +1,8 @@
 import type { Lang } from "@/lib/types";
 
 /**
- * Reading time, as in "4 MIN READ": plain words, no box, in the small spaced capitals of
- * the section label so the two read as one family. Cards and the reading page both use
- * it, always on a line of its own under the date, so it sits in the same place everywhere.
+ * Reading time, as in "4 MIN READ", plain words, no box, in the small spaced capitals of
+ * the section label so the two read as one family. Used on the cards only; the reading page does not show it.
  * Arabic has no capitals and is not letter-spaced.
  */
 export function ReadTime({
