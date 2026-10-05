@@ -337,7 +337,7 @@ export function Shell({
           and the tools sit on the paper at the head of each page. */}
         <header
           dir="ltr"
-          className="relative flex flex-col items-center justify-center bg-panel px-5 py-5 text-paper md:py-6 lg:py-8"
+          className="no-print relative flex flex-col items-center justify-center bg-panel px-5 py-5 text-paper md:py-6 lg:py-8"
         >
           <Link
             {...homeLink(lang)}
@@ -380,7 +380,7 @@ export function Shell({
         ) : null}
 
         <div dir={meta.dir} lang={meta.html} className="flex flex-1 flex-col">
-          <nav aria-label={copy.sections} className="section-bar relative border-b border-rule">
+          <nav aria-label={copy.sections} className="no-print section-bar relative border-b border-rule">
             <div
               ref={bar}
               className="no-scrollbar flex gap-5 overflow-x-auto px-5 text-[13px] tracking-wide whitespace-nowrap md:justify-between md:gap-4 md:px-8 md:text-sm lg:text-base"
@@ -407,13 +407,13 @@ export function Shell({
 
           <div className="flex-1">{children}</div>
 
-          <div aria-hidden="true" className="flex items-center gap-3 px-5 pt-12 pb-10 md:px-8">
+          <div aria-hidden="true" className="no-print flex items-center gap-3 px-5 pt-12 pb-10 md:px-8">
             <span className="h-px flex-1 bg-rule" />
             <span className="size-1.5 rounded-full bg-ink" />
             <span className="h-px flex-1 bg-rule" />
           </div>
 
-          <footer className="bg-panel px-5 py-10 text-paper md:px-8">
+          <footer className="no-print bg-panel px-5 py-10 text-paper md:px-8">
             {/* Three columns spread to the edges: the language list ends at the right margin. */}
             <div className="grid gap-8 md:flex md:justify-between md:gap-12">
               <div ref={footerBrand} className="flex flex-col gap-3 md:max-w-sm">

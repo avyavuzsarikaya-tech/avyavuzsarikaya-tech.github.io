@@ -471,3 +471,82 @@ a.group:has(.paper-title) > p.tabular-nums,
 a.group:has(.paper-title) > div.flex.flex-col > p.tabular-nums {
   order: 3;
 }
+
+/* ---------- Paper: print and "Save as PDF" ----------
+   Every reader can print a reading or keep it as a PDF. On paper the page is always the
+   classic black on white, whatever scheme is on screen; the band, section bar, tools,
+   player, related readings and footer are left out; the name and the reading's address
+   head the first page, and the text, its sources and the citation follow. */
+.print-only {
+  display: none;
+}
+@media print {
+  @page {
+    margin: 18mm 16mm;
+  }
+  html,
+  html[data-look] {
+    --color-paper: #ffffff;
+    --color-sheet: #ffffff;
+    --color-ink: #000000;
+    --color-muted: #555555;
+    --color-mist: #cccccc;
+    --color-line: #d9d9d9;
+    --color-rule: #999999;
+    --color-pine: #6e2432;
+    --color-highlight: #ffffff;
+    --color-panel: #ffffff;
+    color-scheme: light;
+  }
+  body {
+    background: #fff !important;
+    color: #000;
+    font-size: 11.5pt;
+    transition: none;
+  }
+  .no-print,
+  .reading-progress,
+  .reading-player,
+  .menu-scrim,
+  #site-menu,
+  video {
+    display: none !important;
+  }
+  .print-only {
+    display: block;
+    border-bottom: 1px solid #000;
+    padding-bottom: 0.6rem;
+  }
+  main {
+    padding: 0 !important;
+  }
+  main img {
+    filter: none !important;
+    max-height: 9cm;
+    width: auto !important;
+    max-width: 100% !important;
+    margin-inline: 0 !important;
+  }
+  .reading-dek {
+    color: #222 !important;
+  }
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  .source-row,
+  .reading-cite,
+  figure {
+    break-inside: avoid;
+  }
+  /* The source numbers stay as small marks; the addresses are printed in the source list. */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}

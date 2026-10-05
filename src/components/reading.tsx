@@ -3,6 +3,13 @@ import { useEffect, useRef, useState } from "react";
 import { ReadingPlayer } from "@/components/player";
 import { Prose } from "@/components/prose";
 import { Comments } from "@/components/members/comments";
+import {
+  CiteBox,
+  PdfButton,
+  readingUrl,
+  RelatedReadings,
+  useSignedCopy,
+} from "@/components/reading-extras";
 import { LockNote, StoryVideos, useMemberText } from "@/components/members/locked";
 import { FrameTools, Shell } from "@/components/shell";
 import { byline, editorialCopy, imageCaption } from "@/lib/editorial";
@@ -113,6 +120,9 @@ function Reading({ story }: { story: Story | null }) {
   // Where the reading starts (its header) and ends (after its sources), for the progress line.
   const readStart = useRef<HTMLElement | null>(null);
   const readEnd = useRef<HTMLElement | null>(null);
+  // Long passages copied from the page carry the reading's title and address.
+  const page = useRef<HTMLDivElement | null>(null);
+  useSignedCopy(page, story, lang);
 
   useEffect(() => {
     const saved = TYPE_STEPS.indexOf(readType() as (typeof TYPE_STEPS)[number]);
@@ -151,8 +161,13 @@ function Reading({ story }: { story: Story | null }) {
 
   return (
     <main className="px-5 py-10 md:px-12 md:py-14">
-      <div className="mx-auto flex max-w-2xl flex-col gap-8">
-        <div className="flex items-center justify-between gap-4 text-sm">
+      <div ref={page} className="mx-auto flex max-w-2xl flex-col gap-8">
+        {/* On paper (print or PDF) the band is left out; the name and the address head the page. */}
+        <p className="print-only text-sm" dir="ltr">
+          <span className="masthead-name text-2xl">ORBIS</span>
+          <span className="ms-3 text-muted">{readingUrl(lang, story.id)}</span>
+        </p>
+        <div className="no-print flex items-center justify-between gap-4 text-sm">
           <Link {...homeLink(lang)} className="inline-flex min-h-11 items-center text-pine">
             {copy.back}
           </Link>
@@ -213,14 +228,17 @@ function Reading({ story }: { story: Story | null }) {
                   </p>
                 ) : null}
               </div>
-              <TypeSize
-                step={typeStep}
-                onDown={() => setStep(typeStep - 1)}
-                onUp={() => setStep(typeStep + 1)}
-                label={copy.textSize}
-                downLabel={copy.typeDown}
-                upLabel={copy.typeUp}
-              />
+              <div className="no-print flex shrink-0 items-center gap-1">
+                <PdfButton lang={lang} />
+                <TypeSize
+                  step={typeStep}
+                  onDown={() => setStep(typeStep - 1)}
+                  onUp={() => setStep(typeStep + 1)}
+                  label={copy.textSize}
+                  downLabel={copy.typeDown}
+                  upLabel={copy.typeUp}
+                />
+              </div>
             </div>
             {locale.audio ? (
               <ReadingPlayer
@@ -317,7 +335,13 @@ function Reading({ story }: { story: Story | null }) {
           </section>
         ) : null}
 
-        <Comments storyId={story.id} lang={lang} />
+        <CiteBox story={story} lang={lang} />
+
+        <RelatedReadings story={story} lang={lang} />
+
+        <div className="no-print">
+          <Comments storyId={story.id} lang={lang} />
+        </div>
       </div>
     </main>
   );
