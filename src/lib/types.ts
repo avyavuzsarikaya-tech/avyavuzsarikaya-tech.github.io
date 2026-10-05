@@ -140,6 +140,8 @@ export type StoryCard = {
   theme: Theme;
   date: string;
   image?: StoryImage;
+  /** The documents the reading rests on, for the chain of documents on the front page. */
+  sources?: Source[];
   /** The story file holds only the opening; see Story.membersOnly. */
   membersOnly?: boolean;
   locales: Record<Lang, LocaleCard>;

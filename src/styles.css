@@ -94,6 +94,42 @@ html[data-look="bordo"] .section-link[data-on="true"] {
   }
 }
 
+/* Front page records: each layer opens and closes in height and opacity together.
+   Depth 1 shows titles, 2 adds the summary, 3 adds the reading time and a small picture. */
+.records .record-layer {
+  display: grid;
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition:
+    grid-template-rows 200ms ease,
+    opacity 200ms ease;
+}
+.records .record-layer > div {
+  overflow: hidden;
+  min-height: 0;
+}
+.records[data-depth="1"] .record-layer[data-layer="2"],
+.records:not([data-depth="3"]) .record-layer[data-layer="3"] {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+.records .record-picture {
+  transition:
+    grid-template-rows 200ms ease,
+    opacity 200ms ease,
+    width 200ms ease,
+    margin 200ms ease;
+}
+.records:not([data-depth="3"]) .record-picture {
+  width: 0;
+  margin-inline-start: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .records .record-layer {
+    transition: none;
+  }
+}
+
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;

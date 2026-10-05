@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ReadTime } from "@/components/read-time";
 import { FrameTools, Shell } from "@/components/shell";
@@ -152,47 +153,26 @@ function cellSummary(story: Story, lang: Lang): string {
 }
 
 /**
- * The front page is laid out like a newspaper page. On a wide screen: the lead reading
- * with its picture across two columns on the left, two readings with pictures in the
- * narrow right column, then a row of two pictured readings and a corner reading without
- * a picture, and below a thick rule the rest in columns of four, text only. On a phone:
- * the lead with its picture, then every other reading as text, a thick rule every third.
+ * The front page. On a wide screen: the lead reading with its picture across two columns
+ * on the left and two readings in the narrow right column. Under them, the chain of
+ * documents the lead rests on, then every other reading as one list of records whose depth
+ * the reader sets: 1 title, 2 title and summary, 3 everything with a small picture.
+ * On a phone: the lead, the chain, then the records.
  */
 function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
   const dir = langMeta[lang].dir;
   const [lead, ...rest] = stories;
   const side = rest.slice(0, 2);
-  const bottom = rest.slice(2, 4);
-  const corner = rest[4];
-  const more = rest.slice(5);
   if (!lead) return null;
   return (
     <div dir={dir}>
       <div className="md:hidden">
-        <Link {...readLink(lang, lead.id)} className="group flex flex-col border-b-[3px] border-ink">
+        <Link {...readLink(lang, lead.id)} className="group flex flex-col border-b border-ink">
           <CardPicture story={lead} lang={lang} ratio="aspect-[16/10]" eager />
           <div className="flex flex-col gap-2 px-5 pt-3.5 pb-5">
             <CardBody story={lead} lang={lang} size="lead" />
           </div>
         </Link>
-        <ol className="px-5">
-          {rest.map((story, index) => (
-            <li
-              key={story.id}
-              className={
-                index === rest.length - 1
-                  ? ""
-                  : index % 3 === 2
-                    ? "border-b-[3px] border-ink"
-                    : "border-b border-ink"
-              }
-            >
-              <Link {...readLink(lang, story.id)} className="group flex flex-col gap-2 py-4">
-                <CardBody story={story} lang={lang} size="list" />
-              </Link>
-            </li>
-          ))}
-        </ol>
       </div>
 
       <div className="hidden px-8 md:block">
@@ -210,60 +190,200 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
               key={story.id}
               {...readLink(lang, story.id)}
               style={{ gridColumn: "3", gridRow: String(index + 1) }}
-              className="group flex min-w-0 flex-col gap-2.5 border-b border-ink py-7 ps-6"
+              className={`group flex min-w-0 flex-col gap-2.5 py-7 ps-6 ${index === 0 ? "border-b border-ink" : ""}`}
             >
               <CardPicture story={story} lang={lang} ratio="aspect-[2/1]" />
               <CardBody story={story} lang={lang} size="side" />
             </Link>
           ))}
-          {bottom.map((story, index) => (
-            <Link
-              key={story.id}
-              {...readLink(lang, story.id)}
-              style={{ gridColumn: String(index + 1), gridRow: "3" }}
-              className={`group flex min-w-0 flex-col gap-2.5 border-t border-e border-ink py-6 ${
-                index === 0 ? "pe-6" : "px-6"
+        </div>
+      </div>
+
+      <DocumentChain story={lead} lang={lang} />
+      <Records stories={rest} sideCount={side.length} lang={lang} />
+    </div>
+  );
+}
+
+/** Words for the two front-page parts below the lead, in the five languages. */
+const HOME_WORDS: Record<Lang, { chain: string; records: string; depth: [string, string, string] }> = {
+  tr: { chain: "Belge zinciri", records: "Kayıtlar", depth: ["Başlık", "Özet", "Tamamı"] },
+  en: { chain: "Document chain", records: "Records", depth: ["Headline", "Summary", "Full"] },
+  ar: { chain: "سلسلة الوثائق", records: "السجلات", depth: ["العنوان", "الملخص", "كامل"] },
+  fr: { chain: "Chaîne de documents", records: "Registres", depth: ["Titre", "Résumé", "Complet"] },
+  es: { chain: "Cadena de documentos", records: "Registros", depth: ["Titular", "Resumen", "Completo"] },
+};
+
+/** "IPCC – Sixth Assessment Report" becomes the issuer and the document name. */
+function splitSource(label: string): { issuer: string; title: string } {
+  const at = label.search(/\s[–—-]\s/);
+  if (at < 0) return { issuer: "", title: label };
+  return { issuer: label.slice(0, at).trim(), title: label.slice(at + 3).trim() };
+}
+
+/**
+ * One ruled band under the lead: its label, the lead's title, and the documents it rests on
+ * in order, each opening the document itself. A reading without filed sources shows no band.
+ */
+function DocumentChain({ story, lang }: { story: Story; lang: Lang }) {
+  const sources = story.sources ?? [];
+  if (sources.length === 0) return null;
+  const words = HOME_WORDS[lang];
+  const arrow = langMeta[lang].dir === "rtl" ? "←" : "→";
+  const label =
+    lang === "ar" ? "text-sm text-pine" : "text-xs uppercase tracking-[0.14em] text-pine";
+  return (
+    <section className="px-5 md:px-8" aria-label={words.chain}>
+      <div className="flex flex-col gap-3 border-b border-ink py-4 lg:flex-row lg:items-center lg:gap-6">
+        <div className="flex min-w-0 items-baseline gap-3 lg:w-[30%] lg:shrink-0">
+          <p className={`shrink-0 ${label}`}>{words.chain}</p>
+          <p className="paper-title min-w-0 truncate text-[0.95rem] text-ink">{storyTitle(story, lang)}</p>
+        </div>
+        <ol className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-stretch sm:gap-0">
+          {sources.map((source, index) => {
+            const { issuer, title } = splitSource(source.label);
+            return (
+              <li key={source.n} className="flex min-w-0 flex-1 items-stretch">
+                {index > 0 ? (
+                  <span aria-hidden="true" className="hidden shrink-0 self-center px-2.5 text-muted sm:block">
+                    {arrow}
+                  </span>
+                ) : null}
+                <a
+                  href={source.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex min-w-0 flex-1 flex-col justify-center border border-line bg-sheet px-3 py-2 hover:border-ink"
+                >
+                  {issuer ? <span className={`truncate ${label} !text-muted`}>{issuer}</span> : null}
+                  <span className="font-body truncate text-[0.9rem] leading-snug text-ink group-hover:underline">
+                    {title}
+                  </span>
+                </a>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
+type Depth = 1 | 2 | 3;
+const DEPTH_KEY = "orbis-depth";
+
+function readDepth(): Depth {
+  try {
+    const saved = Number(window.localStorage.getItem(DEPTH_KEY));
+    return saved === 1 || saved === 3 ? saved : 2;
+  } catch {
+    return 2;
+  }
+}
+
+/**
+ * Every reading after the lead, newest first, one per ruled row. The control on the right
+ * sets how much of each row shows; the choice is kept in this browser.
+ * The two readings of the right column are listed only on a phone, where that column is not shown.
+ */
+function Records({ stories, sideCount, lang }: { stories: Story[]; sideCount: number; lang: Lang }) {
+  const words = HOME_WORDS[lang];
+  const copy = useCopy(lang);
+  const [depth, setDepth] = useState<Depth>(2);
+  useEffect(() => setDepth(readDepth()), []);
+  const choose = (next: Depth) => {
+    setDepth(next);
+    try {
+      window.localStorage.setItem(DEPTH_KEY, String(next));
+    } catch {
+      /* private window: the choice lasts until the page closes */
+    }
+  };
+  if (stories.length === 0) return null;
+  const label =
+    lang === "ar" ? "text-sm text-pine" : "text-xs uppercase tracking-[0.14em] text-pine";
+  return (
+    <section className="px-5 pt-6 pb-4 md:px-8 md:pt-8" aria-label={words.records}>
+      <div className="flex items-center justify-between gap-4 border-b-[3px] border-ink pb-3">
+        <h2 className={`font-body font-normal ${label}`}>{words.records}</h2>
+        <div role="radiogroup" aria-label={words.records} className="flex items-center">
+          {([1, 2, 3] as const).map((step) => (
+            <button
+              key={step}
+              type="button"
+              role="radio"
+              aria-checked={depth === step}
+              onClick={() => choose(step)}
+              className={`border border-ink px-2 py-1 text-[0.7rem] whitespace-nowrap tabular-nums transition-colors duration-200 sm:px-2.5 sm:text-xs md:px-3.5 ${
+                step > 1 ? "-ms-px" : ""
+              } ${depth === step ? "bg-ink text-paper" : "bg-transparent text-ink hover:bg-highlight"} ${
+                lang === "ar" ? "" : "uppercase tracking-[0.06em] sm:tracking-[0.1em]"
               }`}
             >
-              <CardPicture story={story} lang={lang} ratio="aspect-[2/1]" />
-              <CardBody story={story} lang={lang} size="bottom" />
-            </Link>
+              <span className="me-1 opacity-60 sm:me-1.5">{step}</span>
+              {words.depth[step - 1]}
+            </button>
           ))}
-          {corner ? (
-            <Link
-              {...readLink(lang, corner.id)}
-              style={{ gridColumn: "3", gridRow: "3" }}
-              className="group flex min-w-0 flex-col gap-2.5 py-6 ps-6"
-            >
-              <CardBody story={corner} lang={lang} size="corner" />
-            </Link>
-          ) : null}
         </div>
-
-        {more.length > 0 ? (
-          <div className="mt-7 border-t-[3px] border-ink">
-            {chunk(more, 4).map((row, rowIndex) => (
-              <div
-                key={row[0].id}
-                className={`grid grid-cols-4 ${rowIndex > 0 ? "border-t border-ink" : ""}`}
-              >
-                {row.map((story, index) => (
-                  <Link
-                    key={story.id}
-                    {...readLink(lang, story.id)}
-                    className={`group flex min-w-0 flex-col gap-2 py-5 ${
-                      index === 0 ? "pe-5" : "border-s border-ink px-5"
-                    }`}
-                  >
-                    <CardBody story={story} lang={lang} size="more" />
-                  </Link>
-                ))}
-              </div>
-            ))}
-          </div>
-        ) : null}
       </div>
-    </div>
+      <ol className="records" data-depth={depth}>
+        {stories.map((story, index) => {
+          const summary = cellSummary(story, lang);
+          const minutes = story.locales[lang].minutes;
+          return (
+            <li key={story.id} className={`border-b border-line ${index < sideCount ? "md:hidden" : ""}`}>
+              <Link {...readLink(lang, story.id)} className="group flex items-start py-4 md:py-5">
+                <div className="min-w-0 flex-1">
+                  <h3 className="paper-title text-[1.2rem] leading-[1.2] font-bold text-ink decoration-1 underline-offset-[0.14em] group-hover:underline md:text-[1.35rem]">
+                    {storyTitle(story, lang)}
+                  </h3>
+                  {summary ? (
+                    <div className="record-layer" data-layer="2">
+                      <div>
+                        <p className="font-body max-w-3xl pt-1.5 text-pretty text-base leading-[1.35] text-ink">
+                          {summary}
+                        </p>
+                      </div>
+                    </div>
+                  ) : null}
+                  <p className={`mt-1.5 ${label}`}>
+                    {copy.themes[story.theme]}
+                    <span className="text-muted">
+                      {" · "}
+                      <span className="whitespace-nowrap">{formatDate(story.date, lang)}</span>
+                    </span>
+                  </p>
+                  {minutes ? (
+                    <div className="record-layer" data-layer="3">
+                      <div>
+                        <div className="pt-1">
+                          <ReadTime minutes={minutes} lang={lang} pattern={copy.minRead} />
+                        </div>
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+                {story.image ? (
+                  <div className="record-layer record-picture ms-5 shrink-0" data-layer="3">
+                    <div>
+                      <img
+                        src={story.image.src}
+                        alt={imageCaption(story.image, lang)}
+                        width={160}
+                        height={160}
+                        loading="lazy"
+                        decoding="async"
+                        className="block aspect-square w-20 object-cover md:w-28"
+                      />
+                    </div>
+                  </div>
+                ) : null}
+              </Link>
+            </li>
+          );
+        })}
+      </ol>
+    </section>
   );
 }
 
