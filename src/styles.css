@@ -130,6 +130,32 @@ html[data-look="bordo"] .section-link[data-on="true"] {
   }
 }
 
+/* The chain of documents under the lead opens and closes in height and opacity. */
+.chain-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    grid-template-rows 200ms ease,
+    opacity 200ms ease,
+    visibility 200ms;
+}
+.chain-panel[data-open="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+}
+.chain-panel > div {
+  overflow: hidden;
+  min-height: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .chain-panel {
+    transition: none;
+  }
+}
+
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;

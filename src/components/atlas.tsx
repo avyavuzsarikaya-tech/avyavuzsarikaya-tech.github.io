@@ -206,12 +206,35 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
 }
 
 /** Words for the two front-page parts below the lead, in the five languages. */
-const HOME_WORDS: Record<Lang, { chain: string; records: string; depth: [string, string, string] }> = {
-  tr: { chain: "Belge zinciri", records: "Kayıtlar", depth: ["Başlık", "Özet", "Tamamı"] },
-  en: { chain: "Document chain", records: "Records", depth: ["Headline", "Summary", "Full"] },
-  ar: { chain: "سلسلة الوثائق", records: "السجلات", depth: ["العنوان", "الملخص", "كامل"] },
-  fr: { chain: "Chaîne de documents", records: "Registres", depth: ["Titre", "Résumé", "Complet"] },
-  es: { chain: "Cadena de documentos", records: "Registros", depth: ["Titular", "Resumen", "Completo"] },
+const HOME_WORDS: Record<
+  Lang,
+  { chain: string; records: string; depth: [string, string, string] }
+> = {
+  tr: {
+    chain: "Belge zinciri",
+    records: "Kayıtlar",
+    depth: ["Başlık", "Özet", "Tamamı"],
+  },
+  en: {
+    chain: "Document chain",
+    records: "Records",
+    depth: ["Headline", "Summary", "Full"],
+  },
+  ar: {
+    chain: "سلسلة الوثائق",
+    records: "السجلات",
+    depth: ["العنوان", "الملخص", "كامل"],
+  },
+  fr: {
+    chain: "Chaîne de documents",
+    records: "Registres",
+    depth: ["Titre", "Résumé", "Complet"],
+  },
+  es: {
+    chain: "Cadena de documentos",
+    records: "Registros",
+    depth: ["Titular", "Resumen", "Completo"],
+  },
 };
 
 /** "IPCC – Sixth Assessment Report" becomes the issuer and the document name. */
@@ -222,51 +245,98 @@ function splitSource(label: string): { issuer: string; title: string } {
 }
 
 /**
- * One ruled band under the lead: its label, the lead's title, and the documents it rests on
- * in order, each opening the document itself. A reading without filed sources shows no band.
+ * One ruled band under the lead, closed at first: its label and the lead's title. Opened, it
+ * shows the documents the lead rests on, in order, each opening the document itself.
+ * A reading without filed sources shows no band.
  */
 function DocumentChain({ story, lang }: { story: Story; lang: Lang }) {
+  const [open, setOpen] = useState(false);
   const sources = story.sources ?? [];
   if (sources.length === 0) return null;
   const words = HOME_WORDS[lang];
   const arrow = langMeta[lang].dir === "rtl" ? "←" : "→";
   const label =
     lang === "ar" ? "text-sm text-pine" : "text-xs uppercase tracking-[0.14em] text-pine";
+  const panelId = `chain-${story.id}`;
   return (
     <section className="px-5 md:px-8" aria-label={words.chain}>
-      <div className="flex flex-col gap-3 border-b border-ink py-4 lg:flex-row lg:items-center lg:gap-6">
-        <div className="flex min-w-0 items-baseline gap-3 lg:w-[30%] lg:shrink-0">
-          <p className={`shrink-0 ${label}`}>{words.chain}</p>
-          <p className="paper-title min-w-0 truncate text-[0.95rem] text-ink">{storyTitle(story, lang)}</p>
+      <div className="border-b border-ink">
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-controls={panelId}
+          onClick={() => setOpen((was) => !was)}
+          className="flex w-full items-center gap-3 py-4 text-start md:gap-5"
+        >
+          <span className={`shrink-0 ${label}`}>{words.chain}</span>
+          <span className="paper-title min-w-0 flex-1 truncate text-[0.95rem] text-ink">
+            {storyTitle(story, lang)}
+          </span>
+          <span
+            aria-hidden="true"
+            className={`shrink-0 text-ink transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          >
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.3"
+            >
+              <path d="M2 4.5 6 8.5l4-4" />
+            </svg>
+          </span>
+        </button>
+        <div id={panelId} className="chain-panel" data-open={open}>
+          <div>
+            <ol className="flex flex-col gap-2 pb-4 sm:flex-row sm:items-stretch sm:gap-0">
+              {sources.map((source, index) => {
+                const { issuer, title } = splitSource(source.label);
+                return (
+                  <li key={source.n} className="flex min-w-0 flex-1 items-stretch">
+                    {index > 0 ? (
+                      <span
+                        aria-hidden="true"
+                        className="hidden shrink-0 self-center px-2.5 text-muted sm:block"
+                      >
+                        {arrow}
+                      </span>
+                    ) : null}
+                    <a
+                      href={source.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      tabIndex={open ? 0 : -1}
+                      className="group flex min-w-0 flex-1 flex-col justify-center border border-line bg-sheet px-3 py-2 hover:border-ink"
+                    >
+                      {issuer ? (
+                        <span className={`truncate ${label} !text-muted`}>{issuer}</span>
+                      ) : null}
+                      <span className="font-body truncate text-[0.9rem] leading-snug text-ink group-hover:underline">
+                        {title}
+                      </span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
         </div>
-        <ol className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-stretch sm:gap-0">
-          {sources.map((source, index) => {
-            const { issuer, title } = splitSource(source.label);
-            return (
-              <li key={source.n} className="flex min-w-0 flex-1 items-stretch">
-                {index > 0 ? (
-                  <span aria-hidden="true" className="hidden shrink-0 self-center px-2.5 text-muted sm:block">
-                    {arrow}
-                  </span>
-                ) : null}
-                <a
-                  href={source.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex min-w-0 flex-1 flex-col justify-center border border-line bg-sheet px-3 py-2 hover:border-ink"
-                >
-                  {issuer ? <span className={`truncate ${label} !text-muted`}>{issuer}</span> : null}
-                  <span className="font-body truncate text-[0.9rem] leading-snug text-ink group-hover:underline">
-                    {title}
-                  </span>
-                </a>
-              </li>
-            );
-          })}
-        </ol>
       </div>
     </section>
   );
+}
+
+/**
+ * The first lines of the text, shown under the summary at depth 3. When the summary was
+ * itself taken from those lines, the sentence already shown is not repeated.
+ */
+function openingLines(story: Story, lang: Lang, summary: string): string {
+  const lead = story.locales[lang].lead.replace(/\s+/g, " ").trim();
+  if (!lead) return "";
+  const rest = summary && lead.startsWith(summary) ? lead.slice(summary.length).trim() : lead;
+  return rest === summary ? "" : rest;
 }
 
 type Depth = 1 | 2 | 3;
@@ -286,7 +356,15 @@ function readDepth(): Depth {
  * sets how much of each row shows; the choice is kept in this browser.
  * The two readings of the right column are listed only on a phone, where that column is not shown.
  */
-function Records({ stories, sideCount, lang }: { stories: Story[]; sideCount: number; lang: Lang }) {
+function Records({
+  stories,
+  sideCount,
+  lang,
+}: {
+  stories: Story[];
+  sideCount: number;
+  lang: Lang;
+}) {
   const words = HOME_WORDS[lang];
   const copy = useCopy(lang);
   const [depth, setDepth] = useState<Depth>(2);
@@ -314,13 +392,12 @@ function Records({ stories, sideCount, lang }: { stories: Story[]; sideCount: nu
               role="radio"
               aria-checked={depth === step}
               onClick={() => choose(step)}
-              className={`border border-ink px-2 py-1 text-[0.7rem] whitespace-nowrap tabular-nums transition-colors duration-200 sm:px-2.5 sm:text-xs md:px-3.5 ${
+              className={`border border-ink px-3 py-1 text-xs whitespace-nowrap transition-colors duration-200 md:px-3.5 ${
                 step > 1 ? "-ms-px" : ""
               } ${depth === step ? "bg-ink text-paper" : "bg-transparent text-ink hover:bg-highlight"} ${
-                lang === "ar" ? "" : "uppercase tracking-[0.06em] sm:tracking-[0.1em]"
+                lang === "ar" ? "" : "uppercase tracking-[0.1em]"
               }`}
             >
-              <span className="me-1 opacity-60 sm:me-1.5">{step}</span>
               {words.depth[step - 1]}
             </button>
           ))}
@@ -329,9 +406,13 @@ function Records({ stories, sideCount, lang }: { stories: Story[]; sideCount: nu
       <ol className="records" data-depth={depth}>
         {stories.map((story, index) => {
           const summary = cellSummary(story, lang);
+          const opening = openingLines(story, lang, summary);
           const minutes = story.locales[lang].minutes;
           return (
-            <li key={story.id} className={`border-b border-line ${index < sideCount ? "md:hidden" : ""}`}>
+            <li
+              key={story.id}
+              className={`border-b border-line ${index < sideCount ? "md:hidden" : ""}`}
+            >
               <Link {...readLink(lang, story.id)} className="group flex items-start py-4 md:py-5">
                 <div className="min-w-0 flex-1">
                   <h3 className="paper-title text-[1.2rem] leading-[1.2] font-bold text-ink decoration-1 underline-offset-[0.14em] group-hover:underline md:text-[1.35rem]">
@@ -342,6 +423,15 @@ function Records({ stories, sideCount, lang }: { stories: Story[]; sideCount: nu
                       <div>
                         <p className="font-body max-w-3xl pt-1.5 text-pretty text-base leading-[1.35] text-ink">
                           {summary}
+                        </p>
+                      </div>
+                    </div>
+                  ) : null}
+                  {opening ? (
+                    <div className="record-layer" data-layer="3">
+                      <div>
+                        <p className="font-body line-clamp-4 max-w-3xl pt-2 text-pretty text-[0.95rem] leading-[1.45] text-muted">
+                          {opening}
                         </p>
                       </div>
                     </div>
@@ -416,7 +506,9 @@ function CardBody({ story, lang, size }: { story: Story; lang: Lang; size: CardS
     <>
       <p
         className={
-          lang === "ar" ? "text-sm leading-snug text-pine" : "text-xs leading-snug uppercase tracking-[0.14em] text-pine"
+          lang === "ar"
+            ? "text-sm leading-snug text-pine"
+            : "text-xs leading-snug uppercase tracking-[0.14em] text-pine"
         }
       >
         {copy.themes[story.theme]}
@@ -426,7 +518,9 @@ function CardBody({ story, lang, size }: { story: Story; lang: Lang; size: CardS
       >
         {storyTitle(story, lang)}
       </h2>
-      {summary ? <p className={`font-body text-pretty text-ink ${CARD_SUMMARY[size]}`}>{summary}</p> : null}
+      {summary ? (
+        <p className={`font-body text-pretty text-ink ${CARD_SUMMARY[size]}`}>{summary}</p>
+      ) : null}
       {minutes ? <ReadTime minutes={minutes} lang={lang} pattern={copy.minRead} /> : null}
     </>
   );
@@ -479,7 +573,9 @@ function Column({
     >
       <h2 className="text-lg leading-snug">{storyTitle(story, lang)}</h2>
       {excerpt ? (
-        <p className={`font-body text-pretty text-[15px] leading-snug text-muted ${dek ? "" : "line-clamp-3"}`}>
+        <p
+          className={`font-body text-pretty text-[15px] leading-snug text-muted ${dek ? "" : "line-clamp-3"}`}
+        >
           {excerpt}
         </p>
       ) : null}
@@ -512,7 +608,9 @@ function Picture({
       loading={eager ? "eager" : "lazy"}
       decoding="async"
       className={
-        fill ? "absolute inset-0 h-full w-full object-cover" : `aspect-[3/2] w-full max-w-full object-cover ${className}`
+        fill
+          ? "absolute inset-0 h-full w-full object-cover"
+          : `aspect-[3/2] w-full max-w-full object-cover ${className}`
       }
     />
   );
