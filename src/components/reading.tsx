@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ReadingPlayer } from "@/components/player";
 import { Prose } from "@/components/prose";
 import { Comments } from "@/components/members/comments";
@@ -110,6 +110,9 @@ function Reading({ story }: { story: Story | null }) {
   const membersOnly = story?.membersOnly === true;
   // A paid member's full text of a members-only reading; null for everyone else.
   const fullText = useMemberText(story?.id, lang, membersOnly);
+  // Where the reading starts (its header) and ends (after its sources), for the progress line.
+  const readStart = useRef<HTMLElement | null>(null);
+  const readEnd = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const saved = TYPE_STEPS.indexOf(readType() as (typeof TYPE_STEPS)[number]);
@@ -156,7 +159,8 @@ function Reading({ story }: { story: Story | null }) {
           <FrameTools />
         </div>
 
-        <header className="flex flex-col gap-4">
+        <ReadingProgress start={readStart} end={readEnd} />
+        <header ref={readStart} className="flex flex-col gap-4">
           <p className="text-xs uppercase tracking-widest text-pine">{copy.themes[story.theme]}</p>
           <h1 className="text-4xl md:text-5xl">{locale.title || story.locales.en.title}</h1>
           {locale.dek ? (
@@ -191,7 +195,7 @@ function Reading({ story }: { story: Story | null }) {
                 height={1000}
                 loading="lazy"
                 decoding="async"
-                className="block h-auto w-full max-w-full"
+                className="-mx-5 block h-auto w-[calc(100%+2.5rem)] max-w-none md:mx-0 md:w-full md:max-w-full"
               />
               <figcaption className="text-xs leading-snug text-muted">
                 {caption ? `${caption} · ${AI_NOTE[lang]}` : AI_NOTE[lang]}
@@ -238,7 +242,10 @@ function Reading({ story }: { story: Story | null }) {
         <StoryVideos storyId={story.id} lang={lang} />
 
         {written ? (
-          <div className="flex flex-col gap-8">
+          <div
+            ref={sources.length ? undefined : (node) => void (readEnd.current = node)}
+            className="flex flex-col gap-8"
+          >
             <div style={{ fontSize: `${TYPE_STEPS[typeStep]}em` }}>
               <Prose body={body} sourceNums={sourceNums} sourceWord={copy.sourceWord} />
             </div>
@@ -267,7 +274,11 @@ function Reading({ story }: { story: Story | null }) {
         )}
 
         {sources.length ? (
-          <section className="border-t border-line pt-8" aria-labelledby="bibliography">
+          <section
+            ref={readEnd}
+            className="border-t border-line pt-8"
+            aria-labelledby="bibliography"
+          >
             <h2 id="bibliography" className="text-2xl">
               {copy.sources}
             </h2>
@@ -278,18 +289,26 @@ function Reading({ story }: { story: Story | null }) {
                   <li
                     key={source.n}
                     id={`source-${source.n}`}
-                    className="source-row scroll-mt-24 grid grid-cols-[2.5rem_1fr] gap-3 border-b border-line py-4"
+                    className="source-row group relative scroll-mt-24 grid grid-cols-[2.5rem_1fr] gap-3 border-b border-line py-4 transition-colors duration-150 max-md:active:bg-highlight"
                   >
                     <span className="tabular-nums text-pine">{source.n}</span>
                     <div className="min-w-0">
-                      <p>{source.label}</p>
+                      <p
+                        className={
+                          href
+                            ? "decoration-1 underline-offset-[0.18em] max-md:group-active:underline"
+                            : ""
+                        }
+                      >
+                        {source.label}
+                      </p>
                       {href ? (
                         <a
                           href={href}
                           target="_blank"
                           rel="noopener noreferrer"
                           dir="ltr"
-                          className="mt-1 block break-all text-sm text-pine"
+                          className="mt-1 block break-all text-sm text-pine max-md:after:absolute max-md:after:inset-0 max-md:after:content-['']"
                         >
                           {href}
                         </a>
@@ -306,4 +325,45 @@ function Reading({ story }: { story: Story | null }) {
       </div>
     </main>
   );
+}
+
+/**
+ * A hairline fixed to the top of a phone screen that fills as the reader moves from the
+ * start of the reading to the end of its sources (or of its text, when it has none). Hidden on wide screens by the stylesheet.
+ */
+function ReadingProgress({
+  start,
+  end,
+}: {
+  start: React.RefObject<HTMLElement | null>;
+  end: React.RefObject<HTMLElement | null>;
+}) {
+  const line = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    let frame = 0;
+    const draw = () => {
+      frame = 0;
+      const from = start.current;
+      const to = end.current;
+      const bar = line.current;
+      if (!from || !to || !bar) return;
+      const top = from.getBoundingClientRect().top + window.scrollY;
+      const bottom = to.getBoundingClientRect().bottom + window.scrollY - window.innerHeight;
+      const span = bottom - top;
+      const done = span > 0 ? Math.min(1, Math.max(0, (window.scrollY - top) / span)) : 1;
+      bar.style.transform = `scaleX(${done})`;
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(draw);
+    };
+    draw();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
+  }, [start, end]);
+  return <div ref={line} aria-hidden="true" className="reading-progress" />;
 }

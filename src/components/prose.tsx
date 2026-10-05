@@ -49,6 +49,8 @@ function Cited({
             const el = document.getElementById(`source-${n}`);
             if (!el) return;
             document.querySelectorAll(".source-row.is-lit").forEach((node) => node.classList.remove("is-lit"));
+            // Read the layout once so a second tap on the same number restarts the fade.
+            void el.offsetWidth;
             el.classList.add("is-lit");
             el.scrollIntoView({ behavior: "smooth", block: "center" });
           }}

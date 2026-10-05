@@ -212,6 +212,51 @@ html[data-look="bordo"] .section-link[data-on="true"] {
     border-bottom: 1px solid var(--color-pine);
     padding-inline: 0.15em;
   }
+  /* On a phone the number is a small target: an invisible area around it takes the tap,
+     and a source row lit by a tap fades back after a moment. */
+  @media (max-width: 767px) {
+    a.cite {
+      position: relative;
+    }
+    a.cite::before {
+      content: "";
+      position: absolute;
+      inset: -10px -8px;
+    }
+    .source-row.is-lit {
+      animation: source-lit 1.6s ease-out forwards;
+    }
+  }
+  @keyframes source-lit {
+    0%,
+    40% {
+      background: var(--color-highlight);
+    }
+    100% {
+      background: transparent;
+    }
+  }
+  /* Reading progress on a phone: a hairline across the top of the screen that fills
+     from the start of the text to the end of its sources, right to left in Arabic. */
+  .reading-progress {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: 40;
+    height: 3px;
+    background: var(--color-ink);
+    transform: scaleX(0);
+    transform-origin: left center;
+    pointer-events: none;
+  }
+  [dir="rtl"] .reading-progress {
+    transform-origin: right center;
+  }
+  @media (min-width: 768px) {
+    .reading-progress {
+      display: none;
+    }
+  }
   .source-row.is-lit,
   .source-row:target {
     background: var(--color-highlight);
