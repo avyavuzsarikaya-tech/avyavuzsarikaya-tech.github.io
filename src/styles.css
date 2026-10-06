@@ -1073,6 +1073,34 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
 .atlas-pic-slot {
   min-width: 0;
 }
+/* Headlines only, on a wide screen: the column of three short readings opens into three
+   columns beside the two cards, so the five headlines stand in one ruled row and nothing
+   leaves an empty space under the two cards. */
+@media (min-width: 768px) {
+  .atlas-top.records[data-depth="1"] {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    padding-block-end: 0.25rem;
+  }
+  .atlas-top.records[data-depth="1"] .atlas-briefs {
+    display: contents;
+  }
+  .atlas-top.records[data-depth="1"] .atlas-brief {
+    position: relative;
+    padding: 0;
+    border-bottom: 0;
+  }
+  .atlas-top.records[data-depth="1"] .atlas-brief::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: -0.75rem;
+    border-inline-start: 1px solid var(--color-line);
+  }
+  .atlas-top.records[data-depth="1"] .atlas-card h3 {
+    font-size: 1.4rem;
+    line-height: 1.1;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .atlas-top.records .atlas-card,
   .atlas-top.records .atlas-brief {
