@@ -202,7 +202,7 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
       <div className="md:px-8">
         <Link
           {...readLink(lang, lead.id)}
-          className={`atlas-own group grid grid-cols-1 border-b border-line pb-5 md:gap-[clamp(1.5rem,2.6vw,2.4rem)] md:py-6 ${
+          className={`atlas-own group grid grid-cols-1 pb-5 md:gap-[clamp(1.5rem,2.6vw,2.4rem)] md:py-6 ${
             lead.image ? "md:grid-cols-[minmax(0,0.92fr)_minmax(0,1.65fr)]" : ""
           }`}
         >
@@ -232,6 +232,9 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
           </div>
         </Link>
       </div>
+
+      {/* The chain sits right under the reading it belongs to, before any other card. */}
+      <DocumentChain story={lead} lang={lang} />
 
       {cards.length ? (
         <div className="atlas-top px-5 md:px-8">
@@ -281,9 +284,6 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
         </div>
       ) : null}
 
-      <div className="mt-2 md:mt-4">
-        <DocumentChain story={lead} lang={lang} />
-      </div>
       <Records stories={records} lang={lang} />
     </div>
   );
@@ -422,13 +422,10 @@ function shortName(label: string): string {
 }
 
 /**
- * One tinted band under the lead, a tone darker than the paper, closed at first: its label
- * with the number of sources, the lead's title in the face of the pictured headline, and a
- * preview of the chain — one small dot per document joined by a hairline, in the same
- * line-and-dot language as the mark beside the name; on a phone only the first few links
- * show, with "+2" style continuation for the rest. Opened, the band lists the documents
- * the lead rests on, in order, each opening the document itself.
- * A reading without filed sources shows no band.
+ * A ruled strip under the lead, closed at first: the chain label, the source count, and a
+ * preview of one dot per document joined by a hairline. On a phone only the first few
+ * links show, with a "+2" continuation. Opened, the documents sit on one vertical rule,
+ * numbered, each opening the document itself. A reading without filed sources shows nothing.
  */
 function DocumentChain({ story, lang }: { story: Story; lang: Lang }) {
   const [open, setOpen] = useState(false);
@@ -444,16 +441,16 @@ function DocumentChain({ story, lang }: { story: Story; lang: Lang }) {
   const phoneLinks = 3;
   const moreOnPhone = sources.length - phoneLinks;
   return (
-    <section className="bg-shade transition-colors duration-300" aria-label={words.chain}>
+    <section className="doc-chain" data-lang={lang} aria-label={words.chain}>
       <div className="px-5 md:px-8">
         <button
           type="button"
           aria-expanded={open}
           aria-controls={panelId}
           onClick={() => setOpen((was) => !was)}
-          className="flex w-full flex-col gap-1 py-3.5 text-start md:gap-1.5 md:py-4"
+          className="doc-chain-toggle"
         >
-          <span className="flex items-center justify-between gap-4">
+          <span className="doc-chain-head">
             <span className={`shrink-0 ${label}`}>
               {words.chain}
               <span className="text-muted">
@@ -461,7 +458,7 @@ function DocumentChain({ story, lang }: { story: Story; lang: Lang }) {
                 {sourceCount(sources.length, lang)}
               </span>
             </span>
-            <span className="flex shrink-0 items-center gap-2 text-ink">
+            <span className="doc-chain-open">
               <span className={quiet}>{open ? words.close : words.open}</span>
               <svg
                 aria-hidden="true"
@@ -477,57 +474,45 @@ function DocumentChain({ story, lang }: { story: Story; lang: Lang }) {
               </svg>
             </span>
           </span>
-          <span className="paper-title block text-pretty text-[1.05rem] leading-[1.25] text-ink md:text-[1.2rem]">
-            {storyTitle(story, lang)}
-          </span>
-          <span aria-hidden="true" className="mt-1 flex min-w-0 items-center">
+          <span aria-hidden="true" className="doc-chain-preview">
             {sources.map((source, index) => (
               <span
                 key={source.n}
-                className={`flex min-w-0 items-center ${index >= phoneLinks ? "max-md:hidden" : ""}`}
+                className={`doc-chain-node ${index >= phoneLinks ? "max-md:hidden" : ""}`}
               >
-                {index > 0 ? <span className="mx-1.5 h-px w-3 shrink-0 bg-rule" /> : null}
-                <span className="size-[5px] shrink-0 rounded-full bg-ink" />
-                <span className="ms-1.5 max-w-20 truncate text-[11px] leading-none text-muted md:max-w-28">
-                  {shortName(source.label)}
-                </span>
+                {index > 0 ? <span className="doc-chain-rule" /> : null}
+                <span className="doc-chain-dot" />
+                <span className="doc-chain-name">{shortName(source.label)}</span>
               </span>
             ))}
             {moreOnPhone > 0 ? (
-              <span className="flex shrink-0 items-center md:hidden">
-                <span className="mx-1.5 h-px w-3 shrink-0 bg-rule" />
-                <span className="text-[11px] leading-none text-muted">+{moreOnPhone}</span>
+              <span className="doc-chain-node md:hidden">
+                <span className="doc-chain-rule" />
+                <span className="doc-chain-more">+{moreOnPhone}</span>
               </span>
             ) : null}
           </span>
         </button>
         <div id={panelId} className="chain-panel" data-open={open}>
           <div>
-            <ol className="flex flex-col gap-2 pb-5 sm:flex-row sm:items-stretch sm:gap-0">
+            <ol className="doc-chain-list">
               {sources.map((source, index) => {
                 const { issuer, title } = splitSource(source.label);
                 return (
-                  <li key={source.n} className="flex min-w-0 flex-1 items-stretch">
-                    {index > 0 ? (
-                      <span
-                        aria-hidden="true"
-                        className="hidden shrink-0 self-center px-2.5 text-muted sm:block"
-                      >
-                        {arrow}
-                      </span>
-                    ) : null}
+                  <li key={source.n} className="doc-chain-item">
                     <a
                       href={source.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       tabIndex={open ? 0 : -1}
-                      className="group flex min-w-0 flex-1 flex-col justify-center border border-line bg-sheet px-3 py-1 hover:border-ink md:py-2"
                     >
-                      {issuer ? (
-                        <span className={`truncate ${label} !text-muted`}>{issuer}</span>
-                      ) : null}
-                      <span className="font-body truncate text-[0.9rem] leading-snug text-ink group-hover:underline">
-                        {title}
+                      <span className="doc-chain-n">{String(index + 1).padStart(2, "0")}</span>
+                      <span className="doc-chain-text">
+                        {issuer ? <span className="doc-chain-issuer">{issuer}</span> : null}
+                        <span className="doc-chain-title">{title}</span>
+                      </span>
+                      <span className="doc-chain-go" aria-hidden="true">
+                        {arrow}
                       </span>
                     </a>
                   </li>
@@ -539,6 +524,7 @@ function DocumentChain({ story, lang }: { story: Story; lang: Lang }) {
       </div>
     </section>
   );
+
 }
 
 /**

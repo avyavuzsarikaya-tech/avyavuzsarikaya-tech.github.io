@@ -234,7 +234,126 @@ body {
   }
 }
 
-/* The chain of documents under the lead opens and closes in height and opacity. */
+/* The chain of documents under the lead: a ruled strip, not a separate panel.
+   It opens and closes in height and opacity. */
+.doc-chain {
+  border-block: 1px solid var(--color-line);
+  background: var(--color-paper);
+}
+.doc-chain-toggle {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding-block: 0.85rem 0.95rem;
+  text-align: start;
+}
+.doc-chain-head,
+.doc-chain-open {
+  display: flex;
+  align-items: center;
+}
+.doc-chain-head {
+  justify-content: space-between;
+  gap: 1rem;
+}
+.doc-chain-open {
+  flex-shrink: 0;
+  gap: 0.45rem;
+  color: var(--color-ink);
+}
+.doc-chain-preview {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+}
+.doc-chain-node {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+}
+.doc-chain-rule {
+  width: 1.15rem;
+  height: 1px;
+  margin-inline: 0.45rem;
+  flex-shrink: 0;
+  background: var(--color-rule);
+}
+.doc-chain-dot {
+  width: 5px;
+  height: 5px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: var(--color-pine);
+}
+.doc-chain-name,
+.doc-chain-more {
+  margin-inline-start: 0.4rem;
+  overflow: hidden;
+  font-size: 11px;
+  line-height: 1;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+.doc-chain-name {
+  max-width: 6.5rem;
+  text-overflow: ellipsis;
+}
+.doc-chain-list {
+  margin: 0;
+  padding: 0 0 0.35rem;
+  list-style: none;
+  border-top: 1px solid var(--color-line);
+}
+.doc-chain-item a {
+  display: grid;
+  grid-template-columns: 1.8rem minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: 0.85rem;
+  padding-block: 0.72rem;
+  border-bottom: 1px solid var(--color-line);
+  text-decoration: none;
+}
+.doc-chain-item:last-child a {
+  border-bottom: 0;
+}
+.doc-chain-n {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  color: var(--color-pine);
+}
+.doc-chain-issuer {
+  display: block;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.doc-chain[data-lang="ar"] .doc-chain-issuer {
+  font-size: 0.84rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.doc-chain-title {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 1.02rem;
+  line-height: 1.35;
+  color: var(--color-ink);
+}
+.doc-chain-item a:hover .doc-chain-title {
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+.doc-chain-go {
+  color: var(--color-rule);
+  font-size: 0.9rem;
+}
+.doc-chain-item a:hover .doc-chain-go {
+  color: var(--color-ink);
+}
 .chain-panel {
   display: grid;
   grid-template-rows: 0fr;
@@ -253,6 +372,11 @@ body {
 .chain-panel > div {
   overflow: hidden;
   min-height: 0;
+}
+@media (min-width: 768px) {
+  .doc-chain-name {
+    max-width: 9rem;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .chain-panel {
