@@ -826,12 +826,6 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     border-bottom: 0;
   }
 }
-/* The page's width on a wide screen: centred, as a printed page sits on a desk. */
-.page-width {
-  width: 100%;
-  max-width: 72rem;
-  margin-inline: auto;
-}
 /* The top cards follow the depth control too: at depth 1 their picture column closes
    and the title takes the whole width. */
 .atlas-top.records .atlas-card,
