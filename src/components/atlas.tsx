@@ -355,7 +355,8 @@ function Kicker({ story, lang }: { story: Story; lang: Lang }) {
       {minutes ? (
         <span className="text-muted">
           {" · "}
-          {copy.minRead.replace("{n}", String(minutes))}
+          {/* "1 min read" stays on one line: in a narrow card it moves down whole. */}
+          <span className="whitespace-nowrap">{copy.minRead.replace("{n}", String(minutes))}</span>
         </span>
       ) : null}
     </p>

@@ -617,8 +617,29 @@ body {
   [dir="rtl"] .section-bar::after {
     background: linear-gradient(to left, transparent, var(--color-paper));
   }
+  /* The same fade at the start once the row has been scrolled, so a section name cut by
+     the edge ("…onomy") fades out instead of being sliced. */
+  .section-bar::before {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: 2.5rem;
+    pointer-events: none;
+    background: linear-gradient(to left, transparent, var(--color-paper));
+    opacity: 0;
+    transition: opacity 150ms ease;
+  }
+  .section-bar[data-start="false"]::before {
+    opacity: 1;
+  }
+  [dir="rtl"] .section-bar::before {
+    background: linear-gradient(to right, transparent, var(--color-paper));
+  }
   @media (min-width: 1024px) {
-    .section-bar::after {
+    .section-bar::after,
+    .section-bar::before {
       display: none;
     }
   }

@@ -293,6 +293,7 @@ export function Shell({
     const mark = () => {
       const end = Math.abs(row.scrollLeft) + row.clientWidth >= row.scrollWidth - 2;
       row.parentElement?.setAttribute("data-end", String(end));
+      row.parentElement?.setAttribute("data-start", String(Math.abs(row.scrollLeft) <= 2));
     };
     mark();
     row.addEventListener("scroll", mark, { passive: true });
