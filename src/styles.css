@@ -758,7 +758,7 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
   aspect-ratio: 1 / 1;
 }
 .atlas-card .atlas-dek {
-  display: none;
+  display: block;
 }
 @media (min-width: 768px) {
   .atlas-top {
@@ -870,6 +870,38 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
 }
 .atlas-col li:last-child > a {
   border-bottom: 0;
+}
+/* Homepage picture strip: four cards on desktop, two on a phone. Reuse the
+   existing record content and depth layers; only their placement changes. */
+.atlas-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-line);
+}
+.atlas-strip > li {
+  min-width: 0;
+}
+.atlas-strip > li > a {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 0;
+  padding-block: 0;
+}
+.atlas-strip .record-thumb {
+  width: 100%;
+  margin-inline-end: 0;
+}
+.atlas-strip .record-thumb img {
+  width: 100%;
+  aspect-ratio: 1.85;
+  margin-bottom: 0.75rem;
+}
+@media (min-width: 801px) {
+  .atlas-strip {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 /* Reading page: the text in a narrow column, the picture wider than it. */
 .reading-column {

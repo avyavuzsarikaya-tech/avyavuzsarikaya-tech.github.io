@@ -570,18 +570,20 @@ function Records({ stories, lang }: { stories: Story[]; lang: Lang }) {
   };
   if (stories.length === 0) return null;
 
-  // Three columns as on a printed page: the newest as rows with a small picture, one
-  // reading at length in the middle, and a numbered column on the right. The numbered
-  // column is "Most read" once reads are counted; until then it carries the next readings.
-  const latest = stories.slice(0, 4);
-  const deep = stories[4];
+  // A four-card picture strip, then the three editorial columns. Keep short editions
+  // together; every reading still has a place and the same depth control applies.
+  const strip = stories.length >= 8 ? stories.slice(0, 4) : [];
+  const remaining = stories.slice(strip.length);
+  const latestCount = Math.min(4, Math.max(1, remaining.length - 3));
+  const latest = remaining.slice(0, latestCount);
+  const deep = remaining[latestCount];
   const byId = new Map(stories.map((story) => [story.id, story]));
   const mostRead = ranked
     ? ranked.map((id) => byId.get(id)).filter((story): story is Story => Boolean(story))
     : [];
   const counted = mostRead.length > 0;
-  const numbered = counted ? mostRead : stories.slice(5, 10);
-  const shown = new Set([...latest, ...(deep ? [deep] : []), ...numbered].map((s) => s.id));
+  const numbered = counted ? mostRead : remaining.slice(latestCount + 1, latestCount + 6);
+  const shown = new Set([...strip, ...latest, ...(deep ? [deep] : []), ...numbered].map((s) => s.id));
   const more = stories.filter((story) => !shown.has(story.id));
   const heading = `font-body font-normal ${lang === "ar" ? "text-sm text-pine" : "text-xs uppercase tracking-[0.14em] text-pine"}`;
 
@@ -608,6 +610,16 @@ function Records({ stories, lang }: { stories: Story[]; lang: Lang }) {
           ))}
         </div>
       </div>
+
+      {strip.length ? (
+        <ol className="records atlas-strip mt-5" data-depth={depth}>
+          {strip.map((story) => (
+            <li key={story.id}>
+              <RecordRow story={story} lang={lang} />
+            </li>
+          ))}
+        </ol>
+      ) : null}
 
       <div className="records atlas-bottom mt-5" data-depth={depth}>
         <section className="atlas-col" aria-label={words.latest}>
