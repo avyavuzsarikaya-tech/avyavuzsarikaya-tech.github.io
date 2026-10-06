@@ -1,1 +1,0 @@
-import{n as e}from"./atlas-DZx2GaGL.js";var t=e;export{t as component};
