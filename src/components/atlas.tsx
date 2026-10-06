@@ -7,8 +7,8 @@ import { imageCaption } from "@/lib/editorial";
 import { langMeta, useCopy } from "@/lib/i18n";
 import { readLink } from "@/lib/lang-path";
 import { CARDS } from "@/lib/seed";
-import { formatDate, storyTitle } from "@/lib/text";
-import type { Lang, StoryCard as Story, Theme } from "@/lib/types";
+import { formatDate, safeHttpUrl, storyTitle } from "@/lib/text";
+import type { Lang, Source, StoryCard as Story, Theme } from "@/lib/types";
 import { useMostRead } from "@/lib/reads";
 import { useLang } from "@/lib/use-lang";
 
@@ -484,9 +484,23 @@ function shortName(label: string): string {
  * links show, with a "+2" continuation. Opened, the documents sit on one vertical rule,
  * numbered, each opening the document itself. A reading without filed sources shows nothing.
  */
-function DocumentChain({ story, lang }: { story: Story; lang: Lang }) {
-  const [open, setOpen] = useState(false);
-  const sources = story.sources ?? [];
+/**
+ * The chain of documents a reading rests on. On the front page it sits under the lead and
+ * opens on demand; at the foot of a reading (`page`) it is always open and takes the place
+ * of a plain bibliography, each document keeping its number and its #source-N anchor.
+ */
+export function DocumentChain({
+  story,
+  lang,
+  page = false,
+}: {
+  story: { id: string; sources?: Source[] };
+  lang: Lang;
+  page?: boolean;
+}) {
+  const [toggled, setOpen] = useState(false);
+  const open = page || toggled;
+  const sources = [...(story.sources ?? [])].sort((a, b) => a.n - b.n);
   if (sources.length === 0) return null;
   const words = HOME_WORDS[lang];
   const arrow = langMeta[lang].dir === "rtl" ? "←" : "→";
@@ -498,13 +512,19 @@ function DocumentChain({ story, lang }: { story: Story; lang: Lang }) {
   const phoneLinks = 3;
   const moreOnPhone = sources.length - phoneLinks;
   return (
-    <section className="doc-chain" data-lang={lang} aria-label={words.chain}>
-      <div className="px-5 md:px-8">
+    <section
+      className="doc-chain"
+      data-lang={lang}
+      data-page={page || undefined}
+      aria-label={words.chain}
+    >
+      <div className={page ? "px-4 md:px-6" : "px-5 md:px-8"}>
         <button
           type="button"
           aria-expanded={open}
           aria-controls={panelId}
           onClick={() => setOpen((was) => !was)}
+          disabled={page}
           className="doc-chain-toggle"
         >
           <span className="doc-chain-head">
@@ -530,7 +550,9 @@ function DocumentChain({ story, lang }: { story: Story; lang: Lang }) {
               </span>
             </span>
             <span className="doc-chain-actions">
-              <span className={`doc-chain-pill doc-chain-count ${quiet}`}>{sourceCount(sources.length, lang)}</span>
+              <span className={`doc-chain-pill doc-chain-count ${quiet}`}>
+                {sourceCount(sources.length, lang)}
+              </span>
               <span
                 className={`doc-chain-pill doc-chain-open ${lang === "ar" ? "text-sm" : "text-xs uppercase tracking-[0.14em]"}`}
               >
@@ -558,7 +580,7 @@ function DocumentChain({ story, lang }: { story: Story; lang: Lang }) {
               >
                 {index > 0 ? <span className="doc-chain-rule" /> : null}
                 <span className="doc-chain-chip">
-                  <span className="doc-chain-dot">{index + 1}</span>
+                  <span className="doc-chain-dot">{source.n}</span>
                   <span className="doc-chain-name">{shortName(source.label)}</span>
                 </span>
               </span>
@@ -574,25 +596,50 @@ function DocumentChain({ story, lang }: { story: Story; lang: Lang }) {
         <div id={panelId} className="chain-panel" data-open={open}>
           <div>
             <ol className="doc-chain-list">
-              {sources.map((source, index) => {
+              {sources.map((source) => {
                 const { issuer, title } = splitSource(source.label);
+                const href = safeHttpUrl(source.url);
+                const host = href ? new URL(href).hostname.replace(/^www\./, "") : "";
+                const inner = (
+                  <>
+                    <span className="doc-chain-n">{source.n}</span>
+                    <span className="doc-chain-text">
+                      {issuer ? <span className="doc-chain-issuer">{issuer}</span> : null}
+                      <span className="doc-chain-title">{title}</span>
+                      {page && host ? (
+                        <span className="doc-chain-host" dir="ltr">
+                          {host}
+                        </span>
+                      ) : null}
+                      {page && href ? (
+                        <span className="doc-chain-url" dir="ltr">
+                          {href}
+                        </span>
+                      ) : null}
+                    </span>
+                    <span className="doc-chain-go" aria-hidden="true">
+                      {href ? arrow : ""}
+                    </span>
+                  </>
+                );
                 return (
-                  <li key={source.n} className="doc-chain-item">
-                    <a
-                      href={source.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      tabIndex={open ? 0 : -1}
-                    >
-                      <span className="doc-chain-n">{index + 1}</span>
-                      <span className="doc-chain-text">
-                        {issuer ? <span className="doc-chain-issuer">{issuer}</span> : null}
-                        <span className="doc-chain-title">{title}</span>
-                      </span>
-                      <span className="doc-chain-go" aria-hidden="true">
-                        {arrow}
-                      </span>
-                    </a>
+                  <li
+                    key={source.n}
+                    id={page ? `source-${source.n}` : undefined}
+                    className={`doc-chain-item scroll-mt-24 ${page ? "source-row" : ""}`}
+                  >
+                    {href ? (
+                      <a
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        tabIndex={open ? 0 : -1}
+                      >
+                        {inner}
+                      </a>
+                    ) : (
+                      <div>{inner}</div>
+                    )}
                   </li>
                 );
               })}

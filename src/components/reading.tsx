@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { ReadingPlayer } from "@/components/player";
+import { DocumentChain } from "@/components/atlas";
 import { Prose } from "@/components/prose";
 import { Comments } from "@/components/members/comments";
 import {
@@ -15,7 +16,7 @@ import { FrameTools, Shell } from "@/components/shell";
 import { byline, editorialCopy, imageCaption } from "@/lib/editorial";
 import { langMeta, useCopy } from "@/lib/i18n";
 import { homeLink, readLink, rememberLang } from "@/lib/lang-path";
-import { formatDate, hasCopy, safeHttpUrl } from "@/lib/text";
+import { formatDate, hasCopy } from "@/lib/text";
 import { countRead } from "@/lib/reads";
 import { LANGS, type Lang, type Story } from "@/lib/types";
 import { useLang } from "@/lib/use-lang";
@@ -295,50 +296,8 @@ function Reading({ story }: { story: Story | null }) {
           )}
 
           {sources.length ? (
-            <section
-              ref={readEnd}
-              className="border-t border-line pt-8"
-              aria-labelledby="bibliography"
-            >
-              <h2 id="bibliography" className="text-2xl">
-                {copy.sources}
-              </h2>
-              <ol className="mt-6 flex flex-col">
-                {sources.map((source) => {
-                  const href = safeHttpUrl(source.url);
-                  return (
-                    <li
-                      key={source.n}
-                      id={`source-${source.n}`}
-                      className="source-row group relative scroll-mt-24 grid grid-cols-[2.5rem_1fr] gap-3 border-b border-line py-4 transition-colors duration-150 max-md:active:bg-highlight"
-                    >
-                      <span className="tabular-nums text-pine">{source.n}</span>
-                      <div className="min-w-0">
-                        <p
-                          className={
-                            href
-                              ? "decoration-1 underline-offset-[0.18em] max-md:group-active:underline"
-                              : ""
-                          }
-                        >
-                          {source.label}
-                        </p>
-                        {href ? (
-                          <a
-                            href={href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            dir="ltr"
-                            className="mt-1 block break-all text-sm text-pine max-md:after:absolute max-md:after:inset-0 max-md:after:content-['']"
-                          >
-                            {href}
-                          </a>
-                        ) : null}
-                      </div>
-                    </li>
-                  );
-                })}
-              </ol>
+            <section ref={readEnd}>
+              <DocumentChain story={story} lang={lang} page />
             </section>
           ) : null}
 

@@ -372,7 +372,8 @@ body {
   list-style: none;
   border-top: 1px solid var(--color-line);
 }
-.doc-chain-item a {
+.doc-chain-item a,
+.doc-chain-item > div {
   display: grid;
   grid-template-columns: 1.8rem minmax(0, 1fr) auto;
   align-items: baseline;
@@ -381,7 +382,8 @@ body {
   border-bottom: 1px solid var(--color-line);
   text-decoration: none;
 }
-.doc-chain-item:last-child a {
+.doc-chain-item:last-child a,
+.doc-chain-item:last-child > div {
   border-bottom: 0;
 }
 .doc-chain-n {
@@ -426,6 +428,42 @@ body {
 }
 .doc-chain-item a:hover .doc-chain-go {
   color: var(--color-ink);
+}
+.doc-chain-host {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.78rem;
+  color: var(--color-muted);
+  word-break: break-all;
+}
+.doc-chain-url {
+  display: none;
+}
+/* At the foot of a reading the chain is the bibliography: always open, no toggle. The list
+   runs on white to the box's edges, under the grey head. */
+.doc-chain[data-page] {
+  border-bottom: 0;
+}
+.doc-chain[data-page] .doc-chain-toggle {
+  cursor: default;
+}
+.doc-chain[data-page] .doc-chain-open {
+  display: none;
+}
+.doc-chain[data-page] .chain-panel {
+  margin-inline: -1rem;
+}
+.doc-chain[data-page] .doc-chain-list {
+  padding-inline: 1rem;
+  background: var(--color-paper);
+}
+@media (min-width: 768px) {
+  .doc-chain[data-page] .chain-panel {
+    margin-inline: -1.5rem;
+  }
+  .doc-chain[data-page] .doc-chain-list {
+    padding-inline: 1.5rem;
+  }
 }
 .chain-panel {
   display: grid;
@@ -763,6 +801,16 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
   p {
     orphans: 3;
     widows: 3;
+  }
+  .doc-chain-url {
+    display: block;
+    font-size: 0.75rem;
+    word-break: break-all;
+  }
+  .doc-chain-host,
+  .doc-chain-preview,
+  .doc-chain-go {
+    display: none;
   }
   .source-row,
   .reading-cite,
