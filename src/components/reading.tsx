@@ -16,6 +16,7 @@ import { byline, editorialCopy, imageCaption } from "@/lib/editorial";
 import { langMeta, useCopy } from "@/lib/i18n";
 import { homeLink, readLink, rememberLang } from "@/lib/lang-path";
 import { formatDate, hasCopy, safeHttpUrl } from "@/lib/text";
+import { countRead } from "@/lib/reads";
 import { LANGS, type Lang, type Story } from "@/lib/types";
 import { useLang } from "@/lib/use-lang";
 
@@ -124,6 +125,12 @@ function Reading({ story }: { story: Story | null }) {
   const page = useRef<HTMLDivElement | null>(null);
   useSignedCopy(page, story, lang);
 
+  // One count per visit for the "Most read" column (only once membership is switched on).
+  const storyId = story?.id;
+  useEffect(() => {
+    if (storyId) countRead(storyId);
+  }, [storyId]);
+
   useEffect(() => {
     const saved = TYPE_STEPS.indexOf(readType() as (typeof TYPE_STEPS)[number]);
     setTypeStep(saved === -1 ? 1 : saved);
@@ -161,13 +168,13 @@ function Reading({ story }: { story: Story | null }) {
 
   return (
     <main className="px-5 py-10 md:px-12 md:py-14">
-      <div ref={page} className="mx-auto flex max-w-2xl flex-col gap-8">
+      <div ref={page} className="mx-auto flex max-w-[65rem] flex-col gap-7 md:gap-8">
         {/* On paper (print or PDF) the band is left out; the name and the address head the page. */}
         <p className="print-only text-sm" dir="ltr">
           <span className="masthead-name text-2xl">ORBIS</span>
           <span className="ms-3 text-muted">{readingUrl(lang, story.id)}</span>
         </p>
-        <div className="no-print flex items-center justify-between gap-4 text-sm">
+        <div className="no-print reading-column flex w-full items-center justify-between gap-4 text-sm">
           <Link {...homeLink(lang)} className="inline-flex min-h-11 items-center text-pine">
             {copy.back}
           </Link>
@@ -175,172 +182,173 @@ function Reading({ story }: { story: Story | null }) {
         </div>
 
         <ReadingProgress start={readStart} end={readEnd} />
-        <header ref={readStart} className="flex flex-col gap-4">
+        <header ref={readStart} className="reading-column flex w-full flex-col gap-4">
           <p className="text-xs uppercase tracking-widest text-pine">{copy.themes[story.theme]}</p>
           <h1 className="text-4xl md:text-5xl">{locale.title || story.locales.en.title}</h1>
           {locale.dek ? <p className="reading-dek">{locale.dek}</p> : null}
-          {/* One picture at the top of a reading: a reading with a video shows the video
-              in the picture's place; the picture stays on the cards. */}
-          {story.video ? (
-            <figure className="mt-2 flex max-w-full flex-col gap-2">
-              <video
-                controls
-                preload="none"
-                playsInline
-                autoPlay={false}
-                controlsList="nodownload"
-                src={story.video.src}
-                aria-label={videoCaption || AI_VIDEO_NOTE[lang]}
-                className="block aspect-video h-auto w-full max-w-full bg-ink"
-              />
-              <figcaption className="text-xs leading-snug text-muted">
-                {videoCaption ? `${videoCaption} · ${AI_VIDEO_NOTE[lang]}` : AI_VIDEO_NOTE[lang]}
-              </figcaption>
-            </figure>
-          ) : story.image ? (
-            <figure className="mt-2 flex max-w-full flex-col gap-2">
-              <img
-                src={story.image.src}
-                alt={caption}
-                width={1500}
-                height={1000}
-                loading="lazy"
-                decoding="async"
-                className="-mx-5 block h-auto w-[calc(100%+2.5rem)] max-w-none md:mx-0 md:w-full md:max-w-full"
-              />
-              <figcaption className="text-xs leading-snug text-muted">
-                {caption ? `${caption} · ${AI_NOTE[lang]}` : AI_NOTE[lang]}
-              </figcaption>
-            </figure>
-          ) : null}
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between gap-4">
-              {/* Place and date on the first line; the reading time under them, set as on
-                  the cards, so it no longer pulls the spaced capitals into the date line. */}
-              <div className="flex flex-col items-start gap-1">
-                {by ? <p className="text-sm text-muted">{by}</p> : null}
-                <p className="text-sm text-muted">
-                  {[locale.region, formatDate(story.date, lang)].filter(Boolean).join(" · ")}
-                </p>
-                {story.updatedAt && story.updatedAt !== story.date ? (
-                  <p className="text-sm text-muted">
-                    {editorial.updated}: {formatDate(story.updatedAt, lang)}
-                  </p>
-                ) : null}
-              </div>
-              <div className="no-print flex shrink-0 items-center gap-1">
-                <PdfButton lang={lang} />
-                <TypeSize
-                  step={typeStep}
-                  onDown={() => setStep(typeStep - 1)}
-                  onUp={() => setStep(typeStep + 1)}
-                  label={copy.textSize}
-                  downLabel={copy.typeDown}
-                  upLabel={copy.typeUp}
+          <div className="flex flex-col items-start gap-0.5 pt-1">
+            {by ? <p className="text-sm text-muted">{by}</p> : null}
+            <p className="text-sm text-muted">
+              {[locale.region, formatDate(story.date, lang)].filter(Boolean).join(" · ")}
+            </p>
+            {story.updatedAt && story.updatedAt !== story.date ? (
+              <p className="text-sm text-muted">
+                {editorial.updated}: {formatDate(story.updatedAt, lang)}
+              </p>
+            ) : null}
+          </div>
+          <div className="reading-tools no-print flex flex-wrap items-center gap-x-6 gap-y-1 py-2">
+            {locale.audio ? (
+              <div className="min-w-[15rem] flex-1">
+                <ReadingPlayer
+                  clip={locale.audio}
+                  listen={copy.listen}
+                  pause={copy.pause}
+                  speed={copy.speed}
+                  failed={copy.audioError}
+                  retry={copy.retry}
                 />
               </div>
-            </div>
-            {locale.audio ? (
-              <ReadingPlayer
-                clip={locale.audio}
-                listen={copy.listen}
-                pause={copy.pause}
-                speed={copy.speed}
-                failed={copy.audioError}
-                retry={copy.retry}
-              />
             ) : null}
+            <div className="ms-auto flex shrink-0 items-center gap-1">
+              <PdfButton lang={lang} />
+              <TypeSize
+                step={typeStep}
+                onDown={() => setStep(typeStep - 1)}
+                onUp={() => setStep(typeStep + 1)}
+                label={copy.textSize}
+                downLabel={copy.typeDown}
+                upLabel={copy.typeUp}
+              />
+            </div>
           </div>
         </header>
 
-        <StoryVideos storyId={story.id} lang={lang} />
-
-        {written ? (
-          <div
-            ref={sources.length ? undefined : (node) => void (readEnd.current = node)}
-            className="flex flex-col gap-8"
-          >
-            <div style={{ fontSize: `${TYPE_STEPS[typeStep]}em` }}>
-              <Prose body={body} sourceNums={sourceNums} sourceWord={copy.sourceWord} />
-            </div>
-            {membersOnly && fullText === null ? <LockNote lang={lang} /> : null}
-          </div>
-        ) : (
-          <div className="flex flex-col gap-4">
-            <p>{copy.unwritten}</p>
-            {others.length ? (
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-sm text-muted">{copy.availableIn}</span>
-                {others.map((code) => (
-                  <Link
-                    key={code}
-                    {...readLink(code, story.id)}
-                    onClick={() => rememberLang(code)}
-                    lang={langMeta[code].html}
-                    className="inline-flex min-h-11 items-center border border-line px-3 text-sm"
-                  >
-                    {langMeta[code].name}
-                  </Link>
-                ))}
-              </div>
-            ) : null}
-          </div>
-        )}
-
-        {sources.length ? (
-          <section
-            ref={readEnd}
-            className="border-t border-line pt-8"
-            aria-labelledby="bibliography"
-          >
-            <h2 id="bibliography" className="text-2xl">
-              {copy.sources}
-            </h2>
-            <ol className="mt-6 flex flex-col">
-              {sources.map((source) => {
-                const href = safeHttpUrl(source.url);
-                return (
-                  <li
-                    key={source.n}
-                    id={`source-${source.n}`}
-                    className="source-row group relative scroll-mt-24 grid grid-cols-[2.5rem_1fr] gap-3 border-b border-line py-4 transition-colors duration-150 max-md:active:bg-highlight"
-                  >
-                    <span className="tabular-nums text-pine">{source.n}</span>
-                    <div className="min-w-0">
-                      <p
-                        className={
-                          href
-                            ? "decoration-1 underline-offset-[0.18em] max-md:group-active:underline"
-                            : ""
-                        }
-                      >
-                        {source.label}
-                      </p>
-                      {href ? (
-                        <a
-                          href={href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          dir="ltr"
-                          className="mt-1 block break-all text-sm text-pine max-md:after:absolute max-md:after:inset-0 max-md:after:content-['']"
-                        >
-                          {href}
-                        </a>
-                      ) : null}
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
-          </section>
+        {/* One picture at the top of a reading, wider than the text: a reading with a video
+            shows the video in the picture's place; the picture stays on the cards. */}
+        {story.video ? (
+          <figure className="flex max-w-full flex-col gap-2">
+            <video
+              controls
+              preload="none"
+              playsInline
+              autoPlay={false}
+              controlsList="nodownload"
+              src={story.video.src}
+              aria-label={videoCaption || AI_VIDEO_NOTE[lang]}
+              className="block aspect-video h-auto w-full max-w-full bg-ink"
+            />
+            <figcaption className="text-xs leading-snug text-muted">
+              {videoCaption ? `${videoCaption} · ${AI_VIDEO_NOTE[lang]}` : AI_VIDEO_NOTE[lang]}
+            </figcaption>
+          </figure>
+        ) : story.image ? (
+          <figure className="flex max-w-full flex-col gap-2">
+            <img
+              src={story.image.src}
+              alt={caption}
+              width={1500}
+              height={1000}
+              loading="eager"
+              decoding="async"
+              className="-mx-5 block h-auto w-[calc(100%+2.5rem)] max-w-none md:mx-0 md:w-full md:max-w-full"
+            />
+            <figcaption className="text-xs leading-snug text-muted">
+              {caption ? `${caption} · ${AI_NOTE[lang]}` : AI_NOTE[lang]}
+            </figcaption>
+          </figure>
         ) : null}
 
-        <CiteBox story={story} lang={lang} />
+        <div className="reading-column flex w-full flex-col gap-8">
+          <StoryVideos storyId={story.id} lang={lang} />
 
-        <RelatedReadings story={story} lang={lang} />
+          {written ? (
+            <div
+              ref={sources.length ? undefined : (node) => void (readEnd.current = node)}
+              className="flex flex-col gap-8"
+            >
+              <div style={{ fontSize: `${TYPE_STEPS[typeStep]}em` }}>
+                <Prose body={body} sourceNums={sourceNums} sourceWord={copy.sourceWord} />
+              </div>
+              {membersOnly && fullText === null ? <LockNote lang={lang} /> : null}
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              <p>{copy.unwritten}</p>
+              {others.length ? (
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-sm text-muted">{copy.availableIn}</span>
+                  {others.map((code) => (
+                    <Link
+                      key={code}
+                      {...readLink(code, story.id)}
+                      onClick={() => rememberLang(code)}
+                      lang={langMeta[code].html}
+                      className="inline-flex min-h-11 items-center border border-line px-3 text-sm"
+                    >
+                      {langMeta[code].name}
+                    </Link>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          )}
 
-        <div className="no-print">
-          <Comments storyId={story.id} lang={lang} />
+          {sources.length ? (
+            <section
+              ref={readEnd}
+              className="border-t border-line pt-8"
+              aria-labelledby="bibliography"
+            >
+              <h2 id="bibliography" className="text-2xl">
+                {copy.sources}
+              </h2>
+              <ol className="mt-6 flex flex-col">
+                {sources.map((source) => {
+                  const href = safeHttpUrl(source.url);
+                  return (
+                    <li
+                      key={source.n}
+                      id={`source-${source.n}`}
+                      className="source-row group relative scroll-mt-24 grid grid-cols-[2.5rem_1fr] gap-3 border-b border-line py-4 transition-colors duration-150 max-md:active:bg-highlight"
+                    >
+                      <span className="tabular-nums text-pine">{source.n}</span>
+                      <div className="min-w-0">
+                        <p
+                          className={
+                            href
+                              ? "decoration-1 underline-offset-[0.18em] max-md:group-active:underline"
+                              : ""
+                          }
+                        >
+                          {source.label}
+                        </p>
+                        {href ? (
+                          <a
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            dir="ltr"
+                            className="mt-1 block break-all text-sm text-pine max-md:after:absolute max-md:after:inset-0 max-md:after:content-['']"
+                          >
+                            {href}
+                          </a>
+                        ) : null}
+                      </div>
+                    </li>
+                  );
+                })}
+              </ol>
+            </section>
+          ) : null}
+
+          <CiteBox story={story} lang={lang} />
+
+          <RelatedReadings story={story} lang={lang} />
+
+          <div className="no-print">
+            <Comments storyId={story.id} lang={lang} />
+          </div>
         </div>
       </div>
     </main>

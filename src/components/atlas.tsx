@@ -9,6 +9,7 @@ import { readLink } from "@/lib/lang-path";
 import { CARDS } from "@/lib/seed";
 import { formatDate, storyTitle } from "@/lib/text";
 import type { Lang, StoryCard as Story, Theme } from "@/lib/types";
+import { useMostRead } from "@/lib/reads";
 import { useLang } from "@/lib/use-lang";
 
 /**
@@ -34,7 +35,6 @@ function Meta({ story, lang, section }: { story: Story; lang: Lang; section: The
     </div>
   );
 }
-
 
 /**
  * Today's date under the home sentence, in the reader's language, as a printed paper
@@ -182,55 +182,133 @@ function cellSummary(story: Story, lang: Lang): string {
 }
 
 /**
- * The front page. On a wide screen: the lead reading with its picture across two columns
- * on the left and two readings in the narrow right column. Under them, the chain of
- * documents the lead rests on, then every other reading as one list of records whose depth
- * the reader sets: 1 title, 2 title and summary, 3 everything with a small picture.
- * On a phone: the lead, the chain, then the records.
+ * The front page, as an atlas page. The lead: its words on the left, its picture on the
+ * right (the picture first on a phone). Under it two cards and a column of three short
+ * items; on a phone each of them is a row with a small picture. Then the chain of documents
+ * the lead rests on, and every other reading as records whose depth the reader sets.
  */
 function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
   const dir = langMeta[lang].dir;
   const [lead, ...rest] = stories;
-  const side = rest.slice(0, 2);
   if (!lead) return null;
+  const cards = rest.slice(0, 2);
+  const briefs = rest.slice(2, 5);
+  const records = rest.slice(5);
+  const words = HOME_WORDS[lang];
+  const leadSummary = cellSummary(lead, lang);
+  const arrow = dir === "rtl" ? "←" : "→";
   return (
     <div dir={dir}>
-      <div className="md:hidden">
-        <Link {...readLink(lang, lead.id)} className="group flex flex-col border-b border-ink">
-          <CardPicture story={lead} lang={lang} ratio="aspect-[16/10]" eager />
-          <div className="flex flex-col gap-2 px-5 pt-3.5 pb-5">
-            <CardBody story={lead} lang={lang} size="lead" />
+      <div className="md:px-8">
+        <Link
+          {...readLink(lang, lead.id)}
+          className={`atlas-own group grid grid-cols-1 border-b border-line pb-5 md:gap-[clamp(1.5rem,2.6vw,2.4rem)] md:py-6 ${
+            lead.image ? "md:grid-cols-[minmax(0,0.92fr)_minmax(0,1.65fr)]" : ""
+          }`}
+        >
+          {lead.image ? (
+            <div className="md:order-2">
+              <CardPicture
+                story={lead}
+                lang={lang}
+                ratio="aspect-[4/3] md:aspect-[3/2] md:h-full md:min-h-[22rem]"
+                eager
+              />
+            </div>
+          ) : null}
+          <div className="flex min-w-0 flex-col justify-center px-5 pt-4 md:order-1 md:px-0 md:py-6">
+            <Kicker story={lead} lang={lang} />
+            <h2 className="paper-title atlas-lead-title font-extrabold mt-2.5 text-ink decoration-2 underline-offset-[0.12em] group-hover:underline md:mt-4">
+              {storyTitle(lead, lang)}
+            </h2>
+            {leadSummary ? (
+              <p className="font-body mt-3 max-w-[36rem] text-pretty text-[1.075rem] leading-[1.35] text-ink md:mt-5 md:text-[1.2rem] md:leading-[1.3]">
+                {leadSummary}
+              </p>
+            ) : null}
+            <span className="atlas-more atlas-more-rule mt-3 md:mt-6">
+              {words.readFull} <span aria-hidden="true">{arrow}</span>
+            </span>
           </div>
         </Link>
       </div>
 
-      <div className="hidden px-8 md:block">
-        <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,0.85fr)] border-b border-ink">
-          <Link
-            {...readLink(lang, lead.id)}
-            style={{ gridColumn: "1 / span 2", gridRow: "1 / span 2" }}
-            className="group flex min-w-0 flex-col gap-3 border-e border-ink py-7 pe-7"
-          >
-            <CardPicture story={lead} lang={lang} ratio="aspect-[16/10]" eager />
-            <CardBody story={lead} lang={lang} size="lead" />
-          </Link>
-          {side.map((story, index) => (
+      {cards.length ? (
+        <div className="atlas-top px-5 md:px-8">
+          {cards.map((story) => (
             <Link
               key={story.id}
               {...readLink(lang, story.id)}
-              style={{ gridColumn: "3", gridRow: String(index + 1) }}
-              className={`group flex min-w-0 flex-col gap-2.5 py-7 ps-6 ${index === 0 ? "border-b border-ink" : ""}`}
+              className="atlas-own atlas-card group"
             >
-              <CardPicture story={story} lang={lang} ratio="aspect-[2/1]" />
-              <CardBody story={story} lang={lang} size="side" />
+              <CardPicture story={story} lang={lang} ratio="atlas-card-pic" />
+              <div className="flex min-w-0 flex-col">
+                <Kicker story={story} lang={lang} />
+                <h3 className="paper-title font-bold mt-1.5 text-[1.2rem] leading-[1.12] text-ink decoration-1 underline-offset-[0.14em] group-hover:underline md:mt-2 md:text-[1.6rem] md:leading-[1.08] lg:text-[1.75rem]">
+                  {storyTitle(story, lang)}
+                </h3>
+                <p className="atlas-dek font-body mt-2 text-pretty text-base leading-[1.32] text-ink">
+                  {cellSummary(story, lang)}
+                </p>
+                <span className="atlas-more mt-2 text-[0.8rem] md:mt-3">
+                  {words.readMore} <span aria-hidden="true">{arrow}</span>
+                </span>
+              </div>
             </Link>
           ))}
+          {briefs.length ? (
+            <div className="atlas-briefs">
+              {briefs.map((story) => (
+                <Link
+                  key={story.id}
+                  {...readLink(lang, story.id)}
+                  className="atlas-own atlas-brief group"
+                >
+                  <CardPicture story={story} lang={lang} ratio="atlas-card-pic" />
+                  <div className="flex min-w-0 flex-col">
+                    <Kicker story={story} lang={lang} />
+                    <h3 className="paper-title font-bold mt-1.5 text-[1.2rem] leading-[1.12] text-ink decoration-1 underline-offset-[0.14em] group-hover:underline md:text-[1.1rem] md:leading-[1.15]">
+                      {storyTitle(story, lang)}
+                    </h3>
+                    <span className="atlas-more mt-2 text-[0.75rem]">
+                      {words.readMore} <span aria-hidden="true">{arrow}</span>
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : null}
         </div>
-      </div>
+      ) : null}
 
-      <DocumentChain story={lead} lang={lang} />
-      <Records stories={rest} sideCount={side.length} lang={lang} />
+      <div className="mt-2 md:mt-4">
+        <DocumentChain story={lead} lang={lang} />
+      </div>
+      <Records stories={records} lang={lang} />
     </div>
+  );
+}
+
+/** The section in small capitals, with the reading time beside it in a quieter tone. */
+function Kicker({ story, lang }: { story: Story; lang: Lang }) {
+  const copy = useCopy(lang);
+  const minutes = story.locales[lang].minutes;
+  return (
+    <p
+      className={
+        lang === "ar"
+          ? "text-sm leading-snug text-pine"
+          : "text-xs leading-snug uppercase tracking-[0.14em] text-pine"
+      }
+    >
+      {copy.themes[story.theme]}
+      {minutes ? (
+        <span className="text-muted">
+          {" · "}
+          {copy.minRead.replace("{n}", String(minutes))}
+        </span>
+      ) : null}
+    </p>
   );
 }
 
@@ -244,6 +322,12 @@ const HOME_WORDS: Record<
     sources: { one: string; many: string };
     open: string;
     close: string;
+    readFull: string;
+    readMore: string;
+    latest: string;
+    inDepth: string;
+    mostRead: string;
+    more: string;
   }
 > = {
   tr: {
@@ -253,6 +337,12 @@ const HOME_WORDS: Record<
     sources: { one: "{n} kaynak", many: "{n} kaynak" },
     open: "Aç",
     close: "Kapat",
+    readFull: "Yazının tamamı",
+    readMore: "Devamı",
+    latest: "Son yazılar",
+    inDepth: "Derinlemesine",
+    mostRead: "En çok okunanlar",
+    more: "Diğer yazılar",
   },
   en: {
     chain: "Document chain",
@@ -261,6 +351,12 @@ const HOME_WORDS: Record<
     sources: { one: "{n} source", many: "{n} sources" },
     open: "Open",
     close: "Close",
+    readFull: "Read the full story",
+    readMore: "Read more",
+    latest: "Latest",
+    inDepth: "In depth",
+    mostRead: "Most read",
+    more: "More readings",
   },
   ar: {
     chain: "سلسلة الوثائق",
@@ -269,6 +365,12 @@ const HOME_WORDS: Record<
     sources: { one: "مصدر واحد", many: "{n} مصادر" },
     open: "فتح",
     close: "إغلاق",
+    readFull: "اقرأ النص كاملًا",
+    readMore: "المزيد",
+    latest: "الأحدث",
+    inDepth: "بتعمّق",
+    mostRead: "الأكثر قراءة",
+    more: "قراءات أخرى",
   },
   fr: {
     chain: "Chaîne de documents",
@@ -277,6 +379,12 @@ const HOME_WORDS: Record<
     sources: { one: "{n} source", many: "{n} sources" },
     open: "Ouvrir",
     close: "Fermer",
+    readFull: "Lire en entier",
+    readMore: "Lire la suite",
+    latest: "Derniers",
+    inDepth: "En profondeur",
+    mostRead: "Les plus lus",
+    more: "Autres lectures",
   },
   es: {
     chain: "Cadena de documentos",
@@ -285,6 +393,12 @@ const HOME_WORDS: Record<
     sources: { one: "{n} fuente", many: "{n} fuentes" },
     open: "Abrir",
     close: "Cerrar",
+    readFull: "Leer completo",
+    readMore: "Leer más",
+    latest: "Lo último",
+    inDepth: "En profundidad",
+    mostRead: "Lo más leído",
+    more: "Más lecturas",
   },
 };
 
@@ -455,19 +569,11 @@ function readDepth(): Depth {
  * sets how much of each row shows; the choice is kept in this browser.
  * The two readings of the right column are listed only on a phone, where that column is not shown.
  */
-function Records({
-  stories,
-  sideCount,
-  lang,
-}: {
-  stories: Story[];
-  sideCount: number;
-  lang: Lang;
-}) {
+function Records({ stories, lang }: { stories: Story[]; lang: Lang }) {
   const words = HOME_WORDS[lang];
-  const copy = useCopy(lang);
   const [depth, setDepth] = useState<Depth>(2);
   useEffect(() => setDepth(readDepth()), []);
+  const ranked = useMostRead(5);
   const choose = (next: Depth) => {
     setDepth(next);
     try {
@@ -477,12 +583,26 @@ function Records({
     }
   };
   if (stories.length === 0) return null;
-  const label =
-    lang === "ar" ? "text-sm text-pine" : "text-xs uppercase tracking-[0.14em] text-pine";
+
+  // Three columns as on a printed page: the newest as rows with a small picture, one
+  // reading at length in the middle, and a numbered column on the right. The numbered
+  // column is "Most read" once reads are counted; until then it carries the next readings.
+  const latest = stories.slice(0, 4);
+  const deep = stories[4];
+  const byId = new Map(stories.map((story) => [story.id, story]));
+  const mostRead = ranked
+    ? ranked.map((id) => byId.get(id)).filter((story): story is Story => Boolean(story))
+    : [];
+  const counted = mostRead.length > 0;
+  const numbered = counted ? mostRead : stories.slice(5, 10);
+  const shown = new Set([...latest, ...(deep ? [deep] : []), ...numbered].map((s) => s.id));
+  const more = stories.filter((story) => !shown.has(story.id));
+  const heading = `font-body font-normal ${lang === "ar" ? "text-sm text-pine" : "text-xs uppercase tracking-[0.14em] text-pine"}`;
+
   return (
     <section className="px-5 pt-8 pb-4 md:px-8 md:pt-10" aria-label={words.records}>
       <div className="flex items-center justify-between gap-4 border-t-[3px] border-ink pt-3">
-        <h2 className={`font-body font-normal ${label}`}>{words.records}</h2>
+        <h2 className={heading}>{words.records}</h2>
         <div role="radiogroup" aria-label={words.records} className="flex items-center">
           {([1, 2, 3] as const).map((step) => (
             <button
@@ -502,77 +622,195 @@ function Records({
           ))}
         </div>
       </div>
-      <ol className="records" data-depth={depth}>
-        {stories.map((story, index) => {
-          const summary = cellSummary(story, lang);
-          const opening = openingLines(story, lang, summary);
-          const minutes = story.locales[lang].minutes;
-          return (
-            <li
-              key={story.id}
-              className={`border-b border-line ${index < sideCount ? "md:hidden" : ""}`}
-            >
-              <Link {...readLink(lang, story.id)} className="group flex items-start py-4 md:py-5">
-                <div className="min-w-0 flex-1">
-                  <h3 className="paper-title text-[1.2rem] leading-[1.2] font-bold text-ink decoration-1 underline-offset-[0.14em] group-hover:underline md:text-[1.35rem]">
-                    {storyTitle(story, lang)}
-                  </h3>
-                  {summary ? (
-                    <div className="record-layer" data-layer="2">
-                      <div>
-                        <p className="font-body max-w-3xl pt-1.5 text-pretty text-base leading-[1.35] text-ink">
-                          {summary}
-                        </p>
-                      </div>
-                    </div>
-                  ) : null}
-                  {opening ? (
-                    <div className="record-layer" data-layer="3">
-                      <div>
-                        <p className="font-body line-clamp-4 max-w-3xl pt-2 text-pretty text-[0.95rem] leading-[1.45] text-muted">
-                          {opening}
-                        </p>
-                      </div>
-                    </div>
-                  ) : null}
-                  <p className={`mt-1.5 ${label}`}>
-                    {copy.themes[story.theme]}
-                    <span className="text-muted">
-                      {" · "}
-                      <span className="whitespace-nowrap">{formatDate(story.date, lang)}</span>
-                    </span>
-                  </p>
-                  {minutes ? (
-                    <div className="record-layer" data-layer="3">
-                      <div>
-                        <div className="pt-1">
-                          <ReadTime minutes={minutes} lang={lang} pattern={copy.minRead} />
-                        </div>
-                      </div>
-                    </div>
-                  ) : null}
-                </div>
-                {story.image ? (
-                  <div className="record-layer record-picture ms-5 shrink-0" data-layer="3">
-                    <div>
-                      <img
-                        src={story.image.src}
-                        alt={imageCaption(story.image, lang)}
-                        width={160}
-                        height={160}
-                        loading="lazy"
-                        decoding="async"
-                        className="block aspect-square w-24 object-cover md:w-28"
-                      />
-                    </div>
-                  </div>
-                ) : null}
-              </Link>
+
+      <div className="records atlas-bottom mt-5" data-depth={depth}>
+        <section className="atlas-col" aria-label={words.latest}>
+          <h3 className={`${heading} mb-3`}>{words.latest}</h3>
+          <ol>
+            {latest.map((story) => (
+              <li key={story.id}>
+                <RecordRow story={story} lang={lang} />
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        {deep ? (
+          <section className="atlas-col" aria-label={words.inDepth}>
+            <h3 className={`${heading} mb-3`}>{words.inDepth}</h3>
+            <DeepCard story={deep} lang={lang} />
+          </section>
+        ) : null}
+
+        {numbered.length ? (
+          <section className="atlas-col" aria-label={counted ? words.mostRead : words.more}>
+            <h3 className={`${heading} mb-3`}>{counted ? words.mostRead : words.more}</h3>
+            <ol className="atlas-ranked">
+              {numbered.map((story, index) => (
+                <li key={story.id}>
+                  <RankedRow story={story} lang={lang} n={index + 1} />
+                </li>
+              ))}
+            </ol>
+          </section>
+        ) : null}
+      </div>
+
+      {more.length ? (
+        <ol className="records atlas-more-grid mt-6 border-t border-line pt-2" data-depth={depth}>
+          {more.map((story) => (
+            <li key={story.id}>
+              <RecordRow story={story} lang={lang} />
             </li>
-          );
-        })}
-      </ol>
+          ))}
+        </ol>
+      ) : null}
     </section>
+  );
+}
+
+/** A record with a small picture on its start side; the picture and summary fold with depth. */
+function RecordRow({ story, lang }: { story: Story; lang: Lang }) {
+  const summary = cellSummary(story, lang);
+  const opening = openingLines(story, lang, summary);
+  return (
+    <Link
+      {...readLink(lang, story.id)}
+      className="atlas-own group flex items-start border-b border-line py-3.5"
+    >
+      {story.image ? (
+        <div className="record-layer record-thumb me-4 shrink-0" data-layer="2">
+          <div>
+            <img
+              src={story.image.src}
+              alt={imageCaption(story.image, lang)}
+              width={200}
+              height={150}
+              loading="lazy"
+              decoding="async"
+              className="block aspect-[4/3] w-[6.5rem] object-cover md:w-28"
+            />
+          </div>
+        </div>
+      ) : null}
+      <div className="min-w-0 flex-1">
+        <Kicker story={story} lang={lang} />
+        <h4 className="paper-title font-bold mt-1 text-[1.08rem] leading-[1.18] text-ink decoration-1 underline-offset-[0.14em] group-hover:underline">
+          {storyTitle(story, lang)}
+        </h4>
+        {summary ? (
+          <div className="record-layer" data-layer="2">
+            <div>
+              <p className="font-body pt-1 text-pretty text-[0.92rem] leading-[1.32] text-ink">
+                {summary}
+              </p>
+            </div>
+          </div>
+        ) : null}
+        {opening ? (
+          <div className="record-layer" data-layer="3">
+            <div>
+              <p className="font-body line-clamp-3 pt-1.5 text-pretty text-[0.88rem] leading-[1.4] text-muted">
+                {opening}
+              </p>
+            </div>
+          </div>
+        ) : null}
+        <div className="record-layer" data-layer="3">
+          <div>
+            <p className="pt-1 text-xs text-muted">{formatDate(story.date, lang)}</p>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+/** The middle column: one reading at length, picture on top. */
+function DeepCard({ story, lang }: { story: Story; lang: Lang }) {
+  const words = HOME_WORDS[lang];
+  const summary = cellSummary(story, lang);
+  const opening = openingLines(story, lang, summary);
+  const arrow = langMeta[lang].dir === "rtl" ? "←" : "→";
+  return (
+    <Link {...readLink(lang, story.id)} className="atlas-own group flex flex-col">
+      {story.image ? (
+        <div className="record-layer" data-layer="2">
+          <div>
+            <img
+              src={story.image.src}
+              alt={imageCaption(story.image, lang)}
+              width={1500}
+              height={1000}
+              loading="lazy"
+              decoding="async"
+              className="mb-3 block aspect-[16/10] w-full object-cover"
+            />
+          </div>
+        </div>
+      ) : null}
+      <Kicker story={story} lang={lang} />
+      <h4 className="paper-title font-bold mt-1.5 text-[1.45rem] leading-[1.1] text-ink decoration-1 underline-offset-[0.14em] group-hover:underline md:text-[1.6rem]">
+        {storyTitle(story, lang)}
+      </h4>
+      {summary ? (
+        <div className="record-layer" data-layer="2">
+          <div>
+            <p className="font-body pt-2 text-pretty text-base leading-[1.35] text-ink">
+              {summary}
+            </p>
+          </div>
+        </div>
+      ) : null}
+      {opening ? (
+        <div className="record-layer" data-layer="3">
+          <div>
+            <p className="font-body line-clamp-5 pt-2 text-pretty text-[0.95rem] leading-[1.45] text-muted">
+              {opening}
+            </p>
+          </div>
+        </div>
+      ) : null}
+      <span className="atlas-more mt-3 text-[0.8rem]">
+        {words.readMore} <span aria-hidden="true">{arrow}</span>
+      </span>
+    </Link>
+  );
+}
+
+/** The numbered column: a large number, the title, and the summary when depth allows. */
+function RankedRow({ story, lang, n }: { story: Story; lang: Lang; n: number }) {
+  const summary = cellSummary(story, lang);
+  return (
+    <Link
+      {...readLink(lang, story.id)}
+      className="atlas-own group grid grid-cols-[1.75rem_minmax(0,1fr)] gap-3 border-b border-line py-3.5"
+    >
+      <span className="paper-title font-bold text-[1.6rem] leading-none text-ink tabular-nums">
+        {n}
+      </span>
+      <div className="min-w-0">
+        <h4 className="font-body text-[0.98rem] leading-[1.3] text-ink decoration-1 underline-offset-[0.14em] group-hover:underline">
+          {storyTitle(story, lang)}
+        </h4>
+        {summary ? (
+          <div className="record-layer" data-layer="3">
+            <div>
+              <p className="font-body pt-1 text-pretty text-[0.85rem] leading-[1.32] text-muted">
+                {summary}
+              </p>
+            </div>
+          </div>
+        ) : null}
+        <div className="record-layer" data-layer="2">
+          <div>
+            <div className="pt-1">
+              <Kicker story={story} lang={lang} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </Link>
   );
 }
 

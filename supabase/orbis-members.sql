@@ -314,3 +314,42 @@ create policy "orbis videos: editor uploads" on storage.objects
 drop policy if exists "orbis videos: editor deletes" on storage.objects;
 create policy "orbis videos: editor deletes" on storage.objects
   for delete to authenticated using (bucket_id = 'videos' and public.is_editor());
+
+-- ---------------------------------------------------------------------------------------
+-- Read counts (the "Most read" column on the front page)
+-- ---------------------------------------------------------------------------------------
+-- One row per reading. Nobody writes to the table directly: a reading page calls
+-- count_read once per visit, and the front page asks most_read for the top of the list.
+
+create table if not exists public.reads (
+  story_id text primary key check (story_id ~ '^[a-z0-9-]{1,80}$'),
+  count bigint not null default 0,
+  updated_at timestamptz not null default now()
+);
+
+alter table public.reads enable row level security;
+
+drop policy if exists "reads: anyone reads" on public.reads;
+create policy "reads: anyone reads" on public.reads for select using (true);
+
+create or replace function public.count_read(p_story text) returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  if p_story is null or p_story !~ '^[a-z0-9-]{1,80}$' then
+    return;
+  end if;
+  insert into public.reads (story_id, count) values (p_story, 1)
+  on conflict (story_id) do update set count = public.reads.count + 1, updated_at = now();
+end;
+$$;
+
+create or replace function public.most_read(p_limit int default 5)
+returns table (story_id text, count bigint)
+language sql stable security definer set search_path = public as $$
+  select r.story_id, r.count from public.reads r
+  order by r.count desc, r.updated_at desc
+  limit least(greatest(coalesce(p_limit, 5), 1), 20);
+$$;
+
+grant execute on function public.count_read(text) to anon, authenticated;
+grant execute on function public.most_read(int) to anon, authenticated;

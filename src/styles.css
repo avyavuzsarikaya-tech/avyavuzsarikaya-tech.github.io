@@ -3,7 +3,7 @@
 @theme {
   --font-display: "Bodoni Moda", "Noto Naskh Arabic", "Times New Roman", serif;
   --font-body: "Tinos", "Times New Roman", Times, "Noto Naskh Arabic", serif;
-  --color-paper: #f4f4f5;
+  --color-paper: #ffffff;
   --color-sheet: #ffffff;
   --color-ink: #0c0c0c;
   --color-muted: #5a5a5a;
@@ -102,7 +102,9 @@ body {
   font-family: "Source Serif 4", Georgia, serif;
   font-weight: 600;
   font-optical-sizing: none;
-  font-variation-settings: "opsz" 16, "wght" 600;
+  font-variation-settings:
+    "opsz" 16,
+    "wght" 600;
   color: var(--color-ink);
 }
 :lang(ar) .home-sentence {
@@ -138,7 +140,9 @@ body {
 @media (min-width: 768px) {
   .home-sentence {
     font-weight: 500;
-    font-variation-settings: "opsz" 16, "wght" 500;
+    font-variation-settings:
+      "opsz" 16,
+      "wght" 500;
   }
   :lang(ar) .home-sentence {
     font-variation-settings: normal;
@@ -156,7 +160,9 @@ body {
   font-style: italic;
   font-weight: 400;
   font-optical-sizing: none;
-  font-variation-settings: "opsz" 18, "wght" 400;
+  font-variation-settings:
+    "opsz" 18,
+    "wght" 400;
   font-size: 1.2rem;
   line-height: 1.45;
   letter-spacing: -0.011em;
@@ -209,6 +215,18 @@ body {
 .records:not([data-depth="3"]) .record-picture {
   width: 0;
   margin-inline-start: 0;
+}
+/* The small picture on a record row folds sideways at depth 1. */
+.records .record-thumb {
+  transition:
+    grid-template-rows 200ms ease,
+    opacity 200ms ease,
+    width 200ms ease,
+    margin 200ms ease;
+}
+.records[data-depth="1"] .record-thumb {
+  width: 0;
+  margin-inline-end: 0;
 }
 @media (prefers-reduced-motion: reduce) {
   .records .record-layer {
@@ -457,22 +475,27 @@ body {
 
 .reading-entry-byline {
 }
-.reading-entry-kicker { order: 3; }
-.reading-entry-byline { order: 4; margin-top: -0.25rem; }
+.reading-entry-kicker {
+  order: 3;
+}
+.reading-entry-byline {
+  order: 4;
+  margin-top: -0.25rem;
+}
 
 /* Homepage cards do not carry those class names. Same order only: title, summary, section and reading time. */
-a.group:has(.paper-title) > .paper-title,
-a.group:has(.paper-title) > div.flex.flex-col > .paper-title {
+a.group:not(.atlas-own):has(.paper-title) > .paper-title,
+a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > .paper-title {
   order: 1;
 }
-a.group:has(.paper-title) > p.font-body,
-a.group:has(.paper-title) > div.flex.flex-col > p.font-body {
+a.group:not(.atlas-own):has(.paper-title) > p.font-body,
+a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.font-body {
   order: 2;
 }
-a.group:has(.paper-title) > p.text-pine,
-a.group:has(.paper-title) > div.flex.flex-col > p.text-pine,
-a.group:has(.paper-title) > p.tabular-nums,
-a.group:has(.paper-title) > div.flex.flex-col > p.tabular-nums {
+a.group:not(.atlas-own):has(.paper-title) > p.text-pine,
+a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.text-pine,
+a.group:not(.atlas-own):has(.paper-title) > p.tabular-nums,
+a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
   order: 3;
 }
 
@@ -554,4 +577,181 @@ a.group:has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     color: inherit;
     text-decoration: none;
   }
+}
+
+/* ---------- Front page and reading page arrangement (October 2026) ----------
+   Only where things sit changes; faces, colours, the band and the footer stay as they were. */
+.atlas-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+@media (min-width: 768px) {
+  .atlas-more-rule {
+    position: relative;
+    padding-top: 1rem;
+  }
+  .atlas-more-rule::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    inset-inline-start: 0;
+    width: 3rem;
+    height: 3px;
+    background: var(--color-pine);
+  }
+}
+.atlas-lead-title {
+  font-size: clamp(2rem, 8.4vw, 2.9rem);
+  line-height: 1.04;
+}
+@media (min-width: 768px) {
+  .atlas-lead-title {
+    font-size: clamp(2.3rem, 3.7vw, 4rem);
+    line-height: 1.02;
+  }
+}
+/* The top row: two cards and a column of three short items; on a phone every one of them
+   is a row with its picture on the start side. */
+.atlas-top {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+.atlas-card,
+.atlas-brief {
+  display: grid;
+  grid-template-columns: 38% minmax(0, 1fr);
+  gap: 1rem;
+  padding-block: 1.25rem;
+  border-bottom: 1px solid var(--color-line);
+  align-items: start;
+}
+.atlas-card .atlas-card-pic,
+.atlas-brief .atlas-card-pic {
+  aspect-ratio: 1 / 1;
+}
+.atlas-card .atlas-dek {
+  display: none;
+}
+@media (min-width: 768px) {
+  .atlas-top {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1.5rem;
+    padding-block: 1.5rem;
+  }
+  .atlas-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+    border: 0;
+  }
+  .atlas-card .atlas-card-pic {
+    aspect-ratio: 16 / 10;
+    margin-bottom: 0.75rem;
+  }
+  .atlas-card .atlas-dek {
+    display: block;
+  }
+  .atlas-briefs {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-line);
+  }
+  .atlas-brief {
+    grid-template-columns: 40% minmax(0, 1fr);
+    gap: 0.9rem;
+    padding: 0;
+    border: 0;
+  }
+  .atlas-brief .atlas-card-pic {
+    aspect-ratio: 4 / 3;
+  }
+}
+@media (min-width: 1150px) {
+  .atlas-top {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.9fr);
+  }
+  .atlas-briefs {
+    grid-column: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+    padding-inline-start: 1.5rem;
+    border-inline-start: 1px solid var(--color-line);
+  }
+  .atlas-brief {
+    padding-block: 0.95rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .atlas-brief:first-child {
+    padding-top: 0;
+  }
+  .atlas-brief:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+}
+/* Under the chain: three columns as on a printed page. On a phone they follow each other;
+   on a tablet the first two sit side by side and the numbered one runs under them. */
+.atlas-col + .atlas-col {
+  margin-top: 1.75rem;
+}
+@media (min-width: 768px) {
+  .atlas-bottom {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 1.5rem;
+  }
+  .atlas-col + .atlas-col {
+    margin-top: 0;
+  }
+  .atlas-col:nth-child(2) {
+    padding-inline-start: 1.5rem;
+    border-inline-start: 1px solid var(--color-line);
+  }
+  .atlas-col:nth-child(3) {
+    grid-column: 1 / -1;
+    margin-top: 1.75rem;
+  }
+  .atlas-more-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1.5rem;
+  }
+}
+@media (min-width: 1150px) {
+  .atlas-bottom {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 0.7fr);
+  }
+  .atlas-col:nth-child(3) {
+    grid-column: auto;
+    margin-top: 0;
+    padding-inline-start: 1.5rem;
+    border-inline-start: 1px solid var(--color-line);
+  }
+  .atlas-more-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.atlas-col li:last-child > a {
+  border-bottom: 0;
+}
+/* Reading page: the text in a narrow column, the picture wider than it. */
+.reading-column {
+  max-width: 42rem;
+  margin-inline: auto;
+}
+.reading-tools {
+  border-block: 1px solid var(--color-line);
 }
