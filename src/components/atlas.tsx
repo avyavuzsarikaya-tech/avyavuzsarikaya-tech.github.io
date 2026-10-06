@@ -1,4 +1,5 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { flushSync } from "react-dom";
 import { Link } from "@tanstack/react-router";
 import { ReadTime } from "@/components/read-time";
 import { FrameTools, Shell } from "@/components/shell";
@@ -189,17 +190,22 @@ function cellSummary(story: Story, lang: Lang): string {
  */
 function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
   const dir = langMeta[lang].dir;
-  const [depth, choose] = useDepth();
+  const [depth, setDepthNow] = useDepth();
+  const pageRef = useRef<HTMLDivElement>(null);
+  const choose = (next: Depth) => settle(pageRef.current, () => setDepthNow(next));
   const [lead, ...rest] = stories;
   if (!lead) return null;
   const cards = rest.slice(0, 2);
   const briefs = rest.slice(2, 5);
   const records = rest.slice(5);
+  // The four-card picture strip. At "headline" depth on a wide screen it rises into the
+  // space the two cards leave free under them, beside the column of three short readings.
+  const strip = records.length >= 8 ? records.slice(0, 4) : [];
   const words = HOME_WORDS[lang];
   const leadSummary = cellSummary(lead, lang);
   const arrow = dir === "rtl" ? "←" : "→";
   return (
-    <div dir={dir}>
+    <div dir={dir} ref={pageRef}>
       <div className="md:px-8">
         <Link
           {...readLink(lang, lead.id)}
@@ -240,8 +246,9 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
       {/* From here down every reading follows the depth control, the top cards included. */}
       {rest.length ? <DepthBar lang={lang} depth={depth} choose={choose} /> : null}
 
+      <div className={`atlas-fold px-5 md:px-8 ${strip.length ? "has-strip" : ""}`} data-depth={depth}>
       {cards.length ? (
-        <div className="records atlas-top px-5 md:px-8" data-depth={depth}>
+        <div className="records atlas-top" data-depth={depth}>
           {cards.map((story) => (
             <Link
               key={story.id}
@@ -295,10 +302,66 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
           ) : null}
         </div>
       ) : null}
+      {strip.length ? (
+        <ol className="records atlas-strip" data-depth={depth}>
+          {strip.map((story) => (
+            <li key={story.id}>
+              <RecordRow story={story} lang={lang} />
+            </li>
+          ))}
+        </ol>
+      ) : null}
+      </div>
 
-      <Records stories={records} lang={lang} depth={depth} />
+      <Records stories={records} strip={strip} lang={lang} depth={depth} />
     </div>
   );
+}
+
+/**
+ * Changes the depth and lets the cards travel to their new places instead of jumping:
+ * each card is measured, the change is made at once, and every card that moved glides
+ * from where it was to where it now stands; the parts that open fade in.
+ */
+function settle(page: HTMLElement | null, change: () => void) {
+  const still =
+    !page ||
+    typeof window === "undefined" ||
+    !page.animate ||
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (still) {
+    change();
+    return;
+  }
+  const cards = Array.from(
+    page.querySelectorAll<HTMLElement>(
+      ".atlas-card, .atlas-brief, .atlas-strip > li, .atlas-bottom .atlas-col, .atlas-more-grid > li",
+    ),
+  );
+  const layers = Array.from(page.querySelectorAll<HTMLElement>(".record-layer"));
+  const before = new Map(cards.map((el) => [el, el.getBoundingClientRect()]));
+  const shut = (el: HTMLElement) => el.getBoundingClientRect().height < 1;
+  const wasShut = new Set(layers.filter(shut));
+  page.classList.add("atlas-settling");
+  flushSync(change);
+  for (const el of cards) {
+    const a = before.get(el);
+    if (!a) continue;
+    const b = el.getBoundingClientRect();
+    const dx = a.left - b.left;
+    const dy = a.top - b.top;
+    if (Math.abs(dx) < 1 && Math.abs(dy) < 1) continue;
+    el.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "none" }], {
+      duration: 480,
+      easing: "cubic-bezier(0.22, 0.8, 0.24, 1)",
+    });
+  }
+  for (const el of layers) {
+    if (wasShut.has(el) && !shut(el)) {
+      el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 360, easing: "ease-out" });
+    }
+  }
+  page.classList.remove("atlas-settling");
 }
 
 /** A part of a card that opens from the given depth on. */
@@ -732,14 +795,23 @@ function DepthBar({
   );
 }
 
-function Records({ stories, lang, depth }: { stories: Story[]; lang: Lang; depth: Depth }) {
+function Records({
+  stories,
+  strip,
+  lang,
+  depth,
+}: {
+  stories: Story[];
+  strip: Story[];
+  lang: Lang;
+  depth: Depth;
+}) {
   const words = HOME_WORDS[lang];
   const ranked = useMostRead(5);
   if (stories.length === 0) return null;
 
-  // A four-card picture strip, then the three editorial columns. Keep short editions
-  // together; every reading still has a place and the same depth control applies.
-  const strip = stories.length >= 8 ? stories.slice(0, 4) : [];
+  // The picture strip is drawn above, with the top cards; then the three editorial
+  // columns. Every reading still has a place and the same depth control applies.
   const remaining = stories.slice(strip.length);
   const latestCount = Math.min(4, Math.max(1, remaining.length - 3));
   const latest = remaining.slice(0, latestCount);
@@ -757,18 +829,11 @@ function Records({ stories, lang, depth }: { stories: Story[]; lang: Lang; depth
   const heading = `font-body font-normal ${lang === "ar" ? "text-sm text-pine" : "text-xs uppercase tracking-[0.14em] text-pine"}`;
 
   return (
-    <section className="px-5 pt-6 pb-4 md:px-8 md:pt-8" aria-label={words.records}>
-      {strip.length ? (
-        <ol className="records atlas-strip" data-depth={depth}>
-          {strip.map((story) => (
-            <li key={story.id}>
-              <RecordRow story={story} lang={lang} />
-            </li>
-          ))}
-        </ol>
-      ) : null}
-
-      <div className={`records atlas-bottom ${strip.length ? "mt-5" : ""}`} data-depth={depth}>
+    <section
+      className={`px-5 pb-4 md:px-8 ${strip.length ? "pt-5" : "pt-6 md:pt-8"}`}
+      aria-label={words.records}
+    >
+      <div className="records atlas-bottom" data-depth={depth}>
         <section className="atlas-col" aria-label={words.latest}>
           <h3 className={`${heading} mb-3`}>{words.latest}</h3>
           <ol>

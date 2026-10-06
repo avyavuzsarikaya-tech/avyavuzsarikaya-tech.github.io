@@ -1073,34 +1073,6 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
 .atlas-pic-slot {
   min-width: 0;
 }
-/* Headlines only, on a wide screen: the column of three short readings opens into three
-   columns beside the two cards, so the five headlines stand in one ruled row and nothing
-   leaves an empty space under the two cards. */
-@media (min-width: 768px) {
-  .atlas-top.records[data-depth="1"] {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    padding-block-end: 0.25rem;
-  }
-  .atlas-top.records[data-depth="1"] .atlas-briefs {
-    display: contents;
-  }
-  .atlas-top.records[data-depth="1"] .atlas-brief {
-    position: relative;
-    padding: 0;
-    border-bottom: 0;
-  }
-  .atlas-top.records[data-depth="1"] .atlas-brief::before {
-    content: "";
-    position: absolute;
-    inset-block: 0;
-    inset-inline-start: -0.75rem;
-    border-inline-start: 1px solid var(--color-line);
-  }
-  .atlas-top.records[data-depth="1"] .atlas-card h3 {
-    font-size: 1.4rem;
-    line-height: 1.1;
-  }
-}
 @media (prefers-reduced-motion: reduce) {
   .atlas-top.records .atlas-card,
   .atlas-top.records .atlas-brief {
@@ -1168,6 +1140,84 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
 @media (min-width: 801px) {
   .atlas-strip {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+/* The picture strip now stands with the top cards. */
+.atlas-fold > .atlas-strip {
+  margin-top: 1.5rem;
+}
+@media (min-width: 768px) {
+  .atlas-fold > .atlas-strip {
+    margin-top: 0.5rem;
+  }
+}
+/* While the depth changes, every card is put in its new place at once; the cards then
+   glide there from where they were (see settle in atlas.tsx). */
+.atlas-settling,
+.atlas-settling * {
+  transition: none !important;
+}
+/* Headlines only, on a wide screen: the two cards close to their titles and the four
+   readings of the strip rise into the space under them, two under each card, beside the
+   column of three short readings. Nothing leaves an empty space. */
+@media (min-width: 768px) {
+  .atlas-fold.has-strip[data-depth="1"] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.9fr);
+    grid-template-rows: auto auto 1fr;
+    column-gap: 1.5rem;
+    padding-block: 1.5rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .atlas-fold.has-strip[data-depth="1"] > .atlas-top,
+  .atlas-fold.has-strip[data-depth="1"] > .atlas-strip {
+    display: contents;
+  }
+  .atlas-fold.has-strip[data-depth="1"] .atlas-card {
+    padding-bottom: 1rem;
+  }
+  .atlas-fold.has-strip[data-depth="1"] .atlas-card:nth-child(1) {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .atlas-fold.has-strip[data-depth="1"] .atlas-card:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .atlas-fold.has-strip[data-depth="1"] .atlas-briefs {
+    grid-column: 3;
+    grid-row: 1 / span 3;
+  }
+  .atlas-fold.has-strip[data-depth="1"] .atlas-strip > li {
+    position: relative;
+    padding-block: 1rem;
+    border-top: 1px solid var(--color-line);
+  }
+  .atlas-fold.has-strip[data-depth="1"] .atlas-strip > li:nth-child(1) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .atlas-fold.has-strip[data-depth="1"] .atlas-strip > li:nth-child(2) {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .atlas-fold.has-strip[data-depth="1"] .atlas-strip > li:nth-child(3) {
+    grid-column: 1;
+    grid-row: 3;
+    padding-bottom: 0;
+  }
+  .atlas-fold.has-strip[data-depth="1"] .atlas-strip > li:nth-child(4) {
+    grid-column: 2;
+    grid-row: 3;
+    padding-bottom: 0;
+  }
+  /* The rule between the two columns runs on down past the cards. */
+  .atlas-fold.has-strip[data-depth="1"] .atlas-strip > li:nth-child(even)::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: -0.75rem;
+    border-inline-start: 1px solid var(--color-line);
   }
 }
 /* Reading page: the text in a narrow column, the picture wider than it. */
