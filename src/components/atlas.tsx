@@ -329,7 +329,9 @@ function DeepLines({ story, lang, clamp }: { story: Story; lang: Lang; clamp: st
   return (
     <Fold layer={3}>
       {opening ? (
-        <p className={`font-body ${clamp} pt-1.5 text-pretty text-[0.92rem] leading-[1.4] text-muted`}>
+        <p
+          className={`font-body ${clamp} pt-1.5 text-pretty text-[0.92rem] leading-[1.4] text-muted`}
+        >
           {opening}
         </p>
       ) : null}
@@ -366,6 +368,7 @@ const HOME_WORDS: Record<
   Lang,
   {
     chain: string;
+    chainNote: string;
     records: string;
     depth: [string, string, string];
     sources: { one: string; many: string };
@@ -381,6 +384,7 @@ const HOME_WORDS: Record<
 > = {
   tr: {
     chain: "Belge zinciri",
+    chainNote: "Her belge kendi sayfasında açılır",
     records: "Kayıtlar",
     depth: ["Başlık", "Özet", "Tamamı"],
     sources: { one: "{n} kaynak", many: "{n} kaynak" },
@@ -395,6 +399,7 @@ const HOME_WORDS: Record<
   },
   en: {
     chain: "Document chain",
+    chainNote: "Opens each document on its own page",
     records: "Records",
     depth: ["Headline", "Summary", "Full"],
     sources: { one: "{n} source", many: "{n} sources" },
@@ -409,6 +414,7 @@ const HOME_WORDS: Record<
   },
   ar: {
     chain: "سلسلة الوثائق",
+    chainNote: "تُفتح كل وثيقة في صفحتها",
     records: "السجلات",
     depth: ["العنوان", "الملخص", "كامل"],
     sources: { one: "مصدر واحد", many: "{n} مصادر" },
@@ -423,6 +429,7 @@ const HOME_WORDS: Record<
   },
   fr: {
     chain: "Chaîne de documents",
+    chainNote: "Chaque document s’ouvre sur sa propre page",
     records: "Registres",
     depth: ["Titre", "Résumé", "Complet"],
     sources: { one: "{n} source", many: "{n} sources" },
@@ -437,6 +444,7 @@ const HOME_WORDS: Record<
   },
   es: {
     chain: "Cadena de documentos",
+    chainNote: "Cada documento se abre en su propia página",
     records: "Registros",
     depth: ["Titular", "Resumen", "Completo"],
     sources: { one: "{n} fuente", many: "{n} fuentes" },
@@ -500,27 +508,46 @@ function DocumentChain({ story, lang }: { story: Story; lang: Lang }) {
           className="doc-chain-toggle"
         >
           <span className="doc-chain-head">
-            <span className={`shrink-0 ${label}`}>
-              {words.chain}
-              <span className="text-muted">
-                {" · "}
-                {sourceCount(sources.length, lang)}
+            <span className="doc-chain-title-row">
+              <span className="doc-chain-icon" aria-hidden="true">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                </svg>
+              </span>
+              <span className="min-w-0">
+                <span className={`block ${label}`}>{words.chain}</span>
+                <span className="doc-chain-note">{words.chainNote}</span>
               </span>
             </span>
-            <span className="doc-chain-open">
-              <span className={quiet}>{open ? words.close : words.open}</span>
-              <svg
-                aria-hidden="true"
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.3"
-                className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+            <span className="doc-chain-actions">
+              <span className={`doc-chain-pill doc-chain-count ${quiet}`}>{sourceCount(sources.length, lang)}</span>
+              <span
+                className={`doc-chain-pill doc-chain-open ${lang === "ar" ? "text-sm" : "text-xs uppercase tracking-[0.14em]"}`}
               >
-                <path d="M2 4.5 6 8.5l4-4" />
-              </svg>
+                {open ? words.close : words.open}
+                <svg
+                  aria-hidden="true"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.3"
+                  className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+                >
+                  <path d="M2 4.5 6 8.5l4-4" />
+                </svg>
+              </span>
             </span>
           </span>
           <span aria-hidden="true" className="doc-chain-preview">
@@ -530,8 +557,10 @@ function DocumentChain({ story, lang }: { story: Story; lang: Lang }) {
                 className={`doc-chain-node ${index >= phoneLinks ? "max-md:hidden" : ""}`}
               >
                 {index > 0 ? <span className="doc-chain-rule" /> : null}
-                <span className="doc-chain-dot" />
-                <span className="doc-chain-name">{shortName(source.label)}</span>
+                <span className="doc-chain-chip">
+                  <span className="doc-chain-dot">{index + 1}</span>
+                  <span className="doc-chain-name">{shortName(source.label)}</span>
+                </span>
               </span>
             ))}
             {moreOnPhone > 0 ? (
@@ -555,7 +584,7 @@ function DocumentChain({ story, lang }: { story: Story; lang: Lang }) {
                       rel="noopener noreferrer"
                       tabIndex={open ? 0 : -1}
                     >
-                      <span className="doc-chain-n">{String(index + 1).padStart(2, "0")}</span>
+                      <span className="doc-chain-n">{index + 1}</span>
                       <span className="doc-chain-text">
                         {issuer ? <span className="doc-chain-issuer">{issuer}</span> : null}
                         <span className="doc-chain-title">{title}</span>
@@ -573,7 +602,6 @@ function DocumentChain({ story, lang }: { story: Story; lang: Lang }) {
       </div>
     </section>
   );
-
 }
 
 /**
@@ -619,7 +647,15 @@ function useDepth(): [Depth, (next: Depth) => void] {
 }
 
 /** The ruled bar with the three depth buttons; it heads every reading under the lead. */
-function DepthBar({ lang, depth, choose }: { lang: Lang; depth: Depth; choose: (next: Depth) => void }) {
+function DepthBar({
+  lang,
+  depth,
+  choose,
+}: {
+  lang: Lang;
+  depth: Depth;
+  choose: (next: Depth) => void;
+}) {
   const words = HOME_WORDS[lang];
   const heading = `font-body font-normal ${lang === "ar" ? "text-sm text-pine" : "text-xs uppercase tracking-[0.14em] text-pine"}`;
   return (
@@ -667,7 +703,9 @@ function Records({ stories, lang, depth }: { stories: Story[]; lang: Lang; depth
     : [];
   const counted = mostRead.length > 0;
   const numbered = counted ? mostRead : remaining.slice(latestCount + 1, latestCount + 6);
-  const shown = new Set([...strip, ...latest, ...(deep ? [deep] : []), ...numbered].map((s) => s.id));
+  const shown = new Set(
+    [...strip, ...latest, ...(deep ? [deep] : []), ...numbered].map((s) => s.id),
+  );
   const more = stories.filter((story) => !shown.has(story.id));
   const heading = `font-body font-normal ${lang === "ar" ? "text-sm text-pine" : "text-xs uppercase tracking-[0.14em] text-pine"}`;
 

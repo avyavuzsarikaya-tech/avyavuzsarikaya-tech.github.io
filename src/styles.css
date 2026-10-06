@@ -237,35 +237,78 @@ body {
 /* The chain of documents under the lead: a ruled strip, not a separate panel.
    It opens and closes in height and opacity. */
 .doc-chain {
-  border-block: 1px solid var(--color-line);
-  background: var(--color-paper);
+  border-top: 1px solid var(--color-pine);
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-highlight);
 }
 .doc-chain-toggle {
   display: flex;
   width: 100%;
   flex-direction: column;
-  gap: 0.7rem;
-  padding-block: 0.85rem 0.95rem;
+  gap: 0.8rem;
+  padding-block: 0.95rem 1rem;
   text-align: start;
 }
-.doc-chain-head,
-.doc-chain-open {
+.doc-chain-head {
   display: flex;
   align-items: center;
-}
-.doc-chain-head {
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.75rem;
+}
+.doc-chain-title-row {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.7rem;
+}
+/* The round marks of the chain are black; only the rule above it keeps the red. */
+.doc-chain-icon {
+  display: inline-flex;
+  width: 1.9rem;
+  height: 1.9rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-ink);
+  border-radius: 999px;
+  color: var(--color-ink);
+  background: var(--color-sheet);
+}
+.doc-chain-note {
+  display: block;
+  margin-top: 0.15rem;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  line-height: 1.3;
+  color: var(--color-muted);
+}
+.doc-chain-actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.45rem;
+}
+.doc-chain-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.7rem;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: var(--color-sheet);
+  line-height: 1;
+  white-space: nowrap;
 }
 .doc-chain-open {
-  flex-shrink: 0;
-  gap: 0.45rem;
+  border-color: var(--color-ink);
   color: var(--color-ink);
 }
 .doc-chain-preview {
   display: flex;
   min-width: 0;
+  flex-wrap: wrap;
   align-items: center;
+  row-gap: 0.4rem;
 }
 .doc-chain-node {
   display: flex;
@@ -273,18 +316,36 @@ body {
   align-items: center;
 }
 .doc-chain-rule {
-  width: 1.15rem;
+  width: 1rem;
   height: 1px;
-  margin-inline: 0.45rem;
+  margin-inline: 0.4rem;
   flex-shrink: 0;
   background: var(--color-rule);
 }
-.doc-chain-dot {
-  width: 5px;
-  height: 5px;
-  flex-shrink: 0;
+.doc-chain-chip {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  padding: 0.2rem 0.6rem 0.2rem 0.2rem;
   border-radius: 999px;
-  background: var(--color-pine);
+  background: var(--color-sheet);
+}
+[dir="rtl"] .doc-chain-chip {
+  padding: 0.2rem 0.2rem 0.2rem 0.6rem;
+}
+.doc-chain-dot {
+  display: inline-flex;
+  width: 1.15rem;
+  height: 1.15rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-size: 0.62rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
 }
 .doc-chain-name,
 .doc-chain-more {
@@ -292,12 +353,18 @@ body {
   overflow: hidden;
   font-size: 11px;
   line-height: 1;
-  color: var(--color-muted);
+  color: var(--color-ink);
   white-space: nowrap;
 }
 .doc-chain-name {
   max-width: 6.5rem;
   text-overflow: ellipsis;
+}
+@media (max-width: 520px) {
+  .doc-chain-note,
+  .doc-chain-count {
+    display: none;
+  }
 }
 .doc-chain-list {
   margin: 0;
@@ -318,11 +385,17 @@ body {
   border-bottom: 0;
 }
 .doc-chain-n {
-  font-family: var(--font-display);
-  font-size: 0.78rem;
+  display: inline-flex;
+  width: 1.3rem;
+  height: 1.3rem;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  border-radius: 999px;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-size: 0.7rem;
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.04em;
-  color: var(--color-pine);
 }
 .doc-chain-issuer {
   display: block;
@@ -761,8 +834,10 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
   display: block;
 }
 @media (min-width: 768px) {
+  /* As in the GPT page: two large cards side by side, and a ruled column of three short
+     readings on the right, each with its picture on the start side. */
   .atlas-top {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.9fr);
     column-gap: 1.5rem;
     padding-block: 1.5rem;
   }
@@ -773,6 +848,18 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     padding: 0;
     border: 0;
   }
+  /* The rule between the two cards sits in the middle of the gap, so both cards keep the
+     same width. */
+  .atlas-card + .atlas-card {
+    position: relative;
+  }
+  .atlas-card + .atlas-card::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: -0.75rem;
+    border-inline-start: 1px solid var(--color-line);
+  }
   .atlas-card .atlas-card-pic {
     aspect-ratio: 16 / 10;
     margin-bottom: 0.75rem;
@@ -781,40 +868,14 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     display: block;
   }
   .atlas-briefs {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.25rem;
-    margin-top: 1.5rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--color-line);
-  }
-  .atlas-brief {
-    grid-template-columns: 40% minmax(0, 1fr);
-    gap: 0.9rem;
-    padding: 0;
-    border: 0;
-  }
-  .atlas-brief .atlas-card-pic {
-    aspect-ratio: 4 / 3;
-  }
-}
-@media (min-width: 1150px) {
-  .atlas-top {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.9fr);
-  }
-  .atlas-briefs {
-    grid-column: auto;
     display: flex;
     flex-direction: column;
-    gap: 0;
-    margin-top: 0;
-    padding-top: 0;
-    border-top: 0;
     padding-inline-start: 1.5rem;
     border-inline-start: 1px solid var(--color-line);
   }
   .atlas-brief {
+    grid-template-columns: 44% minmax(0, 1fr);
+    gap: 0.9rem;
     padding-block: 0.95rem;
     border-bottom: 1px solid var(--color-line);
   }
@@ -824,6 +885,9 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
   .atlas-brief:last-child {
     padding-bottom: 0;
     border-bottom: 0;
+  }
+  .atlas-brief .atlas-card-pic {
+    aspect-ratio: 4 / 3;
   }
 }
 /* The top cards follow the depth control too: at depth 1 their picture column closes
