@@ -237,34 +237,62 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
 /** Words for the two front-page parts below the lead, in the five languages. */
 const HOME_WORDS: Record<
   Lang,
-  { chain: string; records: string; depth: [string, string, string] }
+  {
+    chain: string;
+    records: string;
+    depth: [string, string, string];
+    sources: { one: string; many: string };
+    open: string;
+    close: string;
+  }
 > = {
   tr: {
     chain: "Belge zinciri",
     records: "Kayıtlar",
     depth: ["Başlık", "Özet", "Tamamı"],
+    sources: { one: "{n} kaynak", many: "{n} kaynak" },
+    open: "Aç",
+    close: "Kapat",
   },
   en: {
     chain: "Document chain",
     records: "Records",
     depth: ["Headline", "Summary", "Full"],
+    sources: { one: "{n} source", many: "{n} sources" },
+    open: "Open",
+    close: "Close",
   },
   ar: {
     chain: "سلسلة الوثائق",
     records: "السجلات",
     depth: ["العنوان", "الملخص", "كامل"],
+    sources: { one: "مصدر واحد", many: "{n} مصادر" },
+    open: "فتح",
+    close: "إغلاق",
   },
   fr: {
     chain: "Chaîne de documents",
     records: "Registres",
     depth: ["Titre", "Résumé", "Complet"],
+    sources: { one: "{n} source", many: "{n} sources" },
+    open: "Ouvrir",
+    close: "Fermer",
   },
   es: {
     chain: "Cadena de documentos",
     records: "Registros",
     depth: ["Titular", "Resumen", "Completo"],
+    sources: { one: "{n} fuente", many: "{n} fuentes" },
+    open: "Abrir",
+    close: "Cerrar",
   },
 };
+
+/** "4 sources": the count beside the chain label, singular where the language has one. */
+function sourceCount(n: number, lang: Lang): string {
+  const words = HOME_WORDS[lang].sources;
+  return (n === 1 ? words.one : words.many).replace("{n}", String(n));
+}
 
 /** "IPCC – Sixth Assessment Report" becomes the issuer and the document name. */
 function splitSource(label: string): { issuer: string; title: string } {
@@ -273,9 +301,19 @@ function splitSource(label: string): { issuer: string; title: string } {
   return { issuer: label.slice(0, at).trim(), title: label.slice(at + 3).trim() };
 }
 
+/** The short name beside a link's dot: the issuer, or the document's first words. */
+function shortName(label: string): string {
+  const { issuer, title } = splitSource(label);
+  return issuer || title.split(/\s+/).slice(0, 3).join(" ");
+}
+
 /**
- * One ruled band under the lead, closed at first: its label and the lead's title. Opened, it
- * shows the documents the lead rests on, in order, each opening the document itself.
+ * One tinted band under the lead, a tone darker than the paper, closed at first: its label
+ * with the number of sources, the lead's title in the face of the pictured headline, and a
+ * preview of the chain — one small dot per document joined by a hairline, in the same
+ * line-and-dot language as the mark beside the name; on a phone only the first few links
+ * show, with "+2" style continuation for the rest. Opened, the band lists the documents
+ * the lead rests on, in order, each opening the document itself.
  * A reading without filed sources shows no band.
  */
 function DocumentChain({ story, lang }: { story: Story; lang: Lang }) {
@@ -286,40 +324,72 @@ function DocumentChain({ story, lang }: { story: Story; lang: Lang }) {
   const arrow = langMeta[lang].dir === "rtl" ? "←" : "→";
   const label =
     lang === "ar" ? "text-sm text-pine" : "text-xs uppercase tracking-[0.14em] text-pine";
+  const quiet =
+    lang === "ar" ? "text-sm text-muted" : "text-xs uppercase tracking-[0.14em] text-muted";
   const panelId = `chain-${story.id}`;
+  const phoneLinks = 3;
+  const moreOnPhone = sources.length - phoneLinks;
   return (
-    <section className="px-5 md:px-8" aria-label={words.chain}>
-      <div className="border-b border-ink">
+    <section className="bg-shade transition-colors duration-300" aria-label={words.chain}>
+      <div className="px-5 md:px-8">
         <button
           type="button"
           aria-expanded={open}
           aria-controls={panelId}
           onClick={() => setOpen((was) => !was)}
-          className="flex w-full items-center gap-3 py-4 text-start md:gap-5"
+          className="flex w-full flex-col gap-1 py-3.5 text-start md:gap-1.5 md:py-4"
         >
-          <span className={`shrink-0 ${label}`}>{words.chain}</span>
-          <span className="paper-title min-w-0 flex-1 text-[0.95rem] text-ink max-md:line-clamp-2 max-md:leading-snug md:truncate">
+          <span className="flex items-center justify-between gap-4">
+            <span className={`shrink-0 ${label}`}>
+              {words.chain}
+              <span className="text-muted">
+                {" · "}
+                {sourceCount(sources.length, lang)}
+              </span>
+            </span>
+            <span className="flex shrink-0 items-center gap-2 text-ink">
+              <span className={quiet}>{open ? words.close : words.open}</span>
+              <svg
+                aria-hidden="true"
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.3"
+                className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+              >
+                <path d="M2 4.5 6 8.5l4-4" />
+              </svg>
+            </span>
+          </span>
+          <span className="paper-title block text-pretty text-[1.05rem] leading-[1.25] text-ink md:text-[1.2rem]">
             {storyTitle(story, lang)}
           </span>
-          <span
-            aria-hidden="true"
-            className={`shrink-0 text-ink transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-          >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 12 12"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.3"
-            >
-              <path d="M2 4.5 6 8.5l4-4" />
-            </svg>
+          <span aria-hidden="true" className="mt-1 flex min-w-0 items-center">
+            {sources.map((source, index) => (
+              <span
+                key={source.n}
+                className={`flex min-w-0 items-center ${index >= phoneLinks ? "max-md:hidden" : ""}`}
+              >
+                {index > 0 ? <span className="mx-1.5 h-px w-3 shrink-0 bg-rule" /> : null}
+                <span className="size-[5px] shrink-0 rounded-full bg-ink" />
+                <span className="ms-1.5 max-w-20 truncate text-[11px] leading-none text-muted md:max-w-28">
+                  {shortName(source.label)}
+                </span>
+              </span>
+            ))}
+            {moreOnPhone > 0 ? (
+              <span className="flex shrink-0 items-center md:hidden">
+                <span className="mx-1.5 h-px w-3 shrink-0 bg-rule" />
+                <span className="text-[11px] leading-none text-muted">+{moreOnPhone}</span>
+              </span>
+            ) : null}
           </span>
         </button>
         <div id={panelId} className="chain-panel" data-open={open}>
           <div>
-            <ol className="flex flex-col gap-2 pb-4 sm:flex-row sm:items-stretch sm:gap-0">
+            <ol className="flex flex-col gap-2 pb-5 sm:flex-row sm:items-stretch sm:gap-0">
               {sources.map((source, index) => {
                 const { issuer, title } = splitSource(source.label);
                 return (
@@ -410,8 +480,8 @@ function Records({
   const label =
     lang === "ar" ? "text-sm text-pine" : "text-xs uppercase tracking-[0.14em] text-pine";
   return (
-    <section className="px-5 pt-6 pb-4 md:px-8 md:pt-8" aria-label={words.records}>
-      <div className="flex items-center justify-between gap-4 border-b-[3px] border-ink pb-3">
+    <section className="px-5 pt-8 pb-4 md:px-8 md:pt-10" aria-label={words.records}>
+      <div className="flex items-center justify-between gap-4 border-t-[3px] border-ink pt-3">
         <h2 className={`font-body font-normal ${label}`}>{words.records}</h2>
         <div role="radiogroup" aria-label={words.records} className="flex items-center">
           {([1, 2, 3] as const).map((step) => (

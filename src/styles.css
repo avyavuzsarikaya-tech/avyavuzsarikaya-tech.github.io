@@ -13,6 +13,8 @@
   --color-pine: #6e2432;
   --color-highlight: #ececee;
   --color-panel: #0c0c0c;
+  /* The document-chain band: one tone darker than the paper, no frame, in every scheme. */
+  --color-shade: #e9e9eb;
   --radius-sm: 2px;
   --radius-md: 2px;
   --radius-lg: 2px;
@@ -31,6 +33,7 @@ html[data-look="bordo"] {
   --color-pine: #1d5b3f;
   --color-highlight: #f1e8d8;
   --color-panel: #5a1523;
+  --color-shade: #f3eee2;
 }
 /* In the burgundy scheme the section bar and the small labels (Readings, Index)
    are burgundy mixed with white, in the same proportion as the classic grey:
@@ -61,6 +64,7 @@ html[data-look="night"] {
   --color-pine: #d3949f;
   --color-highlight: #2b2b2b;
   --color-panel: #050505;
+  --color-shade: #0d0d0d;
 }
 /* Inside the band (masthead, footer, dropdowns opened from the band) the light and grey
    tones keep the roles they have in the classic scheme: the name and links light, the
@@ -496,6 +500,7 @@ a.group:has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     --color-pine: #6e2432;
     --color-highlight: #ffffff;
     --color-panel: #ffffff;
+    --color-shade: #ffffff;
     color-scheme: light;
   }
   body {
