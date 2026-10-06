@@ -799,7 +799,7 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     aspect-ratio: 4 / 3;
   }
 }
-@media (min-width: 900px) {
+@media (min-width: 1150px) {
   .atlas-top {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.9fr);
   }
@@ -824,6 +824,34 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
   .atlas-brief:last-child {
     padding-bottom: 0;
     border-bottom: 0;
+  }
+}
+/* The page's width on a wide screen: centred, as a printed page sits on a desk. */
+.page-width {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+}
+/* The top cards follow the depth control too: at depth 1 their picture column closes
+   and the title takes the whole width. */
+.atlas-top.records .atlas-card,
+.atlas-top.records .atlas-brief {
+  transition:
+    grid-template-columns 200ms ease,
+    gap 200ms ease;
+}
+.atlas-top.records[data-depth="1"] .atlas-card,
+.atlas-top.records[data-depth="1"] .atlas-brief {
+  grid-template-columns: 0 minmax(0, 1fr);
+  gap: 0;
+}
+.atlas-pic-slot {
+  min-width: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .atlas-top.records .atlas-card,
+  .atlas-top.records .atlas-brief {
+    transition: none;
   }
 }
 /* Under the chain: three columns as on a printed page. On a phone they follow each other;
@@ -854,7 +882,7 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     column-gap: 1.5rem;
   }
 }
-@media (min-width: 900px) {
+@media (min-width: 1150px) {
   .atlas-bottom {
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 0.7fr);
   }

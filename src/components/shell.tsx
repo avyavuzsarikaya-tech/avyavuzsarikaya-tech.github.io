@@ -380,104 +380,114 @@ export function Shell({
         ) : null}
 
         <div dir={meta.dir} lang={meta.html} className="flex flex-1 flex-col">
-          <nav aria-label={copy.sections} className="no-print section-bar relative border-b border-rule">
-            <div
-              ref={bar}
-              className="no-scrollbar flex gap-5 overflow-x-auto px-5 text-[13px] tracking-wide whitespace-nowrap md:justify-between md:gap-4 md:px-8 md:text-sm lg:text-base"
+          {/* On a wide screen the page keeps a newspaper's width in the middle; the black
+            bands above and below still run edge to edge. */}
+          <div className="page-width flex flex-1 flex-col">
+            <nav
+              aria-label={copy.sections}
+              className="no-print section-bar relative border-b border-rule"
             >
-              <Link
-                {...homeLink(lang)}
-                data-on={section === "all"}
-                className={barItem(section === "all")}
+              <div
+                ref={bar}
+                className="no-scrollbar flex gap-5 overflow-x-auto px-5 text-[13px] tracking-wide whitespace-nowrap md:justify-between md:gap-4 md:px-8 md:text-sm lg:text-base"
               >
-                {copy.home}
-              </Link>
-              {THEMES.map((theme) => (
-                <Link
-                  key={theme}
-                  {...sectionLink(lang, theme)}
-                  data-on={section === theme}
-                  className={barItem(section === theme)}
-                >
-                  {copy.themes[theme]}
-                </Link>
-              ))}
-            </div>
-          </nav>
-
-          <div className="flex-1">{children}</div>
-
-          <div aria-hidden="true" className="no-print flex items-center gap-3 px-5 pt-12 pb-10 md:px-8">
-            <span className="h-px flex-1 bg-rule" />
-            <span className="size-1.5 rounded-full bg-ink" />
-            <span className="h-px flex-1 bg-rule" />
-          </div>
-
-          <footer className="no-print bg-panel px-5 py-10 text-paper md:px-8">
-            {/* Three columns spread to the edges: the language list ends at the right margin. */}
-            <div className="grid gap-8 md:flex md:justify-between md:gap-12">
-              <div ref={footerBrand} className="flex flex-col gap-3 md:max-w-sm">
                 <Link
                   {...homeLink(lang)}
-                  dir="ltr"
-                  className="inline-flex min-h-11 items-center gap-3 self-start text-paper"
+                  data-on={section === "all"}
+                  className={barItem(section === "all")}
                 >
-                  <Meridian />
-                  <span className="masthead-name text-[1.75rem] leading-none">ORBIS</span>
+                  {copy.home}
                 </Link>
-                <Link
-                  {...aboutLink(lang)}
-                  className="inline-flex min-h-9 items-center self-start text-base text-paper"
-                >
-                  {aboutCopy(lang).title}
-                </Link>
-                <p className="text-base text-mist">{copy.colophon}</p>
+                {THEMES.map((theme) => (
+                  <Link
+                    key={theme}
+                    {...sectionLink(lang, theme)}
+                    data-on={section === theme}
+                    className={barItem(section === theme)}
+                  >
+                    {copy.themes[theme]}
+                  </Link>
+                ))}
               </div>
-              <div>
-                <p className="text-sm uppercase tracking-widest text-mist">{copy.sections}</p>
-                <ul className="mt-2 grid w-fit grid-cols-2 gap-x-6">
-                  {THEMES.map((theme) => (
-                    <li key={theme}>
-                      <Link
-                        {...sectionLink(lang, theme)}
-                        className="inline-flex min-h-9 items-center text-base text-paper"
-                      >
-                        {copy.themes[theme]}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <p className="text-sm uppercase tracking-widest text-mist">
-                  {frame.languages}
-                </p>
-                <ul className="mt-2 flex flex-col">
-                  {LANGS.map((code) => (
-                    <li key={code}>
-                      <button
-                        type="button"
-                        lang={langMeta[code].html}
-                        onClick={() => {
-                          setLang(code);
-                          window.scrollTo({ top: 0 });
-                        }}
-                        className={
-                          code === lang
-                            ? "inline-flex min-h-9 items-center text-base text-paper underline underline-offset-4"
-                            : "inline-flex min-h-9 items-center text-base text-mist hover:text-paper"
-                        }
-                      >
-                        {langMeta[code].name}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            </nav>
+
+            <div className="flex-1">{children}</div>
+
+            <div
+              aria-hidden="true"
+              className="no-print flex items-center gap-3 px-5 pt-12 pb-10 md:px-8"
+            >
+              <span className="h-px flex-1 bg-rule" />
+              <span className="size-1.5 rounded-full bg-ink" />
+              <span className="h-px flex-1 bg-rule" />
             </div>
-            <p className="mt-10 border-t border-muted pt-6 text-sm text-mist">
-              © {new Date().getFullYear()} Orbis. {frame.rights}
-            </p>
+          </div>
+
+          <footer className="no-print bg-panel py-10 text-paper">
+            <div className="page-width px-5 md:px-8">
+              {/* Three columns spread to the edges: the language list ends at the right margin. */}
+              <div className="grid gap-8 md:flex md:justify-between md:gap-12">
+                <div ref={footerBrand} className="flex flex-col gap-3 md:max-w-sm">
+                  <Link
+                    {...homeLink(lang)}
+                    dir="ltr"
+                    className="inline-flex min-h-11 items-center gap-3 self-start text-paper"
+                  >
+                    <Meridian />
+                    <span className="masthead-name text-[1.75rem] leading-none">ORBIS</span>
+                  </Link>
+                  <Link
+                    {...aboutLink(lang)}
+                    className="inline-flex min-h-9 items-center self-start text-base text-paper"
+                  >
+                    {aboutCopy(lang).title}
+                  </Link>
+                  <p className="text-base text-mist">{copy.colophon}</p>
+                </div>
+                <div>
+                  <p className="text-sm uppercase tracking-widest text-mist">{copy.sections}</p>
+                  <ul className="mt-2 grid w-fit grid-cols-2 gap-x-6">
+                    {THEMES.map((theme) => (
+                      <li key={theme}>
+                        <Link
+                          {...sectionLink(lang, theme)}
+                          className="inline-flex min-h-9 items-center text-base text-paper"
+                        >
+                          {copy.themes[theme]}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <p className="text-sm uppercase tracking-widest text-mist">{frame.languages}</p>
+                  <ul className="mt-2 flex flex-col">
+                    {LANGS.map((code) => (
+                      <li key={code}>
+                        <button
+                          type="button"
+                          lang={langMeta[code].html}
+                          onClick={() => {
+                            setLang(code);
+                            window.scrollTo({ top: 0 });
+                          }}
+                          className={
+                            code === lang
+                              ? "inline-flex min-h-9 items-center text-base text-paper underline underline-offset-4"
+                              : "inline-flex min-h-9 items-center text-base text-mist hover:text-paper"
+                          }
+                        >
+                          {langMeta[code].name}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <p className="mt-10 border-t border-muted pt-6 text-sm text-mist">
+                © {new Date().getFullYear()} Orbis. {frame.rights}
+              </p>
+            </div>
           </footer>
         </div>
       </div>

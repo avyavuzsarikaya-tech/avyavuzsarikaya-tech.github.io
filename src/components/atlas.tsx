@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ReadTime } from "@/components/read-time";
 import { FrameTools, Shell } from "@/components/shell";
@@ -189,6 +189,7 @@ function cellSummary(story: Story, lang: Lang): string {
  */
 function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
   const dir = langMeta[lang].dir;
+  const [depth, choose] = useDepth();
   const [lead, ...rest] = stories;
   if (!lead) return null;
   const cards = rest.slice(0, 2);
@@ -236,23 +237,29 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
       {/* The chain sits right under the reading it belongs to, before any other card. */}
       <DocumentChain story={lead} lang={lang} />
 
+      {/* From here down every reading follows the depth control, the top cards included. */}
+      {rest.length ? <DepthBar lang={lang} depth={depth} choose={choose} /> : null}
+
       {cards.length ? (
-        <div className="atlas-top px-5 md:px-8">
+        <div className="records atlas-top px-5 md:px-8" data-depth={depth}>
           {cards.map((story) => (
             <Link
               key={story.id}
               {...readLink(lang, story.id)}
               className="atlas-own atlas-card group"
             >
-              <CardPicture story={story} lang={lang} ratio="atlas-card-pic" />
+              <FoldPicture story={story} lang={lang} />
               <div className="flex min-w-0 flex-col">
                 <Kicker story={story} lang={lang} />
                 <h3 className="paper-title font-bold mt-1.5 text-[1.2rem] leading-[1.12] text-ink decoration-1 underline-offset-[0.14em] group-hover:underline md:mt-2 md:text-[1.6rem] md:leading-[1.08] lg:text-[1.75rem]">
                   {storyTitle(story, lang)}
                 </h3>
-                <p className="atlas-dek font-body mt-2 text-pretty text-base leading-[1.32] text-ink">
-                  {cellSummary(story, lang)}
-                </p>
+                <Fold layer={2}>
+                  <p className="atlas-dek font-body mt-2 text-pretty text-base leading-[1.32] text-ink">
+                    {cellSummary(story, lang)}
+                  </p>
+                </Fold>
+                <DeepLines story={story} lang={lang} clamp="line-clamp-4" />
                 <span className="atlas-more mt-2 text-[0.8rem] md:mt-3">
                   {words.readMore} <span aria-hidden="true">{arrow}</span>
                 </span>
@@ -267,12 +274,18 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
                   {...readLink(lang, story.id)}
                   className="atlas-own atlas-brief group"
                 >
-                  <CardPicture story={story} lang={lang} ratio="atlas-card-pic" />
+                  <FoldPicture story={story} lang={lang} />
                   <div className="flex min-w-0 flex-col">
                     <Kicker story={story} lang={lang} />
                     <h3 className="paper-title font-bold mt-1.5 text-[1.2rem] leading-[1.12] text-ink decoration-1 underline-offset-[0.14em] group-hover:underline md:text-[1.1rem] md:leading-[1.15]">
                       {storyTitle(story, lang)}
                     </h3>
+                    <Fold layer={3}>
+                      <p className="font-body pt-1.5 text-pretty text-[0.92rem] leading-[1.32] text-ink">
+                        {cellSummary(story, lang)}
+                      </p>
+                      <p className="pt-1 text-xs text-muted">{formatDate(story.date, lang)}</p>
+                    </Fold>
                     <span className="atlas-more mt-2 text-[0.75rem]">
                       {words.readMore} <span aria-hidden="true">{arrow}</span>
                     </span>
@@ -284,8 +297,44 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
         </div>
       ) : null}
 
-      <Records stories={records} lang={lang} />
+      <Records stories={records} lang={lang} depth={depth} />
     </div>
+  );
+}
+
+/** A part of a card that opens from the given depth on. */
+function Fold({ layer, children }: { layer: 2 | 3; children: ReactNode }) {
+  return (
+    <div className="record-layer" data-layer={layer}>
+      <div>{children}</div>
+    </div>
+  );
+}
+
+/** A top card's picture: shown from depth 2, folded away at depth 1. */
+function FoldPicture({ story, lang }: { story: Story; lang: Lang }) {
+  if (!story.image) return <div className="atlas-pic-slot" />;
+  return (
+    <div className="record-layer atlas-pic-slot" data-layer="2">
+      <div>
+        <CardPicture story={story} lang={lang} ratio="atlas-card-pic" />
+      </div>
+    </div>
+  );
+}
+
+/** At depth 3 a top card adds its opening lines and its date, as the records do. */
+function DeepLines({ story, lang, clamp }: { story: Story; lang: Lang; clamp: string }) {
+  const opening = openingLines(story, lang, cellSummary(story, lang));
+  return (
+    <Fold layer={3}>
+      {opening ? (
+        <p className={`font-body ${clamp} pt-1.5 text-pretty text-[0.92rem] leading-[1.4] text-muted`}>
+          {opening}
+        </p>
+      ) : null}
+      <p className="pt-1 text-xs text-muted">{formatDate(story.date, lang)}</p>
+    </Fold>
   );
 }
 
@@ -555,11 +604,9 @@ function readDepth(): Depth {
  * sets how much of each row shows; the choice is kept in this browser.
  * The two readings of the right column are listed only on a phone, where that column is not shown.
  */
-function Records({ stories, lang }: { stories: Story[]; lang: Lang }) {
-  const words = HOME_WORDS[lang];
+function useDepth(): [Depth, (next: Depth) => void] {
   const [depth, setDepth] = useState<Depth>(2);
   useEffect(() => setDepth(readDepth()), []);
-  const ranked = useMostRead(5);
   const choose = (next: Depth) => {
     setDepth(next);
     try {
@@ -568,27 +615,15 @@ function Records({ stories, lang }: { stories: Story[]; lang: Lang }) {
       /* private window: the choice lasts until the page closes */
     }
   };
-  if (stories.length === 0) return null;
+  return [depth, choose];
+}
 
-  // A four-card picture strip, then the three editorial columns. Keep short editions
-  // together; every reading still has a place and the same depth control applies.
-  const strip = stories.length >= 8 ? stories.slice(0, 4) : [];
-  const remaining = stories.slice(strip.length);
-  const latestCount = Math.min(4, Math.max(1, remaining.length - 3));
-  const latest = remaining.slice(0, latestCount);
-  const deep = remaining[latestCount];
-  const byId = new Map(stories.map((story) => [story.id, story]));
-  const mostRead = ranked
-    ? ranked.map((id) => byId.get(id)).filter((story): story is Story => Boolean(story))
-    : [];
-  const counted = mostRead.length > 0;
-  const numbered = counted ? mostRead : remaining.slice(latestCount + 1, latestCount + 6);
-  const shown = new Set([...strip, ...latest, ...(deep ? [deep] : []), ...numbered].map((s) => s.id));
-  const more = stories.filter((story) => !shown.has(story.id));
+/** The ruled bar with the three depth buttons; it heads every reading under the lead. */
+function DepthBar({ lang, depth, choose }: { lang: Lang; depth: Depth; choose: (next: Depth) => void }) {
+  const words = HOME_WORDS[lang];
   const heading = `font-body font-normal ${lang === "ar" ? "text-sm text-pine" : "text-xs uppercase tracking-[0.14em] text-pine"}`;
-
   return (
-    <section className="px-5 pt-8 pb-4 md:px-8 md:pt-10" aria-label={words.records}>
+    <div className="px-5 pt-6 md:px-8 md:pt-8">
       <div className="flex items-center justify-between gap-4 border-t-[3px] border-ink pt-3">
         <h2 className={heading}>{words.records}</h2>
         <div role="radiogroup" aria-label={words.records} className="flex items-center">
@@ -610,9 +645,36 @@ function Records({ stories, lang }: { stories: Story[]; lang: Lang }) {
           ))}
         </div>
       </div>
+    </div>
+  );
+}
 
+function Records({ stories, lang, depth }: { stories: Story[]; lang: Lang; depth: Depth }) {
+  const words = HOME_WORDS[lang];
+  const ranked = useMostRead(5);
+  if (stories.length === 0) return null;
+
+  // A four-card picture strip, then the three editorial columns. Keep short editions
+  // together; every reading still has a place and the same depth control applies.
+  const strip = stories.length >= 8 ? stories.slice(0, 4) : [];
+  const remaining = stories.slice(strip.length);
+  const latestCount = Math.min(4, Math.max(1, remaining.length - 3));
+  const latest = remaining.slice(0, latestCount);
+  const deep = remaining[latestCount];
+  const byId = new Map(stories.map((story) => [story.id, story]));
+  const mostRead = ranked
+    ? ranked.map((id) => byId.get(id)).filter((story): story is Story => Boolean(story))
+    : [];
+  const counted = mostRead.length > 0;
+  const numbered = counted ? mostRead : remaining.slice(latestCount + 1, latestCount + 6);
+  const shown = new Set([...strip, ...latest, ...(deep ? [deep] : []), ...numbered].map((s) => s.id));
+  const more = stories.filter((story) => !shown.has(story.id));
+  const heading = `font-body font-normal ${lang === "ar" ? "text-sm text-pine" : "text-xs uppercase tracking-[0.14em] text-pine"}`;
+
+  return (
+    <section className="px-5 pt-6 pb-4 md:px-8 md:pt-8" aria-label={words.records}>
       {strip.length ? (
-        <ol className="records atlas-strip mt-5" data-depth={depth}>
+        <ol className="records atlas-strip" data-depth={depth}>
           {strip.map((story) => (
             <li key={story.id}>
               <RecordRow story={story} lang={lang} />
@@ -621,7 +683,7 @@ function Records({ stories, lang }: { stories: Story[]; lang: Lang }) {
         </ol>
       ) : null}
 
-      <div className="records atlas-bottom mt-5" data-depth={depth}>
+      <div className={`records atlas-bottom ${strip.length ? "mt-5" : ""}`} data-depth={depth}>
         <section className="atlas-col" aria-label={words.latest}>
           <h3 className={`${heading} mb-3`}>{words.latest}</h3>
           <ol>
