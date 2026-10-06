@@ -259,7 +259,7 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
                     {cellSummary(story, lang)}
                   </p>
                 </Fold>
-                <DeepLines story={story} lang={lang} clamp="line-clamp-4" />
+                <DeepLines story={story} lang={lang} clamp="line-clamp-5" />
                 <span className="atlas-more mt-2 text-[0.8rem] md:mt-3">
                   {words.readMore} <span aria-hidden="true">{arrow}</span>
                 </span>
@@ -280,10 +280,9 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
                     <h3 className="paper-title font-bold mt-1.5 text-[1.2rem] leading-[1.12] text-ink decoration-1 underline-offset-[0.14em] group-hover:underline md:text-[1.1rem] md:leading-[1.15]">
                       {storyTitle(story, lang)}
                     </h3>
+                    {/* Only the date opens here at full depth: a summary in this narrow
+                        column would make it far taller than the two cards beside it. */}
                     <Fold layer={3}>
-                      <p className="font-body pt-1.5 text-pretty text-[0.92rem] leading-[1.32] text-ink">
-                        {cellSummary(story, lang)}
-                      </p>
                       <p className="pt-1 text-xs text-muted">{formatDate(story.date, lang)}</p>
                     </Fold>
                     <span className="atlas-more mt-2 text-[0.75rem]">

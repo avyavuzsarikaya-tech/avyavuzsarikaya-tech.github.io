@@ -960,27 +960,22 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     transition: none;
   }
 }
-/* Under the chain: three columns as on a printed page. On a phone they follow each other;
-   on a tablet the first two sit side by side and the numbered one runs under them. */
+/* Under the chain: three columns as on a printed page, as in the GPT page: the latest,
+   one reading in depth, and the numbered list running down the right. On a phone they
+   follow each other. */
 .atlas-col + .atlas-col {
   margin-top: 1.75rem;
 }
 @media (min-width: 768px) {
   .atlas-bottom {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 0.7fr);
     column-gap: 1.5rem;
   }
   .atlas-col + .atlas-col {
     margin-top: 0;
-  }
-  .atlas-col:nth-child(2) {
     padding-inline-start: 1.5rem;
     border-inline-start: 1px solid var(--color-line);
-  }
-  .atlas-col:nth-child(3) {
-    grid-column: 1 / -1;
-    margin-top: 1.75rem;
   }
   .atlas-more-grid {
     display: grid;
@@ -989,15 +984,6 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
   }
 }
 @media (min-width: 1150px) {
-  .atlas-bottom {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 0.7fr);
-  }
-  .atlas-col:nth-child(3) {
-    grid-column: auto;
-    margin-top: 0;
-    padding-inline-start: 1.5rem;
-    border-inline-start: 1px solid var(--color-line);
-  }
   .atlas-more-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
