@@ -799,7 +799,7 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     aspect-ratio: 4 / 3;
   }
 }
-@media (min-width: 1150px) {
+@media (min-width: 900px) {
   .atlas-top {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.9fr);
   }
@@ -854,7 +854,7 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     column-gap: 1.5rem;
   }
 }
-@media (min-width: 1150px) {
+@media (min-width: 900px) {
   .atlas-bottom {
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 0.7fr);
   }
