@@ -881,6 +881,104 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
 .atlas-card .atlas-dek {
   display: block;
 }
+/* On a phone the picture sits beside the section, the title and the summary only; the
+   opening lines, the date and "Read more" run under it across the whole card, so a long
+   card at full depth leaves no empty strip below the picture. */
+@media (max-width: 767.98px) {
+  /* Children of the text column: 1 section, 2 title, 3 summary, 4 opening lines and
+     date (full depth only), 5 "Read more". Below full depth "Read more" stays beside
+     the picture; at full depth it follows the opening lines under it. */
+  .atlas-card {
+    grid-template-rows: auto auto auto 1fr auto auto;
+    row-gap: 0;
+  }
+  .atlas-card > .atlas-pic-slot {
+    grid-column: 1;
+    grid-row: 1 / 5;
+  }
+  .atlas-card > .atlas-pic-slot + div {
+    display: contents;
+  }
+  .atlas-card > .atlas-pic-slot + div > :nth-child(1) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .atlas-card > .atlas-pic-slot + div > :nth-child(2) {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .atlas-card > .atlas-pic-slot + div > :nth-child(3) {
+    grid-column: 2;
+    grid-row: 3;
+  }
+  .atlas-card > .atlas-pic-slot + div > :nth-child(4) {
+    grid-column: 1 / -1;
+    grid-row: 5;
+  }
+  .atlas-card > .atlas-pic-slot + div > :nth-child(5) {
+    grid-column: 2;
+    grid-row: 4;
+    align-self: start;
+    justify-self: start;
+  }
+  .atlas-card > .atlas-pic-slot + div > :nth-child(4) p:first-child {
+    padding-top: 0.75rem;
+  }
+  .atlas-top.records[data-depth="3"] .atlas-card {
+    grid-template-rows: auto auto 1fr auto auto auto;
+  }
+  .atlas-top.records[data-depth="3"] .atlas-card > .atlas-pic-slot {
+    grid-row: 1 / 4;
+  }
+  .atlas-top.records[data-depth="3"] .atlas-card > .atlas-pic-slot + div > :nth-child(5) {
+    grid-column: 1 / -1;
+    grid-row: 6;
+  }
+
+  /* The record rows under them (Latest, More readings) work the same way: the small
+     picture beside the section, title and summary; the opening lines and the date under
+     it across the row. */
+  .records:not(.atlas-strip) .record-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr auto auto;
+  }
+  .records:not(.atlas-strip) .record-row > .record-thumb {
+    grid-column: 1;
+    grid-row: 1 / 4;
+  }
+  .records:not(.atlas-strip) .record-row > .record-thumb + div {
+    display: contents;
+  }
+  .records:not(.atlas-strip) .record-row > .record-thumb + div > :nth-child(-n + 3) {
+    grid-column: 2;
+  }
+  .records:not(.atlas-strip) .record-row > .record-thumb + div > :nth-child(1) {
+    grid-row: 1;
+  }
+  .records:not(.atlas-strip) .record-row > .record-thumb + div > :nth-child(2) {
+    grid-row: 2;
+  }
+  .records:not(.atlas-strip) .record-row > .record-thumb + div > :nth-child(3) {
+    grid-row: 3;
+  }
+  .records:not(.atlas-strip) .record-row > .record-thumb + div > :nth-child(4) {
+    grid-column: 1 / -1;
+    grid-row: 4;
+  }
+  .records:not(.atlas-strip) .record-row > .record-thumb + div > :nth-child(5) {
+    grid-column: 1 / -1;
+    grid-row: 5;
+  }
+  .records[data-depth="3"]:not(.atlas-strip)
+    .record-row
+    > .record-thumb
+    + div
+    > :nth-child(4)
+    p:first-child {
+    padding-top: 0.6rem;
+  }
+}
 @media (min-width: 768px) {
   /* As in the GPT page: two large cards side by side, and a ruled column of three short
      readings on the right, each with its picture on the start side. */

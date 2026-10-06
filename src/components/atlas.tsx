@@ -820,7 +820,7 @@ function RecordRow({ story, lang }: { story: Story; lang: Lang }) {
   return (
     <Link
       {...readLink(lang, story.id)}
-      className="atlas-own group flex items-start border-b border-line py-3.5"
+      className={`atlas-own group flex items-start border-b border-line py-3.5 ${story.image ? "record-row" : ""}`}
     >
       {story.image ? (
         <div className="record-layer record-thumb me-4 shrink-0" data-layer="2">
