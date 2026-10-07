@@ -129,10 +129,13 @@ export function FrameTools() {
   const copy = useCopy(lang);
   const frame = useFrameCopy(lang);
   if (!tools) return null;
-  const hover = "hover:text-ink";
-  const divider = <span aria-hidden="true" className="mx-1.5 hidden h-4 w-px bg-line md:block" />;
+  // The tools sit on the black band, light on dark like the name.
+  const hover = "hover:text-paper";
+  const divider = (
+    <span aria-hidden="true" className="mx-1.5 hidden h-4 w-px bg-paper/25 md:block" />
+  );
   return (
-    <div dir="ltr" className="flex shrink-0 items-center text-ink">
+    <div dir="ltr" className="flex shrink-0 items-center text-paper/85">
       <Link
         {...searchLink(lang)}
         aria-label={searchCopy(lang).title}
@@ -144,7 +147,7 @@ export function FrameTools() {
       {divider}
       <div className="hidden md:block">
         <Pick
-          tone="page"
+          tone="panel"
           align="end"
           label={copy.language}
           value={tools.lang}
@@ -163,7 +166,7 @@ export function FrameTools() {
       {divider}
       <div className="hidden md:block">
         <Pick
-          tone="page"
+          tone="panel"
           align="end"
           label={frame.look}
           value={tools.look}
@@ -179,7 +182,7 @@ export function FrameTools() {
           }))}
           buttonClassName="group inline-flex h-11 w-9 items-center justify-center"
         >
-          <HeaderSwatch look={tools.look} />
+          <HeaderSwatch look={tools.look} dark />
         </Pick>
       </div>
       {membersOn ? (
@@ -211,15 +214,15 @@ export function FrameTools() {
   );
 }
 
-/** The mark beside the name in the header: the same hairline and dot, in ink on paper. */
+/** The mark beside the name in the header: the same hairline and dot, light on the black band. */
 function InkMark() {
   return (
     <span
       className="relative inline-flex h-8 w-4 items-center justify-center md:h-10 md:w-5"
       aria-hidden="true"
     >
-      <span className="absolute h-8 w-px bg-ink md:h-10" />
-      <span className="size-[7px] rounded-full bg-ink md:size-2" />
+      <span className="absolute h-8 w-px bg-paper md:h-10" />
+      <span className="size-[7px] rounded-full bg-paper md:size-2" />
     </span>
   );
 }
@@ -347,17 +350,15 @@ export function Shell({
   return (
     <ToolsContext.Provider value={tools}>
       <div className="flex min-h-dvh flex-col bg-paper text-ink">
-        {/* The header is one ruled row on the paper: the name with the motto under it, the
-          sections, and the tools. Below a wide screen the sections drop to a second row
-          that scrolls sideways. */}
-        <header
-          dir="ltr"
-          className="no-print relative border-b border-rule bg-paper text-ink"
-        >
-          <div className="flex flex-wrap items-center justify-between gap-x-6 px-5 md:px-8">
+        {/* The header: a black band with the name, the motto under it and the tools, and
+          under the band the section strip on the paper, scrolling sideways when narrow. */}
+        <header dir="ltr" className="no-print relative">
+          {/* The black band carries the name, the motto and the tools, as the footer band does;
+              the section strip runs under it on the paper. */}
+          <div className="flex items-center justify-between gap-x-6 bg-panel px-5 text-paper md:px-8">
             <Link
               {...homeLink(lang)}
-              className="order-1 inline-flex min-h-11 shrink-0 items-center gap-2 py-2.5 md:gap-2.5 md:py-3"
+              className="inline-flex min-h-11 shrink-0 items-center gap-2 py-2.5 md:gap-2.5 md:py-3"
             >
               <InkMark />
               <span className="flex flex-col">
@@ -367,21 +368,21 @@ export function Shell({
                 <span
                   lang={meta.html}
                   dir={meta.dir}
-                  className="mt-1 font-body text-[10px] leading-none tracking-[0.02em] text-ink/80 md:text-[11px]"
+                  className="mt-1 font-body text-[10px] leading-none tracking-[0.02em] text-paper/80 md:text-[11px]"
                 >
                   {copy.heroLead} {copy.hero}
                 </span>
               </span>
             </Link>
 
-            <div className="order-2 xl:order-3">
+            <div>
               {/* The editing panel stays out of the reader's menu; open it at /panel. */}
               {inPanel ? (
                 <nav className="flex items-center gap-4 text-sm">
-                  <Link {...homeLink(lang)} className="inline-flex min-h-11 items-center text-muted">
+                  <Link {...homeLink(lang)} className="inline-flex min-h-11 items-center text-mist">
                     {copy.atlas}
                   </Link>
-                  <Link to="/panel" className="inline-flex min-h-11 items-center text-ink">
+                  <Link to="/panel" className="inline-flex min-h-11 items-center text-paper">
                     {copy.panel}
                   </Link>
                 </nav>
@@ -389,31 +390,31 @@ export function Shell({
                 <FrameTools />
               )}
             </div>
-
-            <nav
-              aria-label={copy.sections}
-              dir={meta.dir}
-              lang={meta.html}
-              data-start="true"
-              className="section-bar relative order-3 -mx-5 min-w-0 shrink-0 basis-[calc(100%+2.5rem)] border-t border-line md:-mx-8 md:basis-[calc(100%+4rem)] xl:order-2 xl:mx-0 xl:flex-1 xl:shrink xl:basis-auto xl:border-t-0"
-            >
-              <div
-                ref={bar}
-                className="no-scrollbar flex gap-5 overflow-x-auto px-5 whitespace-nowrap md:gap-7 md:px-8 lg:justify-between xl:justify-start xl:gap-[clamp(1rem,1.6vw,1.9rem)] xl:px-0"
-              >
-                {THEMES.map((theme) => (
-                  <Link
-                    key={theme}
-                    {...sectionLink(lang, theme)}
-                    data-on={section === theme}
-                    className={barItem(section === theme)}
-                  >
-                    {copy.themes[theme]}
-                  </Link>
-                ))}
-              </div>
-            </nav>
           </div>
+
+          <nav
+            aria-label={copy.sections}
+            dir={meta.dir}
+            lang={meta.html}
+            data-start="true"
+            className="section-bar relative min-w-0 border-b border-rule bg-paper"
+          >
+            <div
+              ref={bar}
+              className="no-scrollbar flex gap-5 overflow-x-auto px-5 whitespace-nowrap md:gap-7 md:px-8 lg:justify-between"
+            >
+              {THEMES.map((theme) => (
+                <Link
+                  key={theme}
+                  {...sectionLink(lang, theme)}
+                  data-on={section === theme}
+                  className={barItem(section === theme)}
+                >
+                  {copy.themes[theme]}
+                </Link>
+              ))}
+            </div>
+          </nav>
         </header>
         {menuOpen ? (
           <SiteMenu
