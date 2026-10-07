@@ -909,52 +909,66 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
    opening lines, the date and "Read more" run under it across the whole card, so a long
    card at full depth leaves no empty strip below the picture. */
 @media (max-width: 767.98px) {
-  /* Children of the text column: 1 section, 2 title, 3 summary, 4 opening lines and
+  /* The column of three short readings (.atlas-brief) is laid out the same way, so its
+     opening lines and date at full depth do not leave a strip under its picture either.
+     Children of the text column: 1 section, 2 title, 3 summary, 4 opening lines and
      date (full depth only), 5 "Read more". Below full depth "Read more" stays beside
      the picture; at full depth it follows the opening lines under it. */
-  .atlas-card {
+  .atlas-card,
+  .atlas-brief {
     grid-template-rows: auto auto auto 1fr auto auto;
     row-gap: 0;
   }
-  .atlas-card > .atlas-pic-slot {
+  .atlas-card > .atlas-pic-slot,
+  .atlas-brief > .atlas-pic-slot {
     grid-column: 1;
     grid-row: 1 / 5;
   }
-  .atlas-card > .atlas-pic-slot + div {
+  .atlas-card > .atlas-pic-slot + div,
+  .atlas-brief > .atlas-pic-slot + div {
     display: contents;
   }
-  .atlas-card > .atlas-pic-slot + div > :nth-child(1) {
+  .atlas-card > .atlas-pic-slot + div > :nth-child(1),
+  .atlas-brief > .atlas-pic-slot + div > :nth-child(1) {
     grid-column: 2;
     grid-row: 1;
   }
-  .atlas-card > .atlas-pic-slot + div > :nth-child(2) {
+  .atlas-card > .atlas-pic-slot + div > :nth-child(2),
+  .atlas-brief > .atlas-pic-slot + div > :nth-child(2) {
     grid-column: 2;
     grid-row: 2;
   }
-  .atlas-card > .atlas-pic-slot + div > :nth-child(3) {
+  .atlas-card > .atlas-pic-slot + div > :nth-child(3),
+  .atlas-brief > .atlas-pic-slot + div > :nth-child(3) {
     grid-column: 2;
     grid-row: 3;
   }
-  .atlas-card > .atlas-pic-slot + div > :nth-child(4) {
+  .atlas-card > .atlas-pic-slot + div > :nth-child(4),
+  .atlas-brief > .atlas-pic-slot + div > :nth-child(4) {
     grid-column: 1 / -1;
     grid-row: 5;
   }
-  .atlas-card > .atlas-pic-slot + div > :nth-child(5) {
+  .atlas-card > .atlas-pic-slot + div > :nth-child(5),
+  .atlas-brief > .atlas-pic-slot + div > :nth-child(5) {
     grid-column: 2;
     grid-row: 4;
     align-self: start;
     justify-self: start;
   }
-  .atlas-card > .atlas-pic-slot + div > :nth-child(4) p:first-child {
+  .atlas-card > .atlas-pic-slot + div > :nth-child(4) p:first-child,
+  .atlas-brief > .atlas-pic-slot + div > :nth-child(4) p:first-child {
     padding-top: 0.75rem;
   }
-  .atlas-top.records[data-depth="3"] .atlas-card {
+  .atlas-top.records[data-depth="3"] .atlas-card,
+  .atlas-top.records[data-depth="3"] .atlas-brief {
     grid-template-rows: auto auto 1fr auto auto auto;
   }
-  .atlas-top.records[data-depth="3"] .atlas-card > .atlas-pic-slot {
+  .atlas-top.records[data-depth="3"] .atlas-card > .atlas-pic-slot,
+  .atlas-top.records[data-depth="3"] .atlas-brief > .atlas-pic-slot {
     grid-row: 1 / 4;
   }
-  .atlas-top.records[data-depth="3"] .atlas-card > .atlas-pic-slot + div > :nth-child(5) {
+  .atlas-top.records[data-depth="3"] .atlas-card > .atlas-pic-slot + div > :nth-child(5),
+  .atlas-top.records[data-depth="3"] .atlas-brief > .atlas-pic-slot + div > :nth-child(5) {
     grid-column: 1 / -1;
     grid-row: 6;
   }
