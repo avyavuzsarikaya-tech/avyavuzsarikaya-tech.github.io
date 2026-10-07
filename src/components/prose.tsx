@@ -12,7 +12,7 @@ export function Prose({
   return (
     <div className="flex flex-col gap-6">
       {paragraphs(body).map((para, index) => (
-        <p key={index} className="reading-para">
+        <p key={index} className={index === 0 ? "reading-para reading-first" : "reading-para"}>
           <Cited text={para} sourceNums={sourceNums} sourceWord={sourceWord} />
         </p>
       ))}

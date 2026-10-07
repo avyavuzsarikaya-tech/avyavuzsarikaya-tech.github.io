@@ -2,7 +2,7 @@ import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ReadTime } from "@/components/read-time";
 import { SearchMark } from "@/components/search-mark";
-import { FrameTools, Shell } from "@/components/shell";
+import { Shell } from "@/components/shell";
 import { useCopy } from "@/lib/i18n";
 import { readLink } from "@/lib/lang-path";
 import { loadSearchBodies, searchCards, searchCopy } from "@/lib/search";
@@ -92,9 +92,6 @@ export function SearchPage() {
       <main>
         <div className="flex items-start justify-between gap-4 px-5 py-3.5 md:px-8 md:py-5">
           <h1 className="min-w-0 text-2xl leading-tight md:text-3xl">{words.title}</h1>
-          <div className="flex h-[1.25em] shrink-0 items-center text-2xl md:text-3xl">
-            <FrameTools />
-          </div>
         </div>
 
         <div className="border-t border-rule px-5 pt-7 pb-6 md:px-8 md:pt-10 md:pb-8">

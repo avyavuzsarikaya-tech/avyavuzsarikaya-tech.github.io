@@ -149,15 +149,13 @@ body {
   }
 }
 
-/* Standfirst under a reading title. Roman, not italic; a short rule keeps it
-   with the headline and off the picture. */
+/* Standfirst under a reading title: roman, in a softer ink, straight under the headline. */
 .reading-dek {
   position: relative;
   max-width: 38rem;
   margin-top: 0.15rem;
-  padding-top: 0.85rem;
   font-family: "Source Serif 4", Georgia, serif;
-  font-style: italic;
+  font-style: normal;
   font-weight: 400;
   font-optical-sizing: none;
   font-variation-settings:
@@ -168,14 +166,16 @@ body {
   letter-spacing: -0.011em;
   color: #2c2c2c;
 }
-.reading-dek::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  inset-inline-start: 0;
-  width: 2.25rem;
-  height: 1px;
-  background: var(--color-pine);
+/* The first letter of a reading drops three lines, in the headline face. Arabic letters
+   join, so Arabic keeps its first word whole. */
+.reading-first:not(:lang(ar))::first-letter {
+  float: left;
+  margin: 0.08em 0.1em 0 0;
+  font-family: "Playfair Display", "Times New Roman", serif;
+  font-size: 3.55em;
+  font-weight: 700;
+  line-height: 0.82;
+  color: var(--color-ink);
 }
 :lang(ar) .reading-dek {
   font-family: "Noto Naskh Arabic", Georgia, serif;

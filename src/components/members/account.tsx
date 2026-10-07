@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
-import { FrameTools, Shell, fieldClass } from "@/components/shell";
+import { Shell, fieldClass } from "@/components/shell";
 import { MEMBERS, membersOn } from "@/lib/members/config";
 import { errorText, membersCopy } from "@/lib/members/copy";
 import { safeBack } from "@/lib/members/rules";
@@ -32,7 +32,6 @@ export function AccountPage() {
         <div className="mx-auto flex max-w-xl flex-col gap-8">
           <div className="flex items-center justify-between gap-4">
             <h1 className="text-3xl md:text-4xl">{words.account}</h1>
-            <FrameTools />
           </div>
           <Account lang={lang} />
         </div>

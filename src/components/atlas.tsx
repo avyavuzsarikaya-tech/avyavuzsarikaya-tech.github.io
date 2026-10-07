@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ReadTime } from "@/components/read-time";
-import { FrameTools, Shell } from "@/components/shell";
+import { Shell } from "@/components/shell";
 import { useFrameCopy } from "@/lib/frame-copy";
 import { imageCaption } from "@/lib/editorial";
 import { langMeta, useCopy } from "@/lib/i18n";
@@ -36,31 +36,6 @@ function Meta({ story, lang, section }: { story: Story; lang: Lang; section: The
   );
 }
 
-/**
- * Today's date under the home sentence, in the reader's language, as a printed paper
- * carries it under its name. The pages are built ahead of time, so the date is filled in
- * by the reader's own browser; the line keeps its height meanwhile so nothing moves.
- */
-function Dateline({ lang }: { lang: Lang }) {
-  const [today, setToday] = useState("");
-  useEffect(() => {
-    const locale = lang === "ar" ? "ar-u-nu-latn" : langMeta[lang].html;
-    setToday(
-      new Intl.DateTimeFormat(locale, {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      }).format(new Date()),
-    );
-  }, [lang]);
-  return (
-    <p className="mt-1 min-h-[1.5em] text-[10px] uppercase leading-[1.5] tracking-widest text-muted md:mt-1.5 md:text-[11px]">
-      {today}
-    </p>
-  );
-}
-
 export function Atlas({ section }: { section: Theme | "all" }) {
   const lang = useLang();
   const stories = CARDS.filter((story) => story.locales[lang].written);
@@ -85,36 +60,28 @@ export function Atlas({ section }: { section: Theme | "all" }) {
 
   return (
     <main>
-      <div className="flex items-start justify-between gap-4 px-5 py-3.5 md:px-8 md:py-5">
-        {section === "all" ? (
-          <>
-            <div className="min-w-0">
-              <h1 className="home-sentence text-[1.15rem] leading-[1.3] min-[380px]:text-[1.45rem] md:text-[2.05rem]">
-                <span className="block md:inline">{copy.heroLead}</span>{" "}
-                <span className="block md:inline">{copy.hero}</span>
-              </h1>
-              <Dateline lang={lang} />
-            </div>
-            <div className="flex h-[1.3em] shrink-0 items-center text-[1.15rem] min-[380px]:text-[1.45rem] md:text-[2.05rem]">
-              <FrameTools />
-            </div>
-          </>
-        ) : (
-          <>
-            <h1 className="min-w-0 text-2xl leading-tight md:text-3xl">{copy.themes[section]}</h1>
-            <div className="flex h-[1.25em] shrink-0 items-center text-2xl md:text-3xl">
-              <FrameTools />
-            </div>
-          </>
-        )}
-      </div>
+      {/* The motto now sits under the name in the header; the front page names itself
+          for screen readers only. A section page opens with its name, large. */}
+      {home ? (
+        <h1 className="sr-only">
+          ORBIS — {copy.heroLead} {copy.hero}
+        </h1>
+      ) : (
+        <div className="px-5 pt-6 pb-4 md:px-8 md:pt-8 md:pb-6">
+          <h1 className="paper-title font-bold text-[2.4rem] leading-[1.05] md:text-[3rem]">
+            {copy.themes[section]}
+          </h1>
+        </div>
+      )}
 
-      <div className="border-t border-rule">
+      <div className={home ? "" : "md:border-t md:border-rule"}>
         {latest ? (
           home ? (
             <HomeGrid stories={sorted} lang={lang} />
           ) : (
-            <div className="self-start">
+            <>
+            <SectionList stories={sorted} lang={lang} />
+            <div className="hidden self-start md:block">
               <Link
                 {...readLink(lang, latest.id)}
                 className={`grid grid-cols-1 gap-6 border-b border-line px-5 py-7 md:px-8 md:py-10 ${
@@ -147,12 +114,96 @@ export function Atlas({ section }: { section: Theme | "all" }) {
                 </div>
               ))}
             </div>
+            </>
           )
         ) : (
           <p className="px-5 py-10 text-muted md:px-8">{frame.emptySection}</p>
         )}
       </div>
     </main>
+  );
+}
+
+type SectionTab = "latest" | "deep" | "read";
+
+/**
+ * A section on a phone: three tabs over one list. "Latest" is newest first, "In depth" the
+ * longest readings first, "Most read" the count kept since membership was switched on (the
+ * tab appears only once there is a count). Each row: a small picture on the start side,
+ * the title, its one-sentence summary and the date.
+ */
+function SectionList({ stories, lang }: { stories: Story[]; lang: Lang }) {
+  const words = HOME_WORDS[lang];
+  const [tab, setTab] = useState<SectionTab>("latest");
+  const ranked = useMostRead(50);
+  const ids = new Set(stories.map((story) => story.id));
+  const byId = new Map(stories.map((story) => [story.id, story]));
+  const mostRead = (ranked ?? [])
+    .filter((id) => ids.has(id))
+    .map((id) => byId.get(id))
+    .filter((story): story is Story => Boolean(story));
+  const deep = [...stories].sort(
+    (a, b) => (b.locales[lang].minutes ?? 0) - (a.locales[lang].minutes ?? 0),
+  );
+  const tabs: { id: SectionTab; label: string; list: Story[] }[] = [
+    { id: "latest", label: words.latest, list: stories },
+    { id: "deep", label: words.inDepth, list: deep },
+    ...(mostRead.length ? [{ id: "read" as const, label: words.mostRead, list: mostRead }] : []),
+  ];
+  const current = tabs.find((t) => t.id === tab) ?? tabs[0];
+  const caps = lang === "ar" ? "text-[13px]" : "text-[11px] uppercase tracking-[0.1em]";
+  return (
+    <div className="px-5 md:hidden">
+      <div role="tablist" className="flex gap-6 border-b border-line">
+        {tabs.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            role="tab"
+            aria-selected={t.id === current.id}
+            onClick={() => setTab(t.id)}
+            className={`-mb-px inline-flex min-h-10 items-center border-b-2 ${caps} ${
+              t.id === current.id ? "border-pine text-ink" : "border-transparent text-muted"
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+      <ol role="tabpanel">
+        {current.list.map((story) => (
+          <li key={story.id}>
+            <Link
+              {...readLink(lang, story.id)}
+              className="atlas-own group flex items-start gap-4 border-b border-line py-4"
+            >
+              {story.image ? (
+                <img
+                  src={story.image.src}
+                  alt={imageCaption(story.image, lang)}
+                  width={240}
+                  height={180}
+                  loading="lazy"
+                  decoding="async"
+                  className="block aspect-[4/3] w-[7.25rem] shrink-0 object-cover"
+                />
+              ) : null}
+              <div className="min-w-0 flex-1">
+                <h2 className="paper-title font-bold text-[1.08rem] leading-[1.18] text-ink decoration-1 underline-offset-[0.14em] group-hover:underline">
+                  {storyTitle(story, lang)}
+                </h2>
+                {cellSummary(story, lang) ? (
+                  <p className="font-body line-clamp-3 pt-1 text-pretty text-[0.9rem] leading-[1.32] text-ink/85">
+                    {cellSummary(story, lang)}
+                  </p>
+                ) : null}
+                <p className="pt-1.5 text-xs text-muted">{formatDate(story.date, lang)}</p>
+              </div>
+            </Link>
+          </li>
+        ))}
+      </ol>
+    </div>
   );
 }
 
@@ -200,10 +251,10 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
   const arrow = dir === "rtl" ? "←" : "→";
   return (
     <div dir={dir}>
-      <div className="md:px-8">
+      <div className="px-5 md:px-8">
         <Link
           {...readLink(lang, lead.id)}
-          className={`atlas-own group grid grid-cols-1 pb-5 md:gap-[clamp(1.5rem,2.6vw,2.4rem)] md:py-6 ${
+          className={`atlas-own group grid grid-cols-1 pt-4 pb-5 md:gap-[clamp(1.5rem,2.6vw,2.4rem)] md:py-6 ${
             lead.image ? "md:grid-cols-[minmax(0,0.92fr)_minmax(0,1.65fr)]" : ""
           }`}
         >
@@ -217,7 +268,7 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
               />
             </div>
           ) : null}
-          <div className="flex min-w-0 flex-col justify-center px-5 pt-4 md:order-1 md:px-0 md:py-6">
+          <div className="flex min-w-0 flex-col justify-center pt-4 md:order-1 md:py-6">
             <Kicker story={lead} lang={lang} />
             <h2 className="paper-title atlas-lead-title font-extrabold mt-2.5 text-ink decoration-2 underline-offset-[0.12em] group-hover:underline md:mt-4">
               {storyTitle(lead, lang)}

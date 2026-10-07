@@ -12,10 +12,10 @@ import {
   useSignedCopy,
 } from "@/components/reading-extras";
 import { LockNote, StoryVideos, useMemberText } from "@/components/members/locked";
-import { FrameTools, Shell } from "@/components/shell";
+import { Shell } from "@/components/shell";
 import { byline, editorialCopy, imageCaption } from "@/lib/editorial";
 import { langMeta, useCopy } from "@/lib/i18n";
-import { homeLink, readLink, rememberLang } from "@/lib/lang-path";
+import { homeLink, readLink, rememberLang, sectionLink } from "@/lib/lang-path";
 import { formatDate, hasCopy } from "@/lib/text";
 import { countRead } from "@/lib/reads";
 import { LANGS, type Lang, type Story } from "@/lib/types";
@@ -74,6 +74,7 @@ function TypeSize({
   step,
   onDown,
   onUp,
+  onReset,
   label,
   downLabel,
   upLabel,
@@ -81,32 +82,45 @@ function TypeSize({
   step: number;
   onDown: () => void;
   onUp: () => void;
+  onReset: () => void;
   label: string;
   downLabel: string;
   upLabel: string;
 }) {
   const atMin = step <= 0;
   const atMax = step >= TYPE_STEPS.length - 1;
+  const button = "inline-flex h-8 w-8 items-center justify-center text-ink disabled:text-muted";
   return (
-    <div className="inline-flex shrink-0 items-center gap-1">
+    <div
+      dir="ltr"
+      className="inline-flex shrink-0 items-center rounded-full border border-line px-1"
+    >
       <span className="sr-only">{label}</span>
       <button
         type="button"
         onClick={onDown}
         disabled={atMin}
         aria-label={downLabel}
-        className="inline-flex size-8 items-center justify-center text-sm text-ink disabled:text-muted"
+        className={`${button} text-[12px]`}
       >
-        <span dir="ltr">A−</span>
+        A−
+      </button>
+      <button
+        type="button"
+        onClick={onReset}
+        aria-label={label}
+        className={`${button} text-[14px]`}
+      >
+        A
       </button>
       <button
         type="button"
         onClick={onUp}
         disabled={atMax}
         aria-label={upLabel}
-        className="inline-flex size-8 items-center justify-center text-sm text-ink disabled:text-muted"
+        className={`${button} text-[16px]`}
       >
-        <span dir="ltr">A+</span>
+        A+
       </button>
     </div>
   );
@@ -168,27 +182,41 @@ function Reading({ story }: { story: Story | null }) {
   const others = LANGS.filter((code) => hasCopy(story, code));
 
   return (
-    <main className="px-5 py-10 md:px-12 md:py-14">
+    <main className="px-5 pt-5 pb-10 md:px-12 md:py-14">
       <div ref={page} className="mx-auto flex max-w-[65rem] flex-col gap-7 md:gap-8">
         {/* On paper (print or PDF) the band is left out; the name and the address head the page. */}
         <p className="print-only text-sm" dir="ltr">
           <span className="masthead-name text-2xl">ORBIS</span>
           <span className="ms-3 text-muted">{readingUrl(lang, story.id)}</span>
         </p>
-        <div className="no-print reading-column flex w-full items-center justify-between gap-4 text-sm">
-          <Link {...homeLink(lang)} className="inline-flex min-h-11 items-center text-pine">
-            {copy.back}
+        {/* Where the reading sits: home, its section, its title. */}
+        <nav
+          aria-label={copy.sections}
+          className="no-print reading-column -mb-3 flex w-full min-w-0 items-center gap-2 text-xs text-muted"
+        >
+          <Link {...homeLink(lang)} className="inline-flex min-h-8 shrink-0 items-center hover:text-ink">
+            {copy.home}
           </Link>
-          <FrameTools />
-        </div>
+          <span aria-hidden="true">{langMeta[lang].dir === "rtl" ? "‹" : "›"}</span>
+          <Link
+            {...sectionLink(lang, story.theme)}
+            className="inline-flex min-h-8 shrink-0 items-center hover:text-ink"
+          >
+            {copy.themes[story.theme]}
+          </Link>
+          <span aria-hidden="true">{langMeta[lang].dir === "rtl" ? "‹" : "›"}</span>
+          <span className="min-w-0 truncate">{locale.title || story.locales.en.title}</span>
+        </nav>
 
         <ReadingProgress start={readStart} end={readEnd} />
         <header ref={readStart} className="reading-column flex w-full flex-col gap-4">
           <p className="text-xs uppercase tracking-widest text-pine">{copy.themes[story.theme]}</p>
-          <h1 className="text-4xl md:text-5xl">{locale.title || story.locales.en.title}</h1>
+          <h1 className="paper-title font-bold text-[2.25rem] leading-[1.08] md:text-5xl md:leading-[1.05]">
+            {locale.title || story.locales.en.title}
+          </h1>
           {locale.dek ? <p className="reading-dek">{locale.dek}</p> : null}
           <div className="flex flex-col items-start gap-0.5 pt-1">
-            {by ? <p className="text-sm text-muted">{by}</p> : null}
+            {by ? <p className="text-sm font-bold text-ink">{by}</p> : null}
             <p className="text-sm text-muted">
               {[locale.region, formatDate(story.date, lang)].filter(Boolean).join(" · ")}
             </p>
@@ -198,9 +226,10 @@ function Reading({ story }: { story: Story | null }) {
               </p>
             ) : null}
           </div>
-          <div className="reading-tools no-print flex flex-wrap items-center gap-x-6 gap-y-1 py-2">
+          <div className="reading-tools no-print flex flex-wrap items-center gap-x-3 gap-y-2 py-2.5">
+            <ShareButton lang={lang} title={locale.title || story.locales.en.title} />
             {locale.audio ? (
-              <div className="min-w-[15rem] flex-1">
+              <div className="min-w-[12rem] flex-1">
                 <ReadingPlayer
                   clip={locale.audio}
                   listen={copy.listen}
@@ -217,6 +246,7 @@ function Reading({ story }: { story: Story | null }) {
                 step={typeStep}
                 onDown={() => setStep(typeStep - 1)}
                 onUp={() => setStep(typeStep + 1)}
+                onReset={() => setStep(1)}
                 label={copy.textSize}
                 downLabel={copy.typeDown}
                 upLabel={copy.typeUp}
@@ -311,6 +341,57 @@ function Reading({ story }: { story: Story | null }) {
         </div>
       </div>
     </main>
+  );
+}
+
+const SHARE: Record<Lang, { share: string; copied: string }> = {
+  tr: { share: "Paylaş", copied: "Bağlantı kopyalandı" },
+  en: { share: "Share", copied: "Link copied" },
+  ar: { share: "مشاركة", copied: "نُسخ الرابط" },
+  fr: { share: "Partager", copied: "Lien copié" },
+  es: { share: "Compartir", copied: "Enlace copiado" },
+};
+
+/** The phone's own share sheet where there is one; elsewhere the address is copied. */
+function ShareButton({ lang, title }: { lang: Lang; title: string }) {
+  const words = SHARE[lang];
+  const [copied, setCopied] = useState(false);
+  async function share() {
+    const url = window.location.href.split("#")[0];
+    try {
+      if (navigator.share) {
+        await navigator.share({ title, url });
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch {
+      /* the reader closed the sheet */
+    }
+  }
+  return (
+    <button
+      type="button"
+      onClick={() => void share()}
+      aria-label={copied ? words.copied : words.share}
+      title={copied ? words.copied : words.share}
+      className="inline-flex size-8 shrink-0 items-center justify-center rounded-full border border-line text-ink"
+    >
+      <svg
+        viewBox="0 0 20 20"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        aria-hidden="true"
+        className="size-[14px]"
+      >
+        <circle cx="15" cy="4.5" r="2.2" />
+        <circle cx="5" cy="10" r="2.2" />
+        <circle cx="15" cy="15.5" r="2.2" />
+        <path d="m7 9 6-3.4M7 11l6 3.4" />
+      </svg>
+    </button>
   );
 }
 
