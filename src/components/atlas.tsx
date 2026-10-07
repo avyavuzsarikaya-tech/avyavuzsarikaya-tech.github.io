@@ -331,9 +331,20 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
                     <h3 className="paper-title font-bold mt-1.5 text-[1.2rem] leading-[1.12] text-ink decoration-1 underline-offset-[0.14em] group-hover:underline md:text-[1.1rem] md:leading-[1.15]">
                       {storyTitle(story, lang)}
                     </h3>
-                    {/* Only the date opens here at full depth: a summary in this narrow
-                        column would make it far taller than the two cards beside it. */}
+                    {/* These follow the depth control like every other reading. In the narrow
+                        column of a wide screen the summary is held to three lines and the
+                        opening lines stay out, so it does not outgrow the two cards beside it. */}
+                    <Fold layer={2}>
+                      <p className="atlas-dek font-body mt-2 text-pretty text-base leading-[1.32] text-ink md:line-clamp-3 md:text-[0.92rem]">
+                        {cellSummary(story, lang)}
+                      </p>
+                    </Fold>
                     <Fold layer={3}>
+                      {openingLines(story, lang, cellSummary(story, lang)) ? (
+                        <p className="font-body line-clamp-5 pt-1.5 text-pretty text-[0.92rem] leading-[1.4] text-muted md:hidden">
+                          {openingLines(story, lang, cellSummary(story, lang))}
+                        </p>
+                      ) : null}
                       <p className="pt-1 text-xs text-muted">{formatDate(story.date, lang)}</p>
                     </Fold>
                     <span className="atlas-more mt-2 text-[0.75rem]">
