@@ -331,10 +331,11 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
                     <h3 className="paper-title font-bold mt-1.5 text-[1.2rem] leading-[1.12] text-ink decoration-1 underline-offset-[0.14em] group-hover:underline md:text-[1.1rem] md:leading-[1.15]">
                       {storyTitle(story, lang)}
                     </h3>
-                    {/* These follow the depth control like every other reading. In the narrow
-                        column of a wide screen the summary is held to three lines and the
-                        opening lines stay out, so it does not outgrow the two cards beside it. */}
-                    <Fold layer={2}>
+                    {/* These follow the depth control like every other reading. On a wide screen
+                        the summary shows only where the column is wide enough (see .atlas-brief-dek
+                        in styles.css), held to three lines, and the opening lines stay out, so the
+                        column does not outgrow the two cards beside it and leave a gap under them. */}
+                    <Fold layer={2} className="atlas-brief-dek">
                       <p className="atlas-dek font-body mt-2 text-pretty text-base leading-[1.32] text-ink md:line-clamp-3 md:text-[0.92rem]">
                         {cellSummary(story, lang)}
                       </p>
@@ -364,9 +365,17 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
 }
 
 /** A part of a card that opens from the given depth on. */
-function Fold({ layer, children }: { layer: 2 | 3; children: ReactNode }) {
+function Fold({
+  layer,
+  className = "",
+  children,
+}: {
+  layer: 2 | 3;
+  className?: string;
+  children: ReactNode;
+}) {
   return (
-    <div className="record-layer" data-layer={layer}>
+    <div className={`record-layer ${className}`.trim()} data-layer={layer}>
       <div>{children}</div>
     </div>
   );

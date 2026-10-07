@@ -1060,6 +1060,15 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     aspect-ratio: 4 / 3;
   }
 }
+/* The summaries in the column of three short readings make that column far taller than the
+   two cards beside it while the columns are narrow (a laptop, or a phone showing the desktop
+   site), which leaves an empty space under the cards. There they stay out; from 1280px on the
+   column is wide enough to carry them. On a phone, where everything is one column, they show. */
+@media (min-width: 768px) and (max-width: 1279.98px) {
+  .atlas-top .atlas-brief-dek {
+    display: none;
+  }
+}
 /* The top cards follow the depth control too: at depth 1 their picture column closes
    and the title takes the whole width. */
 .atlas-top.records .atlas-card,
