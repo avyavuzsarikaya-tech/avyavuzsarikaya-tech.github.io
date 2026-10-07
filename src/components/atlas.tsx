@@ -485,9 +485,11 @@ function shortName(label: string): string {
  * numbered, each opening the document itself. A reading without filed sources shows nothing.
  */
 /**
- * The chain of documents a reading rests on. On the front page it sits under the lead and
- * opens on demand; at the foot of a reading (`page`) it is always open and takes the place
- * of a plain bibliography, each document keeping its number and its #source-N anchor.
+ * The chain of documents a reading rests on. On the front page it sits under the lead; at
+ * the foot of a reading (`page`) it takes the place of a plain bibliography, each document
+ * keeping its number and its #source-N anchor. In both places it is closed at first and opens
+ * on demand. On a reading it also opens by itself when a number in the text is tapped
+ * (the "orbis:open-chain" event from prose.tsx) or the address ends in #source-N.
  */
 export function DocumentChain({
   story,
@@ -498,8 +500,21 @@ export function DocumentChain({
   lang: Lang;
   page?: boolean;
 }) {
-  const [toggled, setOpen] = useState(false);
-  const open = page || toggled;
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (!page) return;
+    const show = () => setOpen(true);
+    if (/^#source-\d+$/.test(window.location.hash)) show();
+    const onHash = () => {
+      if (/^#source-\d+$/.test(window.location.hash)) show();
+    };
+    window.addEventListener("orbis:open-chain", show);
+    window.addEventListener("hashchange", onHash);
+    return () => {
+      window.removeEventListener("orbis:open-chain", show);
+      window.removeEventListener("hashchange", onHash);
+    };
+  }, [page]);
   const sources = [...(story.sources ?? [])].sort((a, b) => a.n - b.n);
   if (sources.length === 0) return null;
   const words = HOME_WORDS[lang];
@@ -524,7 +539,6 @@ export function DocumentChain({
           aria-expanded={open}
           aria-controls={panelId}
           onClick={() => setOpen((was) => !was)}
-          disabled={page}
           className="doc-chain-toggle"
         >
           <span className="doc-chain-head">

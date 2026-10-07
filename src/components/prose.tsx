@@ -49,10 +49,17 @@ function Cited({
             const el = document.getElementById(`source-${n}`);
             if (!el) return;
             document.querySelectorAll(".source-row.is-lit").forEach((node) => node.classList.remove("is-lit"));
-            // Read the layout once so a second tap on the same number restarts the fade.
-            void el.offsetWidth;
-            el.classList.add("is-lit");
-            el.scrollIntoView({ behavior: "smooth", block: "center" });
+            // The chain at the foot starts closed: open it first, then go once it has unfolded.
+            const closed = el.closest('.chain-panel[data-open="false"]') !== null;
+            if (closed) window.dispatchEvent(new Event("orbis:open-chain"));
+            const go = () => {
+              // Read the layout once so a second tap on the same number restarts the fade.
+              void el.offsetWidth;
+              el.classList.add("is-lit");
+              el.scrollIntoView({ behavior: "smooth", block: "center" });
+            };
+            if (closed) window.setTimeout(go, 240);
+            else go();
           }}
         >
           <span aria-hidden="true">{n}</span>

@@ -439,16 +439,11 @@ body {
 .doc-chain-url {
   display: none;
 }
-/* At the foot of a reading the chain is the bibliography: always open, no toggle. The list
-   runs on white to the box's edges, under the grey head. */
+/* At the foot of a reading the chain is the bibliography. Like the one on the front page it
+   is closed at first and opens on a tap; opened, the list runs on white to the box's edges,
+   under the grey head. The rule below the reading closes the box, so it has none of its own. */
 .doc-chain[data-page] {
   border-bottom: 0;
-}
-.doc-chain[data-page] .doc-chain-toggle {
-  cursor: default;
-}
-.doc-chain[data-page] .doc-chain-open {
-  display: none;
 }
 .doc-chain[data-page] .chain-panel {
   margin-inline: -1rem;
@@ -830,8 +825,16 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
   }
   .doc-chain-host,
   .doc-chain-preview,
-  .doc-chain-go {
+  .doc-chain-go,
+  .doc-chain-open {
     display: none;
+  }
+  /* On paper the sources are always printed in full, open or closed on screen. */
+  .chain-panel {
+    grid-template-rows: 1fr !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transition: none !important;
   }
   .source-row,
   .reading-cite,
