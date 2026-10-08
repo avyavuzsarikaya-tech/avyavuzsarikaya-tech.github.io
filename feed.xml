@@ -2,43 +2,43 @@
 <rss version="2.0">
   <channel>
     <title>Orbis</title>
-    <link>https://avyavuzsarikaya-tech.github.io/</link>
+    <link>https://orbisreadingatlas.com/</link>
     <description>Sourced readings from Orbis.</description>
     <language>en</language>
     <item>
       <title>The carbon books, reconciled</title>
-      <link>https://avyavuzsarikaya-tech.github.io/read/carbon-books</link>
+      <link>https://orbisreadingatlas.com/read/carbon-books</link>
       <description>National inventories and satellite measurements are being read against each other – not as a headline, but as an accounting problem.</description>
       <pubDate>Thu, 12 Mar 2026 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/read/carbon-books</guid>
+      <guid isPermaLink="true">https://orbisreadingatlas.com/read/carbon-books</guid>
     </item>
     <item>
       <title>Which languages keep the record</title>
-      <link>https://avyavuzsarikaya-tech.github.io/read/languages-of-record</link>
+      <link>https://orbisreadingatlas.com/read/languages-of-record</link>
       <description>A public figure can be careful and still stop at the border of the language it was released in.</description>
       <pubDate>Sun, 08 Feb 2026 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/read/languages-of-record</guid>
+      <guid isPermaLink="true">https://orbisreadingatlas.com/read/languages-of-record</guid>
     </item>
     <item>
       <title>After ten million</title>
-      <link>https://avyavuzsarikaya-tech.github.io/read/after-ten-million</link>
+      <link>https://orbisreadingatlas.com/read/after-ten-million</link>
       <description>A megacity used to be an exception. The public record now has enough of them to compare the planning, not the skyline.</description>
       <pubDate>Tue, 20 Jan 2026 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/read/after-ten-million</guid>
+      <guid isPermaLink="true">https://orbisreadingatlas.com/read/after-ten-million</guid>
     </item>
     <item>
       <title>How grain actually moves</title>
-      <link>https://avyavuzsarikaya-tech.github.io/read/grain-moves</link>
+      <link>https://orbisreadingatlas.com/read/grain-moves</link>
       <description>Wheat, maize, and rice cross borders as balance sheets before they cross them as ships.</description>
       <pubDate>Tue, 04 Nov 2025 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/read/grain-moves</guid>
+      <guid isPermaLink="true">https://orbisreadingatlas.com/read/grain-moves</guid>
     </item>
     <item>
       <title>The register of trials</title>
-      <link>https://avyavuzsarikaya-tech.github.io/read/register-of-trials</link>
+      <link>https://orbisreadingatlas.com/read/register-of-trials</link>
       <description>A study that never enters a public register is harder to find, and harder to count.</description>
       <pubDate>Tue, 19 Aug 2025 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/read/register-of-trials</guid>
+      <guid isPermaLink="true">https://orbisreadingatlas.com/read/register-of-trials</guid>
     </item>
   </channel>
 </rss>

@@ -2,43 +2,43 @@
 <rss version="2.0">
   <channel>
     <title>Orbis (Español)</title>
-    <link>https://avyavuzsarikaya-tech.github.io/es/</link>
+    <link>https://orbisreadingatlas.com/es/</link>
     <description>Lecturas con fuentes de Orbis.</description>
     <language>es</language>
     <item>
       <title>Los libros del carbono, conciliados</title>
-      <link>https://avyavuzsarikaya-tech.github.io/es/read/carbon-books</link>
+      <link>https://orbisreadingatlas.com/es/read/carbon-books</link>
       <description>Los inventarios nacionales y las mediciones por satélite se leen uno contra el otro: no como un titular, sino como un problema de contabilidad.</description>
       <pubDate>Thu, 12 Mar 2026 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/es/read/carbon-books</guid>
+      <guid isPermaLink="true">https://orbisreadingatlas.com/es/read/carbon-books</guid>
     </item>
     <item>
       <title>Qué lenguas guardan el registro</title>
-      <link>https://avyavuzsarikaya-tech.github.io/es/read/languages-of-record</link>
+      <link>https://orbisreadingatlas.com/es/read/languages-of-record</link>
       <description>Una cifra pública puede ser cuidadosa y, aun así, detenerse en la frontera de la lengua en que se publicó.</description>
       <pubDate>Sun, 08 Feb 2026 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/es/read/languages-of-record</guid>
+      <guid isPermaLink="true">https://orbisreadingatlas.com/es/read/languages-of-record</guid>
     </item>
     <item>
       <title>Después de diez millones</title>
-      <link>https://avyavuzsarikaya-tech.github.io/es/read/after-ten-million</link>
+      <link>https://orbisreadingatlas.com/es/read/after-ten-million</link>
       <description>Una megaciudad era una excepción. El registro público ya tiene bastantes para comparar la planificación, no el perfil de las torres.</description>
       <pubDate>Tue, 20 Jan 2026 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/es/read/after-ten-million</guid>
+      <guid isPermaLink="true">https://orbisreadingatlas.com/es/read/after-ten-million</guid>
     </item>
     <item>
       <title>Cómo se mueve de verdad el grano</title>
-      <link>https://avyavuzsarikaya-tech.github.io/es/read/grain-moves</link>
+      <link>https://orbisreadingatlas.com/es/read/grain-moves</link>
       <description>El trigo, el maíz y el arroz cruzan una frontera como balance antes de cruzarla como barco.</description>
       <pubDate>Tue, 04 Nov 2025 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/es/read/grain-moves</guid>
+      <guid isPermaLink="true">https://orbisreadingatlas.com/es/read/grain-moves</guid>
     </item>
     <item>
       <title>El registro de los ensayos</title>
-      <link>https://avyavuzsarikaya-tech.github.io/es/read/register-of-trials</link>
+      <link>https://orbisreadingatlas.com/es/read/register-of-trials</link>
       <description>Un estudio que no entra en un registro público es más difícil de encontrar y más difícil de contar.</description>
       <pubDate>Tue, 19 Aug 2025 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/es/read/register-of-trials</guid>
+      <guid isPermaLink="true">https://orbisreadingatlas.com/es/read/register-of-trials</guid>
     </item>
   </channel>
 </rss>

@@ -2,43 +2,43 @@
 <rss version="2.0">
   <channel>
     <title>Orbis (العربية)</title>
-    <link>https://avyavuzsarikaya-tech.github.io/ar/</link>
+    <link>https://orbisreadingatlas.com/ar/</link>
     <description>قراءات موثّقة من Orbis.</description>
     <language>ar</language>
     <item>
       <title>دفاتر الكربون، متقابلة</title>
-      <link>https://avyavuzsarikaya-tech.github.io/ar/read/carbon-books</link>
+      <link>https://orbisreadingatlas.com/ar/read/carbon-books</link>
       <description>تُقرأ قوائم الجرد الوطنية وقياسات الأقمار معًا لا كعنوان عاجل، بل كمسألة محاسبة.</description>
       <pubDate>Thu, 12 Mar 2026 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/ar/read/carbon-books</guid>
+      <guid isPermaLink="true">https://orbisreadingatlas.com/ar/read/carbon-books</guid>
     </item>
     <item>
       <title>أي اللغات تمسك بالسجل</title>
-      <link>https://avyavuzsarikaya-tech.github.io/ar/read/languages-of-record</link>
+      <link>https://orbisreadingatlas.com/ar/read/languages-of-record</link>
       <description>قد يكون رقم عام دقيقًا، ثم يقف عند حدود اللغة التي نُشر بها.</description>
       <pubDate>Sun, 08 Feb 2026 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/ar/read/languages-of-record</guid>
+      <guid isPermaLink="true">https://orbisreadingatlas.com/ar/read/languages-of-record</guid>
     </item>
     <item>
       <title>بعد عشرة ملايين</title>
-      <link>https://avyavuzsarikaya-tech.github.io/ar/read/after-ten-million</link>
+      <link>https://orbisreadingatlas.com/ar/read/after-ten-million</link>
       <description>كانت المدينة العملاقة استثناءً. في السجل العام اليوم ما يكفي منها لمقارنة التخطيط لا خط الأفق.</description>
       <pubDate>Tue, 20 Jan 2026 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/ar/read/after-ten-million</guid>
+      <guid isPermaLink="true">https://orbisreadingatlas.com/ar/read/after-ten-million</guid>
     </item>
     <item>
       <title>كيف تتحرك الحبوب فعلًا</title>
-      <link>https://avyavuzsarikaya-tech.github.io/ar/read/grain-moves</link>
+      <link>https://orbisreadingatlas.com/ar/read/grain-moves</link>
       <description>القمح والذرة والأرز يعبرون الحدود كميزانية قبل أن يعبروها كسفينة.</description>
       <pubDate>Tue, 04 Nov 2025 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/ar/read/grain-moves</guid>
+      <guid isPermaLink="true">https://orbisreadingatlas.com/ar/read/grain-moves</guid>
     </item>
     <item>
       <title>سجل التجارب</title>
-      <link>https://avyavuzsarikaya-tech.github.io/ar/read/register-of-trials</link>
+      <link>https://orbisreadingatlas.com/ar/read/register-of-trials</link>
       <description>الدراسة التي لا تدخل سجلًا عامًا يصعب العثور عليها، ويصعب عدّها.</description>
       <pubDate>Tue, 19 Aug 2025 00:00:00 GMT</pubDate>
-      <guid isPermaLink="true">https://avyavuzsarikaya-tech.github.io/ar/read/register-of-trials</guid>
+      <guid isPermaLink="true">https://orbisreadingatlas.com/ar/read/register-of-trials</guid>
     </item>
   </channel>
 </rss>
