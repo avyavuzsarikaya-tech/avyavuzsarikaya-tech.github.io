@@ -44,7 +44,7 @@ const PUBLISH: Record<Lang, PublishCopy> = {
     steps: [
       "Aşağıdaki bağlantıdan GitHub'da yeni bir anahtar sayfası açın.",
       "Ad verin; süreyi en uzun seçenek ya da süresiz yapın.",
-      "Repository access: Only select repositories, ardından avyavuzsarikaya-tech.github.io deposunu seçin.",
+      "Repository access: Only select repositories, ardından editor-cell.github.io deposunu seçin.",
       "Permissions: Contents için Read and write seçin.",
       "Generate token deyip çıkan anahtarı buraya yapıştırın.",
     ],
@@ -89,7 +89,7 @@ const PUBLISH: Record<Lang, PublishCopy> = {
     steps: [
       "افتح صفحة مفتاح جديد في GitHub من الرابط أدناه.",
       "سمِّ المفتاح واختر أطول مدة أو بلا انتهاء.",
-      "Repository access: Only select repositories، ثم اختر المستودع avyavuzsarikaya-tech.github.io.",
+      "Repository access: Only select repositories، ثم اختر المستودع editor-cell.github.io.",
       "Permissions: اختر Read and write لـ Contents.",
       "اضغط Generate token والصق المفتاح هنا.",
     ],
@@ -134,7 +134,7 @@ const PUBLISH: Record<Lang, PublishCopy> = {
     steps: [
       "Open a new token page on GitHub with the link below.",
       "Give it a name; choose the longest expiry or none.",
-      "Repository access: Only select repositories, then pick avyavuzsarikaya-tech.github.io.",
+      "Repository access: Only select repositories, then pick editor-cell.github.io.",
       "Permissions: set Contents to Read and write.",
       "Press Generate token and paste the token here.",
     ],
@@ -180,7 +180,7 @@ const PUBLISH: Record<Lang, PublishCopy> = {
     steps: [
       "Ouvrez une page de nouveau jeton sur GitHub avec le lien ci-dessous.",
       "Donnez-lui un nom ; choisissez l’échéance la plus longue ou aucune.",
-      "Repository access : Only select repositories, puis choisissez avyavuzsarikaya-tech.github.io.",
+      "Repository access : Only select repositories, puis choisissez editor-cell.github.io.",
       "Permissions : Contents en Read and write.",
       "Cliquez sur Generate token et collez le jeton ici.",
     ],
@@ -226,7 +226,7 @@ const PUBLISH: Record<Lang, PublishCopy> = {
     steps: [
       "Abra una página de token nuevo en GitHub con el enlace de abajo.",
       "Póngale un nombre; elija el vencimiento más largo o ninguno.",
-      "Repository access: Only select repositories y elija avyavuzsarikaya-tech.github.io.",
+      "Repository access: Only select repositories y elija editor-cell.github.io.",
       "Permissions: Contents en Read and write.",
       "Pulse Generate token y pegue el token aquí.",
     ],

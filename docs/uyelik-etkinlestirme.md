@@ -19,8 +19,8 @@ Açmak için aşağıdaki adımlar sırayla yapılır.
 ## 3. Giriş ayarları
 
 1. Authentication → URL Configuration:
-   - Site URL: sitenin adresi (şu an `https://avyavuzsarikaya-tech.github.io`)
-   - Redirect URLs: aynı adresin sonuna `/**` eklenmiş hâli (`https://avyavuzsarikaya-tech.github.io/**`)
+   - Site URL: sitenin adresi (şu an `https://orbisreadingatlas.com`)
+   - Redirect URLs: aynı adresin sonuna `/**` eklenmiş hâli (`https://orbisreadingatlas.com/**`)
 2. Authentication → Email Templates → Magic Link: şablona 6 haneli kodu ekleyin, örneğin bağlantının altına:
    `Kodunuz: {{ .Token }}`
    Telefonda bağlantı başka bir tarayıcıda açılabildiği için kod daha garanti yoldur.

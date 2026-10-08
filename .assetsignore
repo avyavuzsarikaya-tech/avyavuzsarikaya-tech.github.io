@@ -1,0 +1,26 @@
+# Cloudflare'e yüklenmeyecek dosyalar: kaynak kod ve ayarlar.
+# Yalnız derlenmiş sayfalar, görseller, ses ve video yayına çıkar.
+.git
+.github
+.assetsignore
+.gitignore
+.prettierrc
+.node_modules.lock
+node_modules
+dist
+src
+server
+scripts
+supabase
+migrations
+docs
+public
+*.md
+package.json
+package-lock.json
+tsconfig.json
+vite.config.ts
+eslint.config.mjs
+vercel.json
+startup.sh
+wrangler.jsonc

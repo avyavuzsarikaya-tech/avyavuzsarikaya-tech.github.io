@@ -1,0 +1,18 @@
+// Cloudflare yayın ayarı: depodaki hazır sayfaları orbisreadingatlas.com'da yayınlar.
+// Cloudflare her yeni commit'te `npx wrangler deploy` çalıştırır; derleme yapmaz,
+// çünkü sayfalar "Publish site" iş akışında zaten derlenip depoya yazılıyor.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "gentle-shadow-b8e8",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": ".",
+    "not_found_handling": "404-page"
+  },
+  "workers_dev": true,
+  "preview_urls": false,
+  "routes": [
+    { "pattern": "orbisreadingatlas.com", "custom_domain": true },
+    { "pattern": "www.orbisreadingatlas.com", "custom_domain": true }
+  ]
+}

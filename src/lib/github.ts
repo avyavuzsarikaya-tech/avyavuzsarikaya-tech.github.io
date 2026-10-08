@@ -9,8 +9,8 @@
  */
 
 export const REPO = {
-  owner: "avyavuzsarikaya-tech",
-  name: "avyavuzsarikaya-tech.github.io",
+  owner: "editor-cell",
+  name: "editor-cell.github.io",
   branch: "main",
 };
 export const TOKEN_PAGE = "https://github.com/settings/personal-access-tokens/new";

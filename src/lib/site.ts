@@ -9,7 +9,7 @@ import { LANGS, type Lang, type StoryCard, type Theme } from "@/lib/types";
  * address, the language alternates and the sitemap are built from it. Change it here if
  * the site moves to its own domain (scripts/pages-shell.mjs reads the same value).
  */
-export const SITE_URL = "https://avyavuzsarikaya-tech.github.io";
+export const SITE_URL = "https://orbisreadingatlas.com";
 export const SITE_NAME = "Orbis";
 /** The 1200×630 card shown when a page without its own picture is shared. */
 export const SITE_CARD = `${SITE_URL}/og.jpg`;
