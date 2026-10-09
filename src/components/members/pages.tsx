@@ -6,7 +6,15 @@ import { useCopy } from "@/lib/i18n";
 import { accountLink, homeLink, legalLink, memberPageLink } from "@/lib/lang-path";
 import { legalCopy } from "@/lib/legal-copy";
 import { pagesCopy } from "@/lib/members/pages-copy";
-import { PAYMENT, currencyFor, isPeriod, paymentOn, price, type Period } from "@/lib/members/plans";
+import {
+  PAYMENT,
+  currencyFor,
+  isPeriod,
+  paymentOn,
+  periodsFor,
+  price,
+  type Period,
+} from "@/lib/members/plans";
 import type { Lang } from "@/lib/types";
 import { useLang } from "@/lib/use-lang";
 
@@ -58,6 +66,34 @@ function Points({ items }: { items: string[] }) {
   );
 }
 
+/** The supporting membership's prices: the first large, the others after it. */
+function PriceList({ lang }: { lang: Lang }) {
+  const words = pagesCopy(lang).membership;
+  const [first, ...rest] = periodsFor(lang);
+  if (!first) return null;
+  return (
+    <div className="flex flex-col gap-2">
+      <p className="flex flex-wrap items-baseline gap-x-2">
+        <span className="text-4xl leading-none tabular-nums">{price(first, lang)}</span>
+        <span className="text-muted">/ {words.per[first]}</span>
+      </p>
+      {rest.length ? (
+        <p className="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-muted">
+          {rest.map((period, i) => (
+            <span key={period} className="inline-flex items-baseline gap-x-2">
+              {i === 0 ? <span>{words.or}</span> : <span aria-hidden="true">·</span>}
+              <span className="text-xl leading-none text-ink tabular-nums">
+                {price(period, lang)}
+              </span>
+              <span>/ {words.per[period]}</span>
+            </span>
+          ))}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
 /** /membership: the free and the supporting membership side by side, stacked on a phone. */
 export function MembershipPage() {
   const lang = useLang();
@@ -76,13 +112,7 @@ export function MembershipPage() {
         </section>
         <section className="flex flex-col gap-5 border-t border-rule py-8 md:border-t-0 md:border-s md:ps-10">
           <h2 className={label}>{words.paid.name}</h2>
-          <p className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-            <span className="text-4xl leading-none tabular-nums">{price("monthly", lang)}</span>
-            <span className="text-muted">/ {words.perMonth}</span>
-            <span className="text-muted">{words.or}</span>
-            <span className="text-2xl leading-none tabular-nums">{price("yearly", lang)}</span>
-            <span className="text-muted">/ {words.perYear}</span>
-          </p>
+          <PriceList lang={lang} />
           <Points items={words.paid.points} />
           <Link
             {...memberPageLink(lang, "payment")}
@@ -102,17 +132,18 @@ export function MembershipPage() {
   );
 }
 
-/** The period in the address (?plan=yearly), read after the page opens. */
-function usePeriod(): [Period, (period: Period) => void] {
-  const [period, setPeriod] = useState<Period>("monthly");
+/** The period in the address (?plan=yearly), read after the page opens; else the first offered. */
+function usePeriod(lang: Lang): [Period, (period: Period) => void] {
+  const offered = periodsFor(lang);
+  const [period, setPeriod] = useState<Period>(offered[0] ?? "yearly");
   useEffect(() => {
     try {
       const plan = new URLSearchParams(window.location.search).get("plan");
-      if (isPeriod(plan)) setPeriod(plan);
+      if (isPeriod(plan) && periodsFor(lang).includes(plan)) setPeriod(plan);
     } catch {
       /* the default period stands */
     }
-  }, []);
+  }, [lang]);
   return [period, setPeriod];
 }
 
@@ -124,14 +155,14 @@ function checkoutHref(period: Period, lang: Lang): string {
   return url.toString();
 }
 
-/** /payment: choose monthly or yearly, see the total, go on to the provider's checkout. */
+/** /payment: choose a period, see the total, go on to the provider's checkout. */
 export function PaymentPage() {
   const lang = useLang();
   const all = pagesCopy(lang);
   const words = all.payment;
   const legal = legalCopy(lang);
-  const [period, setPeriod] = usePeriod();
-  const per = period === "monthly" ? all.membership.perMonth : all.membership.perYear;
+  const [period, setPeriod] = usePeriod(lang);
+  const per = all.membership.per[period];
 
   const option = (value: Period, name: string, note?: string) => (
     <label
@@ -152,10 +183,7 @@ export function PaymentPage() {
           {note ? <span className="ms-3 text-sm text-pine">{note}</span> : null}
         </span>
         <span className="tabular-nums">
-          {price(value, lang)}{" "}
-          <span className="text-muted">
-            / {value === "monthly" ? all.membership.perMonth : all.membership.perYear}
-          </span>
+          {price(value, lang)} <span className="text-muted">/ {all.membership.per[value]}</span>
         </span>
       </span>
     </label>
@@ -167,8 +195,13 @@ export function PaymentPage() {
         <div className="flex flex-col gap-8">
           <fieldset className="flex flex-col border-y border-rule">
             <legend className="sr-only">{words.period}</legend>
-            {option("monthly", words.monthly)}
-            {option("yearly", words.yearly, words.yearlyNote)}
+            {periodsFor(lang).map((value) =>
+              option(
+                value,
+                words.periods[value],
+                value === "yearly" ? words.yearlyNote[currencyFor(lang)] : undefined,
+              ),
+            )}
           </fieldset>
           <section className="flex flex-col gap-3">
             <h2 className="text-[11px] uppercase tracking-[0.14em] text-muted">{words.includes}</h2>
@@ -180,9 +213,7 @@ export function PaymentPage() {
           <h2 className="text-[11px] uppercase tracking-[0.14em] text-muted">{words.summary}</h2>
           <div className="flex flex-col gap-1">
             <p className="text-[17px]">{words.plan}</p>
-            <p className="text-sm text-muted">
-              {period === "monthly" ? words.monthly : words.yearly}
-            </p>
+            <p className="text-sm text-muted">{words.periods[period]}</p>
           </div>
           <p className="flex items-baseline justify-between gap-4 border-t border-line pt-4">
             <span>{words.total}</span>

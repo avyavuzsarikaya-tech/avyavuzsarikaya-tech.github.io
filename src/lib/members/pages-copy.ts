@@ -7,8 +7,8 @@ export type PagesCopy = {
     lead: string;
     free: { name: string; price: string; points: string[]; action: string };
     paid: { name: string; points: string[]; action: string };
-    perMonth: string;
-    perYear: string;
+    /** The unit after a price: "/ ay", "/ 3 ay", … */
+    per: Record<"monthly" | "quarterly" | "halfyear" | "yearly", string>;
     or: string;
     haveAccount: string;
     signIn: string;
@@ -17,9 +17,10 @@ export type PagesCopy = {
     title: string;
     lead: string;
     period: string;
-    monthly: string;
-    yearly: string;
-    yearlyNote: string;
+    /** The name of each period on the payment page. */
+    periods: Record<"monthly" | "quarterly" | "halfyear" | "yearly", string>;
+    /** Beside the yearly period: lira pages and dollar pages. */
+    yearlyNote: { TRY: string; USD: string };
     summary: string;
     plan: string;
     total: string;
@@ -62,8 +63,12 @@ const COPY: Record<Lang, PagesCopy> = {
         ],
         action: "Destekçi ol",
       },
-      perMonth: "ay",
-      perYear: "yıl",
+      per: {
+        monthly: "ay",
+        quarterly: "3 ay",
+        halfyear: "6 ay",
+        yearly: "yıl",
+      },
       or: "ya da",
       haveAccount: "Zaten üye misiniz?",
       signIn: "Giriş yapın",
@@ -72,9 +77,13 @@ const COPY: Record<Lang, PagesCopy> = {
       title: "Ödeme",
       lead: "Destekçi üyelik için bir dönem seçin.",
       period: "Dönem",
-      monthly: "Aylık",
-      yearly: "Yıllık",
-      yearlyNote: "İki ay ücretsiz",
+      periods: {
+        monthly: "Aylık",
+        quarterly: "3 aylık",
+        halfyear: "6 aylık",
+        yearly: "Yıllık",
+      },
+      yearlyNote: { TRY: "İki ay ücretsiz", USD: "En avantajlı" },
       summary: "Özet",
       plan: "Destekçi üyelik",
       total: "Toplam",
@@ -114,8 +123,12 @@ const COPY: Record<Lang, PagesCopy> = {
         ],
         action: "كن داعمًا",
       },
-      perMonth: "شهريًا",
-      perYear: "سنويًا",
+      per: {
+        monthly: "شهريًا",
+        quarterly: "كل 3 أشهر",
+        halfyear: "كل 6 أشهر",
+        yearly: "سنويًا",
+      },
       or: "أو",
       haveAccount: "أنت عضو بالفعل؟",
       signIn: "سجّل الدخول",
@@ -124,9 +137,13 @@ const COPY: Record<Lang, PagesCopy> = {
       title: "الدفع",
       lead: "اختر مدة عضوية الداعم.",
       period: "المدة",
-      monthly: "شهري",
-      yearly: "سنوي",
-      yearlyNote: "شهران مجانًا",
+      periods: {
+        monthly: "شهري",
+        quarterly: "كل 3 أشهر",
+        halfyear: "كل 6 أشهر",
+        yearly: "سنوي",
+      },
+      yearlyNote: { TRY: "شهران مجانًا", USD: "الأوفر" },
       summary: "الملخص",
       plan: "عضوية الداعم",
       total: "المجموع",
@@ -165,8 +182,12 @@ const COPY: Record<Lang, PagesCopy> = {
         ],
         action: "Become a supporter",
       },
-      perMonth: "month",
-      perYear: "year",
+      per: {
+        monthly: "month",
+        quarterly: "3 months",
+        halfyear: "6 months",
+        yearly: "year",
+      },
       or: "or",
       haveAccount: "Already a member?",
       signIn: "Sign in",
@@ -175,9 +196,13 @@ const COPY: Record<Lang, PagesCopy> = {
       title: "Payment",
       lead: "Choose a period for your supporting membership.",
       period: "Period",
-      monthly: "Monthly",
-      yearly: "Yearly",
-      yearlyNote: "Two months free",
+      periods: {
+        monthly: "Monthly",
+        quarterly: "Every 3 months",
+        halfyear: "Every 6 months",
+        yearly: "Yearly",
+      },
+      yearlyNote: { TRY: "Two months free", USD: "Best value" },
       summary: "Summary",
       plan: "Supporting membership",
       total: "Total",
@@ -217,8 +242,12 @@ const COPY: Record<Lang, PagesCopy> = {
         ],
         action: "Devenir bienfaiteur",
       },
-      perMonth: "mois",
-      perYear: "an",
+      per: {
+        monthly: "mois",
+        quarterly: "3 mois",
+        halfyear: "6 mois",
+        yearly: "an",
+      },
       or: "ou",
       haveAccount: "Déjà membre ?",
       signIn: "Se connecter",
@@ -227,9 +256,13 @@ const COPY: Record<Lang, PagesCopy> = {
       title: "Paiement",
       lead: "Choisissez la durée de votre adhésion bienfaiteur.",
       period: "Durée",
-      monthly: "Mensuelle",
-      yearly: "Annuelle",
-      yearlyNote: "Deux mois offerts",
+      periods: {
+        monthly: "Mensuelle",
+        quarterly: "Tous les 3 mois",
+        halfyear: "Tous les 6 mois",
+        yearly: "Annuelle",
+      },
+      yearlyNote: { TRY: "Deux mois offerts", USD: "Le plus avantageux" },
       summary: "Récapitulatif",
       plan: "Adhésion bienfaiteur",
       total: "Total",
@@ -269,8 +302,12 @@ const COPY: Record<Lang, PagesCopy> = {
         ],
         action: "Hacerse benefactor",
       },
-      perMonth: "mes",
-      perYear: "año",
+      per: {
+        monthly: "mes",
+        quarterly: "3 meses",
+        halfyear: "6 meses",
+        yearly: "año",
+      },
       or: "o",
       haveAccount: "¿Ya es miembro?",
       signIn: "Inicie sesión",
@@ -279,9 +316,13 @@ const COPY: Record<Lang, PagesCopy> = {
       title: "Pago",
       lead: "Elija el periodo de su membresía benefactora.",
       period: "Periodo",
-      monthly: "Mensual",
-      yearly: "Anual",
-      yearlyNote: "Dos meses gratis",
+      periods: {
+        monthly: "Mensual",
+        quarterly: "Cada 3 meses",
+        halfyear: "Cada 6 meses",
+        yearly: "Anual",
+      },
+      yearlyNote: { TRY: "Dos meses gratis", USD: "La mejor opción" },
       summary: "Resumen",
       plan: "Membresía benefactora",
       total: "Total",
