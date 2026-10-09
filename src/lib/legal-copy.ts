@@ -48,7 +48,7 @@ const EN: Record<LegalPage, Doc> & { updated: string; footer: string; agree: str
           "Gift: access to all other content on Orbis and to the videos is given to members as a gift; it is not part of what the price pays for.",
           "Price: {prices}. Taxes due in your country are added on the payment page, which shows the total before you pay. Payment is made by card through the payment provider named on that page.",
           "Renewal and cancellation: membership renews at the end of each period for the same period and price unless you cancel. You can cancel at any time; cancelling stops the next renewal, and access lasts until the end of the period you have paid for.",
-          "Because access is provided immediately on payment, there is no right of withdrawal.",
+          "Refunds: because access is provided immediately on payment, there is no right of withdrawal, and payments are not refunded, including for the rest of a cancelled period.",
         ],
       },
       {
@@ -149,7 +149,7 @@ const TR: typeof EN = {
           "Hediye: Orbis'teki diğer bütün içeriklere ve videolara erişim üyelere hediye olarak sunulur; ödenen ücretin karşılığı değildir.",
           "Fiyat: {prices}. Bulunduğunuz ülkede ödenmesi gereken vergiler ödeme sayfasında eklenir; toplam tutar ödemeden önce gösterilir. Ödeme, o sayfada adı yazan ödeme hizmet sağlayıcısı aracılığıyla kartla yapılır.",
           "Yenileme ve iptal: üyelik, iptal edilmedikçe her dönemin sonunda aynı süre ve fiyatla yenilenir. Dilediğiniz zaman iptal edebilirsiniz; iptal bir sonraki yenilemeyi durdurur, erişim ödenmiş dönemin sonuna kadar sürer.",
-          "Erişim ödemeyle hemen sağlandığı için cayma hakkı yoktur.",
+          "İade: erişim ödemeyle hemen sağlandığı için cayma hakkı yoktur; ödemeler, iptal edilen dönemin kalanı dahil, iade edilmez.",
         ],
       },
       {

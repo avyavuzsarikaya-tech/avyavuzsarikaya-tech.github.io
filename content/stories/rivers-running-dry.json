@@ -1,0 +1,58 @@
+{
+  "id": "rivers-running-dry",
+  "theme": "environment",
+  "date": "2026-10-01",
+  "image": {
+    "src": "images/rivers-running-dry.jpg",
+    "credit": "A thin stream across a wide bed of stones."
+  },
+  "sources": [
+    {
+      "n": 1,
+      "label": "FAO – AQUASTAT, global information system on water and agriculture",
+      "url": "https://www.fao.org/aquastat/en/"
+    },
+    {
+      "n": 2,
+      "label": "Grill et al. – Mapping the world's free-flowing rivers (Nature, 2019)",
+      "url": "https://doi.org/10.1038/s41586-019-1111-9"
+    }
+  ],
+  "locales": {
+    "tr": {
+      "title": "Nehirler neden kuruyor?",
+      "dek": "Dünyanın büyük nehirlerinden bazıları yılın bir bölümünde artık denize ulaşmıyor. Asıl neden yukarıda; tarlalarda ve barajlarda.",
+      "region": "Colorado · Sarı Irmak · Aral havzası",
+      "body": "Colorado Nehri bir zamanlar Kaliforniya Körfezi'nde geniş bir deltayla sona ererdi. 1960'lardan bu yana çoğu yıl denize hiç ulaşmıyor. Suyu yedi Amerikan eyaleti ve Meksika arasında paylaştırılıyor ve neredeyse tamamı oraya varmadan tarlalar ve kentler için çekiliyor. Bu paylaşımın kuralları 1922'de, alışılmadık derecede yağışlı bir dizi yılın ardından konuldu ve nehrin genellikle taşıdığından daha fazla su vaat etti.\n\nÇin'deki Sarı Irmak benzer bir hikâye anlatıyor. 1997'de aşağı çığırı 226 gün boyunca kurudu ve nehir yılın büyük bölümünde denize ulaşamadı. 1999'dan beri nehir, ağızda asgari bir akışı koruyan merkezi bir paylaşımla yönetiliyor; bu da kuruyan bir nehrin çoğu zaman yağıştan çok kurallarla ilgili olduğunu gösteriyor.\n\nEn bilinen örnek Aral Gölü. 1960'lardan itibaren onu besleyen iki nehir, Amuderya ve Seyhun, Orta Asya'da pamuk sulamak için çok büyük ölçekte başka yöne çevrildi. Bir zamanlar dünyanın en büyük göllerinden biri olan Aral parçalandı ve eski büyüklüğünün küçük bir kısmına indi.\n\nOrtak nokta su çekimi. FAO'ya göre dünyada nehirlerden, göllerden ve akiferlerden çekilen tatlı suyun yaklaşık yüzde 70'i tarımda kullanılıyor. [1] Barajlar ikinci bir baskı ekliyor: Grill ve arkadaşlarının dünya ölçeğindeki haritalaması, 1.000 kilometreden uzun nehirlerin yalnızca yüzde 37'sinin bütün boyunca hâlâ serbestçe aktığını buldu. [2] Üçüncüsü yeraltında. Kuyular su tablasını düşürünce, kurak mevsimde nehirleri besleyen yeraltı suyu sızmayı bırakıyor.\n\nIsınan iklim bu üçünü de ağırlaştırıyor: barajlardan ve tarlalardan daha çok buharlaşma, yazın nehirleri besleyecek daha az kar. Ama yukarıdaki örneklerin çoğunda nehir, yeterince su varmış gibi göründüğü dönemde ne kadar su çekileceğine dair verilen kararlar yüzünden kurudu.",
+      "audio": null
+    },
+    "ar": {
+      "title": "",
+      "dek": "",
+      "region": "",
+      "body": "",
+      "audio": null
+    },
+    "en": {
+      "title": "Why are rivers running dry?",
+      "dek": "Some of the world's great rivers no longer reach the sea for part of the year. The main cause lies upstream, in fields and reservoirs.",
+      "region": "Colorado · Yellow River · Aral basin",
+      "body": "The Colorado River once ended in a wide delta on the Gulf of California. For most years since the 1960s it has not reached the sea at all. Its water is divided between seven American states and Mexico, and nearly all of it is taken for farms and cities before it gets there. The rules for that division were set in 1922, after a run of unusually wet years, and they promised more water than the river usually carries.\n\nChina's Yellow River tells a similar story. In 1997 its lower course ran dry for 226 days, and the river failed to reach the sea for much of the year. Since 1999 the river has been managed under a central allocation that keeps a minimum flow at the mouth, which shows that a dry river is often a matter of rules rather than rainfall.\n\nThe best-known case is the Aral Sea. From the 1960s the Amu Darya and Syr Darya, the two rivers that fed it, were diverted on a vast scale to irrigate cotton in Central Asia. The sea, once one of the largest lakes in the world, broke apart and shrank to a fraction of its former size.\n\nThe common thread is withdrawal. Agriculture accounts for about 70 percent of the fresh water taken from rivers, lakes and aquifers worldwide, according to the FAO. [1] Dams add a second pressure: a global mapping by Grill and colleagues found that only 37 percent of rivers longer than 1,000 kilometres still flow freely along their whole length. [2] A third is underground. When wells lower the water table, the groundwater that keeps rivers running in the dry season stops seeping in.\n\nA warmer climate adds to all three, with more evaporation from reservoirs and fields and less snow to feed rivers in summer. But in most of the cases above, the river ran dry because of decisions about how much to take, made when there seemed to be enough.",
+      "audio": null
+    },
+    "fr": {
+      "title": "",
+      "dek": "",
+      "region": "",
+      "body": "",
+      "audio": null
+    },
+    "es": {
+      "title": "",
+      "dek": "",
+      "region": "",
+      "body": "",
+      "audio": null
+    }
+  }
+}
