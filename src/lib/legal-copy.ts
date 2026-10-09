@@ -47,7 +47,7 @@ const EN: Record<LegalPage, Doc> & { updated: string; footer: string; agree: str
           "What you buy: access to the members-only readings and videos for the period you choose.",
           "Price: {prices}. Taxes due in your country are added on the payment page, which shows the total before you pay. Payment is made by card through the payment provider named on that page.",
           "Renewal and cancellation: membership renews at the end of each period for the same period and price unless you cancel. You can cancel at any time; cancelling stops the next renewal, and access lasts until the end of the period you have paid for.",
-          "Withdrawal and refunds are governed by consumer law.",
+          "Because access is provided immediately on payment, there is no right of withdrawal.",
         ],
       },
       {
@@ -147,7 +147,7 @@ const TR: typeof EN = {
           "Satışın konusu: seçilen dönem boyunca üyelere özel okumalara ve videolara erişim.",
           "Fiyat: {prices}. Bulunduğunuz ülkede ödenmesi gereken vergiler ödeme sayfasında eklenir; toplam tutar ödemeden önce gösterilir. Ödeme, o sayfada adı yazan ödeme hizmet sağlayıcısı aracılığıyla kartla yapılır.",
           "Yenileme ve iptal: üyelik, iptal edilmedikçe her dönemin sonunda aynı süre ve fiyatla yenilenir. Dilediğiniz zaman iptal edebilirsiniz; iptal bir sonraki yenilemeyi durdurur, erişim ödenmiş dönemin sonuna kadar sürer.",
-          "Cayma hakkı ve iade tüketici mevzuatına tabidir.",
+          "Erişim ödemeyle hemen sağlandığı için cayma hakkı yoktur.",
         ],
       },
       {
