@@ -1,5 +1,23 @@
 [
   {
+    "id": "heat-and-the-plan",
+    "theme": "health",
+    "date": "2026-10-09",
+    "title": "Aynı sıcak neden bazı yerlerde daha çok öldürür",
+    "dek": "Bir sıcak hava dalgası iki kez sayılır: termometrelerle ve ölüm kayıtlarıyla. Planlar bu ikisi arasındaki farkla uğraşır.",
+    "region": "Küresel",
+    "body": "Fransa, Ağustos 2003'ün ilk yirmi gününde beklenenden yaklaşık 14.800 fazla ölüm kaydetti; bu, yüzde 60 civarında bir artıştı. Ölenlerin çoğu yaşlıydı ve birçoğu evinde yalnız öldü. Sıcak bir hava olayıydı; ölüm sayısı ise ona ne kadar az hazırlanıldığını da ölçüyordu. Fransa'nın cevabı idari oldu. Sağlık makamları ve Météo-France işleyen bir uyarı sistemi kurdu ve bunu ulusal bir eylem planının parçası yaptı: bölge bölge verilen uyarılar, belediyelerin tuttuğu yalnız yaşayan yaşlı listeleri, bakımevleri ve hastaneler için talimatlar. Hindistan'ın batısındaki Ahmedabad aynı yolu başka bir noktadan tuttu. Mayıs 2010'daki sıcak hava dalgası 1.344 kişinin ölümüne yol açtı. Şehir 2013'te bir sıcak eylem planı başlattı: erken uyarılar, sağlık çalışanlarının eğitimi, kamusal alanlarda içme suyu ve gölge, sonra da yoksul konutlarda iç sıcaklığı düşüren serin çatı programı. Planın yaklaşık 2.300 erken ölümü önlediği kabul ediliyor. Japonya cevabını tek bir sayı üzerine kurdu. 2021'den beri, sıcaklık, nem ve güneş ışığını birleştiren yaş termometre küre sıcaklığı endeksinin 33'e ulaşacağı tahmin edildiğinde ülke çapında sıcak çarpması uyarısı veriliyor. 35 ve üzeri tahminler için daha güçlü bir özel uyarı 2024'te eklendi. İlk yıl 613 uyarı verilmişti, 2024'te bu sayı 1.722 oldu. Avrupa'nın bütünü, bu planların daha ne kadar yol alması gerektiğini gösteriyor. Nature Medicine'de yayımlanan bir çalışma, 30 Mayıs ile 4 Eylül 2022 arasında 35 Avrupa ülkesinde sıcağa bağlı 61.672 ölüm olduğunu tahmin etti: İtalya'da 18.010, İspanya'da 11.324, Almanya'da 8.173. Kadınlarda ölüm oranı erkeklere göre belirgin biçimde yüksekti. Üç plan ölçek ve kullandığı araçlar bakımından farklı, ama aynı öncülü paylaşıyor. Sıcak şehrin sınırında durdurulamaz; yol açtığı ölüm sayısı ise sıcağın ikinci ve üçüncü gününde yapılanlarla değiştirilebilir."
+  },
+  {
+    "id": "who-keeps-the-clock",
+    "theme": "politics",
+    "date": "2026-10-09",
+    "title": "Saati kim tutar?",
+    "dek": "Hükûmetlerin çoğu yılda iki kez saat değiştirmenin işe yaramadığında artık hemfikir. Hangi saatin kalacağında ise ayrılıyorlar.",
+    "region": "Küresel",
+    "body": "Avrupa Birliği ülkeleri 2001'den beri saatlerini tek bir kurala, 2000/84/EC sayılı Direktife göre yılda iki kez değiştiriyor. Avrupa Komisyonu 2018'de kamuoyuna ne düşündüğünü sordu. Yaklaşık 4,6 milyon kişi cevap verdi ve yüzde 84'ü değişikliğin bitmesini istedi. Komisyon 12 Eylül 2018'de mevsimlik saat değişikliğinin kaldırılmasını önerdi; Avrupa Parlamentosu da 26 Mart 2019'da değişikliğin 2021'e kadar bitirilmesi yönünde oy verdi. Konseyde toplanan üye devletler ise tutumlarını henüz belirlemedi. Zorluk değişikliğin kendisinden çok ardından gelecek seçimde: her ülke yaz saatinde mi kış saatinde mi kalacağına karar vermek zorunda kalacak ve komşular arasında bir saat fark oluşabilecek. Rusya iki cevabı da denedi. Saatler Mart 2011'de ileri alındı ve o sonbahar geri alınmadı; böylece yaz saati kalıcı oldu. Temmuz 2014'te çıkarılan değişikliklerle ülkenin büyük bölümü 26 Ekim 2014'te saati bir saat geri aldı, bu kez kalıcı olarak standart saate geçti. ABD'de Senato, yaz saatini kalıcı yapacak Güneş Işığını Koruma Yasası'nı 15 Mart 2022'de kabul etti. Temsilciler Meclisi tasarıyı ele almadı ve tasarı düştü. Amerikan Uyku Tıbbı Akademisi ise tersini, kalıcı standart saati savunuyor; bunun vücut saatine daha uygun olduğunu söylüyor ve bahardaki değişikliği izleyen günlerde trafik kazalarının ve kalp olaylarının arttığına dikkat çekiyor. Bazıları ise yalnızca vazgeçti. Brezilya, enerji bakanlığının yaz saatinin artık kayda değer elektrik tasarrufu sağlamadığını tespit etmesinin ardından, 25 Nisan 2019'da çıkarılan bir kararnameyle yaz saatini kaldırdı. Meksika Senatosu 26 Ekim 2022'de yaz saatinin kaldırılması yönünde oy verdi ve saatler dört gün sonra son kez geri alındı. Her örnekte tablo aynı. Değişikliği bitirmek herkesin hoşuna gidiyor; yaz akşamlarını mı yoksa kış sabahlarını mı koruyacağına karar vermek ise toplumu bölüyor."
+  },
+  {
     "id": "migration-and-the-vote",
     "theme": "politics",
     "date": "2026-10-08",
@@ -99,15 +117,6 @@
     "body": "Birleşmiş Milletler bir megakenti on milyon kişiyle sayar. Bu çizgi eskiden bir nadirliği işaretlerdi. Şimdi karşılaştırmaya yetecek bir sınıfı işaretliyor: bir kent tablolarda istisna olmaktan çıktığında su, raylı sistem ve konut nasıl planlanır. Nüfus tabloları bu insanların nasıl barındığını söylemez. Hane araştırmaları ile ulusal hesaplar kayıt dışı yerleşimler konusunda hâlâ ayrışır; ayrışma bir dipnot değil, asıl meseledir. Bir kent resmen büyürken hizmet götürülen konut sayısı yerinden kıpırdamayabilir. Yararlı kıyas kulelerin sıralaması değildir. Asıl soru; nüfus sayımı, şebeke bağlantısı ve yapı ruhsatından oluşan kamusal kaydın, anlattığı insanlarla aynı on yıl içinde okunup okunamadığıdır."
   },
   {
-    "id": "heat-and-the-plan",
-    "theme": "health",
-    "date": "2025-12-10",
-    "title": "Aynı sıcak neden bazı yerlerde daha çok öldürür",
-    "dek": "Bir sıcak hava dalgası iki kez sayılır: termometrelerle ve ölüm kayıtlarıyla. Planlar bu ikisi arasındaki farkla uğraşır.",
-    "region": "Küresel",
-    "body": "Fransa, Ağustos 2003'ün ilk yirmi gününde beklenenden yaklaşık 14.800 fazla ölüm kaydetti; bu, yüzde 60 civarında bir artıştı. Ölenlerin çoğu yaşlıydı ve birçoğu evinde yalnız öldü. Sıcak bir hava olayıydı; ölüm sayısı ise ona ne kadar az hazırlanıldığını da ölçüyordu. Fransa'nın cevabı idari oldu. Sağlık makamları ve Météo-France işleyen bir uyarı sistemi kurdu ve bunu ulusal bir eylem planının parçası yaptı: bölge bölge verilen uyarılar, belediyelerin tuttuğu yalnız yaşayan yaşlı listeleri, bakımevleri ve hastaneler için talimatlar. Hindistan'ın batısındaki Ahmedabad aynı yolu başka bir noktadan tuttu. Mayıs 2010'daki sıcak hava dalgası 1.344 kişinin ölümüne yol açtı. Şehir 2013'te bir sıcak eylem planı başlattı: erken uyarılar, sağlık çalışanlarının eğitimi, kamusal alanlarda içme suyu ve gölge, sonra da yoksul konutlarda iç sıcaklığı düşüren serin çatı programı. Planın yaklaşık 2.300 erken ölümü önlediği kabul ediliyor. Japonya cevabını tek bir sayı üzerine kurdu. 2021'den beri, sıcaklık, nem ve güneş ışığını birleştiren yaş termometre küre sıcaklığı endeksinin 33'e ulaşacağı tahmin edildiğinde ülke çapında sıcak çarpması uyarısı veriliyor. 35 ve üzeri tahminler için daha güçlü bir özel uyarı 2024'te eklendi. İlk yıl 613 uyarı verilmişti, 2024'te bu sayı 1.722 oldu. Avrupa'nın bütünü, bu planların daha ne kadar yol alması gerektiğini gösteriyor. Nature Medicine'de yayımlanan bir çalışma, 30 Mayıs ile 4 Eylül 2022 arasında 35 Avrupa ülkesinde sıcağa bağlı 61.672 ölüm olduğunu tahmin etti: İtalya'da 18.010, İspanya'da 11.324, Almanya'da 8.173. Kadınlarda ölüm oranı erkeklere göre belirgin biçimde yüksekti. Üç plan ölçek ve kullandığı araçlar bakımından farklı, ama aynı öncülü paylaşıyor. Sıcak şehrin sınırında durdurulamaz; yol açtığı ölüm sayısı ise sıcağın ikinci ve üçüncü gününde yapılanlarla değiştirilebilir."
-  },
-  {
     "id": "grain-moves",
     "theme": "economy",
     "date": "2025-11-04",
@@ -115,15 +124,6 @@
     "dek": "Buğday, mısır ve pirinç bir sınırı gemi olarak geçmeden önce bilanço olarak geçer.",
     "region": "Karadeniz · Mekong · Paraná",
     "body": "Buğday, mısır ve pirinç manşet olarak yolculuk etmez. Sözleşme, liman su çekimi ve mevsim penceresi olarak gider. Bu akışları izleyen kamu kurumları bilanço yayımlar: üretim, ticaret ve yıl sonunda kalan stok, ülke ülke. Bilanço bir fiyat tahmini değildir; bu atlas da fiyat söylemez. Bilanço, yoğunlaşmayı görmenin yoludur. Sınırı geçen buğdayın büyük payını hâlâ küçük bir ihracatçı grubu karşılar. Bir koridor yavaşlayınca kâğıt, satacak tahılı başka kimde olduğunu ve gecikmenin iç meseleye döneceği kadar ithalat yapanın kim olduğunu gösterir. Kâğıdı iyi okumak, dışarıda bıraktığını fark etmektir. Çiftlik kapısından önce yiten tahıl, kalite yüzünden geri çevrilen yük, gümrükle hiç karşılaşmayan çuval: bunların hiçbiri satıra girmez ve boşluk kaydın parçasıdır."
-  },
-  {
-    "id": "who-keeps-the-clock",
-    "theme": "politics",
-    "date": "2025-10-14",
-    "title": "Saati kim tutar?",
-    "dek": "Hükûmetlerin çoğu yılda iki kez saat değiştirmenin işe yaramadığında artık hemfikir. Hangi saatin kalacağında ise ayrılıyorlar.",
-    "region": "Küresel",
-    "body": "Avrupa Birliği ülkeleri 2001'den beri saatlerini tek bir kurala, 2000/84/EC sayılı Direktife göre yılda iki kez değiştiriyor. Avrupa Komisyonu 2018'de kamuoyuna ne düşündüğünü sordu. Yaklaşık 4,6 milyon kişi cevap verdi ve yüzde 84'ü değişikliğin bitmesini istedi. Komisyon 12 Eylül 2018'de mevsimlik saat değişikliğinin kaldırılmasını önerdi; Avrupa Parlamentosu da 26 Mart 2019'da değişikliğin 2021'e kadar bitirilmesi yönünde oy verdi. Konseyde toplanan üye devletler ise tutumlarını henüz belirlemedi. Zorluk değişikliğin kendisinden çok ardından gelecek seçimde: her ülke yaz saatinde mi kış saatinde mi kalacağına karar vermek zorunda kalacak ve komşular arasında bir saat fark oluşabilecek. Rusya iki cevabı da denedi. Saatler Mart 2011'de ileri alındı ve o sonbahar geri alınmadı; böylece yaz saati kalıcı oldu. Temmuz 2014'te çıkarılan değişikliklerle ülkenin büyük bölümü 26 Ekim 2014'te saati bir saat geri aldı, bu kez kalıcı olarak standart saate geçti. ABD'de Senato, yaz saatini kalıcı yapacak Güneş Işığını Koruma Yasası'nı 15 Mart 2022'de kabul etti. Temsilciler Meclisi tasarıyı ele almadı ve tasarı düştü. Amerikan Uyku Tıbbı Akademisi ise tersini, kalıcı standart saati savunuyor; bunun vücut saatine daha uygun olduğunu söylüyor ve bahardaki değişikliği izleyen günlerde trafik kazalarının ve kalp olaylarının arttığına dikkat çekiyor. Bazıları ise yalnızca vazgeçti. Brezilya, enerji bakanlığının yaz saatinin artık kayda değer elektrik tasarrufu sağlamadığını tespit etmesinin ardından, 25 Nisan 2019'da çıkarılan bir kararnameyle yaz saatini kaldırdı. Meksika Senatosu 26 Ekim 2022'de yaz saatinin kaldırılması yönünde oy verdi ve saatler dört gün sonra son kez geri alındı. Her örnekte tablo aynı. Değişikliği bitirmek herkesin hoşuna gidiyor; yaz akşamlarını mı yoksa kış sabahlarını mı koruyacağına karar vermek ise toplumu bölüyor."
   },
   {
     "id": "register-of-trials",
