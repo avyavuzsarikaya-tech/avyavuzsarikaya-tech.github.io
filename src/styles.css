@@ -1169,6 +1169,22 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
   .atlas-bottom .deep-card {
     flex: 1 1 auto;
   }
+  /* Two readings in depth, one under the other, sharing the column's height. */
+  .atlas-deep-list {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .atlas-deep-list > li {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .atlas-deep-list > li + li {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-line);
+  }
   .records:not([data-depth="1"]) .atlas-fill {
     display: block;
     position: relative;

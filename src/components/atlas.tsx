@@ -883,33 +883,62 @@ function DepthBar({
   );
 }
 
+type RecordPlan = {
+  strip: Story[];
+  latest: Story[];
+  deep: Story[];
+  numbered: Story[];
+  counted: boolean;
+  more: Story[];
+};
+
+/** Which reading goes where; the phone and the desktop are planned apart. */
+function planRecords(stories: Story[], mostRead: Story[], desk: boolean): RecordPlan {
+  const counted = mostRead.length > 0;
+  // Phone (unchanged): a picture strip from eight readings, one reading in depth.
+  // Desktop: two readings in depth and three numbered, the strip only past thirteen.
+  const strip = stories.length >= (desk ? 13 : 8) ? stories.slice(0, 4) : [];
+  const remaining = stories.slice(strip.length);
+  const latestCount = Math.min(4, Math.max(1, remaining.length - (desk ? 5 : 3)));
+  const latest = remaining.slice(0, latestCount);
+  const after = remaining.slice(latestCount);
+  const deepCount = desk && after.length >= 5 ? 2 : Math.min(1, after.length);
+  const deep = after.slice(0, deepCount);
+  const numbered = counted ? mostRead : after.slice(deepCount, deepCount + (desk ? 3 : 5));
+  const shown = new Set([...strip, ...latest, ...deep, ...numbered].map((s) => s.id));
+  const more = stories.filter((story) => !shown.has(story.id));
+  return { strip, latest, deep, numbered, counted, more };
+}
+
 function Records({ stories, lang, depth }: { stories: Story[]; lang: Lang; depth: Depth }) {
-  const words = HOME_WORDS[lang];
   const ranked = useMostRead(5);
   useColumnFill(depth);
   if (stories.length === 0) return null;
-
-  // A four-card picture strip, then the three editorial columns. Keep short editions
-  // together; every reading still has a place and the same depth control applies.
-  const strip = stories.length >= 8 ? stories.slice(0, 4) : [];
-  const remaining = stories.slice(strip.length);
-  const latestCount = Math.min(4, Math.max(1, remaining.length - 3));
-  const latest = remaining.slice(0, latestCount);
-  const deep = remaining[latestCount];
   const byId = new Map(stories.map((story) => [story.id, story]));
   const mostRead = ranked
     ? ranked.map((id) => byId.get(id)).filter((story): story is Story => Boolean(story))
     : [];
-  const counted = mostRead.length > 0;
-  const numbered = counted ? mostRead : remaining.slice(latestCount + 1, latestCount + 6);
-  const shown = new Set(
-    [...strip, ...latest, ...(deep ? [deep] : []), ...numbered].map((s) => s.id),
-  );
-  const more = stories.filter((story) => !shown.has(story.id));
-  const heading = `font-body font-normal ${lang === "ar" ? "text-sm text-pine" : "text-xs uppercase tracking-[0.14em] text-pine"}`;
+  const words = HOME_WORDS[lang];
 
   return (
     <section className="px-5 pt-6 pb-4 md:px-8 md:pt-8" aria-label={words.records}>
+      <div className="md:hidden">
+        <RecordColumns plan={planRecords(stories, mostRead, false)} lang={lang} depth={depth} />
+      </div>
+      <div className="hidden md:block">
+        <RecordColumns plan={planRecords(stories, mostRead, true)} lang={lang} depth={depth} />
+      </div>
+    </section>
+  );
+}
+
+function RecordColumns({ plan, lang, depth }: { plan: RecordPlan; lang: Lang; depth: Depth }) {
+  const words = HOME_WORDS[lang];
+  const { strip, latest, deep, numbered, counted, more } = plan;
+  const heading = `font-body font-normal ${lang === "ar" ? "text-sm text-pine" : "text-xs uppercase tracking-[0.14em] text-pine"}`;
+
+  return (
+    <>
       {strip.length ? (
         <ol className="records atlas-strip" data-depth={depth}>
           {strip.map((story) => (
@@ -932,10 +961,20 @@ function Records({ stories, lang, depth }: { stories: Story[]; lang: Lang; depth
           </ol>
         </section>
 
-        {deep ? (
+        {deep.length ? (
           <section className="atlas-col" aria-label={words.inDepth}>
             <h3 className={`${heading} mb-3`}>{words.inDepth}</h3>
-            <DeepCard story={deep} lang={lang} />
+            {deep.length === 1 ? (
+              <DeepCard story={deep[0]} lang={lang} />
+            ) : (
+              <ol className="atlas-deep-list">
+                {deep.map((story) => (
+                  <li key={story.id}>
+                    <DeepCard story={story} lang={lang} />
+                  </li>
+                ))}
+              </ol>
+            )}
           </section>
         ) : null}
 
@@ -962,7 +1001,7 @@ function Records({ stories, lang, depth }: { stories: Story[]; lang: Lang; depth
           ))}
         </ol>
       ) : null}
-    </section>
+    </>
   );
 }
 
