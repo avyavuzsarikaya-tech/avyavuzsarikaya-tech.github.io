@@ -1,0 +1,1 @@
+import{t as e}from"./search-CedyTAwN.js";var t=e;export{t as component};
