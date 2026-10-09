@@ -1373,3 +1373,62 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
 .reading-tools {
   border-block: 1px solid var(--color-line);
 }
+
+/* Phone only (9 Oct 2026). Nothing here reaches the desktop layout. */
+@media (max-width: 767.98px) {
+  /* A card without a picture does not keep an empty square: its words take the whole row. */
+  .atlas-card > .atlas-pic-slot:empty,
+  .atlas-brief > .atlas-pic-slot:empty {
+    display: none;
+  }
+  .atlas-card:has(> .atlas-pic-slot:empty),
+  .atlas-brief:has(> .atlas-pic-slot:empty) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .atlas-card:has(> .atlas-pic-slot:empty) > .atlas-pic-slot + div > *,
+  .atlas-brief:has(> .atlas-pic-slot:empty) > .atlas-pic-slot + div > * {
+    grid-column: 1 / -1;
+  }
+
+  /* The document chain: the sources sit in two straight columns, without the joining
+     hairlines that wrapped to the start of a line, and without the "+N" (all are shown). */
+  .doc-chain-preview {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem 0.5rem;
+  }
+  .doc-chain-preview > .doc-chain-node {
+    display: flex;
+    min-width: 0;
+  }
+  .doc-chain-preview > .doc-chain-node:has(> .doc-chain-more),
+  .doc-chain-preview .doc-chain-rule {
+    display: none;
+  }
+  .doc-chain-preview .doc-chain-chip {
+    width: 100%;
+  }
+  .doc-chain-preview .doc-chain-name {
+    min-width: 0;
+    max-width: none;
+  }
+
+  /* Cards and rows with a picture: the first line of text starts level with the top of
+     the picture (the empty space above the capitals is trimmed). */
+  .atlas-card > .atlas-pic-slot + div > :nth-child(1),
+  .atlas-brief > .atlas-pic-slot + div > :nth-child(1),
+  .record-row > .record-thumb + div > :first-child {
+    text-box: trim-start cap alphabetic;
+  }
+  /* "Listen" sits on the same line as the section and the reading time, at the same height. */
+  .listen-mark {
+    display: inline;
+    padding-block: 0;
+    margin-block: 0;
+  }
+  .listen-mark > svg {
+    display: inline-block;
+    margin-inline-end: 0.375rem;
+    vertical-align: -0.1em;
+  }
+}
