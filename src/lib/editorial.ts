@@ -5,7 +5,7 @@ import type { Lang, StoryImage } from "@/lib/types";
  * empty, nothing about them appears on the site.
  */
 export const EDITORIAL = {
-  publisherName: "",
+  publisherName: "Yavuz Sarıkaya",
   contactEmail: "editor@orbisreadingatlas.com",
 };
 
