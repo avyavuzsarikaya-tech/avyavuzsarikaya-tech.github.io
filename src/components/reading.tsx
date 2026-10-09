@@ -218,20 +218,34 @@ function Reading({ story }: { story: Story | null }) {
             {locale.title || story.locales.en.title}
           </h1>
           {locale.dek ? <p className="reading-dek">{locale.dek}</p> : null}
-          <div className="flex flex-col items-start gap-0.5 pt-1">
-            {by ? <p className="text-sm font-bold text-ink">{by}</p> : null}
-            <p className="text-sm text-muted">
-              {[locale.region, formatDate(story.date, lang)].filter(Boolean).join(" · ")}
-            </p>
-            {story.updatedAt && story.updatedAt !== story.date ? (
+          {/* On a phone the text size sits at the end of the date line, right above the text. */}
+          <div className="flex items-end justify-between gap-x-3 pt-1">
+            <div className="flex min-w-0 flex-col items-start gap-0.5">
+              {by ? <p className="text-sm font-bold text-ink">{by}</p> : null}
               <p className="text-sm text-muted">
-                {editorial.updated}: {formatDate(story.updatedAt, lang)}
+                {[locale.region, formatDate(story.date, lang)].filter(Boolean).join(" · ")}
               </p>
-            ) : null}
+              {story.updatedAt && story.updatedAt !== story.date ? (
+                <p className="text-sm text-muted">
+                  {editorial.updated}: {formatDate(story.updatedAt, lang)}
+                </p>
+              ) : null}
+            </div>
+            <div className="no-print -mb-1 flex shrink-0 md:hidden">
+              <TypeSize
+                step={typeStep}
+                onDown={() => setStep(typeStep - 1)}
+                onUp={() => setStep(typeStep + 1)}
+                onReset={() => setStep(1)}
+                label={copy.textSize}
+                downLabel={copy.typeDown}
+                upLabel={copy.typeUp}
+              />
+            </div>
           </div>
-          {/* Phone: text size alone at the top end; below it PDF, share and the player on one
-              line. Wide screen, one line: share, player, PDF, text size. */}
-          <div className="reading-tools no-print flex flex-wrap items-center gap-x-2 gap-y-2 py-2.5 sm:gap-x-3">
+          {/* Phone: one thin line of PDF, share and the player. Wide screen, one line:
+              share, player, PDF, text size. */}
+          <div className="reading-tools no-print flex flex-wrap items-center gap-x-2 gap-y-2 py-1 sm:gap-x-3 md:py-2.5">
             <div className="order-2 flex md:order-3 md:ms-auto">
               <PdfButton lang={lang} />
             </div>
@@ -252,7 +266,7 @@ function Reading({ story }: { story: Story | null }) {
                 />
               </div>
             ) : null}
-            <div className="order-1 flex w-full shrink-0 items-center justify-end md:order-4 md:-ms-2 md:w-auto">
+            <div className="order-1 hidden shrink-0 items-center md:order-4 md:-ms-2 md:flex">
               <TypeSize
                 step={typeStep}
                 onDown={() => setStep(typeStep - 1)}
@@ -387,7 +401,7 @@ function ShareButton({ lang, title }: { lang: Lang; title: string }) {
       onClick={() => void share()}
       aria-label={copied ? words.copied : words.share}
       title={copied ? words.copied : words.share}
-      className="inline-flex size-8 shrink-0 items-center justify-center rounded-full border border-line text-ink"
+      className="inline-flex size-7 shrink-0 items-center justify-center rounded-full border border-line text-ink md:size-8"
     >
       <svg
         viewBox="0 0 20 20"
