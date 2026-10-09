@@ -18,10 +18,17 @@ import {
 import type { Lang } from "@/lib/types";
 import { useLang } from "@/lib/use-lang";
 
-const outlineButton =
-  "inline-flex min-h-11 items-center justify-center border border-ink px-5 text-sm text-ink hover:bg-ink hover:text-paper";
+/** The same small label a reading uses for "Related readings". */
+function sectionHead(lang: Lang) {
+  const label =
+    lang === "ar" ? "text-sm text-pine" : "text-xs uppercase tracking-[0.14em] text-pine";
+  return `border-b-[3px] border-ink pb-3 font-body font-normal ${label}`;
+}
 
-/** Same column and way back as the About page. */
+const outlineButton =
+  "inline-flex min-h-11 items-center justify-center border border-ink px-5 text-sm text-ink transition-colors duration-150 hover:bg-ink hover:text-paper";
+
+/** Same column and way back as the About page, set like a reading. */
 function Page({
   title,
   lead,
@@ -37,16 +44,19 @@ function Page({
     <Shell>
       <main className="px-5 py-10 md:px-12 md:py-14">
         <div className="mx-auto flex max-w-3xl flex-col gap-8">
-          <div className="flex items-center justify-between gap-4 text-sm">
-            <Link {...homeLink(lang)} className="inline-flex min-h-11 items-center text-pine">
-              {copy.back}
-            </Link>
-          </div>
-          <div className="flex max-w-2xl flex-col gap-4">
-            <h1 className="text-4xl md:text-5xl">{title}</h1>
-            <p className="text-pretty text-lg text-muted">{lead}</p>
-          </div>
-          {children}
+          <Link
+            {...homeLink(lang)}
+            className="inline-flex min-h-11 items-center self-start text-sm text-pine"
+          >
+            {copy.back}
+          </Link>
+          <header className="flex max-w-2xl flex-col gap-4">
+            <h1 className="paper-title text-4xl font-bold leading-[1.08] md:text-5xl md:leading-[1.05]">
+              {title}
+            </h1>
+            <p className="reading-dek">{lead}</p>
+          </header>
+          <div className="flex flex-col gap-10 border-t-[3px] border-ink pt-8">{children}</div>
         </div>
       </main>
     </Shell>
@@ -55,14 +65,19 @@ function Page({
 
 function Points({ items }: { items: string[] }) {
   return (
-    <ul className="flex flex-col">
-      {items.map((item) => (
-        <li key={item} className="flex gap-3 border-t border-line py-3 text-[17px] leading-snug">
-          <span aria-hidden="true" className="mt-[0.55em] size-1.5 shrink-0 rounded-full bg-ink" />
+    <ol className="mt-6 border-t border-line">
+      {items.map((item, index) => (
+        <li
+          key={item}
+          className="grid grid-cols-[2rem_1fr] items-baseline gap-2 border-b border-line py-3.5 text-[17px] leading-snug"
+        >
+          <span aria-hidden="true" className="text-xs tabular-nums text-pine">
+            {String(index + 1).padStart(2, "0")}
+          </span>
           <span>{item}</span>
         </li>
       ))}
-    </ul>
+    </ol>
   );
 }
 
@@ -72,20 +87,26 @@ function PriceList({ lang }: { lang: Lang }) {
   const [first, ...rest] = periodsFor(lang);
   if (!first) return null;
   return (
-    <div className="flex flex-col gap-2">
+    <div className="mt-6 flex flex-col gap-2">
       <p className="flex flex-wrap items-baseline gap-x-2">
-        <span className="text-4xl leading-none tabular-nums">{price(first, lang)}</span>
-        <span className="text-muted">/ {words.per[first]}</span>
+        <span className="paper-title text-4xl font-bold leading-none tabular-nums">
+          {price(first, lang)}
+        </span>
+        <span className="text-sm text-muted">/ {words.per[first]}</span>
       </p>
       {rest.length ? (
         <p className="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-muted">
           {rest.map((period, i) => (
             <span key={period} className="inline-flex items-baseline gap-x-2">
-              {i === 0 ? <span>{words.or}</span> : <span aria-hidden="true">·</span>}
-              <span className="text-xl leading-none text-ink tabular-nums">
+              {i === 0 ? (
+                <span className="text-sm">{words.or}</span>
+              ) : (
+                <span aria-hidden="true">·</span>
+              )}
+              <span className="paper-title text-2xl font-bold leading-none text-ink tabular-nums">
                 {price(period, lang)}
               </span>
-              <span>/ {words.per[period]}</span>
+              <span className="text-sm">/ {words.per[period]}</span>
             </span>
           ))}
         </p>
@@ -98,33 +119,32 @@ function PriceList({ lang }: { lang: Lang }) {
 export function MembershipPage() {
   const lang = useLang();
   const words = pagesCopy(lang).membership;
-  const label = "text-[11px] uppercase tracking-[0.14em] text-muted";
   return (
     <Page title={words.title} lead={words.lead}>
-      <div className="grid border-y border-rule md:grid-cols-2">
-        <section className="flex flex-col gap-5 py-8 md:pe-10">
-          <h2 className={label}>{words.free.name}</h2>
-          <p className="text-4xl leading-none">{words.free.price}</p>
+      <div className="grid md:grid-cols-2 md:gap-12">
+        <section className="flex flex-col border-b border-line pb-8 md:border-b-0 md:pb-2">
+          <h2 className={sectionHead(lang)}>{words.free.name}</h2>
+          <p className="paper-title mt-6 text-4xl font-bold leading-none">{words.free.price}</p>
           <Points items={words.free.points} />
-          <Link {...accountLink(lang)} className={`${outlineButton} mt-auto self-start`}>
+          <Link {...accountLink(lang)} className={`${outlineButton} mt-8 self-start`}>
             {words.free.action}
           </Link>
         </section>
-        <section className="flex flex-col gap-5 border-t border-rule py-8 md:border-t-0 md:border-s md:ps-10">
-          <h2 className={label}>{words.paid.name}</h2>
+        <section className="-mx-5 flex flex-col bg-shade px-5 py-8 md:mx-0 md:px-8">
+          <h2 className={sectionHead(lang)}>{words.paid.name}</h2>
           <PriceList lang={lang} />
           <Points items={words.paid.points} />
-          <Link
-            {...memberPageLink(lang, "payment")}
-            className={`${buttonClass} mt-auto self-start`}
-          >
+          <Link {...memberPageLink(lang, "payment")} className={`${buttonClass} mt-8 self-start`}>
             {words.paid.action}
           </Link>
         </section>
       </div>
-      <p className="text-sm text-muted">
+      <p className="border-t border-line pt-6 text-sm text-muted">
         {words.haveAccount}{" "}
-        <Link {...accountLink(lang)} className="text-pine underline-offset-4 hover:underline">
+        <Link
+          {...accountLink(lang)}
+          className="text-pine underline underline-offset-4 hover:underline"
+        >
           {words.signIn}
         </Link>
       </p>
@@ -167,7 +187,7 @@ export function PaymentPage() {
   const option = (value: Period, name: string, note?: string) => (
     <label
       key={value}
-      className="flex min-h-14 cursor-pointer items-center gap-4 border-t border-line py-3 first:border-t-0"
+      className={`flex min-h-16 cursor-pointer items-center gap-4 border-b border-line px-3 py-4 ${period === value ? "bg-shade" : ""}`}
     >
       <input
         type="radio"
@@ -191,9 +211,9 @@ export function PaymentPage() {
 
   return (
     <Page title={words.title} lead={words.lead}>
-      <div className="grid gap-10 md:grid-cols-[1fr_18rem]">
-        <div className="flex flex-col gap-8">
-          <fieldset className="flex flex-col border-y border-rule">
+      <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_18rem] md:items-start">
+        <div className="flex min-w-0 flex-col gap-10">
+          <fieldset className="flex flex-col border-t border-line">
             <legend className="sr-only">{words.period}</legend>
             {periodsFor(lang).map((value) =>
               option(
@@ -203,27 +223,29 @@ export function PaymentPage() {
               ),
             )}
           </fieldset>
-          <section className="flex flex-col gap-3">
-            <h2 className="text-[11px] uppercase tracking-[0.14em] text-muted">{words.includes}</h2>
+          <section className="flex flex-col">
+            <h2 className={sectionHead(lang)}>{words.includes}</h2>
             <Points items={all.membership.paid.points} />
           </section>
         </div>
 
-        <aside className="flex flex-col gap-5 self-start border-y border-rule py-6">
-          <h2 className="text-[11px] uppercase tracking-[0.14em] text-muted">{words.summary}</h2>
+        <aside className="flex flex-col gap-5 self-start bg-shade px-6 py-7 md:sticky md:top-8">
+          <h2 className={sectionHead(lang)}>{words.summary}</h2>
           <div className="flex flex-col gap-1">
-            <p className="text-[17px]">{words.plan}</p>
+            <p className="paper-title text-xl font-bold leading-snug">{words.plan}</p>
             <p className="text-sm text-muted">{words.periods[period]}</p>
           </div>
           <p className="flex items-baseline justify-between gap-4 border-t border-line pt-4">
-            <span>{words.total}</span>
-            <span className="tabular-nums">
-              <span className="text-2xl">{price(period, lang)}</span>{" "}
-              <span className="text-muted">/ {per}</span>
+            <span className="text-sm text-muted">{words.total}</span>
+            <span className="text-end tabular-nums">
+              <span className="paper-title text-3xl font-bold leading-none">
+                {price(period, lang)}
+              </span>{" "}
+              <span className="text-sm text-muted">/ {per}</span>
             </span>
           </p>
           {paymentOn ? (
-            <a href={checkoutHref(period, lang)} className={buttonClass}>
+            <a href={checkoutHref(period, lang)} className={`${buttonClass} w-full`}>
               {words.pay}
             </a>
           ) : (
@@ -232,11 +254,11 @@ export function PaymentPage() {
                 type="button"
                 disabled
                 aria-describedby="payment-waiting"
-                className={buttonClass}
+                className={`${buttonClass} w-full`}
               >
                 {words.pay}
               </button>
-              <p id="payment-waiting" className="text-sm text-muted">
+              <p id="payment-waiting" className="text-sm leading-snug text-muted">
                 {words.waiting}
               </p>
             </>
@@ -263,7 +285,7 @@ export function PaymentPage() {
       </div>
       <Link
         {...memberPageLink(lang, "membership")}
-        className="inline-flex min-h-11 items-center self-start text-pine"
+        className="inline-flex min-h-11 items-center self-start text-sm text-pine"
       >
         {words.back}
       </Link>
@@ -277,7 +299,7 @@ export function NewsletterPage() {
   const words = pagesCopy(lang).newsletter;
   return (
     <Page title={words.title} lead={words.lead}>
-      <div className="flex max-w-2xl gap-4 border-y border-rule py-7">
+      <div className="flex max-w-2xl gap-4 border-b border-line pb-8">
         <span
           aria-hidden="true"
           className="relative mt-1 inline-flex h-10 w-3 shrink-0 justify-center"
@@ -286,7 +308,7 @@ export function NewsletterPage() {
           <span className="mt-[15px] size-2 rounded-full bg-ink" />
         </span>
         <div className="flex flex-col gap-2">
-          <p className="text-xl md:text-2xl">{words.soon}</p>
+          <p className="paper-title text-xl font-bold md:text-2xl">{words.soon}</p>
           <p className="text-muted">{words.soonNote}</p>
         </div>
       </div>

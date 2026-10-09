@@ -20,6 +20,13 @@ type Comment = {
 
 const MAX = 2000;
 
+/** The same small label a reading uses for "Related readings", which sits just above. */
+function sectionHead(lang: Lang) {
+  const label =
+    lang === "ar" ? "text-sm text-pine" : "text-xs uppercase tracking-[0.14em] text-pine";
+  return `border-b-[3px] border-ink pb-3 font-body font-normal ${label}`;
+}
+
 /**
  * Comments under a reading, in the language of the page. Anyone reads them; members write.
  * The database refuses links, blocked words and haste, and hides a comment that three
@@ -64,14 +71,14 @@ export function Comments({ storyId, lang }: { storyId: string; lang: Lang }) {
   // Until sign-up is switched on, the section stands empty with the way to membership.
   if (!membersOn) {
     return (
-      <section className="border-t border-line pt-8" aria-labelledby="comments">
-        <h2 id="comments" className="text-2xl">
+      <section className="mt-10" aria-labelledby="comments">
+        <h2 id="comments" className={sectionHead(lang)}>
           {words.comments}
         </h2>
-        <p className="mt-6 text-sm text-muted">{words.noComments}</p>
+        <p className="border-b border-line py-6 text-pretty text-muted">{words.noComments}</p>
         <Link
           {...memberPageLink(lang, "membership")}
-          className="mt-6 inline-flex min-h-11 items-center text-pine"
+          className="mt-5 inline-flex min-h-11 items-center text-sm text-pine underline underline-offset-4 hover:underline"
         >
           {pagesCopy(lang).joinToComment}
         </Link>
@@ -133,34 +140,39 @@ export function Comments({ storyId, lang }: { storyId: string; lang: Lang }) {
   }
 
   return (
-    <section className="border-t border-line pt-8" aria-labelledby="comments">
-      <h2 id="comments" className="text-2xl">
+    <section className="mt-10" aria-labelledby="comments">
+      <h2 id="comments" className={sectionHead(lang)}>
         {words.comments}
         {comments && comments.length ? (
-          <span className="ms-3 text-base text-muted tabular-nums">{comments.length}</span>
+          <span className="ms-3 text-xs tabular-nums tracking-normal text-muted normal-case">
+            {comments.length}
+          </span>
         ) : null}
       </h2>
 
       {comments === null ? (
-        <p className="mt-6 text-sm text-muted">{words.loading}</p>
+        <p className="border-b border-line py-6 text-sm text-muted">{words.loading}</p>
       ) : comments.length === 0 ? (
-        <p className="mt-6 text-sm text-muted">{words.noComments}</p>
+        <p className="border-b border-line py-6 text-pretty text-muted">{words.noComments}</p>
       ) : (
-        <ol className="mt-6 flex flex-col">
+        <ol>
           {comments.map((comment) => {
             const own = comment.user_id === userId;
             return (
-              <li key={comment.id} className="flex flex-col gap-2 border-b border-line py-5">
-                <p className="text-sm">
-                  <span>{comment.author_name}</span>
-                  <span className="text-muted">
-                    {" · "}
+              <li key={comment.id} className="border-b border-line py-5">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                  <p className="paper-title text-[1.05rem] font-bold leading-snug">
+                    {comment.author_name}
+                  </p>
+                  <p className="text-xs tabular-nums text-muted">
                     {formatDate(comment.created_at.slice(0, 10), lang)}
-                  </span>
+                  </p>
+                </div>
+                <p className="mt-2 whitespace-pre-line break-words leading-relaxed">
+                  {comment.body}
                 </p>
-                <p className="whitespace-pre-line break-words">{comment.body}</p>
                 {userId ? (
-                  <div className="flex items-center gap-5 text-xs text-muted">
+                  <div className="mt-2 flex flex-wrap items-center gap-x-5 text-xs text-muted">
                     {!own ? (
                       reported.has(comment.id) ? (
                         <span>{words.reported}</span>
@@ -194,18 +206,29 @@ export function Comments({ storyId, lang }: { storyId: string; lang: Lang }) {
 
       <div className="mt-8">
         {member.status === "out" ? (
-          <Link {...accountLink(lang, here)} className="inline-flex min-h-11 items-center text-pine">
+          <Link
+            {...accountLink(lang, here)}
+            className="inline-flex min-h-11 items-center text-sm text-pine underline underline-offset-4 hover:underline"
+          >
             {words.signInToComment}
           </Link>
         ) : member.status === "in" && !named ? (
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 border-t border-line pt-6">
             <p className="text-sm text-muted">{words.errors.nameRequired}</p>
             <NameForm lang={lang} userId={member.user.id} current="" />
           </div>
         ) : member.status === "in" ? (
-          <form onSubmit={post} className="flex flex-col gap-3">
+          <form onSubmit={post} className="flex flex-col gap-3 border-t border-line pt-6">
             <label className="flex flex-col gap-2">
-              <span className="text-sm">{words.yourComment}</span>
+              <span
+                className={
+                  lang === "ar"
+                    ? "text-sm text-pine"
+                    : "text-xs uppercase tracking-[0.14em] text-pine"
+                }
+              >
+                {words.yourComment}
+              </span>
               <textarea
                 value={body}
                 onChange={(event) => setBody(event.target.value)}
@@ -215,10 +238,14 @@ export function Comments({ storyId, lang }: { storyId: string; lang: Lang }) {
               />
             </label>
             <div className="flex items-center justify-between gap-4">
-              <button type="submit" disabled={busy || body.trim().length < 2} className={buttonClass}>
+              <button
+                type="submit"
+                disabled={busy || body.trim().length < 2}
+                className={buttonClass}
+              >
                 {words.post}
               </button>
-              <span className="text-xs text-muted tabular-nums">
+              <span className="text-xs tabular-nums text-muted">
                 {body.length}/{MAX}
               </span>
             </div>
