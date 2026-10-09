@@ -405,8 +405,16 @@ export function Shell({
           >
             <div
               ref={bar}
-              className="no-scrollbar flex gap-5 overflow-x-auto px-5 whitespace-nowrap md:gap-7 md:px-8 lg:justify-between"
+              className="no-scrollbar flex gap-5 overflow-x-auto px-5 whitespace-nowrap md:justify-between md:gap-7 md:px-8"
             >
+              {/* Home first, then the sections; on a wide screen the row runs edge to edge. */}
+              <Link
+                {...homeLink(lang)}
+                data-on={section === "all"}
+                className={barItem(section === "all")}
+              >
+                {copy.home}
+              </Link>
               {THEMES.map((theme) => (
                 <Link
                   key={theme}

@@ -1155,6 +1155,63 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: 1.5rem;
   }
+  /* Desktop only: the three columns end on one line. The middle reading's picture grows
+     to the height of the longest column, so no white well opens under it. */
+  .atlas-bottom > .atlas-col {
+    display: flex;
+    flex-direction: column;
+  }
+  .atlas-bottom .deep-card {
+    flex: 1 1 auto;
+  }
+  .records:not([data-depth="1"]) .deep-card > .deep-pic {
+    flex: 1 1 0;
+    min-height: 11rem;
+  }
+  .records:not([data-depth="1"]) .deep-card > .deep-pic > div {
+    height: 100%;
+  }
+  .records:not([data-depth="1"]) .deep-card > .deep-pic img {
+    height: calc(100% - 0.75rem);
+    aspect-ratio: auto;
+  }
+  /* The numbered column is narrow: the picture goes above the title at the column's
+     full width, so the title and the section line are no longer squeezed. The first
+     three carry a picture; the rest of the list is text only. */
+  .atlas-ranked .ranked-body {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .atlas-ranked .ranked-body > div {
+    flex: none;
+    width: 100%;
+  }
+  .atlas-ranked .ranked-pic {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+  }
+  .atlas-ranked > li:nth-child(n + 4) .ranked-pic {
+    display: none;
+  }
+  /* When the list is shorter than the columns beside it, its pictures take up the
+     difference, so this column also ends on the common line. */
+  .atlas-bottom .atlas-ranked {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .atlas-bottom .atlas-ranked > li {
+    display: flex;
+  }
+  .atlas-bottom .atlas-ranked > li:nth-child(-n + 3) {
+    flex: 1 1 auto;
+  }
+  .atlas-bottom .atlas-ranked > li > a {
+    flex: 1 1 auto;
+  }
+  .atlas-bottom .atlas-ranked > li:nth-child(-n + 3) .ranked-pic {
+    flex: 1 1 auto;
+  }
 }
 @media (min-width: 1150px) {
   .atlas-more-grid {

@@ -966,9 +966,9 @@ function DeepCard({ story, lang }: { story: Story; lang: Lang }) {
   const opening = openingLines(story, lang, summary);
   const arrow = langMeta[lang].dir === "rtl" ? "←" : "→";
   return (
-    <Link {...readLink(lang, story.id)} className="atlas-own group flex flex-col">
+    <Link {...readLink(lang, story.id)} className="atlas-own deep-card group flex flex-col">
       {story.image ? (
-        <div className="record-layer" data-layer="2">
+        <div className="record-layer deep-pic" data-layer="2">
           <div>
             <img
               src={story.image.src}
@@ -1023,7 +1023,7 @@ function RankedRow({ story, lang, n }: { story: Story; lang: Lang; n: number }) 
       <span className="paper-title font-bold text-[1.6rem] leading-none text-ink tabular-nums">
         {n}
       </span>
-      <div className="flex min-w-0 items-start gap-3">
+      <div className="ranked-body flex min-w-0 items-start gap-3">
         {story.image ? (
           <img
             src={story.image.src}
@@ -1032,7 +1032,7 @@ function RankedRow({ story, lang, n }: { story: Story; lang: Lang; n: number }) 
             height={150}
             loading="lazy"
             decoding="async"
-            className="block aspect-[4/3] w-[4.75rem] shrink-0 object-cover"
+            className="ranked-pic block aspect-[4/3] w-[4.75rem] shrink-0 object-cover"
           />
         ) : null}
         <div className="min-w-0 flex-1">
