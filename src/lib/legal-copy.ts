@@ -63,7 +63,7 @@ const EN: Record<LegalPage, Doc> & { updated: string; footer: string; agree: str
         paragraphs: [
           "Supporting membership gives access to the members-only readings and videos for as long as it is active. It is offered monthly or yearly at the prices shown on the payment page, and it renews automatically at the end of each period until you cancel.",
           "Payments are taken by our payment provider, which acts as the seller of record and may add taxes due in your country. Your card details go to the provider and are never seen or stored by Orbis.",
-          "You can cancel at any time. Access continues until the end of the period you have paid for. Refunds follow our refund policy.",
+          "You can cancel at any time. Access continues until the end of the period you have paid for. Periods already paid for are not refunded; see the refund policy.",
         ],
       },
       {
@@ -141,30 +141,24 @@ const EN: Record<LegalPage, Doc> & { updated: string; footer: string; agree: str
   },
   refunds: {
     title: "Refund policy",
-    lead: "If supporting membership is not what you expected, you can have your money back.",
+    lead: "You can cancel supporting membership at any time. Periods already paid for are not refunded.",
     sections: [
-      {
-        heading: "Fourteen days",
-        paragraphs: [
-          "You can ask for a full refund within fourteen days of your first payment, and within fourteen days of each yearly renewal. No reason is needed.",
-        ],
-      },
-      {
-        heading: "Monthly renewals",
-        paragraphs: [
-          "Monthly renewals are not refunded, but you can cancel at any time so that the next month is not charged. Access continues until the end of the month you have paid for.",
-        ],
-      },
-      {
-        heading: "How to ask",
-        paragraphs: [
-          "Write to {email} from the address you used to pay, or use the link in your payment receipt. Refunds go back to the card you paid with, usually within five to ten working days depending on your bank.",
-        ],
-      },
       {
         heading: "Cancelling",
         paragraphs: [
-          "You can cancel from the link in your payment receipt or by writing to {email}. Cancelling stops future payments; it does not delete your free membership.",
+          "You can cancel from the link in your payment receipt or by writing to {email}. Cancelling stops the next payment; access to the members-only readings and videos continues until the end of the period you have paid for. Your free membership stays.",
+        ],
+      },
+      {
+        heading: "Refunds",
+        paragraphs: [
+          "Payments for monthly or yearly periods are not refunded, and no partial refund is made for the unused part of a period.",
+        ],
+      },
+      {
+        heading: "Payment errors",
+        paragraphs: [
+          "If you are charged twice for the same period, or charged after cancelling, write to {email} from the address you used to pay. The wrongly charged amount is returned to the card you paid with.",
         ],
       },
     ],
@@ -218,7 +212,7 @@ const TR: typeof EN = {
         paragraphs: [
           "Destekçi üyelik, etkin olduğu sürece üyelere özel okumalara ve videolara erişim sağlar. Ödeme sayfasında gösterilen fiyatlarla aylık ya da yıllık olarak sunulur ve iptal edilinceye kadar her dönemin sonunda kendiliğinden yenilenir.",
           "Ödemeler, satıcı sıfatıyla hareket eden ödeme hizmet sağlayıcımız tarafından alınır; sağlayıcı bulunduğunuz ülkede ödenmesi gereken vergileri ekleyebilir. Kart bilgileriniz doğrudan sağlayıcıya iletilir; Orbis bu bilgileri görmez ve saklamaz.",
-          "Üyeliğinizi dilediğiniz zaman iptal edebilirsiniz. Erişiminiz ödemesini yaptığınız dönemin sonuna kadar sürer. İadeler iade politikamıza göre yapılır.",
+          "Üyeliğinizi dilediğiniz zaman iptal edebilirsiniz. Erişiminiz ödemesini yaptığınız dönemin sonuna kadar sürer. Ödemesi yapılmış dönemler için iade yapılmaz; ayrıntılar iade politikasındadır.",
         ],
       },
       {
@@ -296,30 +290,24 @@ const TR: typeof EN = {
   },
   refunds: {
     title: "İade politikası",
-    lead: "Destekçi üyelik beklediğiniz gibi çıkmazsa paranızı geri alabilirsiniz.",
+    lead: "Destekçi üyeliği dilediğiniz zaman iptal edebilirsiniz. Ödemesi yapılmış dönemler için iade yapılmaz.",
     sections: [
-      {
-        heading: "On dört gün",
-        paragraphs: [
-          "İlk ödemenizden itibaren on dört gün içinde ve her yıllık yenilemeden itibaren on dört gün içinde tam iade isteyebilirsiniz. Gerekçe göstermeniz gerekmez.",
-        ],
-      },
-      {
-        heading: "Aylık yenilemeler",
-        paragraphs: [
-          "Aylık yenilemeler iade edilmez; ancak dilediğiniz zaman iptal ederek bir sonraki ayın ücretlendirilmesini önleyebilirsiniz. Erişiminiz ödemesini yaptığınız ayın sonuna kadar sürer.",
-        ],
-      },
-      {
-        heading: "Nasıl istenir",
-        paragraphs: [
-          "Ödemede kullandığınız adresten {email} adresine yazın ya da ödeme makbuzunuzdaki bağlantıyı kullanın. İade, ödeme yaptığınız karta yapılır; bankanıza göre genellikle beş ila on iş günü içinde hesabınıza geçer.",
-        ],
-      },
       {
         heading: "İptal",
         paragraphs: [
-          "Üyeliğinizi ödeme makbuzunuzdaki bağlantıdan ya da {email} adresine yazarak iptal edebilirsiniz. İptal, gelecek ödemeleri durdurur; ücretsiz üyeliğinizi silmez.",
+          "Üyeliğinizi ödeme makbuzunuzdaki bağlantıdan ya da {email} adresine yazarak iptal edebilirsiniz. İptal bir sonraki ödemeyi durdurur; üyelere özel okumalara ve videolara erişiminiz ödemesini yaptığınız dönemin sonuna kadar sürer. Ücretsiz üyeliğiniz devam eder.",
+        ],
+      },
+      {
+        heading: "İade",
+        paragraphs: [
+          "Aylık ya da yıllık dönemler için yapılan ödemeler iade edilmez; dönemin kullanılmayan kısmı için kısmi iade yapılmaz.",
+        ],
+      },
+      {
+        heading: "Hatalı ödemeler",
+        paragraphs: [
+          "Aynı dönem için iki kez ya da iptalden sonra ücret alınmışsa ödemede kullandığınız adresten {email} adresine yazın. Hatalı alınan tutar ödeme yaptığınız karta iade edilir.",
         ],
       },
     ],
