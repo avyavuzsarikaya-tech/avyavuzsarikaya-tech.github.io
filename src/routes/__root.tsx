@@ -57,6 +57,12 @@ function RootDocument() {
         {/* Before the first paint: the reader's language (plain addresses only), then the
             saved colour scheme. */}
         <script dangerouslySetInnerHTML={{ __html: LANG_BOOT + LOOK_BOOT }} />
+        <style
+          dangerouslySetInnerHTML={{
+            __html:
+              ".border-t-\\[3px\\].border-ink{border-top-width:1px;margin-inline:-1.25rem;padding-inline:1.25rem}@media(min-width:768px){.border-t-\\[3px\\].border-ink{margin-inline:-2rem;padding-inline:2rem}}",
+          }}
+        />
       </head>
       <body>
         <PreviewHostBridge />
