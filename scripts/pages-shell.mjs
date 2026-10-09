@@ -46,7 +46,7 @@ for (const lang of LANGS) {
       loc: `${prefix}/about`,
     },
     // Membership and newsletter are listed; the payment page is written out but not listed.
-    ...["membership", "payment", "newsletter", "terms", "privacy", "refunds"].map((page) => ({
+    ...["membership", "payment", "newsletter", "terms", "privacy"].map((page) => ({
       file: `${prefix.slice(1)}${prefix ? "/" : ""}${page}.html`,
       loc: `${prefix}/${page}`,
       listed: page !== "payment",

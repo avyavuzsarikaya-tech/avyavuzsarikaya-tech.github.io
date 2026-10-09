@@ -183,7 +183,7 @@ export function memberPageHead(lang: Lang, page: MemberPage) {
   };
 }
 
-/** Head of the terms, privacy or refund page in one language. */
+/** Head of the terms or privacy page in one language. */
 export function legalHead(lang: Lang, page: LegalPage) {
   const doc = legalCopy(lang)[page];
   const path = `/${page}`;

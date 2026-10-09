@@ -4,17 +4,27 @@ import { EDITORIAL } from "@/lib/editorial";
 import { useCopy } from "@/lib/i18n";
 import { homeLink, legalLink } from "@/lib/lang-path";
 import { LEGAL_PAGES, LEGAL_UPDATED, legalCopy, type LegalPage } from "@/lib/legal-copy";
+import { pagesCopy } from "@/lib/members/pages-copy";
+import { periodsFor, price } from "@/lib/members/plans";
 import { formatDate } from "@/lib/text";
+import type { Lang } from "@/lib/types";
 import { useLang } from "@/lib/use-lang";
 
-/** Puts the publisher's name and the contact address into a paragraph. */
-function fill(text: string): string {
+/** Puts the publisher's name, the contact address and the prices into a paragraph. */
+function fill(text: string, lang: Lang): string {
   const publisher = EDITORIAL.publisherName.trim() || "Orbis";
   const email = EDITORIAL.contactEmail.trim();
-  return text.replaceAll("{publisher}", publisher).replaceAll("{email}", email);
+  const per = pagesCopy(lang).membership.per;
+  const prices = periodsFor(lang)
+    .map((period) => `${price(period, lang)} / ${per[period]}`)
+    .join(", ");
+  return text
+    .replaceAll("{publisher}", publisher)
+    .replaceAll("{email}", email)
+    .replaceAll("{prices}", prices);
 }
 
-/** One legal page: title, date, numbered sections, and the other two pages at the foot. */
+/** One legal page: title, date, numbered sections, and the other page at the foot. */
 export function LegalPageView({ page }: { page: LegalPage }) {
   const lang = useLang();
   const copy = useCopy(lang);
@@ -31,7 +41,7 @@ export function LegalPageView({ page }: { page: LegalPage }) {
           </div>
           <header className="flex flex-col gap-4">
             <h1 className="text-4xl md:text-5xl">{doc.title}</h1>
-            <p className="text-pretty text-lg text-muted">{fill(doc.lead)}</p>
+            <p className="text-pretty text-lg text-muted">{fill(doc.lead, lang)}</p>
             <p className="text-sm text-muted">
               {all.updated}: {formatDate(LEGAL_UPDATED, lang)}
             </p>
@@ -48,7 +58,7 @@ export function LegalPageView({ page }: { page: LegalPage }) {
                 </h2>
                 {section.paragraphs.map((para) => (
                   <p key={para} className="text-pretty">
-                    {fill(para)}
+                    {fill(para, lang)}
                   </p>
                 ))}
               </section>

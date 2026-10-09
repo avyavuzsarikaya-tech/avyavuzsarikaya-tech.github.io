@@ -270,16 +270,9 @@ export function PaymentPage() {
               className="text-pine underline-offset-4 hover:underline"
             >
               {legal.terms.title.toLocaleLowerCase(lang)}
-            </Link>{" "}
-            {legal.agree[1]}{" "}
-            <Link
-              {...legalLink(lang, "refunds")}
-              className="text-pine underline-offset-4 hover:underline"
-            >
-              {legal.refunds.title.toLocaleLowerCase(lang)}
             </Link>
             {lang === "tr" ? " " : ""}
-            {legal.agree[2]}
+            {legal.agree[1]}
           </p>
         </aside>
       </div>
