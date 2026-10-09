@@ -1,1 +1,0 @@
-import{t as e}from"./account-D_MGeQUK.js";var t=e;export{t as component};
