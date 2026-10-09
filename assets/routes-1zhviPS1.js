@@ -1,0 +1,1 @@
+import{n as e}from"./atlas-DV_ciofI.js";var t=e;export{t as component};
