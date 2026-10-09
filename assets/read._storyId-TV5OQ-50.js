@@ -1,1 +1,0 @@
-import{ct as e}from"./seed-LaIywih5.js";import{n as t}from"./index-DzX4nvzB.js";import{t as n}from"./reading-bFM2XNfs.js";var r=e();function i(){return(0,r.jsx)(n,{story:t.useLoaderData()})}export{i as component};
