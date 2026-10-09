@@ -214,12 +214,12 @@ export function ReadingPlayer({
   return (
     <div className="reading-player w-full min-w-0">
       {/* One line, always: the seek line gives up width before anything moves down. */}
-      <div className="flex w-full min-w-0 flex-nowrap items-center gap-x-2 sm:gap-x-3">
+      <div className="flex w-full min-w-0 flex-nowrap items-center gap-x-1.5 sm:gap-x-3">
         <button
           type="button"
           onClick={() => void toggle()}
           aria-label={playing ? pause : listen}
-          className="inline-flex h-7 shrink-0 items-center gap-x-3 text-ink"
+          className="inline-flex h-7 min-w-6 shrink-0 items-center justify-center gap-x-3 text-ink sm:justify-start"
         >
           {/* The icon's drawing starts a little inside its box; pull it back so the
               triangle lines up with the text column above (the region and date line). */}
@@ -228,7 +228,8 @@ export function ReadingPlayer({
           ) : (
             <Play className="play-icon size-3" strokeWidth={1.25} aria-hidden="true" />
           )}
-          <span className="text-[11px] uppercase tracking-[0.18em]">
+          {/* On a phone the word gives its room to the PDF and share marks on the same line. */}
+          <span className="hidden text-[11px] uppercase tracking-[0.18em] sm:inline">
             {playing ? pause : listen}
           </span>
         </button>

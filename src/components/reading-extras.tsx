@@ -173,7 +173,7 @@ export function PdfButton({ lang }: { lang: Lang }) {
       onClick={() => window.print()}
       aria-label={words.pdfLong}
       title={words.pdfLong}
-      className="inline-flex h-8 items-center px-1.5 text-sm text-ink tracking-wide"
+      className="inline-flex h-8 items-center px-0 text-sm text-ink tracking-wide sm:px-1.5"
     >
       <span dir="ltr">{words.pdf}</span>
     </button>

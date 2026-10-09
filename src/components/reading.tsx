@@ -89,11 +89,11 @@ function TypeSize({
 }) {
   const atMin = step <= 0;
   const atMax = step >= TYPE_STEPS.length - 1;
-  const button = "inline-flex h-8 w-9 items-center justify-center text-ink disabled:text-muted";
+  const button = "inline-flex h-8 w-8 items-center justify-center text-ink disabled:text-muted";
   return (
     <div
       dir="ltr"
-      className="inline-flex shrink-0 items-center gap-1 rounded-full border border-line px-1.5"
+      className="inline-flex shrink-0 items-center rounded-full border border-line px-1"
     >
       <span className="sr-only">{label}</span>
       <button
@@ -194,7 +194,10 @@ function Reading({ story }: { story: Story | null }) {
           aria-label={copy.sections}
           className="no-print reading-column -mb-3 flex w-full min-w-0 items-center gap-2 text-xs text-muted"
         >
-          <Link {...homeLink(lang)} className="inline-flex min-h-8 shrink-0 items-center hover:text-ink">
+          <Link
+            {...homeLink(lang)}
+            className="inline-flex min-h-8 shrink-0 items-center hover:text-ink"
+          >
             {copy.home}
           </Link>
           <span aria-hidden="true">{langMeta[lang].dir === "rtl" ? "‹" : "›"}</span>
@@ -226,10 +229,17 @@ function Reading({ story }: { story: Story | null }) {
               </p>
             ) : null}
           </div>
-          <div className="reading-tools no-print flex flex-wrap items-center gap-x-3 gap-y-2 py-2.5">
-            <ShareButton lang={lang} title={locale.title || story.locales.en.title} />
+          {/* Phone: text size alone at the top end; below it PDF, share and the player on one
+              line. Wide screen, one line: share, player, PDF, text size. */}
+          <div className="reading-tools no-print flex flex-wrap items-center gap-x-2 gap-y-2 py-2.5 sm:gap-x-3">
+            <div className="order-2 flex md:order-3 md:ms-auto">
+              <PdfButton lang={lang} />
+            </div>
+            <div className="order-3 flex md:order-1">
+              <ShareButton lang={lang} title={locale.title || story.locales.en.title} />
+            </div>
             {locale.audio ? (
-              <div className="min-w-[12rem] flex-1">
+              <div className="order-4 min-w-[12rem] flex-1 md:order-2">
                 <ReadingPlayer
                   clip={locale.audio}
                   listen={copy.listen}
@@ -242,8 +252,7 @@ function Reading({ story }: { story: Story | null }) {
                 />
               </div>
             ) : null}
-            <div className="ms-auto flex shrink-0 items-center gap-5">
-              <PdfButton lang={lang} />
+            <div className="order-1 flex w-full shrink-0 items-center justify-end md:order-4 md:-ms-2 md:w-auto">
               <TypeSize
                 step={typeStep}
                 onDown={() => setStep(typeStep - 1)}
