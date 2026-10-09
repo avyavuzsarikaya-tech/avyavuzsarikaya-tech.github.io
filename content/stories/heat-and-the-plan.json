@@ -2,6 +2,10 @@
   "id": "heat-and-the-plan",
   "theme": "health",
   "date": "2026-10-09",
+  "image": {
+    "src": "images/heat-and-the-plan.jpg",
+    "credit": "A glass of water and a wall thermometer in hard afternoon light."
+  },
   "sources": [
     {
       "n": 1,
