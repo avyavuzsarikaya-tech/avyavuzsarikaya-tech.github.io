@@ -1022,10 +1022,7 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
      more at the right. The DOM order stays newest-first; only the grid places them. */
   .atlas-top {
     grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr) minmax(0, 0.9fr);
-    /* The upper row is as tall as its taller side item; whatever height the middle card
-       needs beyond that goes to the lower row, so the side columns never open a gap
-       between their two readings — any spare room falls at the foot of the column. */
-    grid-template-rows: auto 1fr;
+    grid-template-rows: auto auto;
     column-gap: 1.5rem;
     row-gap: 1.25rem;
     align-items: start;
@@ -1041,8 +1038,6 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
   .atlas-top > .atlas-card:nth-child(1) {
     grid-column: 1;
     grid-row: 1;
-    /* Both upper side items fill the row, so the rules under them line up across the page. */
-    align-self: stretch;
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--color-line);
   }
@@ -1096,29 +1091,24 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
   .atlas-briefs > .atlas-brief:nth-child(2) {
     grid-column: 3;
     grid-row: 1;
-    align-self: stretch;
-    align-content: start;
     padding-top: 0;
-    padding-bottom: 1rem;
   }
   .atlas-briefs > .atlas-brief:nth-child(3) {
     grid-column: 3;
     grid-row: 2;
-    padding-top: 0;
     padding-bottom: 0;
     border-bottom: 0;
   }
+  /* In the two-by-two side columns a short reading fills its row and its text and picture
+     sit in the middle of it. This leaves no open band above the next row. */
+  .atlas-top.records:not([data-depth="1"]) {
+    align-items: stretch;
+  }
+  .atlas-top.records:not([data-depth="1"]) .atlas-brief {
+    align-content: center;
+  }
   .atlas-brief .atlas-card-pic {
     aspect-ratio: 4 / 3;
-  }
-}
-/* The summaries in the column of three short readings make that column far taller than the
-   two cards beside it while the columns are narrow (a laptop, or a phone showing the desktop
-   site), which leaves an empty space under the cards. There they stay out; from 1280px on the
-   column is wide enough to carry them. On a phone, where everything is one column, they show. */
-@media (min-width: 768px) and (max-width: 1279.98px) {
-  .atlas-top .atlas-brief-dek {
-    display: none;
   }
 }
 /* The top cards follow the depth control too: at depth 1 their picture column closes
@@ -1151,7 +1141,6 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
   .atlas-top.records[data-depth="1"] .atlas-briefs > .atlas-brief {
     grid-column: auto;
     grid-row: auto;
-    align-self: auto;
   }
   .atlas-top.records[data-depth="1"] > .atlas-card:nth-child(1) {
     padding-bottom: 0;
