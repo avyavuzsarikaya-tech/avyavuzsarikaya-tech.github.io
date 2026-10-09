@@ -52,6 +52,10 @@ export function readStoryIndex(dir) {
           lead: lead(body),
           minutes: minutes(body),
           written: body.trim().length > 0,
+          // The recording's path, so a card can offer "Listen" without loading the text.
+          ...(copy.audio?.dataUrl && !copy.audio.dataUrl.startsWith("data:")
+            ? { audio: copy.audio.dataUrl }
+            : {}),
         };
       }
       return [

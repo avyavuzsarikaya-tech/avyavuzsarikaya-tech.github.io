@@ -32,6 +32,11 @@ export type Copy = {
   speed: string;
   audioError: string;
   retry: string;
+  /** The 15-second jumps of the players, read aloud by screen readers. */
+  skipBack: string;
+  skipAhead: string;
+  /** Closes the listening bar at the foot of the screen. */
+  closeListen: string;
   textSize: string;
   typeDown: string;
   typeUp: string;
@@ -106,6 +111,9 @@ const copy: Record<Lang, Copy> = {
     speed: "Speed",
     audioError: "The recording could not be played.",
     retry: "Try again",
+    skipBack: "Back 15 seconds",
+    skipAhead: "Ahead 15 seconds",
+    closeListen: "Close the player",
     textSize: "Type size",
     typeDown: "Smaller type",
     typeUp: "Larger type",
@@ -189,6 +197,9 @@ const copy: Record<Lang, Copy> = {
     speed: "Hız",
     audioError: "Ses kaydı açılamadı.",
     retry: "Tekrar dene",
+    skipBack: "15 saniye geri",
+    skipAhead: "15 saniye ileri",
+    closeListen: "Oynatıcıyı kapat",
     textSize: "Metin boyutu",
     typeDown: "Daha küçük yazı",
     typeUp: "Daha büyük yazı",
@@ -272,6 +283,9 @@ const copy: Record<Lang, Copy> = {
     speed: "السرعة",
     audioError: "تعذّر تشغيل التسجيل.",
     retry: "أعد المحاولة",
+    skipBack: "رجوع ١٥ ثانية",
+    skipAhead: "تقدّم ١٥ ثانية",
+    closeListen: "إغلاق المشغّل",
     textSize: "حجم النص",
     typeDown: "تصغير النص",
     typeUp: "تكبير النص",
@@ -356,6 +370,9 @@ const copy: Record<Lang, Copy> = {
     speed: "Vitesse",
     audioError: "L’enregistrement n’a pas pu être lu.",
     retry: "Réessayer",
+    skipBack: "Reculer de 15 secondes",
+    skipAhead: "Avancer de 15 secondes",
+    closeListen: "Fermer le lecteur",
     textSize: "Taille du texte",
     typeDown: "Réduire le texte",
     typeUp: "Agrandir le texte",
@@ -442,6 +459,9 @@ const copy: Record<Lang, Copy> = {
     speed: "Velocidad",
     audioError: "No se pudo reproducir la grabación.",
     retry: "Reintentar",
+    skipBack: "Retroceder 15 segundos",
+    skipAhead: "Avanzar 15 segundos",
+    closeListen: "Cerrar el reproductor",
     textSize: "Tamaño del texto",
     typeDown: "Reducir el texto",
     typeUp: "Agrandar el texto",

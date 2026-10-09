@@ -268,7 +268,12 @@ export function RelatedReadings({ story, lang }: { story: Story; lang: Lang }) {
                   <span className={label}>{copy.themes[card.theme]}</span>
                   {locale.minutes ? <span className="text-xs text-muted">·</span> : null}
                   {locale.minutes ? (
-                    <ReadTime minutes={locale.minutes} lang={lang} pattern={copy.minRead} />
+                    <ReadTime
+                      minutes={locale.minutes}
+                      lang={lang}
+                      pattern={copy.minRead}
+                      story={card}
+                    />
                   ) : null}
                 </div>
               </Link>

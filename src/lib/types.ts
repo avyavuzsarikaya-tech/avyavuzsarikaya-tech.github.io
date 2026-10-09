@@ -128,6 +128,8 @@ export type LocaleCard = {
   minutes: number;
   /** Whether the reading has a text in this language. */
   written: boolean;
+  /** The spoken reading in this language (audio/…), when one has been filed. */
+  audio?: string;
 };
 
 /** A reading as listed on the front page; the full text is loaded when it is opened. */

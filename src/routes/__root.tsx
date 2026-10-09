@@ -6,6 +6,7 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { AuthProvider } from "@/lib/auth/provider";
+import { ListenBar } from "@/components/listen-bar";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { langMeta } from "@/lib/i18n";
 import { LANG_BOOT, langFromPath } from "@/lib/lang-path";
@@ -62,6 +63,8 @@ function RootDocument() {
         <AuthProvider>
           <Outlet />
         </AuthProvider>
+        {/* Listening started from a card keeps playing from page to page. */}
+        {path.startsWith("/panel") ? null : <ListenBar />}
         <Scripts />
       </body>
     </html>

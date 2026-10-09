@@ -1,35 +1,50 @@
-import { Pause, Play } from "lucide-react";
+import { Pause, Play, RotateCcw, RotateCw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Pick } from "@/components/pick";
+import {
+  AUDIO_EVENT,
+  RATES,
+  SKIP_SECONDS,
+  announceStart,
+  fmt,
+  readRate,
+  writeRate,
+} from "@/lib/listen";
 import type { AudioClip } from "@/lib/types";
 
-const RATES = [0.75, 1, 1.25, 1.5, 2] as const;
-const RATE_KEY = "orbis-rate";
-
-function fmt(seconds: number): string {
-  if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
-  const mins = Math.floor(seconds / 60);
-  const rest = Math.floor(seconds % 60);
-  return `${mins}:${rest.toString().padStart(2, "0")}`;
+/** Back or ahead fifteen seconds: a turning arrow with the number beside it. */
+export function SkipButton({
+  direction,
+  label,
+  onClick,
+}: {
+  direction: "back" | "ahead";
+  label: string;
+  onClick: () => void;
+}) {
+  const Icon = direction === "back" ? RotateCcw : RotateCw;
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      title={label}
+      className="inline-flex h-7 shrink-0 items-center gap-x-1 text-ink"
+    >
+      {direction === "back" ? (
+        <Icon className="size-3.5 rtl:-scale-x-100" strokeWidth={1.25} aria-hidden="true" />
+      ) : null}
+      <span dir="ltr" className="text-[10px] tabular-nums tracking-wide" aria-hidden="true">
+        {SKIP_SECONDS}
+      </span>
+      {direction === "ahead" ? (
+        <Icon className="size-3.5 rtl:-scale-x-100" strokeWidth={1.25} aria-hidden="true" />
+      ) : null}
+    </button>
+  );
 }
 
-function readRate(): number {
-  try {
-    const next = Number(localStorage.getItem(RATE_KEY));
-    if ((RATES as readonly number[]).includes(next)) return next;
-  } catch {
-    /* keep default */
-  }
-  return 1;
-}
-
-function writeRate(value: number) {
-  try {
-    localStorage.setItem(RATE_KEY, String(value));
-  } catch {
-    /* ignore */
-  }
-}
+const PLAYER = "reading";
 
 export function ReadingPlayer({
   clip,
@@ -38,6 +53,8 @@ export function ReadingPlayer({
   speed = "Speed",
   failed = "The recording could not be played.",
   retry = "Try again",
+  back = "Back 15 seconds",
+  ahead = "Ahead 15 seconds",
 }: {
   clip: AudioClip;
   listen: string;
@@ -45,6 +62,8 @@ export function ReadingPlayer({
   speed?: string;
   failed?: string;
   retry?: string;
+  back?: string;
+  ahead?: string;
 }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
@@ -58,6 +77,17 @@ export function ReadingPlayer({
 
   useEffect(() => {
     setRate(readRate());
+  }, []);
+
+  // The bar at the foot of the screen started a recording: this one stops.
+  useEffect(() => {
+    const onStart = (event: Event) => {
+      if ((event as CustomEvent<string>).detail === PLAYER) return;
+      audioRef.current?.pause();
+      setPlaying(false);
+    };
+    window.addEventListener(AUDIO_EVENT, onStart);
+    return () => window.removeEventListener(AUDIO_EVENT, onStart);
   }, []);
 
   useEffect(() => {
@@ -109,6 +139,7 @@ export function ReadingPlayer({
     }
     try {
       audio.playbackRate = rate;
+      announceStart(PLAYER);
       await audio.play();
       setPlaying(true);
       setError(false);
@@ -132,6 +163,13 @@ export function ReadingPlayer({
     if (!audio) return;
     audio.currentTime = value;
     setProgress(value);
+  }
+
+  function skip(step: number) {
+    const audio = audioRef.current;
+    if (!audio) return;
+    const end = duration || (Number.isFinite(audio.duration) ? audio.duration : 0);
+    seek(Math.max(0, end ? Math.min(audio.currentTime + step, end) : audio.currentTime + step));
   }
 
   function changeRate(value: number) {
@@ -165,6 +203,8 @@ export function ReadingPlayer({
             {playing ? pause : listen}
           </span>
         </button>
+        <SkipButton direction="back" label={back} onClick={() => skip(-SKIP_SECONDS)} />
+        <SkipButton direction="ahead" label={ahead} onClick={() => skip(SKIP_SECONDS)} />
         <div className="seek-line">
           <div className="seek-rule" aria-hidden="true">
             <span className="seek-fill" style={{ width: pct }} />

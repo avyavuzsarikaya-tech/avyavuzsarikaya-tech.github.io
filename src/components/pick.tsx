@@ -18,6 +18,7 @@ export function Pick<T extends string>({
   label,
   tone,
   align = "start",
+  drop = "down",
   children,
   buttonClassName = "",
 }: {
@@ -27,6 +28,8 @@ export function Pick<T extends string>({
   label: string;
   tone: "panel" | "page";
   align?: "start" | "end";
+  /** "up" opens the menu above the button (for the bar at the foot of the screen). */
+  drop?: "down" | "up";
   children: React.ReactNode;
   buttonClassName?: string;
 }) {
@@ -120,9 +123,9 @@ export function Pick<T extends string>({
               setOpen(false);
             }
           }}
-          className={`absolute top-full z-50 mt-1 flex min-w-full flex-col py-1 ${
-            align === "end" ? "end-0" : "start-0"
-          } ${menu}`}
+          className={`absolute z-50 flex min-w-full flex-col py-1 ${
+            drop === "up" ? "bottom-full mb-1" : "top-full mt-1"
+          } ${align === "end" ? "end-0" : "start-0"} ${menu}`}
         >
           {options.map((option) => (
             <li key={option.value}>

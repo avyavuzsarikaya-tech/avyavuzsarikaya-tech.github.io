@@ -51,6 +51,12 @@ export const CARDS: StoryCard[] = INDEX.map((card) => ({
   ...card,
   theme: normalizeTheme(card.theme),
   image: card.image ? { ...card.image, src: mediaUrl(card.image.src) } : undefined,
+  locales: Object.fromEntries(
+    Object.entries(card.locales).map(([lang, locale]) => [
+      lang,
+      locale.audio ? { ...locale, audio: mediaUrl(locale.audio) } : locale,
+    ]),
+  ) as StoryCard["locales"],
 }));
 
 export function findCard(id: string): StoryCard | undefined {

@@ -174,7 +174,12 @@ export function SearchPage() {
                         <span className="whitespace-nowrap">{formatDate(story.date, lang)}</span>
                       </p>
                       {local.minutes ? (
-                        <ReadTime minutes={local.minutes} lang={lang} pattern={copy.minRead} />
+                        <ReadTime
+                          minutes={local.minutes}
+                          lang={lang}
+                          pattern={copy.minRead}
+                          story={story}
+                        />
                       ) : null}
                     </div>
                   </Link>

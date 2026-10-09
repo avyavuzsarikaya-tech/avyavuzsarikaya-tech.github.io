@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
-import { ReadTime } from "@/components/read-time";
+import { CardListen, ReadTime } from "@/components/read-time";
 import { Shell } from "@/components/shell";
 import { useFrameCopy } from "@/lib/frame-copy";
 import { imageCaption } from "@/lib/editorial";
@@ -31,7 +31,7 @@ function Meta({ story, lang, section }: { story: Story; lang: Lang; section: The
         ) : null}
         <span className="whitespace-nowrap">{formatDate(story.date, lang)}</span>
       </p>
-      {minutes ? <ReadTime minutes={minutes} lang={lang} pattern={copy.minRead} /> : null}
+      {minutes ? <ReadTime minutes={minutes} lang={lang} pattern={copy.minRead} story={story} /> : null}
     </div>
   );
 }
@@ -430,6 +430,9 @@ function Kicker({ story, lang }: { story: Story; lang: Lang }) {
           <span className="whitespace-nowrap">{copy.minRead.replace("{n}", String(minutes))}</span>
         </span>
       ) : null}
+      <span className="whitespace-nowrap">
+        <CardListen story={story} lang={lang} />
+      </span>
     </p>
   );
 }
@@ -1088,7 +1091,7 @@ function CardBody({ story, lang, size }: { story: Story; lang: Lang; size: CardS
       {summary ? (
         <p className={`font-body text-pretty text-ink ${CARD_SUMMARY[size]}`}>{summary}</p>
       ) : null}
-      {minutes ? <ReadTime minutes={minutes} lang={lang} pattern={copy.minRead} /> : null}
+      {minutes ? <ReadTime minutes={minutes} lang={lang} pattern={copy.minRead} story={story} /> : null}
     </>
   );
 }

@@ -237,6 +237,8 @@ function Reading({ story }: { story: Story | null }) {
                   speed={copy.speed}
                   failed={copy.audioError}
                   retry={copy.retry}
+                  back={copy.skipBack}
+                  ahead={copy.skipAhead}
                 />
               </div>
             ) : null}
