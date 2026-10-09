@@ -1,5 +1,77 @@
 [
   {
+    "id": "migration-and-the-vote",
+    "theme": "politics",
+    "date": "2026-10-08",
+    "title": "Does migration move voters to the right?",
+    "dek": "Studies that follow where newcomers actually settled find an effect, but its size and even its direction depend on contact.",
+    "region": "Denmark · Austria · Greece",
+    "body": "The question is usually argued from national polls, which cannot separate cause from mood. A cleaner test uses moments when the state, not the migrants, decided where people would live. Denmark did this between 1986 and 1998, placing refugees in municipalities with little regard to local politics. Comparing places that received more refugees with places that received fewer, Dustmann, Vasiljeva and Damm found that larger allocations raised the vote for anti-immigration parties in most municipalities. In the largest and most urban ones, the effect went the other way. Austria offers a second record. Halla, Wagner and Zweimüller found that communities with a larger share of immigrants gave more votes to the Freedom Party, the country's main party of the far right. The effect was tied to worries about jobs and about the quality of neighbourhoods, and it was stronger where the newcomers had little formal education. Contact changes the picture. During the 2015 refugee movement through Austria, Steinmayr compared communities that only saw refugees pass through with communities that housed asylum seekers for months. Brief exposure went with higher support for the far right. Longer contact, where refugees became neighbours, went with a small fall. The Greek islands of the eastern Aegean give a sharper case. In 2015 some islands received very large numbers of arrivals by sea, while similar islands farther from the Turkish coast received few. Dinas and colleagues found that the far-right Golden Dawn gained about two percentage points more on the exposed islands than on comparable ones between the two elections of that year. Read together, the studies agree on a few points. The effect is real but modest, measured in percentage points rather than landslides. It is strongest where arrival is sudden and contact is thin, and it can weaken or reverse in large cities and where newcomers stay long enough to be known. Most of this evidence comes from Europe and from refugees rather than labour migrants, so it should travel to other places with care."
+  },
+  {
+    "id": "earthquake-and-the-economy",
+    "theme": "economy",
+    "date": "2026-10-07",
+    "title": "How many years does an earthquake cost an economy?",
+    "dek": "For most countries, national output recovers within a few years. The places hit hardest can carry the loss for decades.",
+    "region": "Kobe · Port-au-Prince",
+    "body": "Two numbers are often confused after a large earthquake. One is damage: the value of the buildings, roads, ports and machines that were destroyed. The other is output: what the economy produces in the years that follow. Damage is counted once. The loss of output is spread over time and is much harder to see. Across countries, the record is calmer than the pictures. Cavallo, Galiani, Noy and Pantano compared countries struck by very large disasters with synthetic versions of themselves, built from similar countries that were not struck. On average, even very large disasters did not leave a lasting mark on national output. The exceptions were extreme events that were followed by radical political change, such as a revolution. The national average can hide the local story. Kobe is the standard case. The Great Hanshin earthquake of January 1995 killed more than 6,400 people and wrecked much of the city's port, then one of the busiest container ports in the world. Japan's economy absorbed the shock. Kobe did not fully return to its earlier path: a study of the city two decades later found income per person still well below the level it would likely have reached, and the port lost traffic to rivals in the region that it never won back. Size relative to the economy matters most. When the 2010 earthquake struck Haiti, the official needs assessment put damage and losses at about 7.8 billion dollars, roughly 120 percent of the country's output in the previous year. A shock of that size cannot be absorbed by insurance, reserves or a quick rebuilding boom; it sets the starting point of the next decade. What decides the answer, more than the magnitude of the earthquake, is set before it happens: how much of the economy sits in the area that shakes, whether buildings follow the code, whether firms and households are insured, and whether reconstruction money arrives quickly and reaches the people who lost most."
+  },
+  {
+    "id": "bread-and-diabetes",
+    "theme": "health",
+    "date": "2026-10-06",
+    "title": "Bread on the table, and diabetes",
+    "dek": "What the grain has kept matters more than whether bread is eaten at all.",
+    "region": "Global",
+    "body": "The World Health Organization counts about 830 million adults living with diabetes in 2022, up from around 200 million in 1990. Most have type 2 diabetes, which is closely linked to excess body weight and too little physical activity, and much of the rise has come in low- and middle-income countries. In much of the world, bread is the main way grain reaches the table, so the question of what bread does is a practical one. The research does not treat bread as a single food. It separates whole grain, in which the bran and the germ are kept, from refined grain, in which they are milled away and mostly starch remains. In a review of prospective studies, Aune and colleagues found that people who ate about three servings of whole grains a day had roughly a third lower risk of developing type 2 diabetes than people who ate almost none. Refined grains showed no such association. A later analysis of three American cohorts, which followed nearly 195,000 adults for decades, reached a similar result for whole-grain foods such as dark bread, oatmeal and whole-grain breakfast cereals. The usual explanation is the fibre and the structure of the grain. Starch from finely milled white flour is digested quickly and raises blood sugar fast; bran and coarser particles slow that down and keep people full for longer. Whole grains also carry minerals that are largely lost in milling. These studies have limits. They observe what people eat; they do not assign it. People who choose whole grains tend to differ in other ways, such as how much they move and whether they smoke, and the analyses can adjust for this only in part. Labels are a second trap: a brown colour is not proof of whole grain, which is why nutrition agencies advise checking that a whole grain is named first in the ingredient list."
+  },
+  {
+    "id": "consumption-and-wellbeing",
+    "theme": "research",
+    "date": "2026-10-05",
+    "title": "Does consuming more mean living better?",
+    "dek": "Income and life satisfaction rise together, but each step buys less than the one before. The argument is over where, and for whom, it stops.",
+    "region": "Global · United States",
+    "body": "In 1974 the economist Richard Easterlin noticed a puzzle. Within a country, richer people said they were happier than poorer people. Yet as countries grew richer over the decades, average reported happiness barely moved. The puzzle took his name and shaped a long argument about whether growth makes lives better. With far larger surveys, Stevenson and Wolfers argued that the paradox mostly disappears. Life satisfaction rises with income both within and across countries, but it rises with the proportion of the change rather than the amount: doubling an income goes with a similar gain whether one starts poor or rich. Each additional dollar therefore buys less. The next question was whether the gains ever stop. Using about 450,000 survey responses from American residents, Kahneman and Deaton found that people's overall judgement of their lives kept rising with income, while their day-to-day emotions stopped improving at about 75,000 dollars a year. Later work by Killingsworth, sampling feelings in real time, found no such plateau. In 2023 the two sides analysed the data together. For most people, happiness keeps rising with income. A plateau appears only among the least happy fifth, for whom more money beyond about 100,000 dollars no longer eases their unhappiness. Income is not the same as consumption, and what money is spent on also matters. In a set of studies, Dunn, Aknin and Norton found that people who spent more on others, as gifts or donations, reported greater happiness than people who spent the same money on themselves. The evidence supports neither \"more is always better\" nor \"money does not matter\". It supports a smaller claim: more helps, by less and less. It also measures only how people say they feel. Health, free time and what consumption costs the environment are left out of these surveys, as they are left out of the national accounts."
+  },
+  {
+    "id": "measuring-sea-level",
+    "theme": "science",
+    "date": "2026-10-02",
+    "title": "How is sea level measured?",
+    "dek": "A rise of a few millimetres a year is built from tide gauges, satellites and a correction for land that moves.",
+    "region": "Global",
+    "body": "The sea is never still. Tides, waves, wind and air pressure move its surface by metres every day. Sea level is therefore not a single reading but an average, taken over long enough periods for those movements to cancel out. The oldest instrument is the tide gauge, which records the height of the water against a fixed mark on land. Some records are centuries old; Amsterdam's begins around 1700. Since 1933 the Permanent Service for Mean Sea Level has collected such records, and it now holds data from more than two thousand gauges around the world. A tide gauge has a weakness: it measures the sea relative to the land it stands on, and land moves. Parts of Scandinavia are still rising as they recover from the weight of the ice sheets of the last ice age. Many coastal cities are sinking, often because groundwater is pumped from beneath them. Modern gauges are paired with satellite positioning receivers so that the movement of the land can be measured and separated from the movement of the sea. Since 1992 satellites have measured the open ocean directly. A radar altimeter sends pulses down to the sea surface and times their return; because the satellite's own position is known to within centimetres, the height of the sea can be calculated across almost the whole globe every ten days. TOPEX/Poseidon began the record, followed by the Jason missions and Sentinel-6 Michael Freilich, launched in 2020. Put together, the records give a clear result. According to the Intergovernmental Panel on Climate Change, global mean sea level rose by about 20 centimetres between 1901 and 2018. The rate was about 1.3 millimetres a year in the first seven decades, 1.9 millimetres between 1971 and 2006, and 3.7 millimetres between 2006 and 2018. The rise has two main causes: water expands as it warms, and glaciers and ice sheets add water as they melt. Gravity-measuring satellites, flying since 2002, weigh the ice that is lost. The global figure is an average; on any single coast, currents and the movement of the land can make the local rise faster or slower."
+  },
+  {
+    "id": "rivers-running-dry",
+    "theme": "environment",
+    "date": "2026-10-01",
+    "title": "Why are rivers running dry?",
+    "dek": "Some of the world's great rivers no longer reach the sea for part of the year. The main cause lies upstream, in fields and reservoirs.",
+    "region": "Colorado · Yellow River · Aral basin",
+    "body": "The Colorado River once ended in a wide delta on the Gulf of California. For most years since the 1960s it has not reached the sea at all. Its water is divided between seven American states and Mexico, and nearly all of it is taken for farms and cities before it gets there. The rules for that division were set in 1922, after a run of unusually wet years, and they promised more water than the river usually carries. China's Yellow River tells a similar story. In 1997 its lower course ran dry for 226 days, and the river failed to reach the sea for much of the year. Since 1999 the river has been managed under a central allocation that keeps a minimum flow at the mouth, which shows that a dry river is often a matter of rules rather than rainfall. The best-known case is the Aral Sea. From the 1960s the Amu Darya and Syr Darya, the two rivers that fed it, were diverted on a vast scale to irrigate cotton in Central Asia. The sea, once one of the largest lakes in the world, broke apart and shrank to a fraction of its former size. The common thread is withdrawal. Agriculture accounts for about 70 percent of the fresh water taken from rivers, lakes and aquifers worldwide, according to the FAO. Dams add a second pressure: a global mapping by Grill and colleagues found that only 37 percent of rivers longer than 1,000 kilometres still flow freely along their whole length. A third is underground. When wells lower the water table, the groundwater that keeps rivers running in the dry season stops seeping in. A warmer climate adds to all three, with more evaporation from reservoirs and fields and less snow to feed rivers in summer. But in most of the cases above, the river ran dry because of decisions about how much to take, made when there seemed to be enough."
+  },
+  {
+    "id": "city-light-and-sleep",
+    "theme": "health",
+    "date": "2026-09-30",
+    "title": "How do city lights affect sleep?",
+    "dek": "Most people now live under a night sky that never fully darkens. The body's clock reads that light as a signal.",
+    "region": "Global",
+    "body": "When Falchi and colleagues mapped artificial night-sky brightness in 2016, they found that more than 80 percent of the world's population, and more than 99 percent of people in the United States and Europe, live under light-polluted skies. The Milky Way is hidden from about a third of humanity. The glow is growing quickly. Between 2011 and 2022, tens of thousands of volunteers around the world reported which stars they could still see. Kyba and colleagues calculated from their reports that the sky was getting brighter by about 9.6 percent a year, which means it would double in brightness in less than eight years. Satellites miss much of this change, partly because they cannot see the blue light of modern white LEDs well. The body reads light as a signal of time. Special cells in the retina, most sensitive to blue light, report to the brain's internal clock, and light in the evening delays the release of melatonin, the hormone that prepares the body for sleep. White LEDs, now common in street lighting, emit a large share of their light in that blue range. Whether outdoor light is enough to change sleep is harder to show. In a study of nearly 16,000 American adults, Ohayon and Milesi matched interviews about sleep with satellite measurements of night light where each person lived. People in brighter areas tended to go to bed later, sleep less and be less satisfied with their sleep. The link is an association, not proof. What reaches the eye in a bedroom depends on curtains, windows and screens as much as on street lamps, and people in bright city centres differ from rural residents in many other ways. Cities that want darker nights have simple tools: shielded lamps that point down, warmer light colours and dimming in the late hours."
+  },
+  {
+    "id": "data-centres-and-water",
+    "theme": "technology",
+    "date": "2026-09-29",
+    "title": "How much water do data centres use?",
+    "dek": "The answer has two parts: the water evaporated to cool the servers, and the water used to make their electricity.",
+    "region": "Global",
+    "body": "Data centres are, first of all, users of electricity. The International Energy Agency estimates that they consumed about 415 terawatt-hours in 2024, around 1.5 percent of the world's electricity, and expects that figure to more than double by 2030 as computing for artificial intelligence grows. Nearly all of that electricity ends up as heat, and the heat has to be removed. Many large facilities do this with evaporative cooling: water is sprayed or circulated through cooling towers, part of it evaporates, and the evaporation carries heat away. Water that evaporates is consumed in the strict sense. It leaves the local river basin as vapour and does not return to the pipe. Other designs cool with air or with closed loops of liquid. They use far less water but usually more electricity. The industry reports this with a ratio called water usage effectiveness: litres of water per kilowatt-hour of energy used by the computers. The ratio covers only the water used on site, and it varies widely with climate. A facility in a cool region can run on outside air for most of the year; one in a hot, dry region evaporates the most water in summer, when water is scarcest. The second part is off site. Thermal power plants also use water for cooling, so the electricity a data centre buys has a water footprint of its own. Li, Yang, Islam and Ren estimated that training the language model GPT-3 in Microsoft's American data centres could have evaporated about 700,000 litres of clean fresh water on site alone, and that the total rises when the water behind the electricity is counted. Comparing companies remains difficult. Most publish water use in annual sustainability reports, but usually as a company-wide total rather than site by site, which is the level at which water stress is felt. Two data centres doing the same work can draw very different amounts of water depending on where they are, how they are cooled and which power plants supply them."
+  },
+  {
     "id": "carbon-books",
     "theme": "climate",
     "date": "2026-03-12",
@@ -43,95 +115,5 @@
     "dek": "A study that never enters a public register is harder to find, and harder to count.",
     "region": "Global",
     "body": "A clinical trial is a plan before it is a result. The plan – who is enrolled, what is compared, which outcome counts – can be filed in a public register before the first participant is seen. The World Health Organization keeps a portal that searches the registries meeting its standard, rather than a single national list. The largest of those registries is run by the United States National Library of Medicine. It is one book, not the whole shelf. A trial recorded there may also be recorded in another registry, and a trial recorded nowhere is missing from both the count and the later reading of what was asked. Journals that follow the medical editors’ recommendations treat registration as part of the record, not as a courtesy. The point for this atlas is narrow. A result that cannot be walked back to a registered question is a thinner source than one that can."
-  },
-  {
-    "id": "sample-migration-vote",
-    "theme": "politics",
-    "date": "2025-07-10",
-    "title": "Does migration move voters to the right?",
-    "dek": "A sample reading.",
-    "region": "Sample",
-    "body": "This is a sample reading. It is here to test the page layout; the text does not rest on any research. The real reading under this title will be published later, with its sources."
-  },
-  {
-    "id": "sample-quake-economy",
-    "theme": "economy",
-    "date": "2025-06-18",
-    "title": "How many years does an earthquake cost an economy?",
-    "dek": "A sample reading.",
-    "region": "Sample",
-    "body": "This is a sample reading. It is here to test the page layout; the text does not rest on any research. The real reading under this title will be published later, with its sources."
-  },
-  {
-    "id": "sample-bread-diabetes",
-    "theme": "health",
-    "date": "2025-05-22",
-    "title": "Bread on the table, and diabetes",
-    "dek": "A sample reading.",
-    "region": "Sample",
-    "body": "This is a sample reading. It is here to test the page layout; the text does not rest on any research. The real reading under this title will be published later, with its sources."
-  },
-  {
-    "id": "sample-consumption",
-    "theme": "research",
-    "date": "2025-04-30",
-    "title": "Does consuming more mean living better?",
-    "dek": "A sample reading.",
-    "region": "Sample",
-    "body": "This is a sample reading. It is here to test the page layout; the text does not rest on any research. The real reading under this title will be published later, with its sources."
-  },
-  {
-    "id": "sample-sea-level",
-    "theme": "science",
-    "date": "2025-04-02",
-    "title": "How is sea level measured?",
-    "dek": "A sample reading.",
-    "region": "Sample",
-    "body": "This is a sample reading. It is here to test the page layout; the text does not rest on any research. The real reading under this title will be published later, with its sources."
-  },
-  {
-    "id": "sample-data-water",
-    "theme": "technology",
-    "date": "2025-03-12",
-    "title": "How much water do data centres use?",
-    "dek": "A sample reading.",
-    "region": "Sample",
-    "body": "This is a sample reading. It is here to test the page layout; the text does not rest on any research. The real reading under this title will be published later, with its sources."
-  },
-  {
-    "id": "sample-rivers",
-    "theme": "environment",
-    "date": "2025-02-19",
-    "title": "Why are rivers running dry?",
-    "dek": "A sample reading.",
-    "region": "Sample",
-    "body": "This is a sample reading. It is here to test the page layout; the text does not rest on any research. The real reading under this title will be published later, with its sources."
-  },
-  {
-    "id": "sample-cuisine",
-    "theme": "culture",
-    "date": "2025-01-28",
-    "title": "How does a cuisine build a nation’s identity?",
-    "dek": "A sample reading.",
-    "region": "Sample",
-    "body": "This is a sample reading. It is here to test the page layout; the text does not rest on any research. The real reading under this title will be published later, with its sources."
-  },
-  {
-    "id": "sample-city-light",
-    "theme": "health",
-    "date": "2024-12-17",
-    "title": "How do city lights affect sleep?",
-    "dek": "A sample reading.",
-    "region": "Sample",
-    "body": "This is a sample reading. It is here to test the page layout; the text does not rest on any research. The real reading under this title will be published later, with its sources."
-  },
-  {
-    "id": "sample-turnout",
-    "theme": "politics",
-    "date": "2024-11-26",
-    "title": "Why is election turnout falling?",
-    "dek": "A sample reading.",
-    "region": "Sample",
-    "body": "This is a sample reading. It is here to test the page layout; the text does not rest on any research. The real reading under this title will be published later, with its sources."
   }
 ]

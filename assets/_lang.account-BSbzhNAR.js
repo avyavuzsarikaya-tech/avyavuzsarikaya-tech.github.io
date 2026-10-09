@@ -1,0 +1,1 @@
+import{t as e}from"./account-kGuU-AGf.js";var t=e;export{t as component};
