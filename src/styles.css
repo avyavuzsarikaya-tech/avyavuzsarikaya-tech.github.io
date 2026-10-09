@@ -1018,11 +1018,17 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
   }
 }
 @media (min-width: 768px) {
-  /* As in the GPT page: two large cards side by side, and a ruled column of three short
-     readings on the right, each with its picture on the start side. */
+  /* Desktop: two readings at the left, the pictured reading large in the middle and two
+     more at the right. The DOM order stays newest-first; only the grid places them. */
   .atlas-top {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.9fr);
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr) minmax(0, 0.9fr);
+    /* The upper row is as tall as its taller side item; whatever height the middle card
+       needs beyond that goes to the lower row, so the side columns never open a gap
+       between their two readings — any spare room falls at the foot of the column. */
+    grid-template-rows: auto 1fr;
     column-gap: 1.5rem;
+    row-gap: 1.25rem;
+    align-items: start;
     padding-block: 1.5rem;
   }
   .atlas-card {
@@ -1032,17 +1038,35 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     padding: 0;
     border: 0;
   }
-  /* The rule between the two cards sits in the middle of the gap, so both cards keep the
-     same width. */
+  .atlas-top > .atlas-card:nth-child(1) {
+    grid-column: 1;
+    grid-row: 1;
+    /* Both upper side items fill the row, so the rules under them line up across the page. */
+    align-self: stretch;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .atlas-top > .atlas-card:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1 / 3;
+  }
+  /* Rules on both sides of the middle card sit in the middle of the gaps and run through
+     both rows. */
   .atlas-card + .atlas-card {
     position: relative;
   }
-  .atlas-card + .atlas-card::before {
+  .atlas-card + .atlas-card::before,
+  .atlas-card + .atlas-card::after {
     content: "";
     position: absolute;
     inset-block: 0;
-    inset-inline-start: -0.75rem;
     border-inline-start: 1px solid var(--color-line);
+  }
+  .atlas-card + .atlas-card::before {
+    inset-inline-start: -0.75rem;
+  }
+  .atlas-card + .atlas-card::after {
+    inset-inline-end: -0.75rem;
   }
   .atlas-card .atlas-card-pic {
     aspect-ratio: 16 / 10;
@@ -1052,10 +1076,7 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     display: block;
   }
   .atlas-briefs {
-    display: flex;
-    flex-direction: column;
-    padding-inline-start: 1.5rem;
-    border-inline-start: 1px solid var(--color-line);
+    display: contents;
   }
   .atlas-brief {
     grid-template-columns: 44% minmax(0, 1fr);
@@ -1063,10 +1084,27 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     padding-block: 0.95rem;
     border-bottom: 1px solid var(--color-line);
   }
-  .atlas-brief:first-child {
+  /* The first short reading moves from the old right column to the foot of the left one;
+     the other two keep their order on the right. */
+  .atlas-briefs > .atlas-brief:nth-child(1) {
+    grid-column: 1;
+    grid-row: 2;
     padding-top: 0;
+    padding-bottom: 0;
+    border-bottom: 0;
   }
-  .atlas-brief:last-child {
+  .atlas-briefs > .atlas-brief:nth-child(2) {
+    grid-column: 3;
+    grid-row: 1;
+    align-self: stretch;
+    align-content: start;
+    padding-top: 0;
+    padding-bottom: 1rem;
+  }
+  .atlas-briefs > .atlas-brief:nth-child(3) {
+    grid-column: 3;
+    grid-row: 2;
+    padding-top: 0;
     padding-bottom: 0;
     border-bottom: 0;
   }
@@ -1105,7 +1143,22 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
 @media (min-width: 768px) {
   .atlas-top.records[data-depth="1"] {
     grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-rows: none;
+    row-gap: 0;
     padding-block-end: 0.25rem;
+  }
+  .atlas-top.records[data-depth="1"] > .atlas-card,
+  .atlas-top.records[data-depth="1"] .atlas-briefs > .atlas-brief {
+    grid-column: auto;
+    grid-row: auto;
+    align-self: auto;
+  }
+  .atlas-top.records[data-depth="1"] > .atlas-card:nth-child(1) {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+  .atlas-top.records[data-depth="1"] .atlas-card + .atlas-card::after {
+    content: none;
   }
   .atlas-top.records[data-depth="1"] .atlas-briefs {
     display: contents;
@@ -1148,6 +1201,35 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     display: grid;
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 0.7fr);
     column-gap: 1.5rem;
+  }
+  /* Headline mode is not a balancing act: no equal-height columns, no reserved room and no
+     picture in the numbered list. Every column starts at the top and ends with its text. */
+  .atlas-bottom.records[data-depth="1"] {
+    align-items: start;
+  }
+  .atlas-bottom.records[data-depth="1"] > .atlas-col,
+  .atlas-bottom.records[data-depth="1"] .atlas-deep-list,
+  .atlas-bottom.records[data-depth="1"] .atlas-ranked {
+    display: block;
+  }
+  .atlas-bottom.records[data-depth="1"] .atlas-deep-list > li,
+  .atlas-bottom.records[data-depth="1"] .atlas-ranked > li {
+    display: block;
+  }
+  .atlas-bottom.records[data-depth="1"] .atlas-deep-list > li + li {
+    margin-top: 0;
+  }
+  .atlas-bottom.records[data-depth="1"] .deep-card,
+  .atlas-bottom.records[data-depth="1"] .atlas-ranked > li > a {
+    flex: none;
+  }
+  .atlas-bottom.records[data-depth="1"] .ranked-pic {
+    display: none;
+  }
+  /* Only the front page carries these columns; let the closing rule follow them without
+     the usual page-end gap. The space below the rule stays unchanged. */
+  .page-width:has(.atlas-bottom) > div:last-child {
+    padding-top: 0;
   }
   .atlas-col + .atlas-col {
     margin-top: 0;
