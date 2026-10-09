@@ -1133,6 +1133,10 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     transition: none;
   }
 }
+/* Column fill text exists for the desktop front page only. */
+.atlas-fill {
+  display: none;
+}
 /* Under the chain: three columns as on a printed page, as in the GPT page: the latest,
    one reading in depth, and the numbered list running down the right. On a phone they
    follow each other. */
@@ -1155,8 +1159,9 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: 1.5rem;
   }
-  /* Desktop only: the three columns end on one line. The middle reading's picture grows
-     to the height of the longest column, so no white well opens under it. */
+  /* Desktop only: the three columns end on one line. Where a column is shorter than the
+     longest one, the reading's opening text runs on into the room left (pictures keep
+     their own shape). The fill adds no height itself; whole lines are fitted by script. */
   .atlas-bottom > .atlas-col {
     display: flex;
     flex-direction: column;
@@ -1164,16 +1169,25 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
   .atlas-bottom .deep-card {
     flex: 1 1 auto;
   }
-  .records:not([data-depth="1"]) .deep-card > .deep-pic {
-    flex: 1 1 0;
-    min-height: 11rem;
+  .records:not([data-depth="1"]) .atlas-fill {
+    display: block;
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
   }
-  .records:not([data-depth="1"]) .deep-card > .deep-pic > div {
-    height: 100%;
+  .atlas-fill > p {
+    position: absolute;
+    inset: 0 0 auto 0;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
   }
-  .records:not([data-depth="1"]) .deep-card > .deep-pic img {
-    height: calc(100% - 0.75rem);
-    aspect-ratio: auto;
+  /* The in-depth card's own five opening lines become the start of the fill. */
+  .deep-card .deep-opening {
+    display: none;
+  }
+  .records[data-depth="3"] .deep-card .atlas-fill {
+    min-height: calc(5 * 1.45 * 0.95rem + 0.5rem);
   }
   /* The numbered column is narrow: the picture goes above the title at the column's
      full width, so the title and the section line are no longer squeezed. The first
@@ -1193,8 +1207,7 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
   .atlas-ranked > li:nth-child(n + 4) .ranked-pic {
     display: none;
   }
-  /* When the list is shorter than the columns beside it, its pictures take up the
-     difference, so this column also ends on the common line. */
+  /* A short list shares the room left among its first three entries, as text. */
   .atlas-bottom .atlas-ranked {
     flex: 1 1 auto;
     display: flex;
@@ -1209,8 +1222,9 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
   .atlas-bottom .atlas-ranked > li > a {
     flex: 1 1 auto;
   }
-  .atlas-bottom .atlas-ranked > li:nth-child(-n + 3) .ranked-pic {
-    flex: 1 1 auto;
+  .atlas-ranked .ranked-body > .atlas-fill {
+    width: 100%;
+    margin-top: -0.5rem;
   }
 }
 @media (min-width: 1150px) {

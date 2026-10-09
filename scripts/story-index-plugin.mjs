@@ -33,6 +33,21 @@ function lead(body) {
   return `${cut.slice(0, cut.lastIndexOf(" ") > 200 ? cut.lastIndexOf(" ") : 320)}…`;
 }
 
+/**
+ * The opening paragraphs run together, up to about 1,200 characters, for the desktop front
+ * page: where a column ends short of its neighbours, the text goes on instead of the
+ * picture growing. Members-only readings keep only the first paragraph.
+ */
+function opening(body) {
+  const text = paragraphs(body)
+    .map((part) => part.replace(/\s*\[\d+\]/g, "").trim())
+    .filter((part) => part && !part.startsWith("#"))
+    .join(" ");
+  if (text.length <= 1200) return text;
+  const cut = text.slice(0, 1200);
+  return `${cut.slice(0, cut.lastIndexOf(" ") > 900 ? cut.lastIndexOf(" ") : 1200)}…`;
+}
+
 export function readStoryIndex(dir) {
   return readdirSync(dir)
     .filter((name) => name.endsWith(".json"))
@@ -50,6 +65,7 @@ export function readStoryIndex(dir) {
           dek: copy.dek ?? "",
           region: copy.region ?? "",
           lead: lead(body),
+          ...(story.membersOnly === true ? {} : { opening: opening(body) }),
           minutes: minutes(body),
           written: body.trim().length > 0,
           // The recording's path, so a card can offer "Listen" without loading the text.

@@ -750,6 +750,69 @@ function openingLines(story: Story, lang: Lang, summary: string): string {
   return rest === summary ? "" : rest;
 }
 
+/** The opening text without the summary, long enough to fill a desktop column. */
+function fillText(story: Story, lang: Lang, summary: string): string {
+  const text = (story.locales[lang].opening || story.locales[lang].lead).replace(/\s+/g, " ").trim();
+  if (!text) return "";
+  const rest = summary && text.startsWith(summary) ? text.slice(summary.length).trim() : text;
+  return rest === summary ? "" : rest;
+}
+
+/**
+ * Desktop only: text that fills the room left at the foot of a short column. It never
+ * adds height of its own; it takes the space the column is given and shows as many whole
+ * lines as fit, ending with an ellipsis.
+ */
+function ColumnFill({ text, className }: { text: string; className: string }) {
+  if (!text) return null;
+  return (
+    <div className="atlas-fill" aria-hidden="true">
+      <p className={`font-body text-pretty ${className}`}>{text}</p>
+    </div>
+  );
+}
+
+/** Fits every fill on the page to whole lines, again on resize, depth change and font load. */
+function useColumnFill(depth: Depth) {
+  useEffect(() => {
+    const fit = () => {
+      for (const box of document.querySelectorAll<HTMLElement>(".atlas-fill")) {
+        const text = box.firstElementChild as HTMLElement | null;
+        if (!text) continue;
+        // Start from the room the column gives, then measure the whole text against it.
+        box.style.flexGrow = "";
+        box.style.height = "";
+        text.style.removeProperty("-webkit-line-clamp");
+        const room = box.clientHeight;
+        const whole = text.scrollHeight;
+        if (whole <= room) {
+          // A short reading ends where its text ends; "Read more" follows right under it.
+          box.style.flexGrow = "0";
+          box.style.height = `${whole}px`;
+          text.style.visibility = "visible";
+          continue;
+        }
+        const line = parseFloat(getComputedStyle(text).lineHeight) || 20;
+        const top = parseFloat(getComputedStyle(text).paddingTop) || 0;
+        const lines = Math.floor((room - top) / line);
+        text.style.setProperty("-webkit-line-clamp", String(Math.max(lines, 1)));
+        text.style.visibility = lines >= 2 ? "visible" : "hidden";
+      }
+    };
+    fit();
+    const late = window.setTimeout(fit, 250);
+    void document.fonts?.ready.then(fit);
+    const watch = new ResizeObserver(fit);
+    for (const col of document.querySelectorAll(".atlas-bottom")) watch.observe(col);
+    window.addEventListener("resize", fit);
+    return () => {
+      window.clearTimeout(late);
+      watch.disconnect();
+      window.removeEventListener("resize", fit);
+    };
+  }, [depth]);
+}
+
 type Depth = 1 | 2 | 3;
 const DEPTH_KEY = "orbis-depth";
 
@@ -823,6 +886,7 @@ function DepthBar({
 function Records({ stories, lang, depth }: { stories: Story[]; lang: Lang; depth: Depth }) {
   const words = HOME_WORDS[lang];
   const ranked = useMostRead(5);
+  useColumnFill(depth);
   if (stories.length === 0) return null;
 
   // A four-card picture strip, then the three editorial columns. Keep short editions
@@ -881,7 +945,7 @@ function Records({ stories, lang, depth }: { stories: Story[]; lang: Lang; depth
             <ol className="atlas-ranked">
               {numbered.map((story, index) => (
                 <li key={story.id}>
-                  <RankedRow story={story} lang={lang} n={index + 1} />
+                  <RankedRow story={story} lang={lang} n={index + 1} depth={depth} />
                 </li>
               ))}
             </ol>
@@ -996,7 +1060,7 @@ function DeepCard({ story, lang }: { story: Story; lang: Lang }) {
         </div>
       ) : null}
       {opening ? (
-        <div className="record-layer" data-layer="3">
+        <div className="record-layer deep-opening" data-layer="3">
           <div>
             <p className="font-body line-clamp-5 pt-2 text-pretty text-[0.95rem] leading-[1.45] text-muted">
               {opening}
@@ -1004,6 +1068,10 @@ function DeepCard({ story, lang }: { story: Story; lang: Lang }) {
           </div>
         </div>
       ) : null}
+      <ColumnFill
+        text={fillText(story, lang, summary)}
+        className="pt-2 text-[0.95rem] leading-[1.45] text-muted"
+      />
       <span className="atlas-more mt-3 text-[0.8rem]">
         {words.readMore} <span aria-hidden="true">{arrow}</span>
       </span>
@@ -1013,7 +1081,17 @@ function DeepCard({ story, lang }: { story: Story; lang: Lang }) {
 
 /** The numbered column: a large number, the title, and the summary when depth allows.
  *  The picture is the reading's own, and it stays visible at every depth. */
-function RankedRow({ story, lang, n }: { story: Story; lang: Lang; n: number }) {
+function RankedRow({
+  story,
+  lang,
+  n,
+  depth,
+}: {
+  story: Story;
+  lang: Lang;
+  n: number;
+  depth: Depth;
+}) {
   const summary = cellSummary(story, lang);
   return (
     <Link
@@ -1056,6 +1134,11 @@ function RankedRow({ story, lang, n }: { story: Story; lang: Lang; n: number }) 
           </div>
         </div>
         </div>
+        {/* The summary shows above only in the deepest view; otherwise the text starts at it. */}
+        <ColumnFill
+          text={fillText(story, lang, depth === 3 ? summary : "")}
+          className="pt-1 text-[0.85rem] leading-[1.38] text-muted"
+        />
       </div>
     </Link>
   );
