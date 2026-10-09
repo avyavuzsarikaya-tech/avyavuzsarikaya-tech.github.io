@@ -1011,7 +1011,8 @@ function DeepCard({ story, lang }: { story: Story; lang: Lang }) {
   );
 }
 
-/** The numbered column: a large number, the title, and the summary when depth allows. */
+/** The numbered column: a large number, the title, and the summary when depth allows.
+ *  The picture is the reading's own, and it stays visible at every depth. */
 function RankedRow({ story, lang, n }: { story: Story; lang: Lang; n: number }) {
   const summary = cellSummary(story, lang);
   return (
@@ -1022,7 +1023,19 @@ function RankedRow({ story, lang, n }: { story: Story; lang: Lang; n: number }) 
       <span className="paper-title font-bold text-[1.6rem] leading-none text-ink tabular-nums">
         {n}
       </span>
-      <div className="min-w-0">
+      <div className="flex min-w-0 items-start gap-3">
+        {story.image ? (
+          <img
+            src={story.image.src}
+            alt={imageCaption(story.image, lang)}
+            width={200}
+            height={150}
+            loading="lazy"
+            decoding="async"
+            className="block aspect-[4/3] w-[4.75rem] shrink-0 object-cover"
+          />
+        ) : null}
+        <div className="min-w-0 flex-1">
         <h4 className="font-body text-[0.98rem] leading-[1.3] text-ink decoration-1 underline-offset-[0.14em] group-hover:underline">
           {storyTitle(story, lang)}
         </h4>
@@ -1041,6 +1054,7 @@ function RankedRow({ story, lang, n }: { story: Story; lang: Lang; n: number }) 
               <Kicker story={story} lang={lang} />
             </div>
           </div>
+        </div>
         </div>
       </div>
     </Link>
