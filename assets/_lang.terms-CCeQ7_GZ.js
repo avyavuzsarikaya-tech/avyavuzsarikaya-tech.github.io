@@ -1,0 +1,1 @@
+import{ct as e}from"./seed-BiAxtsM6.js";import{t}from"./legal-CCYQXccC.js";var n=e(),r=()=>(0,n.jsx)(t,{page:`terms`});export{r as component};
