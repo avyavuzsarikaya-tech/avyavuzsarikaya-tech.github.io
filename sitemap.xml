@@ -1,61 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://orbisreadingatlas.com/tr/</loc></url>
-  <url><loc>https://orbisreadingatlas.com/tr/climate</loc></url>
-  <url><loc>https://orbisreadingatlas.com/tr/environment</loc></url>
-  <url><loc>https://orbisreadingatlas.com/tr/politics</loc></url>
-  <url><loc>https://orbisreadingatlas.com/tr/economy</loc></url>
-  <url><loc>https://orbisreadingatlas.com/tr/science</loc></url>
-  <url><loc>https://orbisreadingatlas.com/tr/technology</loc></url>
-  <url><loc>https://orbisreadingatlas.com/tr/culture</loc></url>
-  <url><loc>https://orbisreadingatlas.com/tr/health</loc></url>
-  <url><loc>https://orbisreadingatlas.com/tr/research</loc></url>
-  <url><loc>https://orbisreadingatlas.com/tr/about</loc></url>
-  <url><loc>https://orbisreadingatlas.com/tr/membership</loc></url>
-  <url><loc>https://orbisreadingatlas.com/tr/newsletter</loc></url>
-  <url><loc>https://orbisreadingatlas.com/tr/read/after-ten-million</loc><lastmod>2026-01-20</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/tr/read/carbon-books</loc><lastmod>2026-03-12</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/tr/read/grain-moves</loc><lastmod>2025-11-04</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/tr/read/languages-of-record</loc><lastmod>2026-02-08</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/tr/read/register-of-trials</loc><lastmod>2025-08-19</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/tr/read/sample-bread-diabetes</loc><lastmod>2025-05-22</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/tr/read/sample-city-light</loc><lastmod>2024-12-17</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/tr/read/sample-consumption</loc><lastmod>2025-04-30</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/tr/read/sample-cuisine</loc><lastmod>2025-01-28</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/tr/read/sample-data-water</loc><lastmod>2025-03-12</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/tr/read/sample-migration-vote</loc><lastmod>2025-07-10</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/tr/read/sample-quake-economy</loc><lastmod>2025-06-18</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/tr/read/sample-rivers</loc><lastmod>2025-02-19</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/tr/read/sample-sea-level</loc><lastmod>2025-04-02</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/tr/read/sample-turnout</loc><lastmod>2024-11-26</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/ar/</loc></url>
-  <url><loc>https://orbisreadingatlas.com/ar/climate</loc></url>
-  <url><loc>https://orbisreadingatlas.com/ar/environment</loc></url>
-  <url><loc>https://orbisreadingatlas.com/ar/politics</loc></url>
-  <url><loc>https://orbisreadingatlas.com/ar/economy</loc></url>
-  <url><loc>https://orbisreadingatlas.com/ar/science</loc></url>
-  <url><loc>https://orbisreadingatlas.com/ar/technology</loc></url>
-  <url><loc>https://orbisreadingatlas.com/ar/culture</loc></url>
-  <url><loc>https://orbisreadingatlas.com/ar/health</loc></url>
-  <url><loc>https://orbisreadingatlas.com/ar/research</loc></url>
-  <url><loc>https://orbisreadingatlas.com/ar/about</loc></url>
-  <url><loc>https://orbisreadingatlas.com/ar/membership</loc></url>
-  <url><loc>https://orbisreadingatlas.com/ar/newsletter</loc></url>
-  <url><loc>https://orbisreadingatlas.com/ar/read/after-ten-million</loc><lastmod>2026-01-20</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/ar/read/carbon-books</loc><lastmod>2026-03-12</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/ar/read/grain-moves</loc><lastmod>2025-11-04</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/ar/read/languages-of-record</loc><lastmod>2026-02-08</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/ar/read/register-of-trials</loc><lastmod>2025-08-19</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/ar/read/sample-bread-diabetes</loc><lastmod>2025-05-22</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/ar/read/sample-city-light</loc><lastmod>2024-12-17</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/ar/read/sample-consumption</loc><lastmod>2025-04-30</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/ar/read/sample-cuisine</loc><lastmod>2025-01-28</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/ar/read/sample-data-water</loc><lastmod>2025-03-12</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/ar/read/sample-migration-vote</loc><lastmod>2025-07-10</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/ar/read/sample-quake-economy</loc><lastmod>2025-06-18</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/ar/read/sample-rivers</loc><lastmod>2025-02-19</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/ar/read/sample-sea-level</loc><lastmod>2025-04-02</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/ar/read/sample-turnout</loc><lastmod>2024-11-26</lastmod></url>
   <url><loc>https://orbisreadingatlas.com/</loc></url>
   <url><loc>https://orbisreadingatlas.com/climate</loc></url>
   <url><loc>https://orbisreadingatlas.com/environment</loc></url>
@@ -69,6 +13,9 @@
   <url><loc>https://orbisreadingatlas.com/about</loc></url>
   <url><loc>https://orbisreadingatlas.com/membership</loc></url>
   <url><loc>https://orbisreadingatlas.com/newsletter</loc></url>
+  <url><loc>https://orbisreadingatlas.com/terms</loc></url>
+  <url><loc>https://orbisreadingatlas.com/privacy</loc></url>
+  <url><loc>https://orbisreadingatlas.com/refunds</loc></url>
   <url><loc>https://orbisreadingatlas.com/read/after-ten-million</loc><lastmod>2026-01-20</lastmod></url>
   <url><loc>https://orbisreadingatlas.com/read/carbon-books</loc><lastmod>2026-03-12</lastmod></url>
   <url><loc>https://orbisreadingatlas.com/read/grain-moves</loc><lastmod>2025-11-04</lastmod></url>
@@ -84,60 +31,35 @@
   <url><loc>https://orbisreadingatlas.com/read/sample-rivers</loc><lastmod>2025-02-19</lastmod></url>
   <url><loc>https://orbisreadingatlas.com/read/sample-sea-level</loc><lastmod>2025-04-02</lastmod></url>
   <url><loc>https://orbisreadingatlas.com/read/sample-turnout</loc><lastmod>2024-11-26</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/fr/</loc></url>
-  <url><loc>https://orbisreadingatlas.com/fr/climate</loc></url>
-  <url><loc>https://orbisreadingatlas.com/fr/environment</loc></url>
-  <url><loc>https://orbisreadingatlas.com/fr/politics</loc></url>
-  <url><loc>https://orbisreadingatlas.com/fr/economy</loc></url>
-  <url><loc>https://orbisreadingatlas.com/fr/science</loc></url>
-  <url><loc>https://orbisreadingatlas.com/fr/technology</loc></url>
-  <url><loc>https://orbisreadingatlas.com/fr/culture</loc></url>
-  <url><loc>https://orbisreadingatlas.com/fr/health</loc></url>
-  <url><loc>https://orbisreadingatlas.com/fr/research</loc></url>
-  <url><loc>https://orbisreadingatlas.com/fr/about</loc></url>
-  <url><loc>https://orbisreadingatlas.com/fr/membership</loc></url>
-  <url><loc>https://orbisreadingatlas.com/fr/newsletter</loc></url>
-  <url><loc>https://orbisreadingatlas.com/fr/read/after-ten-million</loc><lastmod>2026-01-20</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/fr/read/carbon-books</loc><lastmod>2026-03-12</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/fr/read/grain-moves</loc><lastmod>2025-11-04</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/fr/read/languages-of-record</loc><lastmod>2026-02-08</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/fr/read/register-of-trials</loc><lastmod>2025-08-19</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/fr/read/sample-bread-diabetes</loc><lastmod>2025-05-22</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/fr/read/sample-city-light</loc><lastmod>2024-12-17</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/fr/read/sample-consumption</loc><lastmod>2025-04-30</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/fr/read/sample-cuisine</loc><lastmod>2025-01-28</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/fr/read/sample-data-water</loc><lastmod>2025-03-12</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/fr/read/sample-migration-vote</loc><lastmod>2025-07-10</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/fr/read/sample-quake-economy</loc><lastmod>2025-06-18</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/fr/read/sample-rivers</loc><lastmod>2025-02-19</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/fr/read/sample-sea-level</loc><lastmod>2025-04-02</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/fr/read/sample-turnout</loc><lastmod>2024-11-26</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/es/</loc></url>
-  <url><loc>https://orbisreadingatlas.com/es/climate</loc></url>
-  <url><loc>https://orbisreadingatlas.com/es/environment</loc></url>
-  <url><loc>https://orbisreadingatlas.com/es/politics</loc></url>
-  <url><loc>https://orbisreadingatlas.com/es/economy</loc></url>
-  <url><loc>https://orbisreadingatlas.com/es/science</loc></url>
-  <url><loc>https://orbisreadingatlas.com/es/technology</loc></url>
-  <url><loc>https://orbisreadingatlas.com/es/culture</loc></url>
-  <url><loc>https://orbisreadingatlas.com/es/health</loc></url>
-  <url><loc>https://orbisreadingatlas.com/es/research</loc></url>
-  <url><loc>https://orbisreadingatlas.com/es/about</loc></url>
-  <url><loc>https://orbisreadingatlas.com/es/membership</loc></url>
-  <url><loc>https://orbisreadingatlas.com/es/newsletter</loc></url>
-  <url><loc>https://orbisreadingatlas.com/es/read/after-ten-million</loc><lastmod>2026-01-20</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/es/read/carbon-books</loc><lastmod>2026-03-12</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/es/read/grain-moves</loc><lastmod>2025-11-04</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/es/read/languages-of-record</loc><lastmod>2026-02-08</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/es/read/register-of-trials</loc><lastmod>2025-08-19</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/es/read/sample-bread-diabetes</loc><lastmod>2025-05-22</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/es/read/sample-city-light</loc><lastmod>2024-12-17</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/es/read/sample-consumption</loc><lastmod>2025-04-30</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/es/read/sample-cuisine</loc><lastmod>2025-01-28</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/es/read/sample-data-water</loc><lastmod>2025-03-12</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/es/read/sample-migration-vote</loc><lastmod>2025-07-10</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/es/read/sample-quake-economy</loc><lastmod>2025-06-18</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/es/read/sample-rivers</loc><lastmod>2025-02-19</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/es/read/sample-sea-level</loc><lastmod>2025-04-02</lastmod></url>
-  <url><loc>https://orbisreadingatlas.com/es/read/sample-turnout</loc><lastmod>2024-11-26</lastmod></url>
+  <url><loc>https://orbisreadingatlas.com/tr/</loc></url>
+  <url><loc>https://orbisreadingatlas.com/tr/climate</loc></url>
+  <url><loc>https://orbisreadingatlas.com/tr/environment</loc></url>
+  <url><loc>https://orbisreadingatlas.com/tr/politics</loc></url>
+  <url><loc>https://orbisreadingatlas.com/tr/economy</loc></url>
+  <url><loc>https://orbisreadingatlas.com/tr/science</loc></url>
+  <url><loc>https://orbisreadingatlas.com/tr/technology</loc></url>
+  <url><loc>https://orbisreadingatlas.com/tr/culture</loc></url>
+  <url><loc>https://orbisreadingatlas.com/tr/health</loc></url>
+  <url><loc>https://orbisreadingatlas.com/tr/research</loc></url>
+  <url><loc>https://orbisreadingatlas.com/tr/about</loc></url>
+  <url><loc>https://orbisreadingatlas.com/tr/membership</loc></url>
+  <url><loc>https://orbisreadingatlas.com/tr/newsletter</loc></url>
+  <url><loc>https://orbisreadingatlas.com/tr/terms</loc></url>
+  <url><loc>https://orbisreadingatlas.com/tr/privacy</loc></url>
+  <url><loc>https://orbisreadingatlas.com/tr/refunds</loc></url>
+  <url><loc>https://orbisreadingatlas.com/tr/read/after-ten-million</loc><lastmod>2026-01-20</lastmod></url>
+  <url><loc>https://orbisreadingatlas.com/tr/read/carbon-books</loc><lastmod>2026-03-12</lastmod></url>
+  <url><loc>https://orbisreadingatlas.com/tr/read/grain-moves</loc><lastmod>2025-11-04</lastmod></url>
+  <url><loc>https://orbisreadingatlas.com/tr/read/languages-of-record</loc><lastmod>2026-02-08</lastmod></url>
+  <url><loc>https://orbisreadingatlas.com/tr/read/register-of-trials</loc><lastmod>2025-08-19</lastmod></url>
+  <url><loc>https://orbisreadingatlas.com/tr/read/sample-bread-diabetes</loc><lastmod>2025-05-22</lastmod></url>
+  <url><loc>https://orbisreadingatlas.com/tr/read/sample-city-light</loc><lastmod>2024-12-17</lastmod></url>
+  <url><loc>https://orbisreadingatlas.com/tr/read/sample-consumption</loc><lastmod>2025-04-30</lastmod></url>
+  <url><loc>https://orbisreadingatlas.com/tr/read/sample-cuisine</loc><lastmod>2025-01-28</lastmod></url>
+  <url><loc>https://orbisreadingatlas.com/tr/read/sample-data-water</loc><lastmod>2025-03-12</lastmod></url>
+  <url><loc>https://orbisreadingatlas.com/tr/read/sample-migration-vote</loc><lastmod>2025-07-10</lastmod></url>
+  <url><loc>https://orbisreadingatlas.com/tr/read/sample-quake-economy</loc><lastmod>2025-06-18</lastmod></url>
+  <url><loc>https://orbisreadingatlas.com/tr/read/sample-rivers</loc><lastmod>2025-02-19</lastmod></url>
+  <url><loc>https://orbisreadingatlas.com/tr/read/sample-sea-level</loc><lastmod>2025-04-02</lastmod></url>
+  <url><loc>https://orbisreadingatlas.com/tr/read/sample-turnout</loc><lastmod>2024-11-26</lastmod></url>
 </urlset>
