@@ -81,11 +81,6 @@ export function ListenBar() {
               label={copy.skipBack}
               onClick={() => skip(-SKIP_SECONDS)}
             />
-            <SkipButton
-              direction="ahead"
-              label={copy.skipAhead}
-              onClick={() => skip(SKIP_SECONDS)}
-            />
             <div className="seek-line">
               <div className="seek-rule" aria-hidden="true">
                 <span className="seek-fill" style={{ width: pct }} />
@@ -103,6 +98,11 @@ export function ListenBar() {
                 onChange={(event) => seek(Number(event.target.value))}
               />
             </div>
+            <SkipButton
+              direction="ahead"
+              label={copy.skipAhead}
+              onClick={() => skip(SKIP_SECONDS)}
+            />
             <span
               dir="ltr"
               className="shrink-0 text-[11px] tabular-nums tracking-wide text-muted max-[360px]:hidden"

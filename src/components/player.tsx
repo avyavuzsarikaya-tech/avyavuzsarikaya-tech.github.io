@@ -1,4 +1,4 @@
-import { Pause, Play, RotateCcw, RotateCw } from "lucide-react";
+import { Pause, Play } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Pick } from "@/components/pick";
 import {
@@ -12,7 +12,10 @@ import {
 } from "@/lib/listen";
 import type { AudioClip } from "@/lib/types";
 
-/** Back or ahead fifteen seconds: a turning arrow with the number beside it. */
+/**
+ * Back or ahead fifteen seconds: a turning arrow drawn as a hairline circle, with the
+ * number set inside it. Placed on either side of the seek line: back before, ahead after.
+ */
 export function SkipButton({
   direction,
   label,
@@ -22,24 +25,50 @@ export function SkipButton({
   label: string;
   onClick: () => void;
 }) {
-  const Icon = direction === "back" ? RotateCcw : RotateCw;
+  const back = direction === "back";
   return (
     <button
       type="button"
       onClick={onClick}
       aria-label={label}
       title={label}
-      className="inline-flex h-7 shrink-0 items-center gap-x-1 text-ink"
+      className="inline-flex size-8 shrink-0 items-center justify-center text-ink"
     >
-      {direction === "back" ? (
-        <Icon className="size-3.5 rtl:-scale-x-100" strokeWidth={1.25} aria-hidden="true" />
-      ) : null}
-      <span dir="ltr" className="text-[10px] tabular-nums tracking-wide" aria-hidden="true">
-        {SKIP_SECONDS}
-      </span>
-      {direction === "ahead" ? (
-        <Icon className="size-3.5 rtl:-scale-x-100" strokeWidth={1.25} aria-hidden="true" />
-      ) : null}
+      <svg
+        viewBox="0 0 24 24"
+        className="size-7"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1.1}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        {back ? (
+          <>
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+            <path d="M3 3v5h5" />
+          </>
+        ) : (
+          <>
+            <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+            <path d="M21 3v5h-5" />
+          </>
+        )}
+        <text
+          x="12"
+          y="12.4"
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fill="currentColor"
+          stroke="none"
+          fontSize="7.5"
+          letterSpacing="-0.2"
+          style={{ fontVariantNumeric: "tabular-nums" }}
+        >
+          {SKIP_SECONDS}
+        </text>
+      </svg>
     </button>
   );
 }
@@ -204,7 +233,6 @@ export function ReadingPlayer({
           </span>
         </button>
         <SkipButton direction="back" label={back} onClick={() => skip(-SKIP_SECONDS)} />
-        <SkipButton direction="ahead" label={ahead} onClick={() => skip(SKIP_SECONDS)} />
         <div className="seek-line">
           <div className="seek-rule" aria-hidden="true">
             <span className="seek-fill" style={{ width: pct }} />
@@ -222,6 +250,7 @@ export function ReadingPlayer({
             onChange={(event) => seek(Number(event.target.value))}
           />
         </div>
+        <SkipButton direction="ahead" label={ahead} onClick={() => skip(SKIP_SECONDS)} />
         <span dir="ltr" className="shrink-0 text-[11px] tabular-nums tracking-wide text-muted">
           {fmt(progress)}
           <span className="px-1 text-rule" aria-hidden="true">
