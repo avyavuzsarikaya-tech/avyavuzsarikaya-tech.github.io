@@ -46,7 +46,7 @@ const COPY: Record<Lang, PagesCopy> = {
   tr: {
     membership: {
       title: "Üyelik",
-      lead: "Orbis’teki okumaların çoğu herkese açık. Üye olarak yazıların altında yorum yazabilir, destekçi üyelikle üyelere özel yazılara ve videolara erişip Orbis’in bağımsız çalışmasına katkı verebilirsiniz.",
+      lead: "Orbis’teki okumaların çoğu herkese açık. Üye olarak yazıların altında yorum yazabilir, destekçi üyelikle her hafta sekiz yazıdan oluşan dijital dergiyi okuyup dinleyebilir, Orbis’in bağımsız çalışmasına katkı verebilirsiniz.",
       free: {
         name: "Ücretsiz üyelik",
         price: "Ücretsiz",
@@ -56,8 +56,9 @@ const COPY: Record<Lang, PagesCopy> = {
       paid: {
         name: "Destekçi üyelik",
         points: [
-          "Üyelere özel yazıların tamamı",
-          "Üyelere özel videolar",
+          "Her hafta sekiz yazıdan oluşan dijital dergi",
+          "Dergideki yazıları sesli dinleme",
+          "Hediye: bütün içeriklere ve videolara erişim",
           "Ücretsiz üyeliğin bütün imkânları",
           "Kaynaklara dayalı, bağımsız yayıncılığa doğrudan destek",
         ],
@@ -165,7 +166,7 @@ const COPY: Record<Lang, PagesCopy> = {
   en: {
     membership: {
       title: "Membership",
-      lead: "Most Orbis readings are open to everyone. As a member you can comment under the readings; as a supporting member you also read the members-only pieces, watch the members-only videos and help keep Orbis independent.",
+      lead: "Most Orbis readings are open to everyone. As a member you can comment under the readings; as a supporting member you also read and listen to the weekly digital magazine of eight articles and help keep Orbis independent.",
       free: {
         name: "Free membership",
         price: "Free",
@@ -175,8 +176,9 @@ const COPY: Record<Lang, PagesCopy> = {
       paid: {
         name: "Supporting membership",
         points: [
-          "Members-only readings in full",
-          "Members-only videos",
+          "A digital magazine of eight articles every week",
+          "Audio of every magazine article",
+          "Gift: access to all content and the videos",
           "Everything in free membership",
           "Direct support for sourced, independent publishing",
         ],
