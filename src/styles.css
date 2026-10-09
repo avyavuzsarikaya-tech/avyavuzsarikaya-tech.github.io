@@ -1413,12 +1413,85 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     max-width: none;
   }
 
-  /* Cards and rows with a picture: the first line of text starts level with the top of
-     the picture (the empty space above the capitals is trimmed). */
-  .atlas-card > .atlas-pic-slot + div > :nth-child(1),
-  .atlas-brief > .atlas-pic-slot + div > :nth-child(1),
-  .record-row > .record-thumb + div > :first-child {
+  /* The section name and reading time sit under the title and the summary on every card,
+     as in the numbered list. The title comes first and starts level with the top of the
+     picture (the empty space above its capitals is trimmed). */
+  .atlas-card > .atlas-pic-slot + div > :nth-child(2),
+  .atlas-brief > .atlas-pic-slot + div > :nth-child(2) {
+    grid-row: 1;
+    margin-top: 0;
     text-box: trim-start cap alphabetic;
+  }
+  .atlas-card > .atlas-pic-slot + div > :nth-child(3),
+  .atlas-brief > .atlas-pic-slot + div > :nth-child(3) {
+    grid-row: 2;
+  }
+  .atlas-card > .atlas-pic-slot + div > :nth-child(1),
+  .atlas-brief > .atlas-pic-slot + div > :nth-child(1) {
+    grid-row: 3;
+    align-self: start;
+    margin-top: 0.55rem;
+  }
+  .records:not(.atlas-strip) .record-row > .record-thumb + div > :nth-child(2) {
+    grid-row: 1;
+    margin-top: 0;
+    text-box: trim-start cap alphabetic;
+  }
+  .records:not(.atlas-strip) .record-row > .record-thumb + div > :nth-child(3) {
+    grid-row: 2;
+  }
+  .records:not(.atlas-strip) .record-row > .record-thumb + div > :nth-child(1) {
+    grid-row: 3;
+    align-self: start;
+    margin-top: 0.45rem;
+  }
+  /* Rows laid out as a plain column (the picture strip, rows without a picture). */
+  .record-text {
+    display: flex;
+    flex-direction: column;
+  }
+  .record-text > * {
+    order: 1;
+  }
+  .record-text > h4 {
+    order: -2;
+    margin-top: 0;
+  }
+  .record-text > h4 + .record-layer {
+    order: -1;
+  }
+  .record-text > .card-kicker {
+    order: 0;
+    margin-top: 0.45rem;
+  }
+  /* The reading in depth: picture, title, summary, then the section name. */
+  .deep-card > * {
+    order: 1;
+  }
+  .deep-card > .deep-pic {
+    order: -3;
+  }
+  .deep-card > h4 {
+    order: -2;
+    margin-top: 0;
+  }
+  .deep-card > h4 + .record-layer {
+    order: -1;
+  }
+  .deep-card > .card-kicker {
+    order: 0;
+    margin-top: 0.55rem;
+  }
+  /* The lead: title, summary, section name, then "Read the full story". */
+  .lead-text > .atlas-lead-title {
+    margin-top: 0;
+  }
+  .lead-text > .card-kicker {
+    order: 1;
+    margin-top: 0.85rem;
+  }
+  .lead-text > .atlas-more {
+    order: 2;
   }
   /* "Listen" sits on the same line as the section and the reading time, at the same height. */
   .listen-mark {

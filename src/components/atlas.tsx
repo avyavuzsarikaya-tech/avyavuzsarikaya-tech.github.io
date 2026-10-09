@@ -268,7 +268,7 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
               />
             </div>
           ) : null}
-          <div className="flex min-w-0 flex-col justify-center pt-4 md:order-1 md:py-6">
+          <div className="lead-text flex min-w-0 flex-col justify-center pt-4 md:order-1 md:py-6">
             <Kicker story={lead} lang={lang} />
             <h2 className="paper-title atlas-lead-title font-extrabold mt-2.5 text-ink decoration-2 underline-offset-[0.12em] group-hover:underline md:mt-4">
               {storyTitle(lead, lang)}
@@ -418,8 +418,8 @@ function Kicker({ story, lang }: { story: Story; lang: Lang }) {
     <p
       className={
         lang === "ar"
-          ? "text-sm leading-snug text-pine"
-          : "text-xs leading-snug uppercase tracking-[0.14em] text-pine"
+          ? "card-kicker text-sm leading-snug text-pine"
+          : "card-kicker text-xs leading-snug uppercase tracking-[0.14em] text-pine"
       }
     >
       {copy.themes[story.theme]}
@@ -1029,7 +1029,7 @@ function RecordRow({ story, lang }: { story: Story; lang: Lang }) {
           </div>
         </div>
       ) : null}
-      <div className="min-w-0 flex-1">
+      <div className="record-text min-w-0 flex-1">
         <Kicker story={story} lang={lang} />
         <h4 className="paper-title font-bold mt-1 text-[1.08rem] leading-[1.18] text-ink decoration-1 underline-offset-[0.14em] group-hover:underline">
           {storyTitle(story, lang)}
