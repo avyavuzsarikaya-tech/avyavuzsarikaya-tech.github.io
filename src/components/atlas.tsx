@@ -84,12 +84,14 @@ export function Atlas({ section }: { section: Theme | "all" }) {
             <div className="hidden self-start md:block">
               <Link
                 {...readLink(lang, latest.id)}
-                className={`grid grid-cols-1 gap-6 border-b border-line px-5 py-7 md:px-8 md:py-10 ${
-                  latest.image ? "md:grid-cols-2 md:items-center md:gap-10" : ""
+                className={`section-lead grid grid-cols-1 gap-6 border-b border-line px-5 py-7 md:px-8 md:py-10 ${
+                  latest.image ? "md:grid-cols-2 md:gap-10" : ""
                 }`}
               >
-                {latest.image ? <Picture story={latest} eager className="md:order-2" /> : null}
-                <div className="flex flex-col gap-3 md:order-1">
+                {latest.image ? (
+                  <Picture story={latest} eager fill className="section-lead-picture md:order-2" />
+                ) : null}
+                <div className="section-lead-text flex flex-col gap-3 md:order-1">
                   <h2 className="text-3xl leading-[1.1] md:text-5xl">{storyTitle(latest, lang)}</h2>
                   {leadDek ? (
                     <p className="max-w-2xl text-pretty text-lg leading-snug text-muted lg:text-xl">
@@ -175,20 +177,22 @@ function SectionList({ stories, lang }: { stories: Story[]; lang: Lang }) {
           <li key={story.id}>
             <Link
               {...readLink(lang, story.id)}
-              className="atlas-own group flex items-start gap-4 border-b border-line py-4"
+              className="section-list-row atlas-own group flex items-start gap-4 border-b border-line py-4"
             >
               {story.image ? (
-                <img
-                  src={story.image.src}
-                  alt={imageCaption(story.image, lang)}
-                  width={240}
-                  height={180}
-                  loading="lazy"
-                  decoding="async"
-                  className="block aspect-[4/3] w-[7.25rem] shrink-0 object-cover"
-                />
+                <div className="section-list-pic w-[7.25rem] shrink-0">
+                  <img
+                    src={story.image.src}
+                    alt={imageCaption(story.image, lang)}
+                    width={240}
+                    height={180}
+                    loading="lazy"
+                    decoding="async"
+                    className="block h-full w-full object-cover"
+                  />
+                </div>
               ) : null}
-              <div className="min-w-0 flex-1">
+              <div className="section-list-text min-w-0 flex-1">
                 <h2 className="paper-title font-bold text-[1.08rem] leading-[1.18] text-ink decoration-1 underline-offset-[0.14em] group-hover:underline">
                   {storyTitle(story, lang)}
                 </h2>
@@ -1142,17 +1146,19 @@ function RankedRow({
       </span>
       <div className="ranked-body flex min-w-0 items-start gap-3">
         {story.image ? (
-          <img
-            src={story.image.src}
-            alt={imageCaption(story.image, lang)}
-            width={200}
-            height={150}
-            loading="lazy"
-            decoding="async"
-            className="ranked-pic block aspect-[4/3] w-[4.75rem] shrink-0 object-cover"
-          />
+          <div className="ranked-pic w-[4.75rem] shrink-0">
+            <img
+              src={story.image.src}
+              alt={imageCaption(story.image, lang)}
+              width={200}
+              height={150}
+              loading="lazy"
+              decoding="async"
+              className="block h-full w-full object-cover"
+            />
+          </div>
         ) : null}
-        <div className="min-w-0 flex-1">
+        <div className="ranked-text min-w-0 flex-1">
         <h4 className="font-body text-[0.98rem] leading-[1.3] text-ink decoration-1 underline-offset-[0.14em] group-hover:underline">
           {storyTitle(story, lang)}
         </h4>

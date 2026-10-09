@@ -905,6 +905,60 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
 .atlas-card .atlas-dek {
   display: block;
 }
+/* Paired media rule: when a picture and words share a row, both boxes stretch to
+   the row. The picture cover-crops instead of leaving a strip when the words are
+   longer; the words stay centred if the picture is taller. Phone grids still move
+   the deeper text below the picture, so this never alters the reading order. */
+.records:not(.atlas-strip) .record-row {
+  align-items: stretch;
+}
+.atlas-card > .atlas-pic-slot,
+.atlas-brief > .atlas-pic-slot,
+.records:not(.atlas-strip) .record-row > .record-thumb,
+.section-list-pic,
+.ranked-pic {
+  position: relative;
+  align-self: stretch;
+}
+.atlas-card > .atlas-pic-slot,
+.atlas-brief > .atlas-pic-slot {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+.records:not(.atlas-strip) .record-row > .record-thumb,
+.section-list-pic,
+.ranked-pic {
+  aspect-ratio: 4 / 3;
+}
+.records:not(.atlas-strip) .record-row > .record-thumb {
+  width: 6.5rem;
+}
+.atlas-card > .atlas-pic-slot > div,
+.atlas-brief > .atlas-pic-slot > div,
+.records:not(.atlas-strip) .record-row > .record-thumb > div {
+  position: absolute;
+  inset: 0;
+}
+.atlas-card > .atlas-pic-slot img,
+.atlas-brief > .atlas-pic-slot img,
+.records:not(.atlas-strip) .record-row > .record-thumb img,
+.section-list-pic > img,
+.ranked-pic > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.records[data-depth="1"] .record-row > .record-thumb {
+  width: 0;
+  aspect-ratio: auto;
+  align-self: start;
+  margin-inline-end: 0;
+}
+.records[data-depth="1"] .ranked-pic {
+  display: none;
+}
 /* On a phone the picture sits beside the section, the title and the summary only; the
    opening lines, the date and "Read more" run under it across the whole card, so a long
    card at full depth leaves no empty strip below the picture. */
@@ -1016,6 +1070,33 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     p:first-child {
     padding-top: 0.6rem;
   }
+
+  /* Phone form of the paired-media rule. These rules stop before tablet width. */
+  .atlas-card > .atlas-pic-slot,
+  .atlas-brief > .atlas-pic-slot,
+  .section-list-pic,
+  .ranked-body > .ranked-pic {
+    align-self: stretch;
+  }
+  .atlas-card > .atlas-pic-slot > div,
+  .atlas-brief > .atlas-pic-slot > div {
+    height: 100%;
+  }
+  .atlas-card > .atlas-pic-slot img,
+  .atlas-brief > .atlas-pic-slot img,
+  .section-list-pic > img,
+  .ranked-body > .ranked-pic > img {
+    height: 100%;
+    aspect-ratio: auto;
+  }
+  .section-list-row,
+  .ranked-body {
+    align-items: stretch;
+  }
+  .section-list-text,
+  .ranked-text {
+    align-self: center;
+  }
 }
 @media (min-width: 768px) {
   /* Desktop: two readings at the left, the pictured reading large in the middle and two
@@ -1063,9 +1144,13 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
   .atlas-card + .atlas-card::after {
     inset-inline-end: -0.75rem;
   }
-  .atlas-card .atlas-card-pic {
+  .atlas-card > .atlas-pic-slot {
     aspect-ratio: 16 / 10;
     margin-bottom: 0.75rem;
+  }
+  .atlas-card .atlas-card-pic {
+    aspect-ratio: 16 / 10;
+    margin-bottom: 0;
   }
   .atlas-card .atlas-dek {
     display: block;
@@ -1107,8 +1192,42 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
   .atlas-top.records:not([data-depth="1"]) .atlas-brief {
     align-content: center;
   }
+  .atlas-brief > .atlas-pic-slot {
+    aspect-ratio: 4 / 3;
+  }
   .atlas-brief .atlas-card-pic {
     aspect-ratio: 4 / 3;
+  }
+
+  /* Tablet/desktop form of the same paired-media rule. Mobile order is untouched. */
+  .atlas-brief {
+    align-items: stretch;
+  }
+  .atlas-brief > .atlas-pic-slot {
+    align-self: stretch;
+  }
+  .atlas-brief > .atlas-pic-slot > div {
+    height: 100%;
+  }
+  .atlas-brief > .atlas-pic-slot img {
+    height: 100%;
+    aspect-ratio: auto;
+  }
+  .records:not(.atlas-strip) .record-row > .record-thumb {
+    width: 7rem;
+  }
+  /* The depth rule still wins at tablet and desktop widths: headline mode closes the
+     picture column completely instead of keeping its paired-media width. */
+  .records[data-depth="1"] .record-row > .record-thumb {
+    width: 0;
+    margin-inline-end: 0;
+  }
+  .atlas-brief > .atlas-pic-slot + div,
+  .records:not(.atlas-strip) .record-text {
+    align-self: center;
+  }
+  .records:not(.atlas-strip) .record-text {
+    justify-content: center;
   }
 }
 /* The top cards follow the depth control too: at depth 1 their picture column closes
@@ -1352,6 +1471,20 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
 @media (min-width: 801px) {
   .atlas-strip {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+/* Section-page lead: the same paired-media rule at tablet and desktop widths. */
+@media (min-width: 768px) {
+  .section-lead {
+    align-items: stretch;
+  }
+  .section-lead-picture,
+  .section-lead-text {
+    height: 100%;
+  }
+  .section-lead-text {
+    align-self: stretch;
+    justify-content: center;
   }
 }
 /* Reading page: the text in a narrow column, the picture wider than it. */
