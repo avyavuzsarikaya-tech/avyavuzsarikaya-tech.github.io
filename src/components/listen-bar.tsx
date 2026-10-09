@@ -37,17 +37,17 @@ export function ListenBar() {
 
   return (
     <>
-      <div aria-hidden="true" className="listen-bar-space no-print h-40" />
+      <div aria-hidden="true" className="listen-bar-space no-print h-28" />
       <section
         aria-label={copy.listen}
-        className="listen-bar no-print fixed inset-x-0 bottom-0 z-40 border-t-[3px] border-ink bg-sheet text-ink"
+        className="listen-bar no-print fixed inset-x-0 bottom-0 z-40 border-t border-ink bg-sheet text-ink"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
-        <div className="reading-player mx-auto flex w-full max-w-2xl min-w-0 flex-col px-5 pt-3 pb-2 md:px-8">
+        <div className="reading-player mx-auto flex w-full max-w-2xl min-w-0 flex-col px-5 pt-1.5 pb-1 md:px-8">
           <div className="flex items-center gap-3">
             <Link
               {...readLink(clip.lang, clip.id)}
-              className="paper-title block min-w-0 flex-1 truncate text-lg font-bold leading-snug text-ink underline-offset-4 hover:underline"
+              className="paper-title block min-w-0 flex-1 truncate text-base font-bold leading-tight text-ink underline-offset-4 hover:underline"
             >
               {clip.title}
             </Link>
@@ -56,13 +56,13 @@ export function ListenBar() {
               onClick={close}
               aria-label={copy.closeListen}
               title={copy.closeListen}
-              className="-me-2 inline-flex size-11 shrink-0 items-center justify-center text-muted hover:text-ink"
+              className="-me-2 inline-flex size-8 shrink-0 items-center justify-center text-muted hover:text-ink"
             >
               <X className="size-4" strokeWidth={1.25} aria-hidden="true" />
             </button>
           </div>
 
-          <div className="seek-line mt-1 w-full" style={{ flex: "none" }}>
+          <div className="seek-line mt-0.5 w-full" style={{ flex: "none" }}>
             <div className="seek-rule" aria-hidden="true">
               <span className="seek-fill" style={{ width: pct }} />
               <span className="seek-knob" style={{ insetInlineStart: pct }} />
@@ -97,7 +97,7 @@ export function ListenBar() {
                 value={String(now.rate)}
                 onChange={(value) => setRate(Number(value))}
                 options={RATES.map((value) => ({ value: String(value), label: `${value}x` }))}
-                buttonClassName="min-h-11 gap-1 py-0 text-[11px] tracking-widest text-muted"
+                buttonClassName="min-h-8 gap-1 py-0 text-[11px] tracking-widest text-muted"
               >
                 <span dir="ltr" className="tabular-nums text-ink">
                   {now.rate}×
@@ -117,7 +117,7 @@ export function ListenBar() {
                 type="button"
                 onClick={toggle}
                 aria-label={now.playing ? copy.pause : copy.listen}
-                className="inline-flex size-11 shrink-0 items-center justify-center text-ink"
+                className="inline-flex size-8 shrink-0 items-center justify-center text-ink"
               >
                 {now.playing ? (
                   <Pause
