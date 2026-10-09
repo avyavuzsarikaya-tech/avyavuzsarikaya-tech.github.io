@@ -259,7 +259,7 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
           }`}
         >
           {lead.image ? (
-            <div className="md:order-2">
+            <div className="md:order-2" data-lead-picture>
               <CardPicture
                 story={lead}
                 lang={lang}

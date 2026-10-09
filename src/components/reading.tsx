@@ -89,11 +89,11 @@ function TypeSize({
 }) {
   const atMin = step <= 0;
   const atMax = step >= TYPE_STEPS.length - 1;
-  const button = "inline-flex h-8 w-8 items-center justify-center text-ink disabled:text-muted";
+  const button = "inline-flex h-8 w-9 items-center justify-center text-ink disabled:text-muted";
   return (
     <div
       dir="ltr"
-      className="inline-flex shrink-0 items-center rounded-full border border-line px-1"
+      className="inline-flex shrink-0 items-center gap-1 rounded-full border border-line px-1.5"
     >
       <span className="sr-only">{label}</span>
       <button
@@ -242,7 +242,7 @@ function Reading({ story }: { story: Story | null }) {
                 />
               </div>
             ) : null}
-            <div className="ms-auto flex shrink-0 items-center gap-1">
+            <div className="ms-auto flex shrink-0 items-center gap-5">
               <PdfButton lang={lang} />
               <TypeSize
                 step={typeStep}
