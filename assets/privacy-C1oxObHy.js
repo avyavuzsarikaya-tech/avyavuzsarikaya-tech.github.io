@@ -1,0 +1,1 @@
+import{ct as e}from"./seed-CGMhOf6-.js";import{t}from"./legal-C_UJImka.js";var n=e(),r=()=>(0,n.jsx)(t,{page:`privacy`});export{r as component};

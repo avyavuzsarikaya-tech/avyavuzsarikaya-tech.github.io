@@ -1,1 +1,0 @@
-import{t as e}from"./about-C63HlAj2.js";var t=e;export{t as component};

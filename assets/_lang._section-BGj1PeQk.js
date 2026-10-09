@@ -1,0 +1,1 @@
+import{G as e,ct as t}from"./seed-CGMhOf6-.js";import{i as n}from"./index-Cy0B1X33.js";import{r}from"./atlas-BrTuV5NW.js";var i=t();function a(){let{section:t}=n.useParams();return(0,i.jsx)(r,{theme:e(t)})}export{a as component};

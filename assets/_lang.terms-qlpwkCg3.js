@@ -1,1 +1,0 @@
-import{ct as e}from"./seed-Dqus4Sus.js";import{t}from"./legal-BCDt_EgF.js";var n=e(),r=()=>(0,n.jsx)(t,{page:`terms`});export{r as component};
