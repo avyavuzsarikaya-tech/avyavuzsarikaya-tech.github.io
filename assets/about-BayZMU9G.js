@@ -1,1 +1,0 @@
-import{t as e}from"./about-D_jJWEwY.js";var t=e;export{t as component};

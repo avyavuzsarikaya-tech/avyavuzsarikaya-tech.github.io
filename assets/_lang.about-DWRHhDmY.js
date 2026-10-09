@@ -1,0 +1,1 @@
+import{t as e}from"./about-BC-MFDKa.js";var t=e;export{t as component};
