@@ -1,0 +1,1 @@
+import{ct as e}from"./seed-Bd95PKGU.js";import{t}from"./legal-BkFN0n7_.js";var n=e(),r=()=>(0,n.jsx)(t,{page:`privacy`});export{r as component};
