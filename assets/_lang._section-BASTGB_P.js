@@ -1,1 +1,0 @@
-import{G as e,ct as t}from"./seed-DGSgmOxG.js";import{i as n}from"./index-J_wINY3D.js";import{r}from"./atlas-DUZISaP4.js";var i=t();function a(){let{section:t}=n.useParams();return(0,i.jsx)(r,{theme:e(t)})}export{a as component};
