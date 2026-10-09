@@ -1,4 +1,3 @@
-import { Pause, Play } from "lucide-react";
 import type { KeyboardEvent, MouseEvent } from "react";
 import { useCopy } from "@/lib/i18n";
 import { listenTo, useListen, type ListenClip } from "@/lib/listen";
@@ -55,6 +54,26 @@ export function CardListen({ story, lang }: { story: StoryCard; lang: Lang }) {
 }
 
 /**
+ * Start mark beside the Listen word: a hairline ring with a filled triangle,
+ * the same size when the recording is paused.
+ */
+function StartGlyph({ playing }: { playing: boolean }) {
+  return (
+    <svg viewBox="0 0 16 16" className="size-3 shrink-0 rtl:-scale-x-100" aria-hidden="true">
+      <circle cx="8" cy="8" r="6.6" fill="none" stroke="currentColor" strokeWidth="0.8" />
+      {playing ? (
+        <>
+          <rect x="5.05" y="4.9" width="1.85" height="6.2" rx="0.2" fill="currentColor" />
+          <rect x="9.1" y="4.9" width="1.85" height="6.2" rx="0.2" fill="currentColor" />
+        </>
+      ) : (
+        <path d="M6.55 4.75 L11.55 8 L6.55 11.25 Z" fill="currentColor" />
+      )}
+    </svg>
+  );
+}
+
+/**
  * The "Listen" word on a card. The card itself is a link, so this is a span acting as a
  * button: it stops the link from opening and starts (or pauses) the recording instead.
  */
@@ -82,11 +101,7 @@ function ListenMark({ clip }: { clip: ListenClip }) {
       }}
       className="listen-mark -my-2 inline-flex cursor-pointer items-center gap-x-1.5 py-2 text-ink hover:underline hover:underline-offset-4"
     >
-      {playing ? (
-        <Pause className="size-2.5" strokeWidth={1.5} aria-hidden="true" />
-      ) : (
-        <Play className="size-2.5 rtl:-scale-x-100" strokeWidth={1.5} aria-hidden="true" />
-      )}
+      <StartGlyph playing={playing} />
       {playing ? copy.pause : copy.listen}
     </span>
   );
