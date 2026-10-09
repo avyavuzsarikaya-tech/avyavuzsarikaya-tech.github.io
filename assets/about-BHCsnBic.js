@@ -1,0 +1,1 @@
+import{t as e}from"./about-CZKowt0L.js";var t=e;export{t as component};
