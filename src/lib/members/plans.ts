@@ -9,14 +9,14 @@ import type { Lang } from "../types.ts";
  * or `?plan=yearly` added.
  */
 export const PAYMENT: {
-  currency: string;
-  monthly: number;
-  yearly: number;
+  /** Turkish pages show lira; every other language shows dollars. */
+  prices: Record<"TRY" | "USD", { monthly: number; yearly: number }>;
   checkoutUrl: string;
 } = {
-  currency: "TRY",
-  monthly: 49,
-  yearly: 490,
+  prices: {
+    TRY: { monthly: 49, yearly: 490 },
+    USD: { monthly: 1, yearly: 10 },
+  },
   checkoutUrl: "",
 };
 
@@ -32,14 +32,20 @@ const LOCALE: Record<Lang, string> = {
   es: "es-ES",
 };
 
-/** A price as the reader's language writes it: ₺49, 49 ₺, … */
-export function price(amount: number, lang: Lang): string {
+/** The currency of a language's pages. */
+export function currencyFor(lang: Lang): "TRY" | "USD" {
+  return lang === "tr" ? "TRY" : "USD";
+}
+
+/** A period's price as the reader's language writes it: ₺49, $1, 1 $, … */
+export function price(period: Period, lang: Lang): string {
+  const currency = currencyFor(lang);
   return new Intl.NumberFormat(LOCALE[lang], {
     style: "currency",
-    currency: PAYMENT.currency,
+    currency,
     currencyDisplay: "narrowSymbol",
     maximumFractionDigits: 0,
-  }).format(amount);
+  }).format(PAYMENT.prices[currency][period]);
 }
 
 export function isPeriod(value: unknown): value is Period {

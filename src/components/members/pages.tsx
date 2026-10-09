@@ -5,7 +5,7 @@ import { buttonClass } from "@/components/members/account";
 import { useCopy } from "@/lib/i18n";
 import { accountLink, homeLink, memberPageLink } from "@/lib/lang-path";
 import { pagesCopy } from "@/lib/members/pages-copy";
-import { PAYMENT, isPeriod, paymentOn, price, type Period } from "@/lib/members/plans";
+import { PAYMENT, currencyFor, isPeriod, paymentOn, price, type Period } from "@/lib/members/plans";
 import type { Lang } from "@/lib/types";
 import { useLang } from "@/lib/use-lang";
 
@@ -76,14 +76,10 @@ export function MembershipPage() {
         <section className="flex flex-col gap-5 border-t border-rule py-8 md:border-t-0 md:border-s md:ps-10">
           <h2 className={label}>{words.paid.name}</h2>
           <p className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-            <span className="text-4xl leading-none tabular-nums">
-              {price(PAYMENT.monthly, lang)}
-            </span>
+            <span className="text-4xl leading-none tabular-nums">{price("monthly", lang)}</span>
             <span className="text-muted">/ {words.perMonth}</span>
             <span className="text-muted">{words.or}</span>
-            <span className="text-2xl leading-none tabular-nums">
-              {price(PAYMENT.yearly, lang)}
-            </span>
+            <span className="text-2xl leading-none tabular-nums">{price("yearly", lang)}</span>
             <span className="text-muted">/ {words.perYear}</span>
           </p>
           <Points items={words.paid.points} />
@@ -123,6 +119,7 @@ function checkoutHref(period: Period, lang: Lang): string {
   const url = new URL(PAYMENT.checkoutUrl);
   url.searchParams.set("plan", period);
   url.searchParams.set("lang", lang);
+  url.searchParams.set("currency", currencyFor(lang));
   return url.toString();
 }
 
@@ -132,7 +129,6 @@ export function PaymentPage() {
   const all = pagesCopy(lang);
   const words = all.payment;
   const [period, setPeriod] = usePeriod();
-  const amount = period === "monthly" ? PAYMENT.monthly : PAYMENT.yearly;
   const per = period === "monthly" ? all.membership.perMonth : all.membership.perYear;
 
   const option = (value: Period, name: string, note?: string) => (
@@ -154,7 +150,7 @@ export function PaymentPage() {
           {note ? <span className="ms-3 text-sm text-pine">{note}</span> : null}
         </span>
         <span className="tabular-nums">
-          {price(value === "monthly" ? PAYMENT.monthly : PAYMENT.yearly, lang)}{" "}
+          {price(value, lang)}{" "}
           <span className="text-muted">
             / {value === "monthly" ? all.membership.perMonth : all.membership.perYear}
           </span>
@@ -189,7 +185,7 @@ export function PaymentPage() {
           <p className="flex items-baseline justify-between gap-4 border-t border-line pt-4">
             <span>{words.total}</span>
             <span className="tabular-nums">
-              <span className="text-2xl">{price(amount, lang)}</span>{" "}
+              <span className="text-2xl">{price(period, lang)}</span>{" "}
               <span className="text-muted">/ {per}</span>
             </span>
           </p>
