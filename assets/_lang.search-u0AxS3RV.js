@@ -1,0 +1,1 @@
+import{t as e}from"./search-CGC_ypYC.js";var t=e;export{t as component};
