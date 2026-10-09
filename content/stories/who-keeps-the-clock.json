@@ -2,6 +2,10 @@
   "id": "who-keeps-the-clock",
   "theme": "politics",
   "date": "2026-10-09",
+  "image": {
+    "src": "images/who-keeps-the-clock.jpg",
+    "credit": "Two plain clocks on a wall, one hour apart."
+  },
   "sources": [
     {
       "n": 1,
