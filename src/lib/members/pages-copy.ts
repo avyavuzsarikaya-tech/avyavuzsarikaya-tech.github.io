@@ -19,8 +19,8 @@ export type PagesCopy = {
     period: string;
     /** The name of each period on the payment page. */
     periods: Record<"monthly" | "quarterly" | "halfyear" | "yearly", string>;
-    /** Beside the yearly period: lira pages and dollar pages. */
-    yearlyNote: { TRY: string; USD: string };
+    /** Beside the yearly period. */
+    yearlyNote: { USD: string };
     summary: string;
     plan: string;
     total: string;
@@ -83,7 +83,7 @@ const COPY: Record<Lang, PagesCopy> = {
         halfyear: "6 aylık",
         yearly: "Yıllık",
       },
-      yearlyNote: { TRY: "İki ay ücretsiz", USD: "En avantajlı" },
+      yearlyNote: { USD: "En avantajlı" },
       summary: "Özet",
       plan: "Destekçi üyelik",
       total: "Toplam",
@@ -143,7 +143,7 @@ const COPY: Record<Lang, PagesCopy> = {
         halfyear: "كل 6 أشهر",
         yearly: "سنوي",
       },
-      yearlyNote: { TRY: "شهران مجانًا", USD: "الأوفر" },
+      yearlyNote: { USD: "الأوفر" },
       summary: "الملخص",
       plan: "عضوية الداعم",
       total: "المجموع",
@@ -202,7 +202,7 @@ const COPY: Record<Lang, PagesCopy> = {
         halfyear: "Every 6 months",
         yearly: "Yearly",
       },
-      yearlyNote: { TRY: "Two months free", USD: "Best value" },
+      yearlyNote: { USD: "Best value" },
       summary: "Summary",
       plan: "Supporting membership",
       total: "Total",
@@ -262,7 +262,7 @@ const COPY: Record<Lang, PagesCopy> = {
         halfyear: "Tous les 6 mois",
         yearly: "Annuelle",
       },
-      yearlyNote: { TRY: "Deux mois offerts", USD: "Le plus avantageux" },
+      yearlyNote: { USD: "Le plus avantageux" },
       summary: "Récapitulatif",
       plan: "Adhésion bienfaiteur",
       total: "Total",
@@ -322,7 +322,7 @@ const COPY: Record<Lang, PagesCopy> = {
         halfyear: "Cada 6 meses",
         yearly: "Anual",
       },
-      yearlyNote: { TRY: "Dos meses gratis", USD: "La mejor opción" },
+      yearlyNote: { USD: "La mejor opción" },
       summary: "Resumen",
       plan: "Membresía benefactora",
       total: "Total",
