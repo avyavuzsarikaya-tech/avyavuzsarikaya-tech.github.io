@@ -4,16 +4,21 @@ import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { aboutCopy } from "@/lib/about-copy";
 import { useFrameCopy } from "@/lib/frame-copy";
 import { langMeta, useCopy } from "@/lib/i18n";
-import { aboutLink, homeLink, searchLink, sectionLink, stripLang } from "@/lib/lang-path";
+import {
+  aboutLink,
+  homeLink,
+  memberPageLink,
+  searchLink,
+  sectionLink,
+  stripLang,
+} from "@/lib/lang-path";
+import { pagesCopy } from "@/lib/members/pages-copy";
 import { searchCopy } from "@/lib/search";
 import { LOOKS, LOOK_SWATCH, type Look } from "@/lib/look";
 import { LANGS, THEMES, type Lang, type Theme } from "@/lib/types";
 
-/**
- * Pages under the three lists. Contact and the newsletter are added here later;
- * nothing else in the menu has to move.
- */
-const MENU_PAGES = ["search", "about"] as const;
+/** Pages under the three lists. Contact is added here later; nothing else has to move. */
+const MENU_PAGES = ["search", "membership", "newsletter", "about"] as const;
 
 /** The three lists of the menu. Only one is open at a time. */
 type Group = "sections" | "languages" | "look";
@@ -146,6 +151,7 @@ export function SiteMenu({
   onCloseRef.current = onClose;
   const onAbout = stripLang(path) === "/about";
   const onSearch = stripLang(path) === "/search";
+  const here = stripLang(path);
   const [openGroup, setOpenGroup] = useState<Group | null>(readOpen);
   const toggle = (group: Group) => {
     const next = openGroup === group ? null : group;
@@ -301,6 +307,16 @@ export function SiteMenu({
                     <Link {...searchLink(lang)} className={page(onSearch)} onClick={onClose}>
                       {searchCopy(lang).title}
                       <Search aria-hidden="true" strokeWidth={1.5} className="size-4 shrink-0" />
+                    </Link>
+                  </li>
+                ) : item === "membership" || item === "newsletter" ? (
+                  <li key={item}>
+                    <Link
+                      {...memberPageLink(lang, item)}
+                      className={page(here === `/${item}`)}
+                      onClick={onClose}
+                    >
+                      {pagesCopy(lang)[item].title}
                     </Link>
                   </li>
                 ) : item === "about" ? (

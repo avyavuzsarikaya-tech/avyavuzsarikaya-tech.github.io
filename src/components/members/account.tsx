@@ -3,6 +3,8 @@ import { useEffect, useState, type FormEvent } from "react";
 import { Shell, fieldClass } from "@/components/shell";
 import { MEMBERS, membersOn } from "@/lib/members/config";
 import { errorText, membersCopy } from "@/lib/members/copy";
+import { pagesCopy } from "@/lib/members/pages-copy";
+import { memberPageLink } from "@/lib/lang-path";
 import { safeBack } from "@/lib/members/rules";
 import { isPaid, refreshProfile, supabase, useMember } from "@/lib/members/session";
 import { formatDate } from "@/lib/text";
@@ -46,7 +48,20 @@ function Account({ lang }: { lang: Lang }) {
   const [back, setBack] = useState<string | null>(null);
   useEffect(() => setBack(backFromAddress()), []);
 
-  if (!membersOn || member.status === "off") return <p className="text-muted">{words.closed}</p>;
+  if (!membersOn || member.status === "off") {
+    const soon = pagesCopy(lang);
+    return (
+      <div className="flex flex-col gap-4 border-y border-line py-6">
+        <p>{soon.accountSoon}</p>
+        <Link
+          {...memberPageLink(lang, "membership")}
+          className="inline-flex min-h-11 items-center self-start text-pine"
+        >
+          {soon.seePlans}
+        </Link>
+      </div>
+    );
+  }
   if (member.status === "loading") return <p className="text-muted">{words.loading}</p>;
   if (member.status === "out") return <SignIn lang={lang} />;
 

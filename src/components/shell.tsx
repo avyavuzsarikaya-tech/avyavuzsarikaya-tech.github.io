@@ -5,6 +5,7 @@ import { Pick } from "@/components/pick";
 import { SearchMark } from "@/components/search-mark";
 import { membersOn } from "@/lib/members/config";
 import { membersCopy } from "@/lib/members/copy";
+import { pagesCopy } from "@/lib/members/pages-copy";
 import { searchCopy } from "@/lib/search";
 import { aboutCopy } from "@/lib/about-copy";
 import { useFrameCopy } from "@/lib/frame-copy";
@@ -13,6 +14,7 @@ import {
   aboutLink,
   accountLink,
   homeLink,
+  memberPageLink,
   rememberLang,
   searchLink,
   sectionLink,
@@ -185,16 +187,15 @@ export function FrameTools() {
           <HeaderSwatch look={tools.look} dark />
         </Pick>
       </div>
-      {membersOn ? (
-        <Link
-          {...accountLink(lang)}
-          aria-label={membersCopy(lang).account}
-          title={membersCopy(lang).account}
-          className={`hidden h-11 w-9 shrink-0 items-center justify-center md:inline-flex ${hover}`}
-        >
-          <PersonMark />
-        </Link>
-      ) : null}
+      {/* Account once sign-up is on; until then the membership options. */}
+      <Link
+        {...(membersOn ? accountLink(lang) : memberPageLink(lang, "membership"))}
+        aria-label={membersOn ? membersCopy(lang).account : pagesCopy(lang).membership.title}
+        title={membersOn ? membersCopy(lang).account : pagesCopy(lang).membership.title}
+        className={`hidden h-11 w-9 shrink-0 items-center justify-center md:inline-flex ${hover}`}
+      >
+        <PersonMark />
+      </Link>
       <button
         ref={tools.menuButton}
         type="button"
@@ -464,12 +465,26 @@ export function Shell({
                     <Meridian />
                     <span className="masthead-name text-[1.75rem] leading-none">ORBIS</span>
                   </Link>
-                  <Link
-                    {...aboutLink(lang)}
-                    className="inline-flex min-h-9 items-center self-start text-base text-paper"
-                  >
-                    {aboutCopy(lang).title}
-                  </Link>
+                  <ul className="flex flex-col">
+                    <li>
+                      <Link
+                        {...aboutLink(lang)}
+                        className="inline-flex min-h-9 items-center self-start text-base text-paper"
+                      >
+                        {aboutCopy(lang).title}
+                      </Link>
+                    </li>
+                    {(["membership", "newsletter"] as const).map((item) => (
+                      <li key={item}>
+                        <Link
+                          {...memberPageLink(lang, item)}
+                          className="inline-flex min-h-9 items-center self-start text-base text-paper"
+                        >
+                          {pagesCopy(lang)[item].title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
                   <p className="text-base text-mist">{copy.colophon}</p>
                 </div>
                 <div>

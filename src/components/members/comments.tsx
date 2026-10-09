@@ -2,7 +2,8 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { NameForm, buttonClass } from "@/components/members/account";
 import { fieldClass } from "@/components/shell";
-import { accountLink } from "@/lib/lang-path";
+import { accountLink, memberPageLink } from "@/lib/lang-path";
+import { pagesCopy } from "@/lib/members/pages-copy";
 import { membersOn } from "@/lib/members/config";
 import { errorText, membersCopy } from "@/lib/members/copy";
 import { isEditor, supabase, useMember } from "@/lib/members/session";
@@ -60,7 +61,23 @@ export function Comments({ storyId, lang }: { storyId: string; lang: Lang }) {
     };
   }, [storyId, lang]);
 
-  if (!membersOn) return null;
+  // Until sign-up is switched on, the section stands empty with the way to membership.
+  if (!membersOn) {
+    return (
+      <section className="border-t border-line pt-8" aria-labelledby="comments">
+        <h2 id="comments" className="text-2xl">
+          {words.comments}
+        </h2>
+        <p className="mt-6 text-sm text-muted">{words.noComments}</p>
+        <Link
+          {...memberPageLink(lang, "membership")}
+          className="mt-6 inline-flex min-h-11 items-center text-pine"
+        >
+          {pagesCopy(lang).joinToComment}
+        </Link>
+      </section>
+    );
+  }
 
   const userId = member.status === "in" ? member.user.id : null;
   const editor = isEditor(member);

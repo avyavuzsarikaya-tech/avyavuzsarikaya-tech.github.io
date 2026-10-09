@@ -1,6 +1,7 @@
 import { aboutCopy } from "@/lib/about-copy";
 import { copyFor, langMeta } from "@/lib/i18n";
-import { DEFAULT_LANG, publicPath } from "@/lib/lang-path";
+import { DEFAULT_LANG, publicPath, type MemberPage } from "@/lib/lang-path";
+import { pagesCopy } from "@/lib/members/pages-copy";
 import { searchCopy } from "@/lib/search";
 import { LANGS, type Lang, type StoryCard, type Theme } from "@/lib/types";
 
@@ -158,6 +159,25 @@ export function aboutHead(lang: Lang) {
       url: publicPath(lang, path),
       lang,
     }),
+    links: addressLinks(lang, path, LANGS),
+  };
+}
+
+/**
+ * Head of the membership, payment or newsletter page in one language. The payment page
+ * stays out of search engines; the other two are indexed.
+ */
+export function memberPageHead(lang: Lang, page: MemberPage) {
+  const words = pagesCopy(lang)[page];
+  const path = `/${page}`;
+  const meta = pageMeta({
+    title: `${words.title} — ${SITE_NAME}`,
+    description: clip(words.lead),
+    url: publicPath(lang, path),
+    lang,
+  });
+  return {
+    meta: page === "payment" ? [...meta, { name: "robots", content: "noindex, follow" }] : meta,
     links: addressLinks(lang, path, LANGS),
   };
 }

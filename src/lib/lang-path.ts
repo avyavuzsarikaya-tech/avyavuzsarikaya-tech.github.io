@@ -115,3 +115,21 @@ export const LANG_BOOT = [
   'location.replace("/"+l+(p==="/"?"":p)+location.search+location.hash)}}',
   "}catch(e){}",
 ].join("");
+
+/** The membership, payment and newsletter pages, one address per language. */
+export type MemberPage = "membership" | "payment" | "newsletter";
+
+export function memberPageLink(lang: Lang, page: MemberPage) {
+  if (lang === DEFAULT_LANG) {
+    return page === "membership"
+      ? ({ to: "/membership" } as const)
+      : page === "payment"
+        ? ({ to: "/payment" } as const)
+        : ({ to: "/newsletter" } as const);
+  }
+  return page === "membership"
+    ? ({ to: "/$lang/membership", params: { lang } } as const)
+    : page === "payment"
+      ? ({ to: "/$lang/payment", params: { lang } } as const)
+      : ({ to: "/$lang/newsletter", params: { lang } } as const);
+}

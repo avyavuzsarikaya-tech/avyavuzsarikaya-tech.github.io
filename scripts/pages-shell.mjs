@@ -45,6 +45,12 @@ for (const lang of LANGS) {
       file: `${prefix.slice(1)}${prefix ? "/" : ""}about.html`,
       loc: `${prefix}/about`,
     },
+    // Membership and newsletter are listed; the payment page is written out but not listed.
+    ...["membership", "payment", "newsletter"].map((page) => ({
+      file: `${prefix.slice(1)}${prefix ? "/" : ""}${page}.html`,
+      loc: `${prefix}/${page}`,
+      listed: page !== "payment",
+    })),
     // The search page is written out but stays out of the sitemap: nothing to index.
     {
       file: `${prefix.slice(1)}${prefix ? "/" : ""}search.html`,

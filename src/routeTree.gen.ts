@@ -14,11 +14,17 @@ import { Route as SectionRouteImport } from './routes/$section'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as EditorRouteImport } from './routes/editor'
+import { Route as MembershipRouteImport } from './routes/membership'
+import { Route as NewsletterRouteImport } from './routes/newsletter'
 import { Route as PanelRouteImport } from './routes/panel'
+import { Route as PaymentRouteImport } from './routes/payment'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as LangSectionRouteImport } from './routes/$lang.$section'
 import { Route as LangAboutRouteImport } from './routes/$lang.about'
 import { Route as LangAccountRouteImport } from './routes/$lang.account'
+import { Route as LangMembershipRouteImport } from './routes/$lang.membership'
+import { Route as LangNewsletterRouteImport } from './routes/$lang.newsletter'
+import { Route as LangPaymentRouteImport } from './routes/$lang.payment'
 import { Route as LangSearchRouteImport } from './routes/$lang.search'
 import { Route as PanelIndexRouteImport } from './routes/panel.index'
 import { Route as PanelStoryIdRouteImport } from './routes/panel.$storyId'
@@ -50,9 +56,24 @@ const EditorRoute = EditorRouteImport.update({
   path: '/editor',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MembershipRoute = MembershipRouteImport.update({
+  id: '/membership',
+  path: '/membership',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewsletterRoute = NewsletterRouteImport.update({
+  id: '/newsletter',
+  path: '/newsletter',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PanelRoute = PanelRouteImport.update({
   id: '/panel',
   path: '/panel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaymentRoute = PaymentRouteImport.update({
+  id: '/payment',
+  path: '/payment',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchRoute = SearchRouteImport.update({
@@ -73,6 +94,21 @@ const LangAboutRoute = LangAboutRouteImport.update({
 const LangAccountRoute = LangAccountRouteImport.update({
   id: '/$lang/account',
   path: '/$lang/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangMembershipRoute = LangMembershipRouteImport.update({
+  id: '/$lang/membership',
+  path: '/$lang/membership',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangNewsletterRoute = LangNewsletterRouteImport.update({
+  id: '/$lang/newsletter',
+  path: '/$lang/newsletter',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangPaymentRoute = LangPaymentRouteImport.update({
+  id: '/$lang/payment',
+  path: '/$lang/payment',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LangSearchRoute = LangSearchRouteImport.update({
@@ -107,11 +143,17 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
   '/editor': typeof EditorRoute
+  '/membership': typeof MembershipRoute
+  '/newsletter': typeof NewsletterRoute
   '/panel': typeof PanelRouteWithChildren
+  '/payment': typeof PaymentRoute
   '/search': typeof SearchRoute
   '/$lang/$section': typeof LangSectionRoute
   '/$lang/about': typeof LangAboutRoute
   '/$lang/account': typeof LangAccountRoute
+  '/$lang/membership': typeof LangMembershipRoute
+  '/$lang/newsletter': typeof LangNewsletterRoute
+  '/$lang/payment': typeof LangPaymentRoute
   '/$lang/search': typeof LangSearchRoute
   '/panel/$storyId': typeof PanelStoryIdRoute
   '/read/$storyId': typeof ReadStoryIdRoute
@@ -124,10 +166,16 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
   '/editor': typeof EditorRoute
+  '/membership': typeof MembershipRoute
+  '/newsletter': typeof NewsletterRoute
+  '/payment': typeof PaymentRoute
   '/search': typeof SearchRoute
   '/$lang/$section': typeof LangSectionRoute
   '/$lang/about': typeof LangAboutRoute
   '/$lang/account': typeof LangAccountRoute
+  '/$lang/membership': typeof LangMembershipRoute
+  '/$lang/newsletter': typeof LangNewsletterRoute
+  '/$lang/payment': typeof LangPaymentRoute
   '/$lang/search': typeof LangSearchRoute
   '/panel/$storyId': typeof PanelStoryIdRoute
   '/read/$storyId': typeof ReadStoryIdRoute
@@ -141,11 +189,17 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
   '/editor': typeof EditorRoute
+  '/membership': typeof MembershipRoute
+  '/newsletter': typeof NewsletterRoute
   '/panel': typeof PanelRouteWithChildren
+  '/payment': typeof PaymentRoute
   '/search': typeof SearchRoute
   '/$lang/$section': typeof LangSectionRoute
   '/$lang/about': typeof LangAboutRoute
   '/$lang/account': typeof LangAccountRoute
+  '/$lang/membership': typeof LangMembershipRoute
+  '/$lang/newsletter': typeof LangNewsletterRoute
+  '/$lang/payment': typeof LangPaymentRoute
   '/$lang/search': typeof LangSearchRoute
   '/panel/$storyId': typeof PanelStoryIdRoute
   '/read/$storyId': typeof ReadStoryIdRoute
@@ -160,11 +214,17 @@ export interface FileRouteTypes {
     | '/about'
     | '/account'
     | '/editor'
+    | '/membership'
+    | '/newsletter'
     | '/panel'
+    | '/payment'
     | '/search'
     | '/$lang/$section'
     | '/$lang/about'
     | '/$lang/account'
+    | '/$lang/membership'
+    | '/$lang/newsletter'
+    | '/$lang/payment'
     | '/$lang/search'
     | '/panel/$storyId'
     | '/read/$storyId'
@@ -177,10 +237,16 @@ export interface FileRouteTypes {
     | '/about'
     | '/account'
     | '/editor'
+    | '/membership'
+    | '/newsletter'
+    | '/payment'
     | '/search'
     | '/$lang/$section'
     | '/$lang/about'
     | '/$lang/account'
+    | '/$lang/membership'
+    | '/$lang/newsletter'
+    | '/$lang/payment'
     | '/$lang/search'
     | '/panel/$storyId'
     | '/read/$storyId'
@@ -193,11 +259,17 @@ export interface FileRouteTypes {
     | '/about'
     | '/account'
     | '/editor'
+    | '/membership'
+    | '/newsletter'
     | '/panel'
+    | '/payment'
     | '/search'
     | '/$lang/$section'
     | '/$lang/about'
     | '/$lang/account'
+    | '/$lang/membership'
+    | '/$lang/newsletter'
+    | '/$lang/payment'
     | '/$lang/search'
     | '/panel/$storyId'
     | '/read/$storyId'
@@ -211,11 +283,17 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AccountRoute: typeof AccountRoute
   EditorRoute: typeof EditorRoute
+  MembershipRoute: typeof MembershipRoute
+  NewsletterRoute: typeof NewsletterRoute
   PanelRoute: typeof PanelRouteWithChildren
+  PaymentRoute: typeof PaymentRoute
   SearchRoute: typeof SearchRoute
   LangSectionRoute: typeof LangSectionRoute
   LangAboutRoute: typeof LangAboutRoute
   LangAccountRoute: typeof LangAccountRoute
+  LangMembershipRoute: typeof LangMembershipRoute
+  LangNewsletterRoute: typeof LangNewsletterRoute
+  LangPaymentRoute: typeof LangPaymentRoute
   LangSearchRoute: typeof LangSearchRoute
   ReadStoryIdRoute: typeof ReadStoryIdRoute
   LangReadStoryIdRoute: typeof LangReadStoryIdRoute
@@ -258,11 +336,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EditorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/membership': {
+      id: '/membership'
+      path: '/membership'
+      fullPath: '/membership'
+      preLoaderRoute: typeof MembershipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/newsletter': {
+      id: '/newsletter'
+      path: '/newsletter'
+      fullPath: '/newsletter'
+      preLoaderRoute: typeof NewsletterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/panel': {
       id: '/panel'
       path: '/panel'
       fullPath: '/panel'
       preLoaderRoute: typeof PanelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payment': {
+      id: '/payment'
+      path: '/payment'
+      fullPath: '/payment'
+      preLoaderRoute: typeof PaymentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/search': {
@@ -291,6 +390,27 @@ declare module '@tanstack/react-router' {
       path: '/$lang/account'
       fullPath: '/$lang/account'
       preLoaderRoute: typeof LangAccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/membership': {
+      id: '/$lang/membership'
+      path: '/$lang/membership'
+      fullPath: '/$lang/membership'
+      preLoaderRoute: typeof LangMembershipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/newsletter': {
+      id: '/$lang/newsletter'
+      path: '/$lang/newsletter'
+      fullPath: '/$lang/newsletter'
+      preLoaderRoute: typeof LangNewsletterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/payment': {
+      id: '/$lang/payment'
+      path: '/$lang/payment'
+      fullPath: '/$lang/payment'
+      preLoaderRoute: typeof LangPaymentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$lang/search': {
@@ -349,11 +469,17 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AccountRoute: AccountRoute,
   EditorRoute: EditorRoute,
+  MembershipRoute: MembershipRoute,
+  NewsletterRoute: NewsletterRoute,
   PanelRoute: PanelRouteWithChildren,
+  PaymentRoute: PaymentRoute,
   SearchRoute: SearchRoute,
   LangSectionRoute: LangSectionRoute,
   LangAboutRoute: LangAboutRoute,
   LangAccountRoute: LangAccountRoute,
+  LangMembershipRoute: LangMembershipRoute,
+  LangNewsletterRoute: LangNewsletterRoute,
+  LangPaymentRoute: LangPaymentRoute,
   LangSearchRoute: LangSearchRoute,
   ReadStoryIdRoute: ReadStoryIdRoute,
   LangReadStoryIdRoute: LangReadStoryIdRoute,
