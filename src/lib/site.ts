@@ -2,6 +2,7 @@ import { aboutCopy } from "@/lib/about-copy";
 import { copyFor, langMeta } from "@/lib/i18n";
 import { DEFAULT_LANG, publicPath, type MemberPage } from "@/lib/lang-path";
 import { pagesCopy } from "@/lib/members/pages-copy";
+import { legalCopy, type LegalPage } from "@/lib/legal-copy";
 import { searchCopy } from "@/lib/search";
 import { LANGS, type Lang, type StoryCard, type Theme } from "@/lib/types";
 
@@ -178,6 +179,21 @@ export function memberPageHead(lang: Lang, page: MemberPage) {
   });
   return {
     meta: page === "payment" ? [...meta, { name: "robots", content: "noindex, follow" }] : meta,
+    links: addressLinks(lang, path, LANGS),
+  };
+}
+
+/** Head of the terms, privacy or refund page in one language. */
+export function legalHead(lang: Lang, page: LegalPage) {
+  const doc = legalCopy(lang)[page];
+  const path = `/${page}`;
+  return {
+    meta: pageMeta({
+      title: `${doc.title} — ${SITE_NAME}`,
+      description: clip(doc.lead),
+      url: publicPath(lang, path),
+      lang,
+    }),
     links: addressLinks(lang, path, LANGS),
   };
 }

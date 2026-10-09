@@ -8,7 +8,7 @@ import { join } from "node:path";
  * under assets/search/<lang>.json, so the existing assets publication includes them.
  */
 
-const LANGS = ["tr", "ar", "en", "fr", "es"];
+const LANGS = ["en", "tr"];
 
 /**
  * Body text as the reader sees it: links and images reduced to their words, source

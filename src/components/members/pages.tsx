@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { Shell } from "@/components/shell";
 import { buttonClass } from "@/components/members/account";
 import { useCopy } from "@/lib/i18n";
-import { accountLink, homeLink, memberPageLink } from "@/lib/lang-path";
+import { accountLink, homeLink, legalLink, memberPageLink } from "@/lib/lang-path";
+import { legalCopy } from "@/lib/legal-copy";
 import { pagesCopy } from "@/lib/members/pages-copy";
 import { PAYMENT, currencyFor, isPeriod, paymentOn, price, type Period } from "@/lib/members/plans";
 import type { Lang } from "@/lib/types";
@@ -128,6 +129,7 @@ export function PaymentPage() {
   const lang = useLang();
   const all = pagesCopy(lang);
   const words = all.payment;
+  const legal = legalCopy(lang);
   const [period, setPeriod] = usePeriod();
   const per = period === "monthly" ? all.membership.perMonth : all.membership.perYear;
 
@@ -208,6 +210,24 @@ export function PaymentPage() {
               </p>
             </>
           )}
+          <p className="text-sm text-muted">
+            {legal.agree[0]}{" "}
+            <Link
+              {...legalLink(lang, "terms")}
+              className="text-pine underline-offset-4 hover:underline"
+            >
+              {legal.terms.title.toLocaleLowerCase(lang)}
+            </Link>{" "}
+            {legal.agree[1]}{" "}
+            <Link
+              {...legalLink(lang, "refunds")}
+              className="text-pine underline-offset-4 hover:underline"
+            >
+              {legal.refunds.title.toLocaleLowerCase(lang)}
+            </Link>
+            {lang === "tr" ? " " : ""}
+            {legal.agree[2]}
+          </p>
         </aside>
       </div>
       <Link

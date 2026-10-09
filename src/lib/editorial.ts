@@ -6,7 +6,7 @@ import type { Lang, StoryImage } from "@/lib/types";
  */
 export const EDITORIAL = {
   publisherName: "",
-  contactEmail: "",
+  contactEmail: "editor@orbisreadingatlas.com",
 };
 
 const labels = {

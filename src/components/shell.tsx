@@ -6,6 +6,7 @@ import { SearchMark } from "@/components/search-mark";
 import { membersOn } from "@/lib/members/config";
 import { membersCopy } from "@/lib/members/copy";
 import { pagesCopy } from "@/lib/members/pages-copy";
+import { LEGAL_PAGES, legalCopy } from "@/lib/legal-copy";
 import { searchCopy } from "@/lib/search";
 import { aboutCopy } from "@/lib/about-copy";
 import { useFrameCopy } from "@/lib/frame-copy";
@@ -14,6 +15,7 @@ import {
   aboutLink,
   accountLink,
   homeLink,
+  legalLink,
   memberPageLink,
   rememberLang,
   searchLink,
@@ -527,9 +529,25 @@ export function Shell({
                   </ul>
                 </div>
               </div>
-              <p className="mt-10 border-t border-muted pt-6 text-sm text-mist">
-                © {new Date().getFullYear()} Orbis. {frame.rights}
-              </p>
+              <div className="mt-10 flex flex-col gap-3 border-t border-muted pt-6 text-sm text-mist md:flex-row md:items-center md:justify-between">
+                <p>
+                  © {new Date().getFullYear()} Orbis. {frame.rights}
+                </p>
+                <nav aria-label={legalCopy(lang).footer}>
+                  <ul className="flex flex-wrap gap-x-5">
+                    {LEGAL_PAGES.map((page) => (
+                      <li key={page}>
+                        <Link
+                          {...legalLink(lang, page)}
+                          className="inline-flex min-h-9 items-center text-mist hover:text-paper"
+                        >
+                          {legalCopy(lang)[page].title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              </div>
             </div>
           </footer>
         </div>

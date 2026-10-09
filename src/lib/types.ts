@@ -1,5 +1,12 @@
-export const LANGS = ["tr", "ar", "en", "fr", "es"] as const;
-export type Lang = (typeof LANGS)[number];
+/**
+ * Every language a reading file can hold. The files keep all five, so texts written
+ * earlier stay intact; only the languages in LANGS appear on the site.
+ */
+export const ALL_LANGS = ["tr", "ar", "en", "fr", "es"] as const;
+export type Lang = (typeof ALL_LANGS)[number];
+
+/** The languages on the site, in menu order: English first, Turkish second. */
+export const LANGS = ["en", "tr"] as const satisfies readonly Lang[];
 
 export const THEMES = [
   "climate",

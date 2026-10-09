@@ -165,7 +165,7 @@ function staticPages() {
     for (const theme of THEMES) paths.push(`${prefix}/${theme}`);
     paths.push(`${prefix}/about`);
     paths.push(`${prefix}/search`);
-    for (const page of ["membership", "payment", "newsletter"]) paths.push(`${prefix}/${page}`);
+    for (const page of ["membership", "payment", "newsletter", "terms", "privacy", "refunds"]) paths.push(`${prefix}/${page}`);
     for (const id of ids) paths.push(`${prefix}/read/${id}`);
   }
   return paths.map((path) => ({ path }));

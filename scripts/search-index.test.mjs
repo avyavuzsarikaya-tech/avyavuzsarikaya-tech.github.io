@@ -36,17 +36,21 @@ function fullStory(id, date) {
 const read = (out, lang) =>
   JSON.parse(readFileSync(join(out, "assets", "search", `${lang}.json`), "utf8"));
 
-test("writes all five indexes under assets/search, without root or language-folder indexes", (t) => {
+test("writes the English and Turkish indexes under assets/search, without root or language-folder indexes", (t) => {
   const { stories, out } = fixture(t);
   writeFileSync(join(stories, "a.json"), JSON.stringify(fullStory("a", "2026-01-01")));
   writeSearchIndex(out, stories);
-  for (const lang of ["en", "tr", "ar", "fr", "es"]) {
+  for (const lang of ["en", "tr"]) {
     const file = join(out, "assets", "search", `${lang}.json`);
     assert.ok(existsSync(file), `${lang} index missing`);
     assert.equal(read(out, lang).length, 1);
     assert.ok(!existsSync(join(out, lang, "search.json")));
   }
   assert.ok(!existsSync(join(out, "search.json")));
+  // Languages no longer on the site get no index.
+  for (const lang of ["ar", "fr", "es"]) {
+    assert.ok(!existsSync(join(out, "assets", "search", `${lang}.json`)));
+  }
 });
 
 test("records carry id, theme, date, title, dek, region and a cleaned body", (t) => {
@@ -85,14 +89,11 @@ test("drafts stay out; a reading without text in a language is absent there only
     JSON.stringify({ ...fullStory("draft", "2026-03-01"), status: "draft" }),
   );
   const partial = fullStory("partial", "2026-03-02");
-  partial.locales.fr = copy("", "", "", "");
-  partial.locales.ar.body = "   ";
+  partial.locales.tr = copy("", "", "", "");
   writeFileSync(join(stories, "partial.json"), JSON.stringify(partial));
   writeSearchIndex(out, stories);
   assert.deepEqual(read(out, "en").map((r) => r.id), ["partial"]);
-  assert.deepEqual(read(out, "fr").map((r) => r.id), []);
-  assert.deepEqual(read(out, "ar").map((r) => r.id), []);
-  assert.deepEqual(read(out, "tr").map((r) => r.id), ["partial"]);
+  assert.deepEqual(read(out, "tr").map((r) => r.id), []);
 });
 
 test("the id falls back to the file name and records come newest first", (t) => {

@@ -18,14 +18,20 @@ import { Route as MembershipRouteImport } from './routes/membership'
 import { Route as NewsletterRouteImport } from './routes/newsletter'
 import { Route as PanelRouteImport } from './routes/panel'
 import { Route as PaymentRouteImport } from './routes/payment'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as RefundsRouteImport } from './routes/refunds'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as LangSectionRouteImport } from './routes/$lang.$section'
 import { Route as LangAboutRouteImport } from './routes/$lang.about'
 import { Route as LangAccountRouteImport } from './routes/$lang.account'
 import { Route as LangMembershipRouteImport } from './routes/$lang.membership'
 import { Route as LangNewsletterRouteImport } from './routes/$lang.newsletter'
 import { Route as LangPaymentRouteImport } from './routes/$lang.payment'
+import { Route as LangPrivacyRouteImport } from './routes/$lang.privacy'
+import { Route as LangRefundsRouteImport } from './routes/$lang.refunds'
 import { Route as LangSearchRouteImport } from './routes/$lang.search'
+import { Route as LangTermsRouteImport } from './routes/$lang.terms'
 import { Route as PanelIndexRouteImport } from './routes/panel.index'
 import { Route as PanelStoryIdRouteImport } from './routes/panel.$storyId'
 import { Route as ReadStoryIdRouteImport } from './routes/read.$storyId'
@@ -76,9 +82,24 @@ const PaymentRoute = PaymentRouteImport.update({
   path: '/payment',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RefundsRoute = RefundsRouteImport.update({
+  id: '/refunds',
+  path: '/refunds',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LangSectionRoute = LangSectionRouteImport.update({
@@ -111,9 +132,24 @@ const LangPaymentRoute = LangPaymentRouteImport.update({
   path: '/$lang/payment',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LangPrivacyRoute = LangPrivacyRouteImport.update({
+  id: '/$lang/privacy',
+  path: '/$lang/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangRefundsRoute = LangRefundsRouteImport.update({
+  id: '/$lang/refunds',
+  path: '/$lang/refunds',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LangSearchRoute = LangSearchRouteImport.update({
   id: '/$lang/search',
   path: '/$lang/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangTermsRoute = LangTermsRouteImport.update({
+  id: '/$lang/terms',
+  path: '/$lang/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PanelIndexRoute = PanelIndexRouteImport.update({
@@ -147,14 +183,20 @@ export interface FileRoutesByFullPath {
   '/newsletter': typeof NewsletterRoute
   '/panel': typeof PanelRouteWithChildren
   '/payment': typeof PaymentRoute
+  '/privacy': typeof PrivacyRoute
+  '/refunds': typeof RefundsRoute
   '/search': typeof SearchRoute
+  '/terms': typeof TermsRoute
   '/$lang/$section': typeof LangSectionRoute
   '/$lang/about': typeof LangAboutRoute
   '/$lang/account': typeof LangAccountRoute
   '/$lang/membership': typeof LangMembershipRoute
   '/$lang/newsletter': typeof LangNewsletterRoute
   '/$lang/payment': typeof LangPaymentRoute
+  '/$lang/privacy': typeof LangPrivacyRoute
+  '/$lang/refunds': typeof LangRefundsRoute
   '/$lang/search': typeof LangSearchRoute
+  '/$lang/terms': typeof LangTermsRoute
   '/panel/$storyId': typeof PanelStoryIdRoute
   '/read/$storyId': typeof ReadStoryIdRoute
   '/panel/': typeof PanelIndexRoute
@@ -169,14 +211,20 @@ export interface FileRoutesByTo {
   '/membership': typeof MembershipRoute
   '/newsletter': typeof NewsletterRoute
   '/payment': typeof PaymentRoute
+  '/privacy': typeof PrivacyRoute
+  '/refunds': typeof RefundsRoute
   '/search': typeof SearchRoute
+  '/terms': typeof TermsRoute
   '/$lang/$section': typeof LangSectionRoute
   '/$lang/about': typeof LangAboutRoute
   '/$lang/account': typeof LangAccountRoute
   '/$lang/membership': typeof LangMembershipRoute
   '/$lang/newsletter': typeof LangNewsletterRoute
   '/$lang/payment': typeof LangPaymentRoute
+  '/$lang/privacy': typeof LangPrivacyRoute
+  '/$lang/refunds': typeof LangRefundsRoute
   '/$lang/search': typeof LangSearchRoute
+  '/$lang/terms': typeof LangTermsRoute
   '/panel/$storyId': typeof PanelStoryIdRoute
   '/read/$storyId': typeof ReadStoryIdRoute
   '/panel': typeof PanelIndexRoute
@@ -193,14 +241,20 @@ export interface FileRoutesById {
   '/newsletter': typeof NewsletterRoute
   '/panel': typeof PanelRouteWithChildren
   '/payment': typeof PaymentRoute
+  '/privacy': typeof PrivacyRoute
+  '/refunds': typeof RefundsRoute
   '/search': typeof SearchRoute
+  '/terms': typeof TermsRoute
   '/$lang/$section': typeof LangSectionRoute
   '/$lang/about': typeof LangAboutRoute
   '/$lang/account': typeof LangAccountRoute
   '/$lang/membership': typeof LangMembershipRoute
   '/$lang/newsletter': typeof LangNewsletterRoute
   '/$lang/payment': typeof LangPaymentRoute
+  '/$lang/privacy': typeof LangPrivacyRoute
+  '/$lang/refunds': typeof LangRefundsRoute
   '/$lang/search': typeof LangSearchRoute
+  '/$lang/terms': typeof LangTermsRoute
   '/panel/$storyId': typeof PanelStoryIdRoute
   '/read/$storyId': typeof ReadStoryIdRoute
   '/panel/': typeof PanelIndexRoute
@@ -218,14 +272,20 @@ export interface FileRouteTypes {
     | '/newsletter'
     | '/panel'
     | '/payment'
+    | '/privacy'
+    | '/refunds'
     | '/search'
+    | '/terms'
     | '/$lang/$section'
     | '/$lang/about'
     | '/$lang/account'
     | '/$lang/membership'
     | '/$lang/newsletter'
     | '/$lang/payment'
+    | '/$lang/privacy'
+    | '/$lang/refunds'
     | '/$lang/search'
+    | '/$lang/terms'
     | '/panel/$storyId'
     | '/read/$storyId'
     | '/panel/'
@@ -240,14 +300,20 @@ export interface FileRouteTypes {
     | '/membership'
     | '/newsletter'
     | '/payment'
+    | '/privacy'
+    | '/refunds'
     | '/search'
+    | '/terms'
     | '/$lang/$section'
     | '/$lang/about'
     | '/$lang/account'
     | '/$lang/membership'
     | '/$lang/newsletter'
     | '/$lang/payment'
+    | '/$lang/privacy'
+    | '/$lang/refunds'
     | '/$lang/search'
+    | '/$lang/terms'
     | '/panel/$storyId'
     | '/read/$storyId'
     | '/panel'
@@ -263,14 +329,20 @@ export interface FileRouteTypes {
     | '/newsletter'
     | '/panel'
     | '/payment'
+    | '/privacy'
+    | '/refunds'
     | '/search'
+    | '/terms'
     | '/$lang/$section'
     | '/$lang/about'
     | '/$lang/account'
     | '/$lang/membership'
     | '/$lang/newsletter'
     | '/$lang/payment'
+    | '/$lang/privacy'
+    | '/$lang/refunds'
     | '/$lang/search'
+    | '/$lang/terms'
     | '/panel/$storyId'
     | '/read/$storyId'
     | '/panel/'
@@ -287,14 +359,20 @@ export interface RootRouteChildren {
   NewsletterRoute: typeof NewsletterRoute
   PanelRoute: typeof PanelRouteWithChildren
   PaymentRoute: typeof PaymentRoute
+  PrivacyRoute: typeof PrivacyRoute
+  RefundsRoute: typeof RefundsRoute
   SearchRoute: typeof SearchRoute
+  TermsRoute: typeof TermsRoute
   LangSectionRoute: typeof LangSectionRoute
   LangAboutRoute: typeof LangAboutRoute
   LangAccountRoute: typeof LangAccountRoute
   LangMembershipRoute: typeof LangMembershipRoute
   LangNewsletterRoute: typeof LangNewsletterRoute
   LangPaymentRoute: typeof LangPaymentRoute
+  LangPrivacyRoute: typeof LangPrivacyRoute
+  LangRefundsRoute: typeof LangRefundsRoute
   LangSearchRoute: typeof LangSearchRoute
+  LangTermsRoute: typeof LangTermsRoute
   ReadStoryIdRoute: typeof ReadStoryIdRoute
   LangReadStoryIdRoute: typeof LangReadStoryIdRoute
 }
@@ -364,11 +442,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PaymentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/refunds': {
+      id: '/refunds'
+      path: '/refunds'
+      fullPath: '/refunds'
+      preLoaderRoute: typeof RefundsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/search': {
       id: '/search'
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$lang/$section': {
@@ -413,11 +512,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LangPaymentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$lang/privacy': {
+      id: '/$lang/privacy'
+      path: '/$lang/privacy'
+      fullPath: '/$lang/privacy'
+      preLoaderRoute: typeof LangPrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/refunds': {
+      id: '/$lang/refunds'
+      path: '/$lang/refunds'
+      fullPath: '/$lang/refunds'
+      preLoaderRoute: typeof LangRefundsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/$lang/search': {
       id: '/$lang/search'
       path: '/$lang/search'
       fullPath: '/$lang/search'
       preLoaderRoute: typeof LangSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/terms': {
+      id: '/$lang/terms'
+      path: '/$lang/terms'
+      fullPath: '/$lang/terms'
+      preLoaderRoute: typeof LangTermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/panel/': {
@@ -473,14 +593,20 @@ const rootRouteChildren: RootRouteChildren = {
   NewsletterRoute: NewsletterRoute,
   PanelRoute: PanelRouteWithChildren,
   PaymentRoute: PaymentRoute,
+  PrivacyRoute: PrivacyRoute,
+  RefundsRoute: RefundsRoute,
   SearchRoute: SearchRoute,
+  TermsRoute: TermsRoute,
   LangSectionRoute: LangSectionRoute,
   LangAboutRoute: LangAboutRoute,
   LangAccountRoute: LangAccountRoute,
   LangMembershipRoute: LangMembershipRoute,
   LangNewsletterRoute: LangNewsletterRoute,
   LangPaymentRoute: LangPaymentRoute,
+  LangPrivacyRoute: LangPrivacyRoute,
+  LangRefundsRoute: LangRefundsRoute,
   LangSearchRoute: LangSearchRoute,
+  LangTermsRoute: LangTermsRoute,
   ReadStoryIdRoute: ReadStoryIdRoute,
   LangReadStoryIdRoute: LangReadStoryIdRoute,
 }

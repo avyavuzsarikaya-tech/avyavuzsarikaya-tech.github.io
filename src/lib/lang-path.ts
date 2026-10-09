@@ -133,3 +133,19 @@ export function memberPageLink(lang: Lang, page: MemberPage) {
       ? ({ to: "/$lang/payment", params: { lang } } as const)
       : ({ to: "/$lang/newsletter", params: { lang } } as const);
 }
+
+/** Terms of use, privacy policy and refund policy, one address per language. */
+export function legalLink(lang: Lang, page: "terms" | "privacy" | "refunds") {
+  if (lang === DEFAULT_LANG) {
+    return page === "terms"
+      ? ({ to: "/terms" } as const)
+      : page === "privacy"
+        ? ({ to: "/privacy" } as const)
+        : ({ to: "/refunds" } as const);
+  }
+  return page === "terms"
+    ? ({ to: "/$lang/terms", params: { lang } } as const)
+    : page === "privacy"
+      ? ({ to: "/$lang/privacy", params: { lang } } as const)
+      : ({ to: "/$lang/refunds", params: { lang } } as const);
+}

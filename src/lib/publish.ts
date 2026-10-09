@@ -7,7 +7,7 @@ import {
   type Change,
 } from "@/lib/github";
 import { mediaPath, mediaUrl } from "@/lib/seed";
-import { LANGS, type Story } from "@/lib/types";
+import { ALL_LANGS as LANGS, type Story } from "@/lib/types";
 
 /**
  * Turns a saved reading into repository changes:

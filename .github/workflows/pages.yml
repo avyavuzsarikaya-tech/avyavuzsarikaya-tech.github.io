@@ -52,13 +52,19 @@ jobs:
           cp -a dist/client/assets assets
           cp -a dist/client/read read
           # One folder per language besides English: tr/index.html, tr/climate.html, tr/read/…
-          for lang in tr ar fr es; do cp -a "dist/client/$lang" "$lang"; done
+          # Languages no longer on the site have no folder in the build; their old pages go.
+          for lang in tr ar fr es; do
+            if [ -d "dist/client/$lang" ]; then cp -a "dist/client/$lang" "$lang"; fi
+          done
           if [ -d dist/client/__grok ]; then cp -a dist/client/__grok __grok; fi
           if [ -d dist/client/audio ]; then cp -a dist/client/audio audio; fi
           if [ -d dist/client/videos ]; then rm -rf videos; cp -a dist/client/videos videos; fi
-          git config user.name "avyavuzsarikaya-tech"
-          git config user.email "335169178+avyavuzsarikaya-tech@users.noreply.github.com"
-          git add -A .nojekyll favicon.svg og.jpg robots.txt sitemap.xml feed.xml assets read tr ar fr es
+          git config user.name "editor-cell"
+          git config user.email "editor@orbisreadingatlas.com"
+          git add -A .nojekyll favicon.svg og.jpg robots.txt sitemap.xml feed.xml assets read
+          for d in tr ar fr es; do
+            if [ -e "$d" ] || git ls-files --error-unmatch "$d" >/dev/null 2>&1; then git add -A "$d"; fi
+          done
           git add -A -- $(cd dist/client && ls *.html | grep -v '^_shell.html$')
           if [ -d __grok ]; then git add -A __grok; fi
           if [ -d audio ]; then git add -A audio; fi
