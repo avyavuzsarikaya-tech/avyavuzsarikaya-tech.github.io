@@ -472,6 +472,14 @@ const HOME_WORDS: Record<
     inDepth: string;
     mostRead: string;
     more: string;
+    /** Screen-reader name of the eight boxes of the newest issue (no visible heading). */
+    thisIssue: string;
+    /** Name of the depth buttons, for screen readers. */
+    view: string;
+    /** The visible heading over everything below the newest issue. */
+    archive: string;
+    /** The first column under it: the issue before the newest. */
+    lastIssue: string;
   }
 > = {
   tr: {
@@ -485,9 +493,13 @@ const HOME_WORDS: Record<
     readFull: "Yazının tamamı",
     readMore: "Devamı",
     latest: "Son yazılar",
-    inDepth: "Derinlemesine",
+    inDepth: "Uzun okuma",
     mostRead: "En çok okunanlar",
     more: "Diğer yazılar",
+    thisIssue: "Bu sayı",
+    view: "Görünüm",
+    archive: "Arşivden",
+    lastIssue: "Önceki sayı",
   },
   en: {
     chain: "Document chain",
@@ -500,9 +512,13 @@ const HOME_WORDS: Record<
     readFull: "Read the full story",
     readMore: "Read more",
     latest: "Latest",
-    inDepth: "In depth",
+    inDepth: "Long read",
     mostRead: "Most read",
     more: "More readings",
+    thisIssue: "This issue",
+    view: "View",
+    archive: "From the archive",
+    lastIssue: "Last issue",
   },
   ar: {
     chain: "سلسلة الوثائق",
@@ -515,9 +531,13 @@ const HOME_WORDS: Record<
     readFull: "اقرأ النص كاملًا",
     readMore: "المزيد",
     latest: "الأحدث",
-    inDepth: "بتعمّق",
+    inDepth: "قراءة مطوّلة",
     mostRead: "الأكثر قراءة",
     more: "قراءات أخرى",
+    thisIssue: "هذا العدد",
+    view: "طريقة العرض",
+    archive: "من الأرشيف",
+    lastIssue: "العدد السابق",
   },
   fr: {
     chain: "Chaîne de documents",
@@ -530,9 +550,13 @@ const HOME_WORDS: Record<
     readFull: "Lire en entier",
     readMore: "Lire la suite",
     latest: "Derniers",
-    inDepth: "En profondeur",
+    inDepth: "Lecture longue",
     mostRead: "Les plus lus",
     more: "Autres lectures",
+    thisIssue: "Ce numéro",
+    view: "Affichage",
+    archive: "Dans les archives",
+    lastIssue: "Numéro précédent",
   },
   es: {
     chain: "Cadena de documentos",
@@ -545,9 +569,13 @@ const HOME_WORDS: Record<
     readFull: "Leer completo",
     readMore: "Leer más",
     latest: "Lo último",
-    inDepth: "En profundidad",
+    inDepth: "Lectura larga",
     mostRead: "Lo más leído",
     more: "Más lecturas",
+    thisIssue: "Este número",
+    view: "Vista",
+    archive: "Del archivo",
+    lastIssue: "Número anterior",
   },
 };
 
@@ -929,12 +957,12 @@ function DepthBar({
   choose: (next: Depth) => void;
 }) {
   const words = HOME_WORDS[lang];
-  const heading = `font-body font-normal ${lang === "ar" ? "text-sm text-pine" : "text-xs uppercase tracking-[0.14em] text-pine"}`;
   return (
     <div className="px-5 pt-6 md:px-8 md:pt-8">
       <div className="flex items-center justify-between gap-4 border-t-[3px] border-ink pt-3">
-        <h2 className={heading}>{words.records}</h2>
-        <div role="radiogroup" aria-label={words.records} className="flex items-center">
+        {/* The eight boxes speak for themselves; the newest issue has no visible heading. */}
+        <h2 className="sr-only">{words.thisIssue}</h2>
+        <div role="radiogroup" aria-label={words.view} className="ms-auto flex items-center">
           {([1, 2, 3] as const).map((step) => (
             <button
               key={step}
@@ -995,7 +1023,13 @@ function Records({ stories, lang, depth }: { stories: Story[]; lang: Lang; depth
   const words = HOME_WORDS[lang];
 
   return (
-    <section className="px-5 pt-6 pb-4 md:px-8 md:pt-8" aria-label={words.records}>
+    <section className="px-5 pt-6 pb-4 md:px-8 md:pt-8" aria-labelledby="atlas-archive">
+      <h2
+        id="atlas-archive"
+        className="paper-title mb-5 border-t-[3px] border-ink pt-4 text-[1.6rem] font-bold leading-tight text-ink md:mb-7 md:text-[2rem]"
+      >
+        {words.archive}
+      </h2>
       <div className="md:hidden">
         <RecordColumns plan={planRecords(stories, mostRead, false)} lang={lang} depth={depth} />
       </div>
@@ -1024,8 +1058,8 @@ function RecordColumns({ plan, lang, depth }: { plan: RecordPlan; lang: Lang; de
       ) : null}
 
       <div className={`records atlas-bottom ${strip.length ? "mt-5" : ""}`} data-depth={depth}>
-        <section className="atlas-col" aria-label={words.latest}>
-          <h3 className={`${heading} mb-3`}>{words.latest}</h3>
+        <section className="atlas-col" aria-label={words.lastIssue}>
+          <h3 className={`${heading} mb-3`}>{words.lastIssue}</h3>
           <ol>
             {latest.map((story) => (
               <li key={story.id}>
