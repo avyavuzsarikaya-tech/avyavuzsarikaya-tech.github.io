@@ -13,7 +13,14 @@ import {
 } from "@/components/reading-extras";
 import { LockNote, StoryVideos, useMemberText } from "@/components/members/locked";
 import { Shell } from "@/components/shell";
-import { TwinButton, TwinHeading, TwinPanel, TwinProse, useTwin, writtenLangs } from "@/components/twin";
+import {
+  TwinButton,
+  TwinHeading,
+  TwinPanel,
+  TwinProse,
+  useTwin,
+  writtenLangs,
+} from "@/components/twin";
 import { byline, editorialCopy, imageCaption } from "@/lib/editorial";
 import { imageSet } from "@/lib/image-set";
 import { langMeta, useCopy } from "@/lib/i18n";
@@ -98,29 +105,15 @@ function TypeSize({
       className="inline-flex shrink-0 items-center rounded-full border border-line px-1"
     >
       <span className="sr-only">{label}</span>
-      <button
-        type="button"
-        onClick={onDown}
-        disabled={atMin}
-        className={`${button} text-[12px]`}
-      >
+      <button type="button" onClick={onDown} disabled={atMin} className={`${button} text-[12px]`}>
         <span aria-hidden="true">A−</span>
         <span className="sr-only">{downLabel}</span>
       </button>
-      <button
-        type="button"
-        onClick={onReset}
-        className={`${button} text-[14px]`}
-      >
+      <button type="button" onClick={onReset} className={`${button} text-[14px]`}>
         <span aria-hidden="true">A</span>
         <span className="sr-only">{label}</span>
       </button>
-      <button
-        type="button"
-        onClick={onUp}
-        disabled={atMax}
-        className={`${button} text-[16px]`}
-      >
+      <button type="button" onClick={onUp} disabled={atMax} className={`${button} text-[16px]`}>
         <span aria-hidden="true">A+</span>
         <span className="sr-only">{upLabel}</span>
       </button>
@@ -234,7 +227,6 @@ function Reading({ story }: { story: Story | null }) {
           </h1>
           {locale.dek ? <p className="reading-dek">{locale.dek}</p> : null}
           {twin ? <TwinHeading story={story} twin={twin} /> : null}
-          {/* On a phone the text size sits at the end of the date line, right above the text. */}
           <div className="flex items-end justify-between gap-x-3 pt-1">
             <div className="flex min-w-0 flex-col items-start gap-0.5">
               {by ? <p className="text-sm font-bold text-ink">{by}</p> : null}
@@ -246,17 +238,6 @@ function Reading({ story }: { story: Story | null }) {
                   {editorial.updated}: {formatDate(story.updatedAt, lang)}
                 </p>
               ) : null}
-            </div>
-            <div className="no-print -mb-1 flex shrink-0 md:hidden">
-              <TypeSize
-                step={typeStep}
-                onDown={() => setStep(typeStep - 1)}
-                onUp={() => setStep(typeStep + 1)}
-                onReset={() => setStep(1)}
-                label={copy.textSize}
-                downLabel={copy.typeDown}
-                upLabel={copy.typeUp}
-              />
             </div>
           </div>
           {/* Phone: one thin line of PDF, share and the player. Wide screen, one line:
@@ -352,19 +333,33 @@ function Reading({ story }: { story: Story | null }) {
               ref={sources.length ? undefined : (node) => void (readEnd.current = node)}
               className="flex flex-col gap-8"
             >
-              <div style={{ fontSize: `${TYPE_STEPS[typeStep]}em` }}>
-                {twin && twinBody ? (
-                  <TwinProse
-                    main={body}
-                    twin={twinBody}
-                    mainLang={lang}
-                    twinLang={twin}
-                    sourceNums={sourceNums}
-                    sourceWord={copy.sourceWord}
+              <div className="flex flex-col gap-3">
+                {/* On a phone the text size sits right above the text, after the picture. */}
+                <div className="no-print flex justify-end md:hidden">
+                  <TypeSize
+                    step={typeStep}
+                    onDown={() => setStep(typeStep - 1)}
+                    onUp={() => setStep(typeStep + 1)}
+                    onReset={() => setStep(1)}
+                    label={copy.textSize}
+                    downLabel={copy.typeDown}
+                    upLabel={copy.typeUp}
                   />
-                ) : (
-                  <Prose body={body} sourceNums={sourceNums} sourceWord={copy.sourceWord} />
-                )}
+                </div>
+                <div style={{ fontSize: `${TYPE_STEPS[typeStep]}em` }}>
+                  {twin && twinBody ? (
+                    <TwinProse
+                      main={body}
+                      twin={twinBody}
+                      mainLang={lang}
+                      twinLang={twin}
+                      sourceNums={sourceNums}
+                      sourceWord={copy.sourceWord}
+                    />
+                  ) : (
+                    <Prose body={body} sourceNums={sourceNums} sourceWord={copy.sourceWord} />
+                  )}
+                </div>
               </div>
               {membersOnly && fullText === null ? <LockNote lang={lang} /> : null}
             </div>
