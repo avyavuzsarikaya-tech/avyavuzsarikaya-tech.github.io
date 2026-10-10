@@ -4,6 +4,7 @@ import { CardListen, ReadTime } from "@/components/read-time";
 import { Shell } from "@/components/shell";
 import { useFrameCopy } from "@/lib/frame-copy";
 import { imageSet } from "@/lib/image-set";
+import { frontOrder } from "@/lib/front-order";
 import { imageCaption } from "@/lib/editorial";
 import { langMeta, useCopy } from "@/lib/i18n";
 import { readLink } from "@/lib/lang-path";
@@ -43,7 +44,11 @@ export function Atlas({ section }: { section: Theme | "all" }) {
   const copy = useCopy(lang);
   const frame = useFrameCopy(lang);
 
-  const all = [...stories].sort((a, b) => b.date.localeCompare(a.date));
+  // The front page follows the issue and its ranks; a section page is newest first.
+  const all =
+    section === "all"
+      ? frontOrder(stories)
+      : [...stories].sort((a, b) => b.date.localeCompare(a.date));
   const sorted = all.filter((story) => section === "all" || story.theme === section);
   const latest = sorted[0];
   const home = section === "all";
@@ -248,11 +253,14 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
   const dir = langMeta[lang].dir;
   const [depth, choose] = useDepth();
   const topRef = useTopFill(depth);
+  // One box per rank of the issue: 1 the lead, 2 the large middle card, 3 the card at the
+  // left, 4–8 the short readings (4 and 7 at the left, 5, 6 and 8 at the right). Rank 3 is
+  // first in the page so the grid keeps its columns; on a phone rank 2 is moved up again.
   const [lead, ...rest] = stories;
   if (!lead) return null;
-  const cards = rest.slice(0, 2);
-  const briefs = rest.slice(2, 5);
-  const records = rest.slice(5);
+  const cards = rest.length > 1 ? [rest[1], rest[0]] : rest.slice(0, 1);
+  const briefs = rest.slice(2, 7);
+  const records = rest.slice(7);
   const words = HOME_WORDS[lang];
   const leadSummary = cellSummary(lead, lang);
   const arrow = dir === "rtl" ? "←" : "→";

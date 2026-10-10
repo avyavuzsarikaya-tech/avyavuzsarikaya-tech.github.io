@@ -78,6 +78,13 @@ export type Story = {
    * the full text of each language is written in the editor panel and kept in Supabase.
    */
   membersOnly?: boolean;
+  /**
+   * The weekly issue the reading belongs to (1, 2, 3, …). The newest issue fills the top of
+   * the front page; older issues move down. Readings without one follow by date.
+   */
+  issue?: number;
+  /** Its place in the issue: 1 is the most important and gets the largest box, then 2, 3, … */
+  rank?: number;
   locales: Record<Lang, LocaleCopy>;
 };
 
@@ -155,5 +162,8 @@ export type StoryCard = {
   sources?: Source[];
   /** The story file holds only the opening; see Story.membersOnly. */
   membersOnly?: boolean;
+  /** See Story.issue and Story.rank. */
+  issue?: number;
+  rank?: number;
   locales: Record<Lang, LocaleCard>;
 };

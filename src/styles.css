@@ -1294,6 +1294,93 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     margin-bottom: 0;
   }
 }
+/* An issue of eight: one box per rank. Rank 3 is the first card in the page (the left
+   column on a wide screen), rank 2 the second (the large middle card). On a phone the
+   boxes simply follow the ranks, so rank 2 moves up above rank 3. */
+@media (max-width: 767px) {
+  .atlas-top > .atlas-card:nth-child(2) {
+    order: -1;
+  }
+}
+@media (min-width: 768px) {
+  /* Three rows: the middle card runs through all of them; ranks 4 and 7 stand under
+     rank 3 at the left, ranks 5, 6 and 8 at the right. */
+  .atlas-top {
+    grid-template-rows: auto auto auto;
+  }
+  .atlas-top > .atlas-card:nth-child(2) {
+    grid-row: 1 / 4;
+  }
+  .atlas-top.records:not([data-depth="1"]) .atlas-briefs:has(> :nth-child(4)) > .atlas-brief:nth-child(1) {
+    padding-bottom: 0.95rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .atlas-top.records:not([data-depth="1"]) .atlas-briefs:has(> :nth-child(5)) > .atlas-brief:nth-child(3) {
+    padding-bottom: 0.95rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .atlas-briefs > .atlas-brief:nth-child(4) {
+    grid-column: 1;
+    grid-row: 3;
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+  .atlas-briefs > .atlas-brief:nth-child(5) {
+    grid-column: 3;
+    grid-row: 3;
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+  /* Headlines only: the seven headlines under the lead stand in rank order in two ruled
+     rows, four and three, instead of one row of five. Each place is fixed, so the rule
+     between columns is drawn on every headline except the first of a row. */
+  .atlas-top.records[data-depth="1"]:has(.atlas-brief:nth-child(4)) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    row-gap: 1.25rem;
+  }
+  .atlas-top.records[data-depth="1"]:has(.atlas-brief:nth-child(4)) > .atlas-card:nth-child(2) {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .atlas-top.records[data-depth="1"]:has(.atlas-brief:nth-child(4)) > .atlas-card:nth-child(2)::before {
+    content: none;
+  }
+  .atlas-top.records[data-depth="1"]:has(.atlas-brief:nth-child(4)) > .atlas-card:nth-child(1) {
+    grid-column: 2;
+    grid-row: 1;
+    position: relative;
+  }
+  .atlas-top.records[data-depth="1"]:has(.atlas-brief:nth-child(4)) > .atlas-card:nth-child(1)::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: -0.75rem;
+    border-inline-start: 1px solid var(--color-line);
+  }
+  .atlas-top.records[data-depth="1"] .atlas-briefs:has(> :nth-child(4)) > .atlas-brief:nth-child(1) {
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .atlas-top.records[data-depth="1"] .atlas-briefs:has(> :nth-child(4)) > .atlas-brief:nth-child(2) {
+    grid-column: 4;
+    grid-row: 1;
+  }
+  .atlas-top.records[data-depth="1"] .atlas-briefs:has(> :nth-child(4)) > .atlas-brief:nth-child(3) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .atlas-top.records[data-depth="1"] .atlas-briefs:has(> :nth-child(4)) > .atlas-brief:nth-child(3)::before {
+    content: none;
+  }
+  .atlas-top.records[data-depth="1"] .atlas-briefs:has(> :nth-child(4)) > .atlas-brief:nth-child(4) {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .atlas-top.records[data-depth="1"] .atlas-briefs:has(> :nth-child(5)) > .atlas-brief:nth-child(5) {
+    grid-column: 3;
+    grid-row: 2;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .atlas-top.records .atlas-card,
   .atlas-top.records .atlas-brief {

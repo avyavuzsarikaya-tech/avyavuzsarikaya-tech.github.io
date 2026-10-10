@@ -25,11 +25,17 @@ the pages; Cloudflare (Workers Builds) then serves them at https://orbisreadinga
 3. Open every source address before publishing and confirm that the title, authors, year
    and the figure cited are really there. The gates prove a DOI exists, not that it is
    the right paper or that it says what the text says.
-4. Run `npm run test:site && npm run build:pages` locally; both must pass.
-5. Push, watch the "Publish site" run, then the Cloudflare status on the `[site] publish`
+4. Weekly issues: a reading of an issue carries `"issue": N` (1, 2, 3, …) and
+   `"rank": 1–8`, the place the owner gives it (1 = most important). The newest issue
+   fills the eight boxes at the top of the front page by rank (1 lead, 2 large middle
+   card, 3 left card, 4 and 7 under it, 5, 6 and 8 at the right); older issues move down
+   to the lists below. Never guess a rank; ask the owner. Readings without an issue
+   follow by date.
+5. Run `npm run test:site && npm run build:pages` locally; both must pass.
+6. Push, watch the "Publish site" run, then the Cloudflare status on the `[site] publish`
    commit (`gh api repos/editor-cell/editor-cell.github.io/commits/<sha>/check-runs`),
    then look at the live page.
-6. If a published reading is wrong, `git revert` its commit and push; the site returns
+7. If a published reading is wrong, `git revert` its commit and push; the site returns
    to the state before it.
 
 ## Editorial rules from the owner

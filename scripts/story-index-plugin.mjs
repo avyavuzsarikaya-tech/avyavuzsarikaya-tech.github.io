@@ -87,6 +87,8 @@ export function readStoryIndex(dir) {
             ? { sources: story.sources.map(({ n, label, url }) => ({ n, label, url })) }
             : {}),
           ...(story.membersOnly === true ? { membersOnly: true } : {}),
+          ...(Number.isInteger(story.issue) ? { issue: story.issue } : {}),
+          ...(Number.isInteger(story.rank) ? { rank: story.rank } : {}),
           locales,
         },
       ];

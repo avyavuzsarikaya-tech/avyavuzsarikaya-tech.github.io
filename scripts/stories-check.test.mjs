@@ -35,6 +35,23 @@ function mediaExists(path) {
 }
 
 const files = readdirSync(DIR).filter((name) => name.endsWith(".json"));
+const ISSUE_SIZE = Number(
+  readFileSync("src/lib/front-order.ts", "utf8").match(/ISSUE_SIZE = (\d+)/)[1],
+);
+
+test("no two readings share a place in the same issue", () => {
+  const taken = new Map();
+  for (const file of files) {
+    const story = JSON.parse(readFileSync(join(DIR, file), "utf8"));
+    if (story.status === "draft" || story.issue === undefined || story.rank === undefined) continue;
+    const key = `${story.issue}/${story.rank}`;
+    assert.ok(
+      !taken.has(key),
+      `issue ${story.issue}, place ${story.rank}: both ${taken.get(key)} and ${file}`,
+    );
+    taken.set(key, file);
+  }
+});
 
 test("there are readings", () => assert.ok(files.length > 0));
 
@@ -54,6 +71,19 @@ for (const file of files) {
       `${file}: unknown section "${story.theme}"`,
     );
     assert.match(String(story.date), /^\d{4}-\d{2}-\d{2}$/, `${file}: date must be YYYY-MM-DD`);
+    if (story.issue !== undefined) {
+      assert.ok(
+        Number.isInteger(story.issue) && story.issue > 0,
+        `${file}: issue must be 1, 2, 3, …`,
+      );
+    }
+    if (story.rank !== undefined) {
+      assert.ok(story.issue !== undefined, `${file}: a place (rank) needs an issue number`);
+      assert.ok(
+        Number.isInteger(story.rank) && story.rank >= 1 && story.rank <= ISSUE_SIZE,
+        `${file}: place (rank) must be 1 to ${ISSUE_SIZE}`,
+      );
+    }
 
     const written = LANGS.filter((lang) => (story.locales?.[lang]?.body ?? "").trim());
     assert.ok(written.length > 0, `${file}: published but no language has a text`);
