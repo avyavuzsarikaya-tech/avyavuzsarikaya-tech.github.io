@@ -14,6 +14,23 @@ import { videoWords } from "@/lib/videos";
  */
 export const SITE_URL = "https://orbisreadingatlas.com";
 export const SITE_NAME = "Orbis";
+
+/**
+ * The test period before the launch: every page carries a thin "in test" strip under the
+ * header and asks search engines not to list it. On launch day set this to false.
+ */
+export const TRIAL = true;
+
+const TRIAL_NOTE: Record<Lang, string> = {
+  tr: "Orbis deneme yayınında. Buradaki yazılar geçicidir.",
+  ar: "أوربيس في مرحلة تجريبية. القراءات هنا مؤقتة.",
+  en: "Orbis is in test. The readings here are provisional.",
+  fr: "Orbis est en test. Les lectures publiées ici sont provisoires.",
+  es: "Orbis está en pruebas. Las lecturas de aquí son provisionales.",
+};
+export function trialNote(lang: Lang): string {
+  return TRIAL_NOTE[lang];
+}
 /** The 1200×630 card shown when a page without its own picture is shared. */
 export const SITE_CARD = `${SITE_URL}/og.jpg`;
 

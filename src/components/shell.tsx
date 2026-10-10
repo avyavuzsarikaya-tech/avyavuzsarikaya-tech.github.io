@@ -4,6 +4,7 @@ import { SiteMenu } from "@/components/menu";
 import { Pick } from "@/components/pick";
 import { SearchMark } from "@/components/search-mark";
 import { membersOn } from "@/lib/members/config";
+import { TRIAL, trialNote } from "@/lib/site";
 import { membersCopy } from "@/lib/members/copy";
 import { pagesCopy } from "@/lib/members/pages-copy";
 import { LEGAL_PAGES, legalCopy } from "@/lib/legal-copy";
@@ -395,6 +396,17 @@ export function Shell({
               )}
             </div>
           </div>
+
+          {/* The test period: one quiet line on the paper, under the black band. */}
+          {TRIAL && !inPanel ? (
+            <p
+              dir={meta.dir}
+              lang={meta.html}
+              className="border-b border-rule bg-shade px-5 py-1.5 text-center font-body text-[12px] leading-snug text-ink/75 md:px-8"
+            >
+              {trialNote(lang)}
+            </p>
+          ) : null}
 
           <nav
             aria-label={copy.sections}

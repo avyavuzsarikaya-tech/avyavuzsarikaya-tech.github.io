@@ -13,7 +13,7 @@ import { langMeta } from "@/lib/i18n";
 import { LANG_BOOT, langFromPath } from "@/lib/lang-path";
 import { LOOK_BOOT } from "@/lib/look";
 import { DEPTH_BOOT } from "@/lib/depth-boot";
-import { feedLink, pageMeta, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
+import { feedLink, pageMeta, SITE_DESCRIPTION, SITE_NAME, TRIAL } from "@/lib/site";
 import appCss from "../styles.css?url";
 
 // Only the families the stylesheet uses. Google serves Arabic in its own file, which a
@@ -32,6 +32,8 @@ export const Route = createRootRoute({
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "theme-color", content: "#0c0c0c" },
       ...pageMeta({ title: SITE_NAME, description: SITE_DESCRIPTION, url: "/" }),
+      // During the test period no page is listed by search engines (see TRIAL in site.ts).
+      ...(TRIAL ? [{ name: "robots", content: "noindex, nofollow" }] : []),
     ],
     links: [
       { rel: "icon", type: "image/png", sizes: "192x192", href: "/__grok/icon-192.png?v=20261007-7" },
