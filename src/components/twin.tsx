@@ -97,12 +97,13 @@ function writeTwin(value: Lang | null) {
 
 /**
  * The twin language in use on this reading, or null. A saved twin that is the page's own
- * language, or that this reading is not written in, is simply not shown. Members-only
- * readings have only their opening in the other language, so they open without a twin.
+ * language, or that this reading is not written in, is simply not shown; nor is any twin
+ * while `allowed` is false (a members-only reading for a reader without its full text).
  */
 export function useTwin(
   story: Story | null,
   lang: Lang,
+  allowed: boolean,
 ): [Lang | null, (next: Lang | null) => void] {
   const [saved, setSaved] = useState<Lang | null>(null);
   useEffect(() => setSaved(readTwin()), []);
@@ -111,9 +112,7 @@ export function useTwin(
     writeTwin(next);
   };
   const usable =
-    story && saved && saved !== lang && story.membersOnly !== true && hasCopy(story, saved)
-      ? saved
-      : null;
+    allowed && story && saved && saved !== lang && hasCopy(story, saved) ? saved : null;
   return [usable, choose];
 }
 
