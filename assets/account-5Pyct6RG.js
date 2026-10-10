@@ -1,0 +1,1 @@
+import{t as e}from"./account-CP7_G0f_.js";var t=e;export{t as component};

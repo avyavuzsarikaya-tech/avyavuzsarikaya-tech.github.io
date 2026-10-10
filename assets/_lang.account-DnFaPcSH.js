@@ -1,1 +1,0 @@
-import{t as e}from"./account-DM_LxvVV.js";var t=e;export{t as component};

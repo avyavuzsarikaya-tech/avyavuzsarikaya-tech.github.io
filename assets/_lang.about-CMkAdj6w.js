@@ -1,1 +1,0 @@
-import{t as e}from"./about-Bv0CgDmf.js";var t=e;export{t as component};

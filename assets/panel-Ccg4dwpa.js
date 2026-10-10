@@ -1,1 +1,0 @@
-import{n as e}from"./rolldown-runtime-CbXtAM7H.js";import{Pt as t,ct as n}from"./seed-CO9HdJkj.js";import{i as r,t as i}from"./shell-BnLMTn_I.js";import{l as a}from"./index-DKx338GX.js";var o=e(t()),s=n();function c(){let e=r(e=>e.load);return(0,o.useEffect)(()=>{e()},[e]),(0,s.jsx)(i,{children:(0,s.jsx)(a,{})})}export{c as component};
