@@ -13,6 +13,7 @@ import {
 } from "@/components/reading-extras";
 import { LockNote, StoryVideos, useMemberText } from "@/components/members/locked";
 import { Shell } from "@/components/shell";
+import { TwinButton, TwinHeading, TwinPanel, TwinProse, useTwin, writtenLangs } from "@/components/twin";
 import { byline, editorialCopy, imageCaption } from "@/lib/editorial";
 import { imageSet } from "@/lib/image-set";
 import { langMeta, useCopy } from "@/lib/i18n";
@@ -131,6 +132,8 @@ function Reading({ story }: { story: Story | null }) {
   const lang = useLang();
   const copy = useCopy(lang);
   const [typeStep, setTypeStep] = useState(1);
+  const [twin, chooseTwin] = useTwin(story, lang);
+  const [twinOpen, setTwinOpen] = useState(false);
   const membersOnly = story?.membersOnly === true;
   // A paid member's full text of a members-only reading; null for everyone else.
   const fullText = useMemberText(story?.id, lang, membersOnly);
@@ -181,6 +184,8 @@ function Reading({ story }: { story: Story | null }) {
   const sourceNums = new Set(story.sources.map((source) => source.n));
   const sources = [...story.sources].sort((a, b) => a.n - b.n);
   const others = LANGS.filter((code) => hasCopy(story, code));
+  // Twin reading needs this text and at least one other; members-only readings have none.
+  const canTwin = written && !membersOnly && writtenLangs(story).length > 1;
 
   return (
     <main className="px-5 pt-5 pb-10 md:px-12 md:py-14">
@@ -219,6 +224,7 @@ function Reading({ story }: { story: Story | null }) {
             {locale.title || story.locales.en.title}
           </h1>
           {locale.dek ? <p className="reading-dek">{locale.dek}</p> : null}
+          {twin ? <TwinHeading story={story} twin={twin} /> : null}
           {/* On a phone the text size sits at the end of the date line, right above the text. */}
           <div className="flex items-end justify-between gap-x-3 pt-1">
             <div className="flex min-w-0 flex-col items-start gap-0.5">
@@ -250,8 +256,16 @@ function Reading({ story }: { story: Story | null }) {
             <div className="order-2 flex md:order-3 md:ms-auto">
               <PdfButton lang={lang} />
             </div>
-            <div className="order-3 flex md:order-1">
+            <div className="order-3 flex gap-2 md:order-1">
               <ShareButton lang={lang} title={locale.title || story.locales.en.title} />
+              {canTwin ? (
+                <TwinButton
+                  lang={lang}
+                  on={twin !== null}
+                  open={twinOpen}
+                  onToggle={() => setTwinOpen((value) => !value)}
+                />
+              ) : null}
             </div>
             {locale.audio ? (
               <div className="order-4 min-w-[12rem] flex-1 md:order-2">
@@ -279,6 +293,9 @@ function Reading({ story }: { story: Story | null }) {
               />
             </div>
           </div>
+          {canTwin && twinOpen ? (
+            <TwinPanel story={story} lang={lang} twin={twin} choose={chooseTwin} />
+          ) : null}
         </header>
 
         {/* One picture at the top of a reading, wider than the text: a reading with a video
@@ -327,7 +344,18 @@ function Reading({ story }: { story: Story | null }) {
               className="flex flex-col gap-8"
             >
               <div style={{ fontSize: `${TYPE_STEPS[typeStep]}em` }}>
-                <Prose body={body} sourceNums={sourceNums} sourceWord={copy.sourceWord} />
+                {twin ? (
+                  <TwinProse
+                    main={body}
+                    twin={story.locales[twin].body}
+                    mainLang={lang}
+                    twinLang={twin}
+                    sourceNums={sourceNums}
+                    sourceWord={copy.sourceWord}
+                  />
+                ) : (
+                  <Prose body={body} sourceNums={sourceNums} sourceWord={copy.sourceWord} />
+                )}
               </div>
               {membersOnly && fullText === null ? <LockNote lang={lang} /> : null}
             </div>

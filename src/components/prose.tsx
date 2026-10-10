@@ -4,15 +4,21 @@ export function Prose({
   body,
   sourceNums,
   sourceWord,
+  first = true,
 }: {
   body: string;
   sourceNums: Set<number>;
   sourceWord: string;
+  /** Whether the first paragraph opens the reading (with the dropped first letter). */
+  first?: boolean;
 }) {
   return (
     <div className="flex flex-col gap-6">
       {paragraphs(body).map((para, index) => (
-        <p key={index} className={index === 0 ? "reading-para reading-first" : "reading-para"}>
+        <p
+          key={index}
+          className={first && index === 0 ? "reading-para reading-first" : "reading-para"}
+        >
           <Cited text={para} sourceNums={sourceNums} sourceWord={sourceWord} />
         </p>
       ))}
