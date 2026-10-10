@@ -1,0 +1,1 @@
+import{t as e}from"./about-D86l_oLm.js";var t=e;export{t as component};

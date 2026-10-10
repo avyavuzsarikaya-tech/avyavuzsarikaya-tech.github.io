@@ -1,1 +1,0 @@
-import{n as e}from"./atlas-DBK_cKTl.js";var t=e;export{t as component};
