@@ -1,1 +1,0 @@
-import{t as e}from"./about-N-rLqMqm.js";var t=e;export{t as component};
