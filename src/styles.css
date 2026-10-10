@@ -1287,6 +1287,12 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     font-size: 1.4rem;
     line-height: 1.1;
   }
+  /* The two cards' pictures fold away in this mode; their slot folds with them instead of
+     keeping the picture's shape as empty room, so all five headlines start on one line. */
+  .atlas-top.records[data-depth="1"] .atlas-card > .atlas-pic-slot {
+    aspect-ratio: auto;
+    margin-bottom: 0;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .atlas-top.records .atlas-card,
