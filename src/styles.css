@@ -1631,3 +1631,75 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     vertical-align: -0.1em;
   }
 }
+
+/* Top row fill (desktop, depth 2 and 3): the room left in a box under its words takes the
+   story's opening lines (an .atlas-fill, fitted as the columns lower down), and "Read more"
+   sits at the foot of the box. Type sizes and box sizes stay as they were. */
+@media (min-width: 768px) {
+  .atlas-top .deep-lines {
+    display: none;
+  }
+  .atlas-top-fill > .atlas-fill-sizer {
+    position: static;
+    visibility: hidden;
+  }
+  .atlas-top.records:not([data-depth="3"]) .atlas-fill-sizer,
+  .atlas-brief .atlas-fill-sizer {
+    display: none;
+  }
+  .atlas-top.records:not([data-depth="1"]) .atlas-card > .atlas-pic-slot + div {
+    flex: 1 1 auto;
+  }
+  .atlas-top.records:not([data-depth="1"]) .atlas-card > .atlas-pic-slot + div > .atlas-top-fill {
+    order: 1;
+  }
+  .atlas-top.records:not([data-depth="1"]) .atlas-card > .atlas-pic-slot + div > .record-layer[data-layer="3"] {
+    order: 2;
+  }
+  .atlas-top.records:not([data-depth="1"]) .atlas-card > .atlas-pic-slot + div > .atlas-more {
+    order: 3;
+  }
+  /* A short reading: picture, section, title and summary stay side by side at the top; the
+     fill runs under the picture across the whole box, then the date and "Read more". */
+  .atlas-top.records:not([data-depth="1"]) .atlas-brief {
+    align-content: stretch;
+    grid-template-rows: min-content min-content min-content auto 1fr auto auto;
+    row-gap: 0;
+  }
+  .atlas-top.records:not([data-depth="1"]) .atlas-brief > .atlas-pic-slot {
+    grid-column: 1;
+    grid-row: 1 / 5;
+    /* The picture takes the height of the words beside it and adds none of its own, so
+       the box is never taller than before; the photograph is cover-cropped as before. */
+    aspect-ratio: auto;
+    min-height: 0;
+  }
+  .atlas-top.records:not([data-depth="1"]) .atlas-brief > .atlas-pic-slot + div {
+    display: contents;
+  }
+  .atlas-top.records:not([data-depth="1"]) .atlas-brief > .atlas-pic-slot + div > * {
+    grid-column: 2;
+  }
+  .atlas-top.records:not([data-depth="1"]) .atlas-brief > .atlas-pic-slot + div > :nth-child(1) {
+    grid-row: 1;
+  }
+  .atlas-top.records:not([data-depth="1"]) .atlas-brief > .atlas-pic-slot + div > :nth-child(2) {
+    grid-row: 2;
+  }
+  .atlas-top.records:not([data-depth="1"]) .atlas-brief > .atlas-pic-slot + div > :nth-child(3) {
+    grid-row: 3;
+  }
+  .atlas-top.records:not([data-depth="1"]) .atlas-brief > .atlas-top-fill {
+    grid-column: 1 / -1;
+    grid-row: 5;
+  }
+  .atlas-top.records:not([data-depth="1"]) .atlas-brief > .atlas-pic-slot + div > :nth-child(4) {
+    grid-column: 1 / -1;
+    grid-row: 6;
+  }
+  .atlas-top.records:not([data-depth="1"]) .atlas-brief > .atlas-pic-slot + div > .atlas-more {
+    grid-column: 1 / -1;
+    grid-row: 7;
+    justify-self: start;
+  }
+}

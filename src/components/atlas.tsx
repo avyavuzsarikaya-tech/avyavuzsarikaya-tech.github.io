@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { CardListen, ReadTime } from "@/components/read-time";
 import { Shell } from "@/components/shell";
@@ -245,6 +245,7 @@ function cellSummary(story: Story, lang: Lang): string {
 function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
   const dir = langMeta[lang].dir;
   const [depth, choose] = useDepth();
+  const topRef = useTopFill(depth);
   const [lead, ...rest] = stories;
   if (!lead) return null;
   const cards = rest.slice(0, 2);
@@ -296,7 +297,7 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
       {rest.length ? <DepthBar lang={lang} depth={depth} choose={choose} /> : null}
 
       {cards.length ? (
-        <div className="records atlas-top px-5 md:px-8" data-depth={depth}>
+        <div ref={topRef} className="records atlas-top px-5 md:px-8" data-depth={depth}>
           {cards.map((story) => (
             <Link
               key={story.id}
@@ -318,6 +319,7 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
                 <span className="atlas-more mt-2 text-[0.8rem] md:mt-3">
                   {words.readMore} <span aria-hidden="true">{arrow}</span>
                 </span>
+                <TopFill story={story} lang={lang} />
               </div>
             </Link>
           ))}
@@ -356,6 +358,7 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
                       {words.readMore} <span aria-hidden="true">{arrow}</span>
                     </span>
                   </div>
+                  <TopFill story={story} lang={lang} />
                 </Link>
               ))}
             </div>
@@ -404,7 +407,7 @@ function DeepLines({ story, lang, clamp }: { story: Story; lang: Lang; clamp: st
     <Fold layer={3}>
       {opening ? (
         <p
-          className={`font-body ${clamp} pt-1.5 text-pretty text-[0.92rem] leading-[1.4] text-muted`}
+          className={`deep-lines font-body ${clamp} pt-1.5 text-pretty text-[0.92rem] leading-[1.4] text-muted`}
         >
           {opening}
         </p>
@@ -776,32 +779,88 @@ function ColumnFill({ text, className }: { text: string; className: string }) {
   );
 }
 
+/**
+ * Desktop only, top row at depth 2 and 3: the story's opening lines fill the room left in a
+ * box under its words, above "Read more". It is a ColumnFill (fitted by fitFills, as the
+ * columns lower down); at depth 3 an invisible copy of the card's five opening lines keeps
+ * the box exactly as tall as before, so the boxes themselves never change size.
+ */
+function TopFill({ story, lang }: { story: Story; lang: Lang }) {
+  const summary = cellSummary(story, lang);
+  const text = fillText(story, lang, summary);
+  if (!text) return null;
+  const opening = openingLines(story, lang, summary);
+  return (
+    <div className="atlas-fill atlas-top-fill" aria-hidden="true">
+      <p className="font-body pt-1.5 text-pretty text-[0.92rem] leading-[1.4] text-muted">{text}</p>
+      {opening ? (
+        <p className="atlas-fill-sizer font-body line-clamp-5 pt-1.5 text-pretty text-[0.92rem] leading-[1.4]">
+          {opening}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+/**
+ * Re-fits the top row's fills: after the 200ms depth transition, when the width changes and
+ * when the fonts load. A change of height alone (a phone's address bar) does not refit.
+ */
+function useTopFill(depth: Depth) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const root = ref.current;
+    if (!root) return;
+    const fit = () => fitFills(root.querySelectorAll<HTMLElement>(".atlas-fill"));
+    fit();
+    const late = window.setTimeout(fit, 250);
+    void document.fonts?.ready.then(fit);
+    let width = window.innerWidth;
+    const onResize = () => {
+      if (window.innerWidth === width) return;
+      width = window.innerWidth;
+      fit();
+    };
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.clearTimeout(late);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [depth]);
+  return ref;
+}
+
+/** Fits each fill to whole lines of the room it is given, ending with an ellipsis. */
+function fitFills(boxes: Iterable<HTMLElement>) {
+  for (const box of boxes) {
+    const text = box.firstElementChild as HTMLElement | null;
+    if (!text) continue;
+    // Start from the room the column gives, then measure the whole text against it.
+    box.style.flexGrow = "";
+    box.style.height = "";
+    text.style.removeProperty("-webkit-line-clamp");
+    const room = box.clientHeight;
+    const whole = text.scrollHeight;
+    if (whole <= room) {
+      // A short reading ends where its text ends; "Read more" follows right under it.
+      box.style.flexGrow = "0";
+      box.style.height = `${whole}px`;
+      text.style.visibility = "visible";
+      continue;
+    }
+    const line = parseFloat(getComputedStyle(text).lineHeight) || 20;
+    const top = parseFloat(getComputedStyle(text).paddingTop) || 0;
+    const lines = Math.floor((room - top) / line);
+    text.style.setProperty("-webkit-line-clamp", String(Math.max(lines, 1)));
+    text.style.visibility = lines >= 2 ? "visible" : "hidden";
+  }
+}
+
 /** Fits every fill on the page to whole lines, again on resize, depth change and font load. */
 function useColumnFill(depth: Depth) {
   useEffect(() => {
     const fit = () => {
-      for (const box of document.querySelectorAll<HTMLElement>(".atlas-fill")) {
-        const text = box.firstElementChild as HTMLElement | null;
-        if (!text) continue;
-        // Start from the room the column gives, then measure the whole text against it.
-        box.style.flexGrow = "";
-        box.style.height = "";
-        text.style.removeProperty("-webkit-line-clamp");
-        const room = box.clientHeight;
-        const whole = text.scrollHeight;
-        if (whole <= room) {
-          // A short reading ends where its text ends; "Read more" follows right under it.
-          box.style.flexGrow = "0";
-          box.style.height = `${whole}px`;
-          text.style.visibility = "visible";
-          continue;
-        }
-        const line = parseFloat(getComputedStyle(text).lineHeight) || 20;
-        const top = parseFloat(getComputedStyle(text).paddingTop) || 0;
-        const lines = Math.floor((room - top) / line);
-        text.style.setProperty("-webkit-line-clamp", String(Math.max(lines, 1)));
-        text.style.visibility = lines >= 2 ? "visible" : "hidden";
-      }
+      fitFills(document.querySelectorAll<HTMLElement>(".atlas-fill:not(.atlas-top-fill)"));
     };
     fit();
     const late = window.setTimeout(fit, 250);
