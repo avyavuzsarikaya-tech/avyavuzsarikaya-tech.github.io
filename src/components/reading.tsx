@@ -132,11 +132,19 @@ function Reading({ story }: { story: Story | null }) {
   const lang = useLang();
   const copy = useCopy(lang);
   const [typeStep, setTypeStep] = useState(1);
-  const [twin, chooseTwin] = useTwin(story, lang);
   const [twinOpen, setTwinOpen] = useState(false);
   const membersOnly = story?.membersOnly === true;
   // A paid member's full text of a members-only reading; null for everyone else.
   const fullText = useMemberText(story?.id, lang, membersOnly);
+  // Twin reading: every reader on an open reading; on a members-only reading, the paid
+  // members who have its full text, the twin's full text fetched the same way.
+  const twinAllowed =
+    !!story &&
+    hasCopy(story, lang) &&
+    writtenLangs(story).length > 1 &&
+    (!membersOnly || fullText !== null);
+  const [twin, chooseTwin] = useTwin(story, lang, twinAllowed);
+  const twinFull = useMemberText(story?.id, twin ?? lang, membersOnly && twin !== null);
   // Where the reading starts (its header) and ends (after its sources), for the progress line.
   const readStart = useRef<HTMLElement | null>(null);
   const readEnd = useRef<HTMLElement | null>(null);
@@ -184,8 +192,9 @@ function Reading({ story }: { story: Story | null }) {
   const sourceNums = new Set(story.sources.map((source) => source.n));
   const sources = [...story.sources].sort((a, b) => a.n - b.n);
   const others = LANGS.filter((code) => hasCopy(story, code));
-  // Twin reading needs this text and at least one other; members-only readings have none.
-  const canTwin = written && !membersOnly && writtenLangs(story).length > 1;
+  const canTwin = twinAllowed;
+  // A members-only reading's twin waits for its full text; until then the main text shows alone.
+  const twinBody = twin ? (membersOnly ? twinFull : story.locales[twin].body) : null;
 
   return (
     <main className="px-5 pt-5 pb-10 md:px-12 md:py-14">
@@ -344,10 +353,10 @@ function Reading({ story }: { story: Story | null }) {
               className="flex flex-col gap-8"
             >
               <div style={{ fontSize: `${TYPE_STEPS[typeStep]}em` }}>
-                {twin ? (
+                {twin && twinBody ? (
                   <TwinProse
                     main={body}
-                    twin={story.locales[twin].body}
+                    twin={twinBody}
                     mainLang={lang}
                     twinLang={twin}
                     sourceNums={sourceNums}
