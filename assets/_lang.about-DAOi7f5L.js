@@ -1,0 +1,1 @@
+import{t as e}from"./about-BN7PFz-r.js";var t=e;export{t as component};

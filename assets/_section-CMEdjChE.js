@@ -1,0 +1,1 @@
+import{F as e,J as t,dt as n}from"./shell-BYa_wNmZ.js";import{a as r}from"./index-rWyavkEK.js";import{n as i,r as a}from"./atlas-DBK_cKTl.js";var o=n();function s(){let{section:n}=r.useParams();return e(n)?(0,o.jsx)(i,{}):(0,o.jsx)(a,{theme:t(n)})}export{s as component};
