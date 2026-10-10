@@ -12,6 +12,7 @@ import { CARDS } from "@/lib/seed";
 import { formatDate, safeHttpUrl, storyTitle } from "@/lib/text";
 import type { Lang, Source, StoryCard as Story, Theme } from "@/lib/types";
 import { useMostRead } from "@/lib/reads";
+import { MediaStrip } from "@/components/videos";
 import { useLang } from "@/lib/use-lang";
 
 /**
@@ -376,6 +377,10 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
           ) : null}
         </div>
       ) : null}
+
+      {/* Videos: one row between the newest issue and the archive. It stands apart from the
+          readings, so the depth buttons above leave it as it is. */}
+      <MediaStrip lang={lang} />
 
       <Records stories={records} lang={lang} depth={depth} />
     </div>

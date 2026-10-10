@@ -160,3 +160,37 @@ test("local preview serves the same per-language JSON before the HTML fallback",
     assert.ok(passed, url);
   }
 });
+
+test("videos beside content/stories enter the index with their transcript, drafts and untitled languages left out", (t) => {
+  const root = mkdtempSync(join(tmpdir(), "orbis-videos-"));
+  const out = mkdtempSync(join(tmpdir(), "orbis-out-"));
+  t.after(() => {
+    rmSync(root, { recursive: true, force: true });
+    rmSync(out, { recursive: true, force: true });
+  });
+  mkdirSync(join(root, "stories"));
+  mkdirSync(join(root, "videos"));
+  writeFileSync(join(root, "stories", "a.json"), JSON.stringify(fullStory("a", "2026-01-01")));
+  const video = (id, status) => ({
+    id,
+    ...(status ? { status } : {}),
+    date: "2026-02-01",
+    src: `videos/${id}.mp4`,
+    locales: { en: { title: "Sea", dek: "One line", transcript: "Tide **gauges** [1]\n\nand satellites." } },
+  });
+  writeFileSync(join(root, "videos", "sea.json"), JSON.stringify(video("sea")));
+  writeFileSync(join(root, "videos", "draft.json"), JSON.stringify(video("draft", "draft")));
+  writeSearchIndex(out, join(root, "stories"));
+  const en = read(out, "en");
+  const record = en.find((r) => r.kind === "video");
+  assert.deepEqual(record, {
+    id: "video:sea",
+    kind: "video",
+    date: "2026-02-01",
+    title: "Sea",
+    dek: "One line",
+    body: "Tide gauges and satellites.",
+  });
+  assert.equal(en.filter((r) => r.kind === "video").length, 1);
+  assert.equal(read(out, "tr").filter((r) => r.kind === "video").length, 0);
+});

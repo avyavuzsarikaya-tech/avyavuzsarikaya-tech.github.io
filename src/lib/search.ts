@@ -1,4 +1,4 @@
-import type { Lang, StoryCard } from "@/lib/types";
+import type { Lang, StoryCard, VideoCard } from "@/lib/types";
 // Relative import with the extension, so the tests can load this file directly with node.
 import { copyFor } from "./i18n.ts";
 
@@ -29,8 +29,8 @@ export type SearchCopy = {
 const COPY: Record<Lang, SearchCopy> = {
   tr: {
     title: "Arama",
-    label: "Okumalarda ara",
-    placeholder: "Okumalarda ara",
+    label: "Okumalarda ve videolarda ara",
+    placeholder: "Okumalarda ve videolarda ara",
     submit: "Ara",
     count: (n) => `${n} sonuç`,
     empty: "Aramanızla eşleşen okuma bulunamadı.",
@@ -52,8 +52,8 @@ const COPY: Record<Lang, SearchCopy> = {
   },
   en: {
     title: "Search",
-    label: "Search the readings",
-    placeholder: "Search the readings",
+    label: "Search readings and videos",
+    placeholder: "Search readings and videos",
     submit: "Search",
     count: (n) => (n === 1 ? "1 result" : `${n} results`),
     empty: "No readings match your search.",
@@ -241,22 +241,69 @@ export function searchCards(
     const fields: Fields = bodies
       ? [...cardFields.slice(0, 3), [bodyWords(bodies, card.id), 1]]
       : cardFields;
-    let score = 0;
-    let all = true;
-    for (const word of words) {
-      let hit = 0;
-      for (const [list, weight] of fields) {
-        if (list.some((w) => w.startsWith(word))) hit += weight;
-      }
-      if (!hit) {
-        all = false;
-        break;
-      }
-      score += hit;
-    }
-    if (all) scored.push({ card, score });
+    const score = scoreOf(fields, words);
+    if (score) scored.push({ card, score });
   }
   return scored
     .sort((a, b) => b.score - a.score || b.card.date.localeCompare(a.card.date))
     .map((entry) => entry.card);
+}
+
+/** Every query word must hit some field; the score adds the weights of the fields hit. */
+function scoreOf(fields: Fields, words: string[]): number {
+  let score = 0;
+  for (const word of words) {
+    let hit = 0;
+    for (const [list, weight] of fields) {
+      if (list.some((w) => w.startsWith(word))) hit += weight;
+    }
+    if (!hit) return 0;
+    score += hit;
+  }
+  return score;
+}
+
+/** A video's key in the search index: videos and readings never share an id. */
+export function videoKey(id: string): string {
+  return `video:${id}`;
+}
+
+export type Found =
+  | { kind: "story"; card: StoryCard; date: string; score: number }
+  | { kind: "video"; video: VideoCard; date: string; score: number };
+
+/**
+ * Readings and videos together, found the same way: a video's title counts as a reading's
+ * title, its sentence as a summary, its transcript as the full text. A video is found
+ * only through the index, which holds its transcript.
+ */
+export function searchAll(
+  cards: StoryCard[],
+  videos: VideoCard[],
+  lang: Lang,
+  query: string,
+  bodies: ReadonlyMap<string, string>,
+): Found[] {
+  const words = terms(query);
+  if (words.length === 0) return [];
+  const found: Found[] = [];
+  for (const card of cards) {
+    if (!card.locales[lang].written || !bodies.has(card.id)) continue;
+    const fields: Fields = [...fieldsOf(card, lang).slice(0, 3), [bodyWords(bodies, card.id), 1]];
+    const score = scoreOf(fields, words);
+    if (score) found.push({ kind: "story", card, date: card.date, score });
+  }
+  for (const video of videos) {
+    const copy = video.locales[lang];
+    const key = videoKey(video.id);
+    if (!copy || !bodies.has(key)) continue;
+    const fields: Fields = [
+      [fieldWords(copy.title), 5],
+      [fieldWords(copy.dek), 3],
+      [bodyWords(bodies, key), 1],
+    ];
+    const score = scoreOf(fields, words);
+    if (score) found.push({ kind: "video", video, date: video.date, score });
+  }
+  return found.sort((a, b) => b.score - a.score || b.date.localeCompare(a.date));
 }

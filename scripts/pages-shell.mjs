@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { readStoryIndex } from "./story-index-plugin.mjs";
+import { readVideoIndex } from "./video-index.mjs";
 import { writeFeeds } from "./feed.mjs";
 import { writeSearchIndex } from "./search-index.mjs";
 import { writeImageSizes } from "./image-sizes.mjs";
@@ -29,6 +30,7 @@ const listOf = (file, name) =>
 const LANGS = listOf("src/lib/types.ts", "LANGS");
 const THEMES = listOf("src/lib/types.ts", "THEMES");
 const stories = readStoryIndex("content/stories");
+const videos = readVideoIndex();
 const siteSource = readFileSync("src/lib/site.ts", "utf8");
 const site = siteSource.match(/SITE_URL = "([^"]+)"/)[1];
 const name = siteSource.match(/SITE_NAME = "([^"]+)"/)[1];
@@ -64,6 +66,18 @@ for (const lang of LANGS) {
       lastmod: story.date,
       // A language without this text shows only a notice: no sitemap entry.
       listed: story.locales[lang].written,
+    })),
+    // The list of videos is listed once there is a video; each video where it has a title.
+    {
+      file: `${prefix.slice(1)}${prefix ? "/" : ""}media.html`,
+      loc: `${prefix}/media`,
+      listed: videos.some((video) => video.locales[lang]),
+    },
+    ...videos.map((video) => ({
+      file: `${prefix.slice(1)}${prefix ? "/" : ""}media/${video.id}.html`,
+      loc: `${prefix}/media/${video.id}`,
+      lastmod: video.date,
+      listed: Boolean(video.locales[lang]),
     })),
   ];
   for (const page of pages) {

@@ -14,6 +14,7 @@ import { Route as SectionRouteImport } from './routes/$section'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as EditorRouteImport } from './routes/editor'
+import { Route as MediaRouteImport } from './routes/media'
 import { Route as MembershipRouteImport } from './routes/membership'
 import { Route as NewsletterRouteImport } from './routes/newsletter'
 import { Route as PanelRouteImport } from './routes/panel'
@@ -24,15 +25,18 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as LangSectionRouteImport } from './routes/$lang.$section'
 import { Route as LangAboutRouteImport } from './routes/$lang.about'
 import { Route as LangAccountRouteImport } from './routes/$lang.account'
+import { Route as LangMediaRouteImport } from './routes/$lang.media'
 import { Route as LangMembershipRouteImport } from './routes/$lang.membership'
 import { Route as LangNewsletterRouteImport } from './routes/$lang.newsletter'
 import { Route as LangPaymentRouteImport } from './routes/$lang.payment'
 import { Route as LangPrivacyRouteImport } from './routes/$lang.privacy'
 import { Route as LangSearchRouteImport } from './routes/$lang.search'
 import { Route as LangTermsRouteImport } from './routes/$lang.terms'
+import { Route as MediaVideoIdRouteImport } from './routes/media_.$videoId'
 import { Route as PanelIndexRouteImport } from './routes/panel.index'
 import { Route as PanelStoryIdRouteImport } from './routes/panel.$storyId'
 import { Route as ReadStoryIdRouteImport } from './routes/read.$storyId'
+import { Route as LangMediaVideoIdRouteImport } from './routes/$lang.media_.$videoId'
 import { Route as LangReadStoryIdRouteImport } from './routes/$lang.read.$storyId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -58,6 +62,11 @@ const AccountRoute = AccountRouteImport.update({
 const EditorRoute = EditorRouteImport.update({
   id: '/editor',
   path: '/editor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MediaRoute = MediaRouteImport.update({
+  id: '/media',
+  path: '/media',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MembershipRoute = MembershipRouteImport.update({
@@ -110,6 +119,11 @@ const LangAccountRoute = LangAccountRouteImport.update({
   path: '/$lang/account',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LangMediaRoute = LangMediaRouteImport.update({
+  id: '/$lang/media',
+  path: '/$lang/media',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LangMembershipRoute = LangMembershipRouteImport.update({
   id: '/$lang/membership',
   path: '/$lang/membership',
@@ -140,6 +154,11 @@ const LangTermsRoute = LangTermsRouteImport.update({
   path: '/$lang/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MediaVideoIdRoute = MediaVideoIdRouteImport.update({
+  id: '/media_/$videoId',
+  path: '/media/$videoId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PanelIndexRoute = PanelIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -155,6 +174,11 @@ const ReadStoryIdRoute = ReadStoryIdRouteImport.update({
   path: '/read/$storyId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LangMediaVideoIdRoute = LangMediaVideoIdRouteImport.update({
+  id: '/$lang/media_/$videoId',
+  path: '/$lang/media/$videoId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LangReadStoryIdRoute = LangReadStoryIdRouteImport.update({
   id: '/$lang/read/$storyId',
   path: '/$lang/read/$storyId',
@@ -167,6 +191,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
   '/editor': typeof EditorRoute
+  '/media': typeof MediaRoute
   '/membership': typeof MembershipRoute
   '/newsletter': typeof NewsletterRoute
   '/panel': typeof PanelRouteWithChildren
@@ -177,15 +202,18 @@ export interface FileRoutesByFullPath {
   '/$lang/$section': typeof LangSectionRoute
   '/$lang/about': typeof LangAboutRoute
   '/$lang/account': typeof LangAccountRoute
+  '/$lang/media': typeof LangMediaRoute
   '/$lang/membership': typeof LangMembershipRoute
   '/$lang/newsletter': typeof LangNewsletterRoute
   '/$lang/payment': typeof LangPaymentRoute
   '/$lang/privacy': typeof LangPrivacyRoute
   '/$lang/search': typeof LangSearchRoute
   '/$lang/terms': typeof LangTermsRoute
+  '/media/$videoId': typeof MediaVideoIdRoute
   '/panel/$storyId': typeof PanelStoryIdRoute
   '/read/$storyId': typeof ReadStoryIdRoute
   '/panel/': typeof PanelIndexRoute
+  '/$lang/media/$videoId': typeof LangMediaVideoIdRoute
   '/$lang/read/$storyId': typeof LangReadStoryIdRoute
 }
 export interface FileRoutesByTo {
@@ -194,6 +222,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
   '/editor': typeof EditorRoute
+  '/media': typeof MediaRoute
   '/membership': typeof MembershipRoute
   '/newsletter': typeof NewsletterRoute
   '/payment': typeof PaymentRoute
@@ -203,15 +232,18 @@ export interface FileRoutesByTo {
   '/$lang/$section': typeof LangSectionRoute
   '/$lang/about': typeof LangAboutRoute
   '/$lang/account': typeof LangAccountRoute
+  '/$lang/media': typeof LangMediaRoute
   '/$lang/membership': typeof LangMembershipRoute
   '/$lang/newsletter': typeof LangNewsletterRoute
   '/$lang/payment': typeof LangPaymentRoute
   '/$lang/privacy': typeof LangPrivacyRoute
   '/$lang/search': typeof LangSearchRoute
   '/$lang/terms': typeof LangTermsRoute
+  '/media/$videoId': typeof MediaVideoIdRoute
   '/panel/$storyId': typeof PanelStoryIdRoute
   '/read/$storyId': typeof ReadStoryIdRoute
   '/panel': typeof PanelIndexRoute
+  '/$lang/media/$videoId': typeof LangMediaVideoIdRoute
   '/$lang/read/$storyId': typeof LangReadStoryIdRoute
 }
 export interface FileRoutesById {
@@ -221,6 +253,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
   '/editor': typeof EditorRoute
+  '/media': typeof MediaRoute
   '/membership': typeof MembershipRoute
   '/newsletter': typeof NewsletterRoute
   '/panel': typeof PanelRouteWithChildren
@@ -231,15 +264,18 @@ export interface FileRoutesById {
   '/$lang/$section': typeof LangSectionRoute
   '/$lang/about': typeof LangAboutRoute
   '/$lang/account': typeof LangAccountRoute
+  '/$lang/media': typeof LangMediaRoute
   '/$lang/membership': typeof LangMembershipRoute
   '/$lang/newsletter': typeof LangNewsletterRoute
   '/$lang/payment': typeof LangPaymentRoute
   '/$lang/privacy': typeof LangPrivacyRoute
   '/$lang/search': typeof LangSearchRoute
   '/$lang/terms': typeof LangTermsRoute
+  '/media_/$videoId': typeof MediaVideoIdRoute
   '/panel/$storyId': typeof PanelStoryIdRoute
   '/read/$storyId': typeof ReadStoryIdRoute
   '/panel/': typeof PanelIndexRoute
+  '/$lang/media_/$videoId': typeof LangMediaVideoIdRoute
   '/$lang/read/$storyId': typeof LangReadStoryIdRoute
 }
 export interface FileRouteTypes {
@@ -250,6 +286,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/account'
     | '/editor'
+    | '/media'
     | '/membership'
     | '/newsletter'
     | '/panel'
@@ -260,15 +297,18 @@ export interface FileRouteTypes {
     | '/$lang/$section'
     | '/$lang/about'
     | '/$lang/account'
+    | '/$lang/media'
     | '/$lang/membership'
     | '/$lang/newsletter'
     | '/$lang/payment'
     | '/$lang/privacy'
     | '/$lang/search'
     | '/$lang/terms'
+    | '/media/$videoId'
     | '/panel/$storyId'
     | '/read/$storyId'
     | '/panel/'
+    | '/$lang/media/$videoId'
     | '/$lang/read/$storyId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -277,6 +317,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/account'
     | '/editor'
+    | '/media'
     | '/membership'
     | '/newsletter'
     | '/payment'
@@ -286,15 +327,18 @@ export interface FileRouteTypes {
     | '/$lang/$section'
     | '/$lang/about'
     | '/$lang/account'
+    | '/$lang/media'
     | '/$lang/membership'
     | '/$lang/newsletter'
     | '/$lang/payment'
     | '/$lang/privacy'
     | '/$lang/search'
     | '/$lang/terms'
+    | '/media/$videoId'
     | '/panel/$storyId'
     | '/read/$storyId'
     | '/panel'
+    | '/$lang/media/$videoId'
     | '/$lang/read/$storyId'
   id:
     | '__root__'
@@ -303,6 +347,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/account'
     | '/editor'
+    | '/media'
     | '/membership'
     | '/newsletter'
     | '/panel'
@@ -313,15 +358,18 @@ export interface FileRouteTypes {
     | '/$lang/$section'
     | '/$lang/about'
     | '/$lang/account'
+    | '/$lang/media'
     | '/$lang/membership'
     | '/$lang/newsletter'
     | '/$lang/payment'
     | '/$lang/privacy'
     | '/$lang/search'
     | '/$lang/terms'
+    | '/media_/$videoId'
     | '/panel/$storyId'
     | '/read/$storyId'
     | '/panel/'
+    | '/$lang/media_/$videoId'
     | '/$lang/read/$storyId'
   fileRoutesById: FileRoutesById
 }
@@ -331,6 +379,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AccountRoute: typeof AccountRoute
   EditorRoute: typeof EditorRoute
+  MediaRoute: typeof MediaRoute
   MembershipRoute: typeof MembershipRoute
   NewsletterRoute: typeof NewsletterRoute
   PanelRoute: typeof PanelRouteWithChildren
@@ -341,13 +390,16 @@ export interface RootRouteChildren {
   LangSectionRoute: typeof LangSectionRoute
   LangAboutRoute: typeof LangAboutRoute
   LangAccountRoute: typeof LangAccountRoute
+  LangMediaRoute: typeof LangMediaRoute
   LangMembershipRoute: typeof LangMembershipRoute
   LangNewsletterRoute: typeof LangNewsletterRoute
   LangPaymentRoute: typeof LangPaymentRoute
   LangPrivacyRoute: typeof LangPrivacyRoute
   LangSearchRoute: typeof LangSearchRoute
   LangTermsRoute: typeof LangTermsRoute
+  MediaVideoIdRoute: typeof MediaVideoIdRoute
   ReadStoryIdRoute: typeof ReadStoryIdRoute
+  LangMediaVideoIdRoute: typeof LangMediaVideoIdRoute
   LangReadStoryIdRoute: typeof LangReadStoryIdRoute
 }
 
@@ -386,6 +438,13 @@ declare module '@tanstack/react-router' {
       path: '/editor'
       fullPath: '/editor'
       preLoaderRoute: typeof EditorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/media': {
+      id: '/media'
+      path: '/media'
+      fullPath: '/media'
+      preLoaderRoute: typeof MediaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/membership': {
@@ -458,6 +517,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LangAccountRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$lang/media': {
+      id: '/$lang/media'
+      path: '/$lang/media'
+      fullPath: '/$lang/media'
+      preLoaderRoute: typeof LangMediaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/$lang/membership': {
       id: '/$lang/membership'
       path: '/$lang/membership'
@@ -500,6 +566,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LangTermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/media_/$videoId': {
+      id: '/media_/$videoId'
+      path: '/media/$videoId'
+      fullPath: '/media/$videoId'
+      preLoaderRoute: typeof MediaVideoIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/panel/': {
       id: '/panel/'
       path: '/'
@@ -519,6 +592,13 @@ declare module '@tanstack/react-router' {
       path: '/read/$storyId'
       fullPath: '/read/$storyId'
       preLoaderRoute: typeof ReadStoryIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/media_/$videoId': {
+      id: '/$lang/media_/$videoId'
+      path: '/$lang/media/$videoId'
+      fullPath: '/$lang/media/$videoId'
+      preLoaderRoute: typeof LangMediaVideoIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$lang/read/$storyId': {
@@ -549,6 +629,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AccountRoute: AccountRoute,
   EditorRoute: EditorRoute,
+  MediaRoute: MediaRoute,
   MembershipRoute: MembershipRoute,
   NewsletterRoute: NewsletterRoute,
   PanelRoute: PanelRouteWithChildren,
@@ -559,13 +640,16 @@ const rootRouteChildren: RootRouteChildren = {
   LangSectionRoute: LangSectionRoute,
   LangAboutRoute: LangAboutRoute,
   LangAccountRoute: LangAccountRoute,
+  LangMediaRoute: LangMediaRoute,
   LangMembershipRoute: LangMembershipRoute,
   LangNewsletterRoute: LangNewsletterRoute,
   LangPaymentRoute: LangPaymentRoute,
   LangPrivacyRoute: LangPrivacyRoute,
   LangSearchRoute: LangSearchRoute,
   LangTermsRoute: LangTermsRoute,
+  MediaVideoIdRoute: MediaVideoIdRoute,
   ReadStoryIdRoute: ReadStoryIdRoute,
+  LangMediaVideoIdRoute: LangMediaVideoIdRoute,
   LangReadStoryIdRoute: LangReadStoryIdRoute,
 }
 export const routeTree = rootRouteImport

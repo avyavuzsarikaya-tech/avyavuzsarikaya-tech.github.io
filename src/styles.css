@@ -1800,3 +1800,66 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     justify-self: start;
   }
 }
+
+/* ---------- Media strip (October 2026) ----------
+   One row of videos between the newest issue and the archive. It is not part of the
+   depth-controlled records above or below it. On a phone it runs to the screen's edges and
+   is swiped sideways, the next video showing at the edge; on a wide screen four show. */
+.media-strip {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 78%;
+  gap: 1rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 1.25rem;
+  margin-inline: -1.25rem;
+  padding-inline: 1.25rem;
+  padding-bottom: 0.75rem;
+  scrollbar-width: none;
+}
+.media-strip::-webkit-scrollbar {
+  display: none;
+}
+.media-strip > li {
+  scroll-snap-align: start;
+  min-width: 0;
+}
+@media (min-width: 768px) {
+  .media-strip {
+    grid-auto-columns: calc((100% - 3 * 1.5rem) / 4);
+    gap: 1.5rem;
+    margin-inline: 0;
+    padding-inline: 0;
+    scroll-padding-inline: 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line) transparent;
+  }
+  .media-strip::-webkit-scrollbar {
+    display: block;
+    height: 6px;
+  }
+  .media-strip::-webkit-scrollbar-thumb {
+    background: var(--color-line);
+  }
+}
+/* A still is dark in every theme; the play mark is a quiet white ring. */
+.media-still {
+  background: #0c0c0c;
+}
+.media-play {
+  position: absolute;
+  inset-inline-start: 0.75rem;
+  bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1.5px solid rgb(255 255 255 / 0.9);
+  border-radius: 9999px;
+  color: #fff;
+  background: rgb(0 0 0 / 0.35);
+  padding-inline-start: 2px;
+}

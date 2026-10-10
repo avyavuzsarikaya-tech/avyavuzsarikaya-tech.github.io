@@ -14,6 +14,8 @@ import { isMigrationFile } from "./scripts/migration-plan.mjs";
 import { LANGS, THEMES } from "./src/lib/types.ts";
 // @ts-expect-error JS plugin alongside the TS vite config
 import { readStoryIndex, storyIndexPlugin } from "./scripts/story-index-plugin.mjs";
+// @ts-expect-error JS plugin alongside the TS vite config
+import { readVideoIndex, videoIndexPlugin } from "./scripts/video-index.mjs";
 
 /** The files `src/lib/db.ts` globs — same directory, same non-recursive scope. */
 function hasGlobbedMigrations(root: string): boolean {
@@ -151,12 +153,14 @@ const pages = process.env.ORBIS_PAGES === "1";
  * GitHub Pages build: every page is written out as its own HTML file with its text
  * already in it — the front pages (index.html, tr/index.html, …), every section
  * (climate.html, tr/climate.html, …), the search page (search.html, tr/search.html, …) and every reading in every language
- * (read/<id>.html, tr/read/<id>.html, …). The host answers those addresses with 200, and
+ * (read/<id>.html, tr/read/<id>.html, …), the list of videos (media.html, tr/media.html) and
+ * every video (media/<id>.html, tr/media/<id>.html). The host answers those addresses with 200, and
  * each file carries its page's title, language alternates and link-preview tags.
  * The shell (404.html) covers everything else, the panel included.
  */
 function staticPages() {
   const ids = readStoryIndex("content/stories").map((story) => story.id);
+  const videoIds = readVideoIndex().map((video: { id: string }) => video.id);
   const paths: string[] = [];
   for (const lang of LANGS) {
     const prefix = lang === "en" ? "" : `/${lang}`;
@@ -167,6 +171,8 @@ function staticPages() {
     paths.push(`${prefix}/search`);
     for (const page of ["membership", "payment", "newsletter", "terms", "privacy", "account"]) paths.push(`${prefix}/${page}`);
     for (const id of ids) paths.push(`${prefix}/read/${id}`);
+    paths.push(`${prefix}/media`);
+    for (const id of videoIds) paths.push(`${prefix}/media/${id}`);
   }
   return paths.map((path) => ({ path }));
 }
@@ -209,6 +215,8 @@ export default defineConfig(({ command, isPreview }) => ({
     grokPwaPlugin(),
     // virtual:orbis-index — the reading cards for the front page.
     storyIndexPlugin(),
+    // virtual:orbis-videos — the video cards for the media strip and the list of videos.
+    videoIndexPlugin(),
     tailwindcss(),
     tanstackStart(startOptions),
     ...(command === "build" || isPreview

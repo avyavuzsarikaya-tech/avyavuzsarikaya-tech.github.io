@@ -1,13 +1,15 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import { readStoryIndex } from "./story-index-plugin.mjs";
+import { readVideoIndex } from "./video-index.mjs";
 
 /**
  * The last check before publishing, run on the finished site in dist/client (npm run
  * build:pages). If anything here fails, the "Publish site" workflow stops, nothing is
  * published, and the live site stays as it was.
  *
- * 1. Every reading has its page in every language it is written in, with its title.
+ * 1. Every reading and every video has its page in every language it is written in,
+ *    with its title.
  * 2. Every address inside the site (links, pictures, picture copies, scripts, styles)
  *    points to a file that exists.
  * 3. Every DOI in the sources is registered at doi.org (a mistyped DOI is the one source
@@ -65,6 +67,23 @@ for (const story of readStoryIndex("content/stories")) {
     const title = copy.title.trim();
     if (title && !html.includes(escapeHtml(title)) && !html.includes(title)) {
       problems.push(`${story.id} (${lang}): page does not show its title "${title}"`);
+    }
+  }
+}
+
+/** 1b. Video pages: written out, with their title. */
+for (const video of readVideoIndex()) {
+  for (const lang of LANGS) {
+    const copy = video.locales[lang];
+    if (!copy) continue;
+    const file = join(root, lang === "en" ? "" : lang, "media", `${video.id}.html`);
+    if (!existsSync(file)) {
+      problems.push(`video ${video.id} (${lang}): page was not written`);
+      continue;
+    }
+    const html = readFileSync(file, "utf8");
+    if (!html.includes(escapeHtml(copy.title)) && !html.includes(copy.title)) {
+      problems.push(`video ${video.id} (${lang}): page does not show its title "${copy.title}"`);
     }
   }
 }

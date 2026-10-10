@@ -4,7 +4,8 @@ import { DEFAULT_LANG, publicPath, type MemberPage } from "@/lib/lang-path";
 import { pagesCopy } from "@/lib/members/pages-copy";
 import { legalCopy, type LegalPage } from "@/lib/legal-copy";
 import { searchCopy } from "@/lib/search";
-import { LANGS, type Lang, type StoryCard, type Theme } from "@/lib/types";
+import { LANGS, type Lang, type StoryCard, type Theme, type VideoCard } from "@/lib/types";
+import { videoWords } from "@/lib/videos";
 
 /**
  * The public address of the site. Link previews (WhatsApp, X, Telegram), the canonical
@@ -272,6 +273,43 @@ export function storyHead(card: StoryCard | undefined, lang: Lang) {
             },
           ]
         : [{ name: "robots", content: "noindex" }]),
+    ],
+    links: own === lang ? addressLinks(lang, path, written) : [],
+  };
+}
+
+/** The list of every video: /media, /tr/media. */
+export function mediaHead(lang: Lang) {
+  const words = videoWords(lang);
+  const path = "/media";
+  return {
+    meta: pageMeta({
+      title: `${words.videos} — ${SITE_NAME}`,
+      description: words.listNote,
+      url: publicPath(lang, path),
+      lang,
+    }),
+    links: addressLinks(lang, path, LANGS),
+  };
+}
+
+/** One video's page. A language without its title points to the others and is not indexed. */
+export function videoHead(card: VideoCard | undefined, lang: Lang) {
+  if (!card) {
+    return { meta: [{ title: SITE_NAME }, { name: "robots", content: "noindex" }] };
+  }
+  const path = `/media/${card.id}`;
+  const written = LANGS.filter((code) => Boolean(card.locales[code]?.title));
+  const own = card.locales[lang] ? lang : (written[0] ?? DEFAULT_LANG);
+  const copy = card.locales[own];
+  const title = copy?.title || SITE_NAME;
+  const description = clip(copy?.dek ?? "") || DESCRIPTION[lang];
+  const image = card.poster || SITE_CARD;
+  const url = publicPath(lang, path);
+  return {
+    meta: [
+      ...pageMeta({ title: `${title} — ${SITE_NAME}`, description, url, lang, image }),
+      ...(own === lang ? [] : [{ name: "robots", content: "noindex" }]),
     ],
     links: own === lang ? addressLinks(lang, path, written) : [],
   };

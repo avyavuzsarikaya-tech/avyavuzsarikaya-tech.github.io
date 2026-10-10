@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
-  fold, loadSearchBodies, readSearchBodies, searchCards, searchCopy, searchIndexUrl, terms,
+  fold, loadSearchBodies, readSearchBodies, searchAll, searchCards, searchCopy, searchIndexUrl, terms,
+  videoKey,
 } from "./search.ts";
-import type { Lang, LocaleCard, StoryCard } from "./types.ts";
+import type { Lang, LocaleCard, StoryCard, VideoCard } from "./types.ts";
 
 const LANGS: Lang[] = ["tr", "ar", "en", "fr", "es"];
 
@@ -213,4 +214,29 @@ test("HTTP errors, HTML fallbacks and malformed records are not empty results", 
   assert.throws(() => readSearchBodies({}), /Invalid search index/);
   assert.throws(() => readSearchBodies([{ id: "a" }]), /Invalid search record/);
   assert.equal(readSearchBodies([]).size, 0);
+});
+
+test("videos are found by their title and their transcript, beside the readings", () => {
+  const cards = [card("tide", "tr", { title: "Deniz seviyesi" }, "2026-01-02")];
+  const video: VideoCard = {
+    id: "sea",
+    file: "sea.json",
+    date: "2026-01-03",
+    src: "videos/sea.mp4",
+    locales: { tr: { title: "Hareket eden deniz", dek: "Uydular ve kara" } },
+  };
+  const bodies = new Map([
+    ["tide", "Gelgit ölçerler kıyıda durur."],
+    [videoKey("sea"), "Bu videoda gelgit ölçer ile uydu karşılaştırılıyor."],
+  ]);
+  const found = (q: string) =>
+    searchAll(cards, [video], "tr", q, bodies).map((f) => (f.kind === "video" ? `video:${f.video.id}` : f.card.id));
+  // A word only in the transcript finds the video.
+  assert.deepEqual(found("uydu karsilastir"), ["video:sea"]);
+  // A word in both: both come back, the title hit first.
+  assert.deepEqual(found("deniz"), ["video:sea", "tide"]);
+  assert.deepEqual(found("gelgit").sort(), ["tide", "video:sea"]);
+  // A video without an index entry, or without this language, is not found.
+  assert.deepEqual(searchAll(cards, [video], "tr", "uydu", new Map()), []);
+  assert.deepEqual(searchAll(cards, [video], "en", "uydu", bodies), []);
 });

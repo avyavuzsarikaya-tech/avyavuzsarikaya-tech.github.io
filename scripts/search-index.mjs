@@ -1,5 +1,6 @@
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { readVideos } from "./video-index.mjs";
 
 /**
  * Static search index: one JSON file per language with the full plain text of every
@@ -58,12 +59,41 @@ export function readSearchIndex(storiesDir, lang) {
   });
 }
 
-export function writeSearchIndex(outDir, storiesDir = "content/stories") {
+/**
+ * Videos are searched like readings: their title, one sentence and the full transcript.
+ * Their records carry `kind: "video"` and the id `video:<id>`, so a video and a reading
+ * with the same name never mix.
+ */
+export function readVideoSearchIndex(videosDir, lang) {
+  return readVideos(videosDir).flatMap((video) => {
+    const copy = video.locales?.[lang];
+    const body = plain(copy?.transcript ?? "");
+    if (!copy?.title?.trim() || !body) return [];
+    return [
+      {
+        id: `video:${video.id}`,
+        kind: "video",
+        date: video.date,
+        title: copy.title.trim(),
+        dek: (copy.dek ?? "").trim(),
+        body,
+      },
+    ];
+  });
+}
+
+/** content/videos sits beside content/stories. */
+export function videosDirFor(storiesDir) {
+  return join(dirname(storiesDir), "videos");
+}
+
+export function writeSearchIndex(outDir, storiesDir = "content/stories", videosDir = videosDirFor(storiesDir)) {
   const dir = join(outDir, "assets", "search");
   mkdirSync(dir, { recursive: true });
   for (const lang of LANGS) {
     const records = readSearchIndex(storiesDir, lang);
-    writeFileSync(join(dir, `${lang}.json`), `${JSON.stringify(records, null, 2)}\n`);
-    console.log(`[search] ${records.length} readings in assets/search/${lang}.json`);
+    const videos = readVideoSearchIndex(videosDir, lang);
+    writeFileSync(join(dir, `${lang}.json`), `${JSON.stringify([...records, ...videos], null, 2)}\n`);
+    console.log(`[search] ${records.length} readings and ${videos.length} videos in assets/search/${lang}.json`);
   }
 }

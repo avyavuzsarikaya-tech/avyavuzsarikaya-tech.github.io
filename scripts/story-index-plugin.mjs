@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { readSearchIndex } from "./search-index.mjs";
+import { readSearchIndex, readVideoSearchIndex, videosDirFor } from "./search-index.mjs";
 
 /**
  * `virtual:orbis-index`: a short card for every reading in content/stories — title,
@@ -121,7 +121,10 @@ export function storyIndexPlugin() {
         if (!match || !LANGS.includes(lang)) return next();
         if (req.method !== "GET" && req.method !== "HEAD") return next();
         try {
-          const json = JSON.stringify(readSearchIndex(dir, lang));
+          const json = JSON.stringify([
+            ...readSearchIndex(dir, lang),
+            ...readVideoSearchIndex(videosDirFor(dir), lang),
+          ]);
           res.setHeader("Content-Type", "application/json; charset=utf-8");
           res.setHeader("Cache-Control", "no-store");
           res.end(req.method === "HEAD" ? "" : json);

@@ -38,6 +38,17 @@ the pages; Cloudflare (Workers Builds) then serves them at https://orbisreadinga
 7. If a published reading is wrong, `git revert` its commit and push; the site returns
    to the state before it.
 
+## Adding a video
+
+Videos stand on their own: no reading and no issue behind them. One file per video,
+`content/videos/<id>.json` (`id`, `date`, `src`, `poster`, `duration` in seconds, and per
+language `title`, `dek`, `transcript`). The newest sits first in the one-row media strip
+between the newest issue and the archive; "Show all" opens `/media`; each video has its
+own page `/media/<id>` with the transcript behind a button; search finds a video by its
+title and transcript. `scripts/videos-check.test.mjs` checks every file. Cloudflare serves
+static files only up to 25 MiB, so a long film goes on outside storage with an https
+`src`. The strip must never change the boxes above it or the depth buttons.
+
 ## Editorial rules from the owner
 
 - Readings rest on public, checkable sources (public institutions first); no essays,

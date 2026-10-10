@@ -4,12 +4,13 @@ import { ReadTime } from "@/components/read-time";
 import { SearchMark } from "@/components/search-mark";
 import { Shell } from "@/components/shell";
 import { useCopy } from "@/lib/i18n";
-import { readLink } from "@/lib/lang-path";
-import { loadSearchBodies, searchCards, searchCopy } from "@/lib/search";
+import { readLink, videoLink } from "@/lib/lang-path";
+import { loadSearchBodies, searchAll, searchCopy } from "@/lib/search";
 import type { Lang } from "@/lib/types";
 import { CARDS } from "@/lib/seed";
 import { formatDate, storyTitle } from "@/lib/text";
 import { useLang } from "@/lib/use-lang";
+import { VIDEOS, formatDuration, videoWords } from "@/lib/videos";
 
 /** The query in the address (?q=…), so a search can be shared and survives a reload. */
 function queryFromAddress(search: string): string {
@@ -80,7 +81,7 @@ export function SearchPage() {
 
   const bodies = index?.lang === lang ? index.bodies : undefined;
   const results = useMemo(
-    () => (bodies ? searchCards(CARDS, lang, query, bodies) : []),
+    () => (bodies ? searchAll(CARDS, VIDEOS, lang, query, bodies) : []),
     [lang, query, bodies],
   );
   const searching = ready && hasQuery && bodies !== undefined;
@@ -145,7 +146,41 @@ export function SearchPage() {
 
         {searching && results.length > 0 ? (
           <ol className="px-5 md:px-8">
-            {results.map((story) => {
+            {results.map((found) => {
+              if (found.kind === "video") {
+                const { video } = found;
+                const local = video.locales[lang];
+                const length = formatDuration(video.duration);
+                return (
+                  <li key={`video-${video.id}`} className="border-b border-line last:border-b-0">
+                    <Link {...videoLink(lang, video.id)} className="group flex flex-col gap-2 py-5">
+                      <h2 className="text-lg leading-snug group-hover:underline group-hover:underline-offset-4 lg:text-xl">
+                        {local?.title}
+                      </h2>
+                      {local?.dek ? (
+                        <p className="max-w-2xl text-pretty text-[15px] leading-snug text-muted">
+                          {local.dek}
+                        </p>
+                      ) : null}
+                      <div className="mt-1 flex flex-col items-start gap-1 text-xs text-muted">
+                        <p>
+                          <span
+                            className={
+                              lang === "ar" ? "text-pine" : "uppercase tracking-widest text-pine"
+                            }
+                          >
+                            {videoWords(lang).video}
+                          </span>
+                          {length ? <span className="tabular-nums" dir="ltr">{` · ${length}`}</span> : null}
+                          {" · "}
+                          <span className="whitespace-nowrap">{formatDate(video.date, lang)}</span>
+                        </p>
+                      </div>
+                    </Link>
+                  </li>
+                );
+              }
+              const story = found.card;
               const local = story.locales[lang];
               const summary = local.dek.trim() || local.lead;
               return (

@@ -170,3 +170,39 @@ export type StoryCard = {
   pick?: number;
   locales: Record<Lang, LocaleCard>;
 };
+
+/**
+ * A video of its own, not tied to any reading or issue: content/videos/<id>.json.
+ * It has its own page with the transcript under it, appears in the media strip on the
+ * front page (newest first) and is found by the search through its title and transcript.
+ * `src` and `poster` are paths in the repository (videos/…, images/…) or full addresses.
+ */
+export type VideoCopy = {
+  title: string;
+  /** One sentence under the title. */
+  dek: string;
+  /** Everything said in the video, paragraphs separated by a blank line. */
+  transcript: string;
+};
+
+export type Video = {
+  id: string;
+  status?: "draft" | "published";
+  date: string;
+  src: string;
+  poster?: string;
+  /** Length in seconds. */
+  duration?: number;
+  locales: Partial<Record<Lang, VideoCopy>>;
+};
+
+/** What the front page and the list of videos know about a video; no transcript. */
+export type VideoCard = {
+  id: string;
+  file: string;
+  date: string;
+  src: string;
+  poster?: string;
+  duration?: number;
+  locales: Partial<Record<Lang, { title: string; dek: string }>>;
+};

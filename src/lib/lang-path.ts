@@ -72,6 +72,20 @@ export function readLink(lang: Lang, storyId: string) {
     : ({ to: "/$lang/read/$storyId", params: { lang, storyId } } as const);
 }
 
+/** The list of every video. */
+export function mediaLink(lang: Lang) {
+  return lang === DEFAULT_LANG
+    ? ({ to: "/media" } as const)
+    : ({ to: "/$lang/media", params: { lang } } as const);
+}
+
+/** One video's page, with its transcript. */
+export function videoLink(lang: Lang, videoId: string) {
+  return lang === DEFAULT_LANG
+    ? ({ to: "/media/$videoId", params: { videoId } } as const)
+    : ({ to: "/$lang/media/$videoId", params: { lang, videoId } } as const);
+}
+
 export function searchLink(lang: Lang) {
   return lang === DEFAULT_LANG
     ? ({ to: "/search" } as const)
