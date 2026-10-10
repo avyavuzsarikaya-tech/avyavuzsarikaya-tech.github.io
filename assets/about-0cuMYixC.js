@@ -1,0 +1,1 @@
+import{t as e}from"./about-D5n42RPL.js";var t=e;export{t as component};

@@ -1,1 +1,0 @@
-import{t as e}from"./about-BnFM2pq3.js";var t=e;export{t as component};
