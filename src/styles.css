@@ -1403,6 +1403,10 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 0.7fr);
     column-gap: 1.5rem;
   }
+  /* No editor's picks: the two remaining columns share the width. */
+  .atlas-bottom:not(:has(> .atlas-picks)) {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  }
   /* Headline mode is not a balancing act: no equal-height columns, no reserved room and no
      picture in the numbered list. Every column starts at the top and ends with its text. */
   .atlas-bottom.records[data-depth="1"] {

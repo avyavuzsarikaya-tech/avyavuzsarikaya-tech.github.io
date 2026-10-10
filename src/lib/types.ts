@@ -85,6 +85,8 @@ export type Story = {
   issue?: number;
   /** Its place in the issue: 1 is the most important and gets the largest box, then 2, 3, … */
   rank?: number;
+  /** Chosen by the editor for "Editor's picks" on the front page: 1 shows first, then 2. */
+  pick?: number;
   locales: Record<Lang, LocaleCopy>;
 };
 
@@ -165,5 +167,6 @@ export type StoryCard = {
   /** See Story.issue and Story.rank. */
   issue?: number;
   rank?: number;
+  pick?: number;
   locales: Record<Lang, LocaleCard>;
 };

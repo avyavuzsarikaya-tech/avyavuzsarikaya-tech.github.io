@@ -480,6 +480,8 @@ const HOME_WORDS: Record<
     archive: string;
     /** The first column under it: the issue before the newest. */
     lastIssue: string;
+    /** The middle column: readings the editor marked as picks. */
+    picks: string;
   }
 > = {
   tr: {
@@ -500,6 +502,7 @@ const HOME_WORDS: Record<
     view: "Görünüm",
     archive: "Arşivden",
     lastIssue: "Önceki sayı",
+    picks: "Editörün seçtikleri",
   },
   en: {
     chain: "Document chain",
@@ -519,6 +522,7 @@ const HOME_WORDS: Record<
     view: "View",
     archive: "From the archive",
     lastIssue: "Last issue",
+    picks: "Editor’s picks",
   },
   ar: {
     chain: "سلسلة الوثائق",
@@ -538,6 +542,7 @@ const HOME_WORDS: Record<
     view: "طريقة العرض",
     archive: "من الأرشيف",
     lastIssue: "العدد السابق",
+    picks: "اختيارات المحرر",
   },
   fr: {
     chain: "Chaîne de documents",
@@ -557,6 +562,7 @@ const HOME_WORDS: Record<
     view: "Affichage",
     archive: "Dans les archives",
     lastIssue: "Numéro précédent",
+    picks: "Le choix de la rédaction",
   },
   es: {
     chain: "Cadena de documentos",
@@ -576,6 +582,7 @@ const HOME_WORDS: Record<
     view: "Vista",
     archive: "Del archivo",
     lastIssue: "Número anterior",
+    picks: "Selección del editor",
   },
 };
 
@@ -997,16 +1004,23 @@ type RecordPlan = {
 /** Which reading goes where; the phone and the desktop are planned apart. */
 function planRecords(stories: Story[], mostRead: Story[], desk: boolean): RecordPlan {
   const counted = mostRead.length > 0;
-  // Phone (unchanged): a picture strip from eight readings, one reading in depth.
-  // Desktop: two readings in depth and three numbered, the strip only past thirteen.
-  const strip = stories.length >= (desk ? 13 : 8) ? stories.slice(0, 4) : [];
-  const remaining = stories.slice(strip.length);
-  const latestCount = Math.min(4, Math.max(1, remaining.length - (desk ? 5 : 3)));
+  // The middle column holds the editor's picks in the editor's order (1, then 2): two on a
+  // desktop, one on a phone. With no picks it is not shown. The picks leave the other lists.
+  const deep = stories
+    .filter((story) => story.pick !== undefined)
+    .sort((a, b) => (a.pick ?? 0) - (b.pick ?? 0))
+    .slice(0, desk ? 2 : 1);
+  const picked = new Set(deep.map((s) => s.id));
+  const rest = stories.filter((story) => !picked.has(story.id));
+  // Phone: a picture strip from eight readings. Desktop: the strip only past thirteen.
+  const strip = rest.length >= (desk ? 13 : 8) ? rest.slice(0, 4) : [];
+  const remaining = rest.slice(strip.length);
+  const latestCount = Math.min(4, Math.max(1, remaining.length - 3));
   const latest = remaining.slice(0, latestCount);
   const after = remaining.slice(latestCount);
-  const deepCount = desk && after.length >= 5 ? 2 : Math.min(1, after.length);
-  const deep = after.slice(0, deepCount);
-  const numbered = counted ? mostRead : after.slice(deepCount, deepCount + (desk ? 3 : 5));
+  const numbered = counted
+    ? mostRead.filter((story) => !picked.has(story.id))
+    : after.slice(0, desk ? 3 : 5);
   const shown = new Set([...strip, ...latest, ...deep, ...numbered].map((s) => s.id));
   const more = stories.filter((story) => !shown.has(story.id));
   return { strip, latest, deep, numbered, counted, more };
@@ -1070,8 +1084,8 @@ function RecordColumns({ plan, lang, depth }: { plan: RecordPlan; lang: Lang; de
         </section>
 
         {deep.length ? (
-          <section className="atlas-col" aria-label={words.inDepth}>
-            <h3 className={`${heading} mb-3`}>{words.inDepth}</h3>
+          <section className="atlas-col atlas-picks" aria-label={words.picks}>
+            <h3 className={`${heading} mb-3`}>{words.picks}</h3>
             {deep.length === 1 ? (
               <DeepCard story={deep[0]} lang={lang} />
             ) : (
