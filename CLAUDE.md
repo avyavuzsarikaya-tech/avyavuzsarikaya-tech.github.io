@@ -49,6 +49,13 @@ title and transcript. `scripts/videos-check.test.mjs` checks every file. Cloudfl
 static files only up to 25 MiB, so a long film goes on outside storage with an https
 `src`. The strip must never change the boxes above it or the depth buttons.
 
+## Test period
+
+Until launch, `TRIAL = true` in `src/lib/site.ts`: every reader page shows a thin
+"in test" line under the header and every page carries `noindex, nofollow`. The readings
+on the site now are interim texts (Gemini drafts corrected against their sources). On
+launch day, set `TRIAL` to false.
+
 ## Editorial rules from the owner
 
 - Readings rest on public, checkable sources (public institutions first); no essays,
