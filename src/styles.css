@@ -1485,6 +1485,11 @@ a.group:not(.atlas-own):has(.paper-title) > div.flex.flex-col > p.tabular-nums {
     display: -webkit-box;
     -webkit-box-orient: vertical;
   }
+  /* A fill shows only once it has been cut to the room it has (fitFills makes it visible);
+     before the scripts start it would run past its box and over the cards below. */
+  .atlas-fill > p:first-child {
+    visibility: hidden;
+  }
   /* The in-depth card's own five opening lines become the start of the fill. */
   .deep-card .deep-opening {
     display: none;

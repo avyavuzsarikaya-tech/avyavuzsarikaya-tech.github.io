@@ -12,6 +12,7 @@ import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { langMeta } from "@/lib/i18n";
 import { LANG_BOOT, langFromPath } from "@/lib/lang-path";
 import { LOOK_BOOT } from "@/lib/look";
+import { DEPTH_BOOT } from "@/lib/depth-boot";
 import { feedLink, pageMeta, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
 import appCss from "../styles.css?url";
 
@@ -61,8 +62,9 @@ function RootDocument() {
         <link {...feedLink(lang)} />
         <HeadContent />
         {/* Before the first paint: the reader's language (plain addresses only), the saved
-            colour scheme, then the web fonts (without blocking the paint). */}
-        <script dangerouslySetInnerHTML={{ __html: LANG_BOOT + LOOK_BOOT + FONT_BOOT }} />
+            colour scheme, the saved front-page depth, then the web fonts (without blocking
+            the paint). */}
+        <script dangerouslySetInnerHTML={{ __html: LANG_BOOT + LOOK_BOOT + DEPTH_BOOT + FONT_BOOT }} />
         <noscript>
           <link rel="stylesheet" href={FONTS} />
         </noscript>

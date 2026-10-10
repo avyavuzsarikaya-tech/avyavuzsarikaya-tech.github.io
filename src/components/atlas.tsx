@@ -12,6 +12,7 @@ import { CARDS } from "@/lib/seed";
 import { formatDate, safeHttpUrl, storyTitle } from "@/lib/text";
 import type { Lang, Source, StoryCard as Story, Theme } from "@/lib/types";
 import { useMostRead } from "@/lib/reads";
+import { DEPTH_KEY } from "@/lib/depth-boot";
 import { MediaStrip } from "@/components/videos";
 import { useLang } from "@/lib/use-lang";
 
@@ -309,7 +310,7 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
       {rest.length ? <DepthBar lang={lang} depth={depth} choose={choose} /> : null}
 
       {cards.length ? (
-        <div ref={topRef} className="records atlas-top px-5 md:px-8" data-depth={depth}>
+        <div ref={topRef} className="records atlas-top px-5 md:px-8" data-depth={depth} suppressHydrationWarning>
           {cards.map((story) => (
             <Link
               key={story.id}
@@ -928,7 +929,6 @@ function useColumnFill(depth: Depth) {
 }
 
 type Depth = 1 | 2 | 3;
-const DEPTH_KEY = "orbis-depth";
 
 function readDepth(): Depth {
   try {
@@ -981,10 +981,14 @@ function DepthBar({
               type="button"
               role="radio"
               aria-checked={depth === step}
+              // Before the scripts start, DEPTH_BOOT (lib/depth-boot.ts) marks the stored
+              // choice through aria-checked; the colours follow aria-checked alone.
+              data-depth-step={step}
+              suppressHydrationWarning
               onClick={() => choose(step)}
               className={`border border-ink px-3 py-1 text-xs whitespace-nowrap transition-colors duration-150 md:px-3.5 ${
                 step > 1 ? "-ms-px" : ""
-              } ${depth === step ? "bg-ink text-paper" : "bg-transparent text-ink hover:bg-highlight active:bg-line"} ${
+              } bg-transparent text-ink hover:bg-highlight active:bg-line aria-checked:bg-ink aria-checked:text-paper aria-checked:hover:bg-ink aria-checked:active:bg-ink ${
                 lang === "ar" ? "" : "uppercase tracking-[0.1em]"
               }`}
             >
@@ -1067,7 +1071,7 @@ function RecordColumns({ plan, lang, depth }: { plan: RecordPlan; lang: Lang; de
   return (
     <>
       {strip.length ? (
-        <ol className="records atlas-strip" data-depth={depth}>
+        <ol className="records atlas-strip" data-depth={depth} suppressHydrationWarning>
           {strip.map((story) => (
             <li key={story.id}>
               <RecordRow story={story} lang={lang} />
@@ -1076,7 +1080,7 @@ function RecordColumns({ plan, lang, depth }: { plan: RecordPlan; lang: Lang; de
         </ol>
       ) : null}
 
-      <div className={`records atlas-bottom ${strip.length ? "mt-5" : ""}`} data-depth={depth}>
+      <div className={`records atlas-bottom ${strip.length ? "mt-5" : ""}`} data-depth={depth} suppressHydrationWarning>
         <section className="atlas-col" aria-label={words.lastIssue}>
           <h3 className={`${heading} mb-3`}>{words.lastIssue}</h3>
           <ol>
@@ -1120,7 +1124,7 @@ function RecordColumns({ plan, lang, depth }: { plan: RecordPlan; lang: Lang; de
       </div>
 
       {more.length ? (
-        <ol className="records atlas-more-grid mt-6 border-t border-line pt-2" data-depth={depth}>
+        <ol className="records atlas-more-grid mt-6 border-t border-line pt-2" data-depth={depth} suppressHydrationWarning>
           {more.map((story) => (
             <li key={story.id}>
               <RecordRow story={story} lang={lang} />
