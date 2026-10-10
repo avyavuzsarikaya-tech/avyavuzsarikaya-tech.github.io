@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { SectionPage } from "@/components/atlas";
 import { DEFAULT_LANG, isPrefixed } from "@/lib/lang-path";
 import { sectionHead } from "@/lib/site";
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/$lang/$section")({
     if (params.lang === DEFAULT_LANG && theme) {
       throw redirect({ to: "/$section", params: { section: theme }, replace: true });
     }
-    if (!isPrefixed(params.lang) || !theme) throw redirect({ to: "/", replace: true });
+    if (!isPrefixed(params.lang) || !theme) throw notFound();
     if (theme !== params.section) {
       throw redirect({
         to: "/$lang/$section",

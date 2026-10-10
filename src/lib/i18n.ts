@@ -15,6 +15,10 @@ export type Copy = {
   atlas: string;
   home: string;
   sections: string;
+  /** Name of the trail above a reading (home › section › title). */
+  trail: string;
+  /** Name of the sections list inside the opened menu. */
+  menuSections: string;
   panel: string;
   language: string;
   /** First line of the home sentence. Read with `hero` as one sentence. */
@@ -94,6 +98,8 @@ const copy: Record<Lang, Copy> = {
     atlas: "Home",
     home: "Home",
     sections: "Sections",
+    trail: "You are here",
+    menuSections: "Menu sections",
     panel: "Panel",
     language: "Language",
     heroLead: "The reading",
@@ -180,6 +186,8 @@ const copy: Record<Lang, Copy> = {
     atlas: "Ana sayfa",
     home: "Ana sayfa",
     sections: "Bölümler",
+    trail: "Bulunduğunuz yer",
+    menuSections: "Menüdeki bölümler",
     panel: "Panel",
     language: "Dil",
     heroLead: "Okuma",
@@ -267,6 +275,8 @@ const copy: Record<Lang, Copy> = {
     atlas: "الرئيسية",
     home: "الرئيسية",
     sections: "الأقسام",
+    trail: "موقعك",
+    menuSections: "أقسام القائمة",
     panel: "اللوحة",
     language: "اللغة",
     heroLead: "أطلس",
@@ -353,6 +363,8 @@ const copy: Record<Lang, Copy> = {
     atlas: "Accueil",
     home: "Accueil",
     sections: "Sections",
+    trail: "Vous êtes ici",
+    menuSections: "Sections du menu",
     panel: "Panneau",
     language: "Langue",
     heroLead: "L’atlas",
@@ -442,6 +454,8 @@ const copy: Record<Lang, Copy> = {
     atlas: "Inicio",
     home: "Inicio",
     sections: "Secciones",
+    trail: "Usted está aquí",
+    menuSections: "Secciones del menú",
     panel: "Panel",
     language: "Lengua",
     heroLead: "El atlas",

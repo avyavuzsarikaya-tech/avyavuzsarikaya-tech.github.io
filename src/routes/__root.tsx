@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-router";
 import { AuthProvider } from "@/lib/auth/provider";
 import { ListenBar } from "@/components/listen-bar";
+import { NotFoundPage } from "@/components/not-found";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { langMeta } from "@/lib/i18n";
 import { LANG_BOOT, langFromPath } from "@/lib/lang-path";
@@ -18,6 +19,8 @@ import appCss from "../styles.css?url";
 // browser fetches only when Arabic text is on screen.
 const FONTS =
   "https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=Playfair+Display:wght@700;800&family=Source+Serif+4:opsz,wght@8..60,400..600&family=Tinos:ital,wght@0,400;0,700;1,400&family=Noto+Naskh+Arabic:wght@500;600&display=swap";
+
+const FONT_BOOT = `(function(){var l=document.createElement("link");l.rel="stylesheet";l.href=${JSON.stringify(FONTS)};document.head.appendChild(l)})();`;
 
 export const Route = createRootRoute({
   // Site-wide defaults; a section or reading page replaces the title, description and
@@ -34,13 +37,16 @@ export const Route = createRootRoute({
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg?v=20261007-7" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: FONTS },
+      // The font stylesheet starts downloading at once but does not hold up the first paint
+      // (FONT_BOOT below attaches it); until the faces arrive the page shows in Times.
+      { rel: "preload", as: "style", href: FONTS },
       { rel: "stylesheet", href: appCss },
       { rel: "manifest", href: "/__grok/manifest.webmanifest?v=20261007-7" },
       { rel: "apple-touch-icon", href: "/__grok/icon-180.png?v=20261007-7" },
     ],
   }),
   component: RootDocument,
+  notFoundComponent: NotFoundPage,
 });
 
 function RootDocument() {
@@ -54,9 +60,12 @@ function RootDocument() {
       <head>
         <link {...feedLink(lang)} />
         <HeadContent />
-        {/* Before the first paint: the reader's language (plain addresses only), then the
-            saved colour scheme. */}
-        <script dangerouslySetInnerHTML={{ __html: LANG_BOOT + LOOK_BOOT }} />
+        {/* Before the first paint: the reader's language (plain addresses only), the saved
+            colour scheme, then the web fonts (without blocking the paint). */}
+        <script dangerouslySetInnerHTML={{ __html: LANG_BOOT + LOOK_BOOT + FONT_BOOT }} />
+        <noscript>
+          <link rel="stylesheet" href={FONTS} />
+        </noscript>
         <style
           dangerouslySetInnerHTML={{
             __html:

@@ -12,6 +12,8 @@ export type PagesCopy = {
     or: string;
     haveAccount: string;
     signIn: string;
+    /** Beside the buttons while membership is not yet open. */
+    soon: string;
   };
   payment: {
     title: string;
@@ -73,6 +75,7 @@ const COPY: Record<Lang, PagesCopy> = {
       or: "ya da",
       haveAccount: "Zaten üye misiniz?",
       signIn: "Giriş yapın",
+      soon: "Yakında",
     },
     payment: {
       title: "Ödeme",
@@ -133,6 +136,7 @@ const COPY: Record<Lang, PagesCopy> = {
       or: "أو",
       haveAccount: "أنت عضو بالفعل؟",
       signIn: "سجّل الدخول",
+      soon: "قريبًا",
     },
     payment: {
       title: "الدفع",
@@ -193,6 +197,7 @@ const COPY: Record<Lang, PagesCopy> = {
       or: "or",
       haveAccount: "Already a member?",
       signIn: "Sign in",
+      soon: "Coming soon",
     },
     payment: {
       title: "Payment",
@@ -253,6 +258,7 @@ const COPY: Record<Lang, PagesCopy> = {
       or: "ou",
       haveAccount: "Déjà membre ?",
       signIn: "Se connecter",
+      soon: "Bientôt",
     },
     payment: {
       title: "Paiement",
@@ -313,6 +319,7 @@ const COPY: Record<Lang, PagesCopy> = {
       or: "o",
       haveAccount: "¿Ya es miembro?",
       signIn: "Inicie sesión",
+      soon: "Próximamente",
     },
     payment: {
       title: "Pago",

@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { CardListen, ReadTime } from "@/components/read-time";
 import { Shell } from "@/components/shell";
 import { useFrameCopy } from "@/lib/frame-copy";
+import { imageSet } from "@/lib/image-set";
 import { imageCaption } from "@/lib/editorial";
 import { langMeta, useCopy } from "@/lib/i18n";
 import { readLink } from "@/lib/lang-path";
@@ -183,6 +184,7 @@ function SectionList({ stories, lang }: { stories: Story[]; lang: Lang }) {
                 <div className="section-list-pic w-[7.25rem] shrink-0">
                   <img
                     src={story.image.src}
+                    {...imageSet(story.image.src, "116px")}
                     alt={imageCaption(story.image, lang)}
                     width={240}
                     height={180}
@@ -269,6 +271,7 @@ function HomeGrid({ stories, lang }: { stories: Story[]; lang: Lang }) {
                 story={lead}
                 lang={lang}
                 ratio="aspect-[4/3] md:aspect-[3/2] md:h-full md:min-h-[22rem]"
+                sizes="(min-width: 768px) 64vw, 100vw"
                 eager
               />
             </div>
@@ -1082,6 +1085,7 @@ function RecordRow({ story, lang }: { story: Story; lang: Lang }) {
           <div>
             <img
               src={story.image.src}
+              {...imageSet(story.image.src, "112px")}
               alt={imageCaption(story.image, lang)}
               width={200}
               height={150}
@@ -1138,6 +1142,7 @@ function DeepCard({ story, lang }: { story: Story; lang: Lang }) {
           <div>
             <img
               src={story.image.src}
+              {...imageSet(story.image.src, "(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw")}
               alt={imageCaption(story.image, lang)}
               width={1500}
               height={1000}
@@ -1208,6 +1213,7 @@ function RankedRow({
           <div className="ranked-pic w-[4.75rem] shrink-0">
             <img
               src={story.image.src}
+              {...imageSet(story.image.src, "76px")}
               alt={imageCaption(story.image, lang)}
               width={200}
               height={150}
@@ -1302,20 +1308,25 @@ function CardPicture({
   lang,
   ratio,
   eager = false,
+  sizes = "(min-width: 768px) 25vw, 33vw",
 }: {
   story: Story;
   lang: Lang;
   ratio: string;
   eager?: boolean;
+  /** How wide the picture shows, so the browser downloads a copy of about that size. */
+  sizes?: string;
 }) {
   if (!story.image) return null;
   return (
     <img
       src={story.image.src}
+      {...imageSet(story.image.src, sizes)}
       alt={imageCaption(story.image, lang)}
       width={1500}
       height={1000}
       loading={eager ? "eager" : "lazy"}
+      fetchPriority={eager ? "high" : undefined}
       decoding="async"
       className={`block w-full object-cover ${ratio}`}
     />
@@ -1373,10 +1384,12 @@ function Picture({
   const img = (
     <img
       src={story.image.src}
+      {...imageSet(story.image.src, "(min-width: 768px) 60vw, 100vw")}
       alt={imageCaption(story.image, lang)}
       width={1500}
       height={1000}
       loading={eager ? "eager" : "lazy"}
+      fetchPriority={eager ? "high" : undefined}
       decoding="async"
       className={
         fill

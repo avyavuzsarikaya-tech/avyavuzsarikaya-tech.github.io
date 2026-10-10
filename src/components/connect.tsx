@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import { fieldClass } from "@/components/shell";
-import { checkToken, PublishError, readToken, TOKEN_PAGE, writeToken } from "@/lib/github";
+import {
+  checkToken,
+  PublishError,
+  readToken,
+  TOKEN_EVENT,
+  TOKEN_PAGE,
+  writeToken,
+} from "@/lib/github";
 import { usePublishCopy, type PublishCopy } from "@/lib/publish-copy";
 import type { Lang } from "@/lib/types";
 
@@ -16,7 +23,12 @@ export function publishMessage(copy: PublishCopy, error: unknown): string {
 /** The saved token for this browser; empty until the page has mounted. */
 export function useToken(): [string, (token: string) => void] {
   const [token, setToken] = useState("");
-  useEffect(() => setToken(readToken()), []);
+  useEffect(() => {
+    const sync = () => setToken(readToken());
+    sync();
+    window.addEventListener(TOKEN_EVENT, sync);
+    return () => window.removeEventListener(TOKEN_EVENT, sync);
+  }, []);
   return [
     token,
     (next: string) => {

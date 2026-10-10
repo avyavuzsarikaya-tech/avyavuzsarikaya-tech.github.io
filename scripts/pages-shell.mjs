@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { readStoryIndex } from "./story-index-plugin.mjs";
 import { writeFeeds } from "./feed.mjs";
 import { writeSearchIndex } from "./search-index.mjs";
+import { writeImageSizes } from "./image-sizes.mjs";
 
 /**
  * After `vite build` (see vite.config.ts): checks that every page was written out, makes
@@ -45,11 +46,11 @@ for (const lang of LANGS) {
       file: `${prefix.slice(1)}${prefix ? "/" : ""}about.html`,
       loc: `${prefix}/about`,
     },
-    // Membership and newsletter are listed; the payment page is written out but not listed.
-    ...["membership", "payment", "newsletter", "terms", "privacy"].map((page) => ({
+    // Membership and newsletter are listed; the payment and account pages are written out but not listed.
+    ...["membership", "payment", "newsletter", "terms", "privacy", "account"].map((page) => ({
       file: `${prefix.slice(1)}${prefix ? "/" : ""}${page}.html`,
       loc: `${prefix}/${page}`,
-      listed: page !== "payment",
+      listed: page !== "payment" && page !== "account",
     })),
     // The search page is written out but stays out of the sitemap: nothing to index.
     {
@@ -90,4 +91,5 @@ writeFileSync(
   join(root, "robots.txt"),
   `User-agent: *\nDisallow: /panel\n\nSitemap: ${site}/sitemap.xml\n`,
 );
-console.log(`[pages] ${urls.length} addresses in sitemap.xml`);
+const sized = await writeImageSizes(root);
+console.log(`[pages] ${urls.length} addresses in sitemap.xml, ${sized} picture copies in assets/img/`);

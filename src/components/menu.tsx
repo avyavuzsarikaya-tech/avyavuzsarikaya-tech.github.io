@@ -216,7 +216,7 @@ export function SiteMenu({
           </button>
         </div>
         <div className="flex flex-1 flex-col overflow-y-auto">
-          <nav aria-label={copy.sections}>
+          <nav aria-label={copy.menuSections}>
             <MenuGroup
               title={copy.sections}
               current={currentSection}

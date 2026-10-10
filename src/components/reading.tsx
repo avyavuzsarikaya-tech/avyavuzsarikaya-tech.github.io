@@ -14,6 +14,7 @@ import {
 import { LockNote, StoryVideos, useMemberText } from "@/components/members/locked";
 import { Shell } from "@/components/shell";
 import { byline, editorialCopy, imageCaption } from "@/lib/editorial";
+import { imageSet } from "@/lib/image-set";
 import { langMeta, useCopy } from "@/lib/i18n";
 import { homeLink, readLink, rememberLang, sectionLink } from "@/lib/lang-path";
 import { formatDate, hasCopy } from "@/lib/text";
@@ -100,27 +101,27 @@ function TypeSize({
         type="button"
         onClick={onDown}
         disabled={atMin}
-        aria-label={downLabel}
         className={`${button} text-[12px]`}
       >
-        A−
+        <span aria-hidden="true">A−</span>
+        <span className="sr-only">{downLabel}</span>
       </button>
       <button
         type="button"
         onClick={onReset}
-        aria-label={label}
         className={`${button} text-[14px]`}
       >
-        A
+        <span aria-hidden="true">A</span>
+        <span className="sr-only">{label}</span>
       </button>
       <button
         type="button"
         onClick={onUp}
         disabled={atMax}
-        aria-label={upLabel}
         className={`${button} text-[16px]`}
       >
-        A+
+        <span aria-hidden="true">A+</span>
+        <span className="sr-only">{upLabel}</span>
       </button>
     </div>
   );
@@ -191,7 +192,7 @@ function Reading({ story }: { story: Story | null }) {
         </p>
         {/* Where the reading sits: home, its section, its title. */}
         <nav
-          aria-label={copy.sections}
+          aria-label={copy.trail}
           className="no-print reading-column -mb-3 flex w-full min-w-0 items-center gap-2 text-xs text-muted"
         >
           <Link
@@ -302,10 +303,12 @@ function Reading({ story }: { story: Story | null }) {
           <figure className="flex max-w-full flex-col gap-2">
             <img
               src={story.image.src}
+              {...imageSet(story.image.src, "(min-width: 768px) 48rem, 100vw")}
               alt={caption}
               width={1500}
               height={1000}
               loading="eager"
+              fetchPriority="high"
               decoding="async"
               className="-mx-5 block h-auto w-[calc(100%+2.5rem)] max-w-none md:mx-0 md:w-full md:max-w-full"
             />

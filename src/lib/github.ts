@@ -28,12 +28,20 @@ export function readToken(): string {
   }
 }
 
+/** Fired on window whenever the token is saved or cleared, so every part of the panel follows. */
+export const TOKEN_EVENT = "orbis-token";
+
 export function writeToken(token: string) {
   try {
     if (token) sessionStorage.setItem(TOKEN_KEY, token);
     else sessionStorage.removeItem(TOKEN_KEY);
   } catch {
     /* ignore */
+  }
+  try {
+    window.dispatchEvent(new Event(TOKEN_EVENT));
+  } catch {
+    /* no window (prerender) */
   }
 }
 

@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Shell } from "@/components/shell";
 import { buttonClass } from "@/components/members/account";
+import { membersOn } from "@/lib/members/config";
 import { useCopy } from "@/lib/i18n";
 import { accountLink, homeLink, legalLink, memberPageLink } from "@/lib/lang-path";
 import { legalCopy } from "@/lib/legal-copy";
@@ -115,6 +116,18 @@ function PriceList({ lang }: { lang: Lang }) {
   );
 }
 
+/** A button that is not open yet: its name, dimmed, and "soon" beside it. */
+function Soon({ label, soon, className }: { label: string; soon: string; className: string }) {
+  return (
+    <p className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2">
+      <span aria-disabled="true" className={`${className} pointer-events-none opacity-50`}>
+        {label}
+      </span>
+      <span className="text-sm text-pine">{soon}</span>
+    </p>
+  );
+}
+
 /** /membership: the free and the supporting membership side by side, stacked on a phone. */
 export function MembershipPage() {
   const lang = useLang();
@@ -126,27 +139,42 @@ export function MembershipPage() {
           <h2 className={sectionHead(lang)}>{words.free.name}</h2>
           <p className="paper-title mt-6 text-4xl font-bold leading-none">{words.free.price}</p>
           <Points items={words.free.points} />
-          <Link {...accountLink(lang)} className={`${outlineButton} mt-8 self-start`}>
-            {words.free.action}
-          </Link>
+          {membersOn ? (
+            <Link {...accountLink(lang)} className={`${outlineButton} mt-8 self-start`}>
+              {words.free.action}
+            </Link>
+          ) : (
+            <Soon label={words.free.action} soon={words.soon} className={outlineButton} />
+          )}
         </section>
         <section className="-mx-5 flex flex-col bg-shade px-5 py-8 md:mx-0 md:px-8">
           <h2 className={sectionHead(lang)}>{words.paid.name}</h2>
           <PriceList lang={lang} />
           <Points items={words.paid.points} />
-          <Link {...memberPageLink(lang, "payment")} className={`${buttonClass} mt-8 self-start`}>
-            {words.paid.action}
-          </Link>
+          {paymentOn ? (
+            <Link {...memberPageLink(lang, "payment")} className={`${buttonClass} mt-8 self-start`}>
+              {words.paid.action}
+            </Link>
+          ) : (
+            <Soon label={words.paid.action} soon={words.soon} className={buttonClass} />
+          )}
         </section>
       </div>
       <p className="border-t border-line pt-6 text-sm text-muted">
         {words.haveAccount}{" "}
-        <Link
-          {...accountLink(lang)}
-          className="text-pine underline underline-offset-4 hover:underline"
-        >
-          {words.signIn}
-        </Link>
+        {membersOn ? (
+          <Link
+            {...accountLink(lang)}
+            className="text-pine underline underline-offset-4 hover:underline"
+          >
+            {words.signIn}
+          </Link>
+        ) : (
+          <>
+            {words.signIn}
+            <span className="ms-2 text-pine">{words.soon}</span>
+          </>
+        )}
       </p>
     </Page>
   );

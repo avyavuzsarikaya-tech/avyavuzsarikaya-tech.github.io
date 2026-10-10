@@ -94,7 +94,6 @@ export function Pick<T extends string>({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={open ? listId : undefined}
-        aria-label={label}
         onClick={() => setOpen((was) => !was)}
         onKeyDown={(event) => {
           if (event.key === "ArrowDown" || event.key === "ArrowUp") {
@@ -104,7 +103,9 @@ export function Pick<T extends string>({
         }}
         className={`inline-flex items-center ${buttonClassName}`}
       >
+        {/* The name read aloud starts with the visible text, so "EN" is also its spoken name. */}
         {children}
+        <span className="sr-only"> {label}</span>
       </button>
       {open ? (
         <ul

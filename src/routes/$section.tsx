@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { HomePage, SectionPage } from "@/components/atlas";
 import { DEFAULT_LANG, isPrefixed } from "@/lib/lang-path";
 import { homeHead, sectionHead } from "@/lib/site";
@@ -15,8 +15,8 @@ export const Route = createFileRoute("/$section")({
     // English has no prefix.
     if (part === DEFAULT_LANG) throw redirect({ to: "/", replace: true });
     const theme = toTheme(part);
-    // Neither: back to the front page.
-    if (!theme) throw redirect({ to: "/", replace: true });
+    // Neither: the site has no page here.
+    if (!theme) throw notFound();
     // An old two-part section name: to the section that replaced it.
     if (theme !== part) {
       throw redirect({ to: "/$section", params: { section: theme }, replace: true });

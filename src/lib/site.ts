@@ -17,11 +17,11 @@ export const SITE_NAME = "Orbis";
 export const SITE_CARD = `${SITE_URL}/og.jpg`;
 
 const DESCRIPTION: Record<Lang, string> = {
-  tr: "Orbis: Türkçe, Arapça, İngilizce, Fransızca ve İspanyolca kaynaklı okumalar.",
-  ar: "أوربيس: قراءات موثّقة بمصادرها بالتركية والعربية والإنجليزية والفرنسية والإسبانية.",
-  en: "Orbis: sourced readings in Turkish, Arabic, English, French, and Spanish.",
-  fr: "Orbis : des lectures sourcées en turc, arabe, anglais, français et espagnol.",
-  es: "Orbis: lecturas con fuentes en turco, árabe, inglés, francés y español.",
+  tr: "Orbis: İngilizce ve Türkçe kaynaklı okumalar.",
+  ar: "أوربيس: قراءات موثّقة بمصادرها بالإنجليزية والتركية.",
+  en: "Orbis: sourced readings in English and Turkish.",
+  fr: "Orbis : des lectures sourcées en anglais et en turc.",
+  es: "Orbis: lecturas con fuentes en inglés y turco.",
 };
 export const SITE_DESCRIPTION = DESCRIPTION.en;
 
