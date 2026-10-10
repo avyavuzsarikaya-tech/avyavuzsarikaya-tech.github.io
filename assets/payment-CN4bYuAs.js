@@ -1,0 +1,1 @@
+import{r as e}from"./pages-CpvJUzz9.js";var t=e;export{t as component};

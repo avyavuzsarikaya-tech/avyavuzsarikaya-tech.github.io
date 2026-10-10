@@ -1,1 +1,0 @@
-import{dt as e}from"./shell-BYfdrnPy.js";import{t}from"./legal-3d0Acib7.js";var n=e(),r=()=>(0,n.jsx)(t,{page:`privacy`});export{r as component};
